@@ -1,13 +1,13 @@
 # PROGRESS — Maa Kali Astuti
 
-**Phase:** F — Frontend (client demo) · **Next step:** F2
+**Phase:** F — Frontend (client demo) · **Next step:** F3
 Resume in a fresh session with: `/next`
 
 | Step | Title | Status |
 |---|---|---|
 | F0 | Workflow + docs + design import | DONE |
 | F1 | Design inventory (line-range map) | DONE |
-| F2 | Scaffold + design system + extraction pipeline | TODO |
+| F2 | Scaffold + design system + extraction pipeline | DONE |
 | F3 | Data layer + stores + ProductCard | TODO |
 | F4 | Global chrome (header, menus, cart drawer, footer) | TODO |
 | F5 | Home A — hero → 12 Nag spotlight | TODO |
@@ -91,15 +91,15 @@ Done-notes:
   - `logo-emblem.png` is not used by the design (the logo is the `M.logo` SVG) — don't ship it.
 Manual QA: optional — open `docs/DESIGN-INVENTORY.md` and skim §C (routes/slugs) and §G (coming-soon pages). Tell me if you want different URL slugs; no code to test in this step.
 
-### F2 — Scaffold + design system + extraction pipeline · TODO
+### F2 — Scaffold + design system + extraction pipeline · DONE
 Read: `docs/TECH-STACK.md`, `docs/ARCHITECTURE.md`, `docs/DESIGN-TO-CODE.md`; INV (= `docs/DESIGN-INVENTORY.md`) §0, §B, §D, §E.2, §F. Design: `Home.dc.html` 10–27 · `Shop.dc.html` 14–24 · `mka-core.js` 1–27, 28–136, 137–173, 381–395, 455–519, 543–558 · `mka-astro.js` 1–9 · `mka-home.js` 1–11 (details: INV §H F2).
 Tasks:
-- [ ] `pnpm create next-app@latest` into a temp folder with TS, Tailwind, ESLint, App Router, `src/`, alias `@/*`, no Turbopack prompts. Then move the contents to the project root, because the root already has files. Keep `design/`, `docs/`, `client-requirements/` and `design-brief/` untouched.
-- [ ] Install: `next-intl motion lenis zustand react-hook-form zod @hookform/resolvers radix-ui clsx tailwind-merge`. Dev: `jsdom sharp prettier prettier-plugin-tailwindcss`.
-- [ ] `next.config.ts`: security headers (see TECH-STACK §Security), `images.formats` avif/webp, `poweredByHeader:false`, next-intl plugin.
-- [ ] next-intl: `src/i18n/{routing,request,navigation}.ts`, locale middleware/proxy per the installed Next version, `messages/en.json` + `hi.json` skeleton, `app/[locale]/layout.tsx` with `setRequestLocale` and `generateStaticParams`.
-- [ ] Fonts via `next/font/google` as CSS variables (see TECH-STACK).
-- [ ] `src/app/globals.css`: Tailwind v4 `@theme`
+- [x] `pnpm create next-app@latest` into a temp folder with TS, Tailwind, ESLint, App Router, `src/`, alias `@/*`, no Turbopack prompts. Then move the contents to the project root, because the root already has files. Keep `design/`, `docs/`, `client-requirements/` and `design-brief/` untouched.
+- [x] Install: `next-intl motion lenis zustand react-hook-form zod @hookform/resolvers radix-ui clsx tailwind-merge`. Dev: `jsdom sharp prettier prettier-plugin-tailwindcss`.
+- [x] `next.config.ts`: security headers (see TECH-STACK §Security), `images.formats` avif/webp, `poweredByHeader:false`, next-intl plugin.
+- [x] next-intl: `src/i18n/{routing,request,navigation}.ts`, locale middleware/proxy per the installed Next version, `messages/en.json` + `hi.json` skeleton, `app/[locale]/layout.tsx` with `setRequestLocale` and `generateStaticParams`.
+- [x] Fonts via `next/font/google` as CSS variables (see TECH-STACK).
+- [x] `src/app/globals.css`: Tailwind v4 `@theme`
   - colour tokens from `M.C` + the HANDOFF tints;
   - fonts; breakpoints `md 768`, `w900`, `lg 1024`, `w1100`, `nav 1180`, `xl 1280`;
   - radii, shadows and easing variables;
@@ -107,20 +107,102 @@ Tasks:
   - a reduced-motion block;
   - focus ring (2px gold, offset 2px);
   - paper grain.
-- [ ] `scripts/extract-design.mjs` (jsdom + vm: load `mka-core` → `mka-astro` → `mka-home` in a jsdom window with a stub React). It dumps:
+- [x] `scripts/extract-design.mjs` (jsdom + vm: load `mka-core` → `mka-astro` → `mka-home` in a jsdom window with a stub React). It dumps:
   - DATA members → `src/lib/data/*.json`;
   - static ART → `public/svg/<group>/<name>.svg`;
   - animated ART strings → `src/lib/art/*.ts` (exported string constants).
 
   Run it once with `node scripts/extract-design.mjs`. That is allowed; it is a generator, not a build.
-- [ ] `scripts/optimize-images.mjs` (sharp): `design/assets/*.png` → `public/images/*.webp` (max 1600px, q≈80). Run it once.
-- [ ] `src/lib/core/*`: port the LOGIC from mka-core to typed TS (fmt, off, rng/hash, dates, muhurat, stockNote, pin, search). Add `src/lib/utils/cn.ts`.
-- [ ] `src/components/icons/`: the icon set from `mka-core` `I`, as one `<Icon name>` component with typed names.
-- [ ] `src/components/ui/`: ornaments (LotusRule, Corner, Mandala), Logo, Button variants, Eyebrow, SectionHeader, Badge, Price, Rating, Chip, QtyStepper, Input/Field. Match the design exactly.
-- [ ] `src/components/motion/`: AmbientRoot (pauses `data-amb` offscreen or when the tab is hidden), Reveal, MaskText, Counter, Magnetic, ScrollLine, Marquee. Timings follow HANDOFF.
-- [ ] Invoke skill **ui-ux-pro-max** (Next.js + Tailwind; a11y, motion, perf). Distil its rules into `docs/CODING-RULES.md` §From ui-ux-pro-max.
-- [ ] Add `.vercelignore` entries if needed. Leave `app/[locale]/page.tsx` as a minimal placeholder.
-Manual QA: `pnpm install` then `pnpm dev` → `/` loads with the correct fonts and ivory background; `/hi` works.
+- [x] `scripts/optimize-images.mjs` (sharp): `design/assets/*.png` → `public/images/*.webp` (max 1600px, q≈80). Run it once.
+- [x] `src/lib/core/*`: port the LOGIC from mka-core to typed TS (fmt, off, rng/hash, dates, muhurat, stockNote, pin, search). Add `src/lib/utils/cn.ts`.
+- [x] `src/components/icons/`: the icon set from `mka-core` `I`, as one `<Icon name>` component with typed names.
+- [x] `src/components/ui/`: ornaments (LotusRule, Corner, Mandala), Logo, Button variants, Eyebrow, SectionHeader, Badge, Price, Rating, Chip, QtyStepper, Input/Field. Match the design exactly.
+- [x] `src/components/motion/`: AmbientRoot (pauses `data-amb` offscreen or when the tab is hidden), Reveal, MaskText, Counter, Magnetic, ScrollLine, Marquee. Timings follow HANDOFF.
+- [x] Invoke skill **ui-ux-pro-max** (Next.js + Tailwind; a11y, motion, perf). Distil its rules into `docs/CODING-RULES.md` §From ui-ux-pro-max.
+- [x] Add `.vercelignore` entries if needed. Leave `app/[locale]/page.tsx` as a minimal placeholder.
+Done-notes:
+- **Versions:** Next 16.3.7 · React 19.2.8 · Tailwind 4.3 · next-intl 4.14.8 · motion 13 · zod 4 · zustand 5 · radix-ui 1.6. The scaffold's `CLAUDE.md` was dropped (ours stays). `AGENTS.md` was kept because `next dev` re-adds it. It says to read `node_modules/next/dist/docs/` before using an unfamiliar Next 16 API.
+- **Config:**
+  - `next.config.ts` has the CSP and security headers. Dev only adds `'unsafe-eval'` and `ws:`, which Next's docs require.
+  - `src/proxy.ts` is the next-intl middleware; Next 16 renamed `middleware.ts` to `proxy.ts`.
+  - `src/i18n/routing.ts` uses `localePrefix: as-needed` and `localeDetection: false`. `/` is always English; Hindi is only at `/hi`.
+  - Import `Link` / `useRouter` from `@/i18n/navigation`, never from `next/link`.
+- **Root layout** is `src/app/[locale]/layout.tsx`; there is no `app/layout.tsx`. It has:
+  - `<html lang>`, the four font variables (`src/app/fonts.ts`), a skip link to `#main`, `NextIntlClientProvider` (v4 inherits messages from the server) and `<AmbientRoot/>`;
+  - a comment showing where F4 mounts the chrome.
+  - `src/app/icon.svg` = the emblem; the Next favicon is removed.
+- **globals.css:**
+  - Tokens use the M.C names: `em9 em7 em5 em1 n9 n8 g5 g3 g7 iv s1 s2 ink ink6 cu sin rose ok`. The tints are `cream` #FFFDF8, `g1` #F6E7BC, `g4` #E6CB86, `sg3` #C9D6CF and `sg5` #9FB3AA.
+  - Fonts: `font-display` (Fraunces), `font-sans` (Manrope → Mukta), `font-deva` (Tiro), `font-hi` (Mukta).
+  - Breakpoints (in rem): `sm` 640 · `md` 768 · `w900` · `lg` 1024 · `w1100` · `nav` 1180 · `xl` 1280 · `2xl` 1400 (Shop 4 cols).
+  - Radii: `rounded-field` 2 · `rounded-3` · `rounded-btn` 4 · `rounded-pill`.
+  - Shadows are the design's rings: `shadow-ring-gold`, `-gold-45/-60`, `-g3`, `-g5`, `-g5-55`, `-sand`, `-em`, `-em-15`, `-focus`, `-error`; plus `shadow-hair-y/-top/-bottom`, `shadow-card` and `shadow-fly`.
+  - Easings: `ease-mka`, `ease-mka-inout`, `ease-mka-exit`, `ease-fly`.
+  - Utilities: `container-mka` (1320 + clamp gutter), `section-y`, `font-soft` (SOFT 40), `tabular`, `no-scrollbar`, `sheen` (gold sweep CTA), `sr-only-focusable`.
+  - Custom variant `hi:` for Devanagari overrides (no tracking, no italics, 1.35 leading).
+  - Also: every `data-amb` keyframe, `animate-marquee`, the reduced-motion kill block, the focus ring, `::selection` and the paper grain.
+- **Ambient motion is CSS-driven.**
+  - `AmbientRoot` (a port of core `auto()` + `fx.scan` + `fx.reveal`) parses `data-amb="kind:n…"` into `--amb-dur/--amb-delay/--amb-y/--amb-r/--amb-dir` and sets `data-amb-on`, which starts the animation.
+  - It sets `data-amb-paused` when an element is offscreen (rootMargin 120px) and `html[data-tab-hidden]` when the tab is hidden.
+  - Random values use seeded `rng("mka-amb")`.
+  - It also runs **all `data-reveal`** (700 ms / i×80 / threshold .12). So server components can simply write `data-reveal="n"` (or use `<Reveal i>`).
+  - Marquee pauses the same way (`data-loop`).
+- **Extractor** (`scripts/extract-design.mjs` + `scripts/lib-design-env.mjs`; re-run with `pnpm design:extract`):
+  - **28 JSON** files in `src/lib/data/`: tokens, categories (+slug), intents, stones, rudraksha, badges, products (+slug; `photo` now points to `/images/*.webp`; `href` dropped), services (SERVICES ⊕ SVC + slug; SERVICES' `modes` string is renamed `modesLine`), consult, articles, trending, months, rashi (+slug), graha, nakshatra, cities, demo-kundali, testimonials, kundali99, predict, love, courses (+slug `<key>-sadhana`), rituals, faq, videos, books, reviews, about.
+  - **99 static SVGs** in `public/svg/`: chakra ×3, wheel nak/pointer, arch-frame, mandala ×3 colours, gems ×9, categories ×2, places ×3, portrait/fg, product main+detail for the 37 products without a photo, and logo.svg.
+  - **17 inline art modules** in `src/lib/art/`: icons, glyphs, logo, pandit, mala (N, L and a 721-point LUT), diya, kalash, thali, wheel (rashi/graha/center), yantras, service-art, portrait, chapters, thumbs, books, seal, arch.
+  - **Rule:** art with `<text>` is inlined, because `<img>` SVG can't use web fonts.
+  - Strings carry `__U__`; render them with `<InlineArt svg uid>` (`src/lib/art/uid.ts`).
+  - Where `u` seeds randomness, the design's call-site `u` is kept:
+    - `thali` → THALI_RITUALS / THALI_HOME;
+    - `portrait` → BG_CONSULT / BG_ABOUT / PORTRAIT_HOME;
+    - `thumbs` use the Videos-page seed (`vg<id>` / `vs<id>`) on every page.
+- **Not extracted yet** (the owning step does it):
+  - report-page SVGs (`A.page`): F9 / F11 must read their call sites;
+  - product `cert` / `video` slots (they contain text): PDP phase;
+  - `places/office.svg` has a small "NE" label (a warning in the extractor output). It is PDP-only.
+  - Unexposed locals (`OPEN AREA FR LORD RS HC SN HCOLS BHU YAN MP LUT HIN SH`) are not on `M` / `A` / `H`. Port them by hand in the LOGIC steps (F6 / F12). `PIN` / `ST` / `DAY` / `MON` are already in `src/lib/core`.
+- **Images:** `scripts/optimize-images.mjs` wrote 7 WebPs to `public/images/` (10–116 KB each, max 1600px, q80). `logo-emblem.png` is skipped.
+- **Core ports** (`src/lib/core/`):
+  - `format.ts` (fmt, off, num, secs), `rng.ts` (rng, hash, mix — same seeds), `dates.ts` (addDays, dfmt, dlong, muhurat — pass `now` on the server), `stock.ts`, `pin.ts`, `search.ts` (pure; the caller passes the collections).
+  - `commerce.ts` holds the store constants plus `waLink()`. **F3:** verify the COUPONS shape against mka-core store 398–443.
+- **Hooks** (`src/lib/hooks/`): useReducedMotion (+ `isReduced()`), useMedia (+ useIsMobile / useIsDesktop / useFinePointer), useHydrated, usePageVisible, useInView. `useScrollDir` comes in F4.
+- **UI** (`src/components/ui/`, import each file directly — no barrel):
+  - Button (`Button` / `ButtonLink` / `ButtonA` / `buttonClass`): variants primary · sheen · outline · gold · night; sizes lg 54 · md 52 · sm 50 · xs 44.
+  - Eyebrow (light g7 / night g3).
+  - SectionHeader: sizes sm/md/lg/xl match the four design heading clamps; `lede` gives the 2-col auto-fit grid; `<em>` renders gold italic.
+  - Badge / BadgePill, Price (card / row), Rating + Stars, Chip (filter / form; pass `role="radio"` for single-choice), QtyStepper (client, number roll), Field (CSS-only states, RHF-ready, `prefix="+91"`).
+  - Logo (inline, `uid` prop), InlineArt, and `ornaments/` LotusRule, Corner, Mandala + MandalaG (a `<g>` for embedding).
+- **Icon:** `<Icon name sw label>` in `src/components/icons/Icon.tsx`. Its names are typed from `ICON_PATHS`: 97 names plus heartF / starF.
+- **Motion** (`src/components/motion/`):
+  - AmbientRoot, Reveal;
+  - MaskText + MaskLine + `maskIn()` (900 ms, 60 ms stagger, at 25%, only below 90% vh);
+  - CountGroup + Counter (1600 ms ease-out cubic at 40%; the server renders the final value);
+  - Magnetic + `magneticHandlers` (6×4 px, ≥1024);
+  - ScrollLine (p = (0.62·vh − top)/height; has `onProgress`);
+  - Marquee (56 s, hover / offscreen / hidden pause);
+  - `fx.ts` (roll, shimmer, drawIn, enter, stagger) and `easing.ts`.
+- `docs/CODING-RULES.md` §From ui-ux-pro-max is filled. It adds a z-index scale, 44px hit areas, no barrels, and the form / toast rules. `docs/DESIGN-TO-CODE.md` §4 now records the text→inline rule.
+- **Tooling:** `.prettierrc.json` (tailwind plugin, `cn` / `buttonClass` sorted), `.prettierignore`, package scripts `design:extract`, `design:images`, `format`. `pnpm-workspace.yaml` silences the ignored build scripts.
+- **Placeholder** `app/[locale]/page.tsx` shows the logo inside a spinning chakra, eyebrow, H1, the Devanagari line, LotusRule and an EN↔HI button.
+- **Nothing was run except the two generators** (no dev / build / tsc / lint). Type errors, if any, surface in your `pnpm dev`; put them in the Fix-list.
+
+Manual QA (F2):
+1. OneDrive sync pause karo → `pnpm install` (deps already added; this just verifies) → `pnpm dev`.
+2. `http://localhost:3000/`:
+   - ivory background with a faint paper grain;
+   - the emblem inside a slowly spinning gold chakra (120 s per turn);
+   - the H1 "Maa Kali Astuti" in Fraunces (soft serif) and body text in Manrope;
+   - "॥ साधक पवन पाण्डेय ॥" in Tiro Devanagari;
+   - a gold lotus rule;
+   - the "हिंदी" outline button.
+3. Click "हिंदी" → `/hi`: Hindi copy, `<html lang="hi">`, and the button now says "English" and goes back to `/`.
+4. Tab key: the first Tab shows "Skip to content" (emerald pill, top-left); the button focus ring is 2px gold with a 2px offset.
+5. Switch to another tab and come back; also turn on OS reduced motion. The chakra should stop with reduced motion.
+6. Mobile 390px (DevTools): no horizontal scroll, and the text is centred.
+7. DevTools → Network → response headers on `/`: `content-security-policy`, `x-frame-options: DENY`, and no `x-powered-by`.
+8. Open `/svg/gems/amethyst.svg` and `/images/p-12-nag.webp` directly — both should load.
+9. Any terminal error or type error → paste it into the Fix-list.
 
 ### F3 — Data layer + stores + ProductCard · TODO
 Read: ARCHITECTURE §Data seam + §Client state; INV §A.4, §B.1. Design: `ProductCard.dc.html` 14–139 · `mka-core.js` 176–194, 277–305, 308–381, 396–450, 490–512 · `SiteChrome.dc.html` 350–387, 421–436, 543–559 (details: INV §H F3).
@@ -284,6 +366,7 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
 
 ## Decisions log
 - 2026-09-29: Design source = Claude Design ZIP (cheaper than the MCP). Stack per docs/TECH-STACK.md. Next.js lives in the `KALA-JADU` root (inside OneDrive; pause OneDrive sync during `pnpm install`). pnpm. URL-based i18n (`/` = EN, `/hi` = HI).
+- 2026-09-30 (F2): `localeDetection: false` — `/` never auto-redirects to `/hi` by browser language; Hindi only via the toggle or `/hi` URLs. SVG art with `<text>` is inlined (web fonts), everything else is an external `/svg` file.
 - Commerce pages not in the export (Cart, Checkout, PDP, Wishlist, Search, Order Success) → branded coming-soon routes until they are designed. The cart drawer works fully.
 
 ## Client-confirm list (placeholders from the design)
@@ -306,4 +389,6 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
   - services: kundali-reading, palmistry, tarot-reading, numerology;
   - courses: `<deity>-sadhana`;
   - categories: rudraksha-malas, crystal-bracelets, bhojpatra-amulets, havan-samagri, energized-copper.
+- Favicon / app icon: currently the full emblem SVG (`src/app/icon.svg`); its wordmark is unreadable at 16px. Need a simplified mark (e.g. the ॐ + lotus core) with the original logo file.
+- Video/Shorts thumbnails are generated placeholder art (same art on every page); real YouTube thumbnails + IDs replace them.
 - Design gap: the Booking page shows no order summary between 768 and 1023px. It is built 1:1 for now; confirm whether one should be added.

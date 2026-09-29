@@ -1,0 +1,47 @@
+[
+  {
+    "key": "rudraksha",
+    "name": "Rudraksha & Malas",
+    "hi": "रुद्राक्ष एवं माला",
+    "short": "Rudraksha",
+    "desc": "Original Nepali beads from 2 to 14 Mukhi, X-ray tested and energized in Mahapuja before dispatch.",
+    "deshi": "मूल नेपाली 2 से 14 मुखी रुद्राक्ष, एक्स-रे परीक्षित और भेजने से पहले महापूजा में ऊर्जित।",
+    "slug": "rudraksha-malas"
+  },
+  {
+    "key": "bracelets",
+    "name": "Crystal Bracelets",
+    "hi": "क्रिस्टल ब्रेसलेट",
+    "short": "Bracelets",
+    "desc": "Fifteen natural-stone bracelets, each chosen for one intention and strung on durable stretch cord.",
+    "deshi": "पंद्रह प्राकृतिक रत्न ब्रेसलेट, हर एक किसी एक उद्देश्य के लिए चुना गया।",
+    "slug": "crystal-bracelets"
+  },
+  {
+    "key": "amulets",
+    "name": "Sacred Amulets on Bhojpatra",
+    "hi": "भोजपत्र कवच",
+    "short": "Amulets",
+    "desc": "Handmade on authentic Bhojpatra, energized at an auspicious muhurat during Mahapuja and sealed in a consecrated copper tabiz.",
+    "deshi": "असली भोजपत्र पर हस्तनिर्मित, शुभ मुहूर्त में महापूजा में ऊर्जित और तांबे के ताबीज़ में बंद।",
+    "slug": "bhojpatra-amulets"
+  },
+  {
+    "key": "havan",
+    "name": "Havan Samagri",
+    "hi": "हवन सामग्री",
+    "short": "Havan",
+    "desc": "Bitter Havan blend to clear deep negativity, evil eye and stagnant energy from the home.",
+    "deshi": "घर से गहरी नकारात्मकता, बुरी नज़र और रुकी हुई ऊर्जा दूर करने वाला कड़वा हवन।",
+    "slug": "havan-samagri"
+  },
+  {
+    "key": "copper",
+    "name": "Energized Copper",
+    "hi": "ऊर्जित ताम्र",
+    "short": "Copper",
+    "desc": "Pure copper offerings, hand-energized through traditional ritual for the home temple, tijori and office.",
+    "deshi": "शुद्ध तांबे की वस्तुएँ, पारंपरिक अनुष्ठान से ऊर्जित — मंदिर, तिजोरी और ऑफ़िस के लिए।",
+    "slug": "energized-copper"
+  }
+]

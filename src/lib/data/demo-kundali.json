@@ -1,0 +1,133 @@
+{
+  "lagna": 7,
+  "lagnaDeg": "0°44′",
+  "rashi": 11,
+  "nak": "Uttara Bhadrapada",
+  "pada": 1,
+  "planets": [
+    {
+      "k": "su",
+      "en": "Sun",
+      "hi": "Surya",
+      "ab": "Su",
+      "dev": "सू",
+      "lon": 205.68409281895686,
+      "sign": 6,
+      "degS": "25°41′",
+      "house": 12,
+      "retro": false,
+      "nak": "Vishakha"
+    },
+    {
+      "k": "mo",
+      "en": "Moon",
+      "hi": "Chandra",
+      "ab": "Mo",
+      "dev": "चं",
+      "lon": 334.7585785861306,
+      "sign": 11,
+      "degS": "4°45′",
+      "house": 5,
+      "retro": false,
+      "nak": "Uttara Bhadrapada"
+    },
+    {
+      "k": "ma",
+      "en": "Mars",
+      "hi": "Mangal",
+      "ab": "Ma",
+      "dev": "मं",
+      "lon": 296.2705029877345,
+      "sign": 9,
+      "degS": "26°16′",
+      "house": 3,
+      "retro": false,
+      "nak": "Dhanishta"
+    },
+    {
+      "k": "me",
+      "en": "Mercury",
+      "hi": "Budh",
+      "ab": "Me",
+      "dev": "बु",
+      "lon": 201.9030317703215,
+      "sign": 6,
+      "degS": "21°54′",
+      "house": 12,
+      "retro": true,
+      "nak": "Vishakha"
+    },
+    {
+      "k": "ju",
+      "en": "Jupiter",
+      "hi": "Guru",
+      "ab": "Ju",
+      "dev": "गु",
+      "lon": 322.0885689787908,
+      "sign": 10,
+      "degS": "22°05′",
+      "house": 4,
+      "retro": true,
+      "nak": "Purva Bhadrapada"
+    },
+    {
+      "k": "ve",
+      "en": "Venus",
+      "hi": "Shukra",
+      "ab": "Ve",
+      "dev": "शु",
+      "lon": 193.2734517938934,
+      "sign": 6,
+      "degS": "13°16′",
+      "house": 12,
+      "retro": true,
+      "nak": "Swati"
+    },
+    {
+      "k": "sa",
+      "en": "Saturn",
+      "hi": "Shani",
+      "ab": "Sa",
+      "dev": "श",
+      "lon": 224.03595530975076,
+      "sign": 7,
+      "degS": "14°02′",
+      "house": 1,
+      "retro": false,
+      "nak": "Anuradha"
+    },
+    {
+      "k": "ra",
+      "en": "Rahu",
+      "hi": "Rahu",
+      "ab": "Ra",
+      "dev": "रा",
+      "lon": 355.4716603236166,
+      "sign": 11,
+      "degS": "25°28′",
+      "house": 5,
+      "retro": true,
+      "nak": "Revati"
+    },
+    {
+      "k": "ke",
+      "en": "Ketu",
+      "hi": "Ketu",
+      "ab": "Ke",
+      "dev": "के",
+      "lon": 175.47166032361667,
+      "sign": 5,
+      "degS": "25°28′",
+      "house": 11,
+      "retro": true,
+      "nak": "Chitra"
+    }
+  ],
+  "unknown": false,
+  "city": [
+    "Varanasi",
+    "Uttar Pradesh",
+    25.32,
+    82.97
+  ]
+}

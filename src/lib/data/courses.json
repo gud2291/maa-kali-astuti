@@ -1,0 +1,196 @@
+{
+  "courses": [
+    {
+      "key": "baglamukhi",
+      "en": "Baglamukhi Sadhana",
+      "hi": "बगलामुखी साधना",
+      "deity": "Maa Baglamukhi, the eighth Mahavidya",
+      "icon": "gada",
+      "days": 36,
+      "essence": "Protection, victory over opposition, and relief from legal and life obstacles.",
+      "overview": "Maa Baglamukhi is the power that stills. Her sadhana is traditionally taken up by those facing persistent opposition, court matters or speech used against them. The practice builds a calm, unshakeable centre from which the seeker acts.",
+      "attain": [
+        "Steadiness when facing opposition, disputes or hostile speech",
+        "Protection for yourself and your family through daily practice",
+        "Composure and clarity in legal and professional matters",
+        "The discipline to carry a long sankalp to completion"
+      ],
+      "niyam": "Yellow clothing, a yellow asana and a haldi mala during japa.",
+      "slug": "baglamukhi-sadhana"
+    },
+    {
+      "key": "hanuman",
+      "en": "Hanuman Sadhana",
+      "hi": "हनुमान साधना",
+      "deity": "Shri Hanuman, Sankat Mochan",
+      "icon": "gada",
+      "days": 41,
+      "essence": "Inner strength, courage and steady protection from negative energies.",
+      "overview": "Hanuman sadhana builds strength of body, breath and will. It suits seekers who feel drained, fearful or unprotected, and it asks for physical discipline as much as mantra.",
+      "attain": [
+        "Physical and mental stamina through daily practice",
+        "Freedom from fear and night-time disturbance",
+        "Protection from negative energies at home",
+        "Devotion that steadies the mind under pressure"
+      ],
+      "niyam": "A short daily physical practice and strict celibacy during the anushthan.",
+      "slug": "hanuman-sadhana"
+    },
+    {
+      "key": "kali",
+      "en": "Kali Sadhana",
+      "hi": "काली साधना",
+      "deity": "Maa Mahakali, the first Mahavidya",
+      "icon": "sword",
+      "days": 41,
+      "essence": "The intense, transformative grace of Maa Kali, for seekers ready for deep change.",
+      "overview": "Kali sadhana is the heart of this lineage. It is intense and it is transformative: old fear, attachment and negativity are cut away. It is offered only after a personal conversation with Sadhak Ji.",
+      "attain": [
+        "Release from long-held fear and negativity",
+        "Strong protection from dark and hostile energies",
+        "Deep inner change under close guidance",
+        "Grounding in the tradition of Maa Kali Astuti"
+      ],
+      "niyam": "Night practice at a fixed hour, and a first course or long conversation before enrollment.",
+      "slug": "kali-sadhana"
+    },
+    {
+      "key": "durga",
+      "en": "Durga Sadhana",
+      "hi": "दुर्गा साधना",
+      "deity": "Maa Durga, protector of the three worlds",
+      "icon": "conch",
+      "days": 27,
+      "essence": "A complete shield of protection, peace, prosperity and steady energy.",
+      "overview": "Durga sadhana draws on the Devi Mahatmya tradition. It suits householders who want protection for the family, peace in the home and the energy to carry responsibilities well.",
+      "attain": [
+        "Protection for the home and family",
+        "Peace and steadiness in daily life",
+        "Energy to carry responsibilities without burning out",
+        "A living connection with the Navadurga forms"
+      ],
+      "niyam": "Red asana and daily path of selected Devi Mahatmya chapters.",
+      "slug": "durga-sadhana"
+    },
+    {
+      "key": "shiva",
+      "en": "Shiva Sadhana",
+      "hi": "शिव साधना",
+      "deity": "Bhagwan Shiva, Mahadev",
+      "icon": "trishul",
+      "days": 40,
+      "essence": "Connection with cosmic consciousness for deep peace, inner mastery and spiritual growth.",
+      "overview": "Shiva sadhana is the quietest of the six and the most inward. It centres on mantra, breath and stillness, and suits seekers whose aim is peace and self-mastery rather than worldly results.",
+      "attain": [
+        "Deep peace and a quieter mind",
+        "Mastery over anger, restlessness and habit",
+        "A steady meditation practice",
+        "Progress on the inner path under guidance"
+      ],
+      "niyam": "Monday fast (as health allows) and silence for one hour after japa.",
+      "slug": "shiva-sadhana"
+    },
+    {
+      "key": "bhairav",
+      "en": "Bhairav Sadhana",
+      "hi": "भैरव साधना",
+      "deity": "Kaal Bhairav, guardian of Kashi",
+      "icon": "damaru",
+      "days": 41,
+      "essence": "Fierce protective energy that dissolves deep-seated fear and obstacles.",
+      "overview": "Bhairav is the guardian. His sadhana is taken up for fearlessness and protection, and to clear obstacles that return again and again. Discipline and timing matter greatly, so guidance stays close throughout.",
+      "attain": [
+        "Fearlessness in situations that once paralysed you",
+        "Protection during travel, night and difficult periods",
+        "Removal of recurring obstacles",
+        "Discipline in time, speech and conduct"
+      ],
+      "niyam": "Practice after sunset and a sesame-oil diya every Sunday.",
+      "slug": "bhairav-sadhana"
+    }
+  ],
+  "includes": [
+    [
+      "user",
+      "Personal diksha",
+      "Given by Sadhak Pawan Pandey, in person or on video"
+    ],
+    [
+      "scroll",
+      "Mantra, vidhi & niyam",
+      "Explained step by step, in the order you practise them"
+    ],
+    [
+      "yantra",
+      "Energized yantra & mala",
+      "Prepared for you and sent before diksha"
+    ],
+    [
+      "calendar",
+      "Weekly check-ins",
+      "Your japa record reviewed every week"
+    ],
+    [
+      "lotus",
+      "Guidance after completion",
+      "How to keep the practice alive once the anushthan ends"
+    ]
+  ],
+  "enroll": [
+    [
+      "chat",
+      "Inquiry",
+      "Send the form or message on WhatsApp."
+    ],
+    [
+      "phone",
+      "Personal conversation",
+      "A call with Sadhak Ji about your intention and life situation."
+    ],
+    [
+      "seal",
+      "Eligibility",
+      "Whether this sadhana suits you now, or another one first."
+    ],
+    [
+      "cert",
+      "Enrollment",
+      "Fee, dates and preparation shared in writing."
+    ],
+    [
+      "flame",
+      "Guided sadhana",
+      "Diksha, daily practice and weekly check-ins."
+    ]
+  ],
+  "modules": [
+    [
+      "Preparation & shuddhi",
+      "7 days of diet, routine and purification before diksha"
+    ],
+    [
+      "Diksha & sankalp",
+      "The mantra and your sankalp, given personally"
+    ],
+    [
+      "Mantra, nyasa & dhyana",
+      "Daily japa with nyasa and meditation, in a fixed sequence"
+    ],
+    [
+      "Yantra puja & havan",
+      "Weekly puja of your energized yantra and a closing havan"
+    ],
+    [
+      "Purnahuti & integration",
+      "Completion rites and how to carry the practice forward"
+    ]
+  ],
+  "niyam": [
+    "The same time and place every day",
+    "Satvik food; no alcohol, meat or tobacco",
+    "Brahmacharya for the length of the anushthan",
+    "Measured, truthful speech; no arguments or gossip",
+    "A daily record of japa count and experiences",
+    "No discussion of the practice outside guidance"
+  ]
+}

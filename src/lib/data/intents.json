@@ -1,0 +1,44 @@
+[
+  {
+    "key": "wealth",
+    "en": "Wealth",
+    "hi": "धन",
+    "icon": "coins"
+  },
+  {
+    "key": "protection",
+    "en": "Protection",
+    "hi": "रक्षा",
+    "icon": "shield"
+  },
+  {
+    "key": "love",
+    "en": "Love",
+    "hi": "प्रेम",
+    "icon": "heart"
+  },
+  {
+    "key": "peace",
+    "en": "Peace",
+    "hi": "शांति",
+    "icon": "lotus"
+  },
+  {
+    "key": "health",
+    "en": "Health",
+    "hi": "स्वास्थ्य",
+    "icon": "health"
+  },
+  {
+    "key": "courage",
+    "en": "Courage",
+    "hi": "साहस",
+    "icon": "trishul"
+  },
+  {
+    "key": "clarity",
+    "en": "Clarity",
+    "hi": "स्पष्टता",
+    "icon": "sun"
+  }
+]

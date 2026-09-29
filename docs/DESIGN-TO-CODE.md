@@ -51,6 +51,8 @@ The Claude Design output is the **spec**. The goal is 1:1 visual and motion fide
 - **DATA** members (catalog, rashis, services, courses, videos, FAQ …) are generated into `src/lib/data/*.json` by `scripts/extract-design.mjs`. Never hand-copy them.
 - **Static ART** (product art, gems, thumbnails, books, yantra idle states, glyphs, portraits, report pages) is generated to `public/svg/**` and rendered with `<img>` (lazy when below the fold). Always set width and height or an aspect-ratio box.
 - **Animated ART** (Pandit Ji, chakra, rashi wheel, kundali chart, yantras when drawing, diya, starfield) is generated to `src/lib/art/*.ts` as string constants and inlined by its signature component. The component animates named groups through refs. SVG `id`s get a per-instance suffix (the design uses a `u` param) to avoid collisions.
+- **Rule set by the F2 extractor:** any art that contains `<text>` is inlined too (thumbnails, books, seal, logo, palm labels, Lo Shu, wheel rashi/graha/center), because an SVG inside `<img>` cannot use the page's web fonts. Inline strings carry the token `__U__`; render them with `<InlineArt svg uid>` (`src/components/ui/InlineArt.tsx`), which swaps in the instance suffix. Chakra layers are static files (`public/svg/chakra/*`) spun by a `data-amb="spin:N"` wrapper.
+- Mandala, LotusRule, Corner, Stars (stars5) are JSX ports in `src/components/ui/`; Icon renders `ICON_PATHS` from `src/lib/art/icons.ts`.
 - **LOGIC** (pure functions) is copied into `src/lib/core` and `src/lib/astro` with TS types, keeping the same algorithm and seeds so outputs match the prototype.
 
 ## 5. Fidelity checklist (per section)

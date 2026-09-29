@@ -1,0 +1,32 @@
+{
+  "bestseller": [
+    "Bestseller",
+    "बेस्टसेलर",
+    "#164E3F",
+    "#FBF7EE"
+  ],
+  "energized": [
+    "Energized",
+    "ऊर्जित",
+    "#FBF7EE",
+    "#7A5C1C"
+  ],
+  "new": [
+    "New",
+    "नया",
+    "#FBF7EE",
+    "#164E3F"
+  ],
+  "rare": [
+    "Rare",
+    "दुर्लभ",
+    "#0A1F1A",
+    "#D9B96A"
+  ],
+  "featured": [
+    "Featured",
+    "विशेष",
+    "#FBF7EE",
+    "#8A4A26"
+  ]
+}

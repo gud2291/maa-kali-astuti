@@ -1,0 +1,423 @@
+[
+  {
+    "key": "kundali",
+    "name": "Kundali Reading",
+    "hi": "कुंडली विश्लेषण",
+    "icon": "kundali",
+    "price": 2100,
+    "dur": "60 min",
+    "line": "Career, marriage, finance and health, read from your birth chart with guidance until your doubts are resolved.",
+    "slug": "kundali-reading",
+    "modesLine": "Call · Video · WhatsApp · Written report",
+    "modes": [
+      "call",
+      "video",
+      "wa",
+      "report"
+    ],
+    "guarantee": true,
+    "deliver": "Session within 3 days · summary on WhatsApp",
+    "get": "Chart overview, 5-year dasha timing, remedies you can follow",
+    "covered": [
+      [
+        "office",
+        "Career & profession",
+        "Timing for job changes, promotions and business moves"
+      ],
+      [
+        "heart",
+        "Marriage & relationships",
+        "Marriage timing, compatibility and harmony at home"
+      ],
+      [
+        "coins",
+        "Finance & property",
+        "Income patterns, savings, property and investment windows"
+      ],
+      [
+        "health",
+        "Health tendencies",
+        "Areas to watch and the planetary periods behind them"
+      ],
+      [
+        "shield",
+        "Doshas & obstacles",
+        "Manglik, Kaal Sarp, Pitra dosha and Sade Sati, checked honestly"
+      ],
+      [
+        "calendar",
+        "Dasha timing",
+        "Your Vimshottari periods for the next five years"
+      ],
+      [
+        "lotus",
+        "Remedies",
+        "Mantra, daan and discipline first; gemstones only when they help"
+      ]
+    ],
+    "tiers": [
+      {
+        "k": "essential",
+        "t": "Essential",
+        "price": 2100,
+        "mins": 60,
+        "inc": [
+          "60-minute session",
+          "One life area in depth, plus a chart overview",
+          "Remedies you can follow at home"
+        ]
+      },
+      {
+        "k": "detailed",
+        "t": "Detailed",
+        "price": 3100,
+        "mins": 90,
+        "rec": 1,
+        "inc": [
+          "90-minute session",
+          "All major life areas and 5-year dasha timing",
+          "Written summary on WhatsApp",
+          "Two follow-up questions within 30 days"
+        ]
+      },
+      {
+        "k": "premium",
+        "t": "Premium",
+        "price": 5100,
+        "mins": 90,
+        "inc": [
+          "Everything in Detailed",
+          "25-page written analysis before the session",
+          "Kundali Milan for one match, if needed",
+          "Follow-up guidance for 3 months"
+        ]
+      }
+    ],
+    "samples": [
+      [
+        "chart",
+        "Lagna chart & positions"
+      ],
+      [
+        "dasha",
+        "Vimshottari dasha"
+      ],
+      [
+        "remedy",
+        "Remedies to follow"
+      ]
+    ],
+    "href": "Consultation-Detail.dc.html#s=kundali",
+    "book": "Booking.dc.html#s=kundali"
+  },
+  {
+    "key": "palm",
+    "name": "Palmistry",
+    "hi": "हस्तरेखा",
+    "icon": "palm",
+    "price": 1100,
+    "dur": "Report in 48 hrs",
+    "line": "Share clear photos of both palms; life line, destiny and turning points decoded by Hastrekha principles.",
+    "slug": "palmistry",
+    "modesLine": "Photo upload · Written report",
+    "modes": [
+      "report",
+      "video"
+    ],
+    "deliver": "Written report in 48 hrs",
+    "get": "Both palms read, turning points, guidance",
+    "covered": [
+      [
+        "palm",
+        "Life, head & heart lines",
+        "What they say about vitality, thinking and emotion"
+      ],
+      [
+        "scroll",
+        "Fate line & turning points",
+        "Approximate ages of major changes"
+      ],
+      [
+        "user",
+        "Mounts & finger shape",
+        "Temperament, strengths and blind spots"
+      ],
+      [
+        "heart",
+        "Marriage & children lines",
+        "Relationship indications, read with care"
+      ],
+      [
+        "coins",
+        "Career & wealth signs",
+        "Sun line, Mercury line and money indications"
+      ],
+      [
+        "health",
+        "Health signs",
+        "What the palm suggests, never a diagnosis"
+      ],
+      [
+        "returns",
+        "Left and right hand",
+        "Inherited tendencies compared with your present path"
+      ]
+    ],
+    "tiers": [
+      {
+        "k": "essential",
+        "t": "Essential",
+        "price": 1100,
+        "mins": 20,
+        "inc": [
+          "Written report in 48 hours",
+          "Both palms: major lines and mounts",
+          "Turning-point ages marked"
+        ]
+      },
+      {
+        "k": "detailed",
+        "t": "Detailed",
+        "price": 1800,
+        "mins": 30,
+        "rec": 1,
+        "inc": [
+          "Everything in Essential",
+          "Minor lines, marriage and children lines",
+          "Your specific question answered in the report"
+        ]
+      },
+      {
+        "k": "premium",
+        "t": "Premium",
+        "price": 2500,
+        "mins": 40,
+        "inc": [
+          "Everything in Detailed",
+          "40-minute video walkthrough",
+          "Guidance for 30 days on WhatsApp"
+        ]
+      }
+    ],
+    "samples": [
+      [
+        "palm",
+        "Your palm, marked"
+      ],
+      [
+        "lines",
+        "Turning points"
+      ],
+      [
+        "remedy",
+        "Guidance summary"
+      ]
+    ],
+    "href": "Consultation-Detail.dc.html#s=palm",
+    "book": "Booking.dc.html#s=palm"
+  },
+  {
+    "key": "tarot",
+    "name": "Tarot Card Reading",
+    "hi": "टैरो कार्ड",
+    "icon": "tarot",
+    "price": 1100,
+    "dur": "30 min",
+    "line": "An intuitive spread for one clear question, especially relationship and career dilemmas.",
+    "slug": "tarot-reading",
+    "modesLine": "Call · Video",
+    "modes": [
+      "call",
+      "video",
+      "wa"
+    ],
+    "deliver": "Live session · recap on WhatsApp",
+    "get": "Clarity on one question, practical next steps",
+    "covered": [
+      [
+        "question",
+        "One clear question",
+        "Or up to three in the Detailed package"
+      ],
+      [
+        "heart",
+        "Relationship spread",
+        "Where the relationship stands and what helps"
+      ],
+      [
+        "office",
+        "Career crossroads",
+        "Two options laid side by side"
+      ],
+      [
+        "arrowR",
+        "Practical next steps",
+        "What to do this month, in plain words"
+      ],
+      [
+        "tarot",
+        "Card-by-card explanation",
+        "Every card shown and explained on screen"
+      ],
+      [
+        "chat",
+        "Recap on WhatsApp",
+        "A written summary after the session"
+      ]
+    ],
+    "tiers": [
+      {
+        "k": "essential",
+        "t": "Essential",
+        "price": 1100,
+        "mins": 30,
+        "inc": [
+          "30-minute session",
+          "One question",
+          "Recap on WhatsApp"
+        ]
+      },
+      {
+        "k": "detailed",
+        "t": "Detailed",
+        "price": 1700,
+        "mins": 45,
+        "rec": 1,
+        "inc": [
+          "45-minute session",
+          "Up to three questions",
+          "Relationship or career spread"
+        ]
+      },
+      {
+        "k": "premium",
+        "t": "Premium",
+        "price": 2500,
+        "mins": 60,
+        "inc": [
+          "60-minute session",
+          "Full life spread",
+          "Follow-up reading within 30 days"
+        ]
+      }
+    ],
+    "samples": [
+      [
+        "cards",
+        "Your spread"
+      ],
+      [
+        "lines",
+        "Card meanings"
+      ],
+      [
+        "remedy",
+        "Next steps"
+      ]
+    ],
+    "href": "Consultation-Detail.dc.html#s=tarot",
+    "book": "Booking.dc.html#s=tarot"
+  },
+  {
+    "key": "numerology",
+    "name": "Numerology",
+    "hi": "अंक ज्योतिष",
+    "icon": "loshu",
+    "price": 1500,
+    "dur": "45 min",
+    "line": "Align your name, mobile number and business name with favourable vibrations.",
+    "slug": "numerology",
+    "modesLine": "Call · Written report",
+    "modes": [
+      "call",
+      "video",
+      "report"
+    ],
+    "deliver": "Session or written report in 48 hrs",
+    "get": "Core numbers, name and number corrections",
+    "covered": [
+      [
+        "loshu",
+        "Moolank & Bhagyank",
+        "Birth number and destiny number, explained"
+      ],
+      [
+        "edit",
+        "Name number",
+        "Spelling options that suit your numbers"
+      ],
+      [
+        "phone",
+        "Mobile number",
+        "How your current number sits with you, and alternatives"
+      ],
+      [
+        "office",
+        "Business or brand name",
+        "The vibration of the name you trade under"
+      ],
+      [
+        "calendar",
+        "Lucky dates",
+        "Dates for launches, signings and moves"
+      ],
+      [
+        "grid",
+        "Lo Shu grid",
+        "Missing numbers and simple remedies"
+      ]
+    ],
+    "tiers": [
+      {
+        "k": "essential",
+        "t": "Essential",
+        "price": 1500,
+        "mins": 45,
+        "inc": [
+          "45-minute session",
+          "Moolank, Bhagyank and name number",
+          "Lucky dates for the year"
+        ]
+      },
+      {
+        "k": "detailed",
+        "t": "Detailed",
+        "price": 2500,
+        "mins": 60,
+        "rec": 1,
+        "inc": [
+          "Everything in Essential",
+          "Mobile number analysis",
+          "Name spelling options"
+        ]
+      },
+      {
+        "k": "premium",
+        "t": "Premium",
+        "price": 4100,
+        "mins": 60,
+        "inc": [
+          "Everything in Detailed",
+          "Business or brand name",
+          "Launch dates and signature guidance"
+        ]
+      }
+    ],
+    "samples": [
+      [
+        "grid",
+        "Your Lo Shu grid"
+      ],
+      [
+        "lines",
+        "Core numbers"
+      ],
+      [
+        "remedy",
+        "Name options"
+      ]
+    ],
+    "href": "Consultation-Detail.dc.html#s=numerology",
+    "book": "Booking.dc.html#s=numerology"
+  }
+]

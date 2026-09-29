@@ -1,0 +1,403 @@
+@import "tailwindcss";
+
+/* hi: — Devanagari overrides (no tracking, no italics, looser leading). Usage: hi:tracking-normal */
+@custom-variant hi (&:where(:lang(hi), :lang(hi) *));
+
+/* ==========================================================================
+   Maa Kali Astuti — design system
+   Source of truth: design/mka-core.js (M.C, M.EASE, M.INOUT, fx.scan) and the
+   helmet <style> of design/Home.dc.html 16–27 + Shop.dc.html 14–24.
+   ========================================================================== */
+
+@theme {
+  /* ---- colour tokens: M.C (mka-core.js 8) ---- */
+  --color-em9: #0e3b30;
+  --color-em7: #164e3f;
+  --color-em5: #1c6b54;
+  --color-em1: #e4eee8;
+  --color-n9: #0a1f1a;
+  --color-n8: #10302a;
+  --color-g5: #b8923a;
+  --color-g3: #d9b96a;
+  --color-g7: #7a5c1c;
+  --color-iv: #fbf7ee;
+  --color-s1: #f4eddd;
+  --color-s2: #eae0ca;
+  --color-ink: #1f2a24;
+  --color-ink6: #5b6a61;
+  --color-cu: #b8683d;
+  --color-sin: #a8322d;
+  --color-rose: #ebcfc9;
+  --color-ok: #2f7a4f;
+
+  /* ---- system tints (HANDOFF-NOTES "Palette") ---- */
+  --color-cream: #fffdf8; /* card / field surface */
+  --color-g1: #f6e7bc; /* pale gold text on night */
+  --color-g4: #e6cb86; /* gold hover */
+  --color-sg3: #c9d6cf; /* sage hairline on night */
+  --color-sg5: #9fb3aa; /* muted text on night */
+
+  /* ---- fonts (next/font variables set on <html>) ---- */
+  --font-display: var(--font-fraunces), "Fraunces", serif;
+  --font-sans: var(--font-manrope), var(--font-mukta), "Manrope", "Mukta", sans-serif;
+  --font-deva: var(--font-tiro), "Tiro Devanagari Hindi", serif;
+  --font-hi: var(--font-mukta), "Mukta", sans-serif;
+
+  /* ---- breakpoints (docs/DESIGN-INVENTORY.md §D). All rem so v4 sorts them. ---- */
+  --breakpoint-sm: 40rem; /* 640 */
+  --breakpoint-md: 48rem; /* 768 */
+  --breakpoint-w900: 56.25rem; /* 900 */
+  --breakpoint-lg: 64rem; /* 1024 */
+  --breakpoint-w1100: 68.75rem; /* 1100 */
+  --breakpoint-nav: 73.75rem; /* 1180 — full header */
+  --breakpoint-xl: 80rem; /* 1280 */
+  --breakpoint-2xl: 87.5rem; /* 1400 — Shop 4 cols */
+
+  /* ---- radii (design: 4px ×217, 999px ×191, 2px ×52, 3px ×22) ---- */
+  --radius-field: 2px;
+  --radius-3: 3px;
+  --radius-btn: 4px;
+  --radius-pill: 999px;
+
+  /* ---- shadows / hairlines (most-used design values) ---- */
+  --shadow-ring-gold: inset 0 0 0 1px rgba(217, 185, 106, 0.55);
+  --shadow-ring-gold-45: inset 0 0 0 1px rgba(217, 185, 106, 0.45);
+  --shadow-ring-gold-60: inset 0 0 0 1px rgba(217, 185, 106, 0.6);
+  --shadow-ring-g3: inset 0 0 0 1px #d9b96a;
+  --shadow-ring-g5: inset 0 0 0 1px #b8923a;
+  --shadow-ring-g5-55: inset 0 0 0 1px rgba(184, 146, 58, 0.55);
+  --shadow-ring-sand: inset 0 0 0 1px #eae0ca;
+  --shadow-ring-em: inset 0 0 0 1px #164e3f;
+  --shadow-ring-em-15: inset 0 0 0 1.5px #164e3f;
+  --shadow-ring-focus: inset 0 0 0 1.5px #1c6b54;
+  --shadow-ring-error: inset 0 0 0 1.5px #a8322d;
+  --shadow-hair-y: inset 0 1px 0 rgba(184, 146, 58, 0.35), inset 0 -1px 0 rgba(184, 146, 58, 0.35);
+  --shadow-hair-top: inset 0 1px 0 rgba(184, 146, 58, 0.35);
+  --shadow-hair-bottom: inset 0 -1px 0 #eae0ca;
+  --shadow-card: inset 0 0 0 1px #eae0ca, 0 18px 36px -18px rgba(14, 59, 48, 0.35);
+  --shadow-fly: 0 12px 32px -12px rgba(14, 59, 48, 0.4);
+
+  /* ---- easing: M.EASE / M.INOUT ---- */
+  --ease-mka: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-mka-inout: cubic-bezier(0.45, 0, 0.55, 1);
+  --ease-mka-exit: cubic-bezier(0.6, 0, 0.8, 0.4);
+  --ease-fly: cubic-bezier(0.5, 0, 0.2, 1);
+
+  /* ---- animations usable as utilities ---- */
+  --animate-marquee: mka-marquee 56s linear infinite;
+  --animate-spin-slow: amb-spin 60s linear infinite;
+}
+
+/* ==========================================================================
+   Base (Home.dc.html 16–27, Shop.dc.html 14–24 superset)
+   ========================================================================== */
+@layer base {
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+  }
+  body {
+    margin: 0;
+    /* ivory + paper grain (feTurbulence data-URI, 180px tile) */
+    background: #fbf7ee
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .16 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    color: #1f2a24;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  a {
+    color: #164e3f;
+  }
+  a:hover {
+    color: #1c6b54;
+  }
+  button,
+  input,
+  select,
+  textarea {
+    font-family: inherit;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  input[type="date"],
+  input[type="time"] {
+    -webkit-appearance: none;
+    appearance: none;
+  }
+  /* global focus ring: 2px gold, offset 2px */
+  :focus-visible {
+    outline: 2px solid #b8923a;
+    outline-offset: 2px;
+  }
+  ::selection {
+    background: #d9b96a;
+    color: #0e3b30;
+  }
+}
+
+/* ==========================================================================
+   Utilities
+   ========================================================================== */
+@utility container-mka {
+  /* max-width 1320 + side padding clamp(16px,4vw,32px) — the design's section wrapper */
+  max-width: 1320px;
+  margin-inline: auto;
+  padding-inline: clamp(16px, 4vw, 32px);
+}
+@utility section-y {
+  padding-block: clamp(56px, 8vw, 112px);
+}
+@utility font-soft {
+  font-variation-settings: "SOFT" 40;
+}
+@utility tabular {
+  font-variant-numeric: tabular-nums;
+}
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+@utility sr-only-focusable {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  &:focus,
+  &:focus-visible {
+    width: auto;
+    height: auto;
+    clip: auto;
+    overflow: visible;
+  }
+}
+
+/* ==========================================================================
+   Ambient motion — `data-amb="kind:n0:n1:…"` (mka-core.js fx.scan 465–481)
+   AmbientRoot parses the attribute into the CSS variables below and toggles
+   `data-amb-paused` (offscreen, rootMargin 120px) / html[data-tab-hidden].
+   ========================================================================== */
+[data-amb] {
+  animation-duration: var(--amb-dur, 3s);
+  animation-delay: var(--amb-delay, 0s);
+  animation-iteration-count: infinite;
+  animation-fill-mode: none;
+}
+[data-amb^="spin"] {
+  animation-name: amb-spin;
+  animation-timing-function: linear;
+  animation-direction: var(--amb-dir, normal);
+}
+[data-amb^="float"] {
+  animation-name: amb-float;
+  animation-timing-function: var(--ease-mka-inout);
+}
+[data-amb^="twinkle"] {
+  animation-name: amb-twinkle;
+  animation-timing-function: ease-in-out;
+}
+[data-amb^="glow"] {
+  animation-name: amb-glow;
+  animation-timing-function: var(--ease-mka-inout);
+}
+[data-amb^="flicker"] {
+  animation-name: amb-flicker;
+  animation-timing-function: ease-in-out;
+}
+[data-amb^="smoke"] {
+  animation-name: amb-smoke;
+  animation-timing-function: linear;
+}
+[data-amb^="pulse"] {
+  animation-name: amb-pulse;
+  animation-timing-function: ease-out;
+}
+[data-amb^="shoot"] {
+  animation-name: amb-shoot;
+  animation-timing-function: ease-in;
+}
+[data-amb^="draw"] {
+  animation-name: amb-draw;
+  animation-timing-function: var(--ease-mka-inout);
+  stroke-dasharray: 1;
+}
+/* AmbientRoot binds an element before it animates (so random/seeded params are in place) */
+[data-amb]:not([data-amb-on]) {
+  animation-name: none;
+}
+[data-amb-paused],
+html[data-tab-hidden] [data-amb],
+html[data-tab-hidden] [data-loop] {
+  animation-play-state: paused !important;
+}
+
+@keyframes amb-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes amb-float {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+  50% {
+    transform: translate3d(0, calc(var(--amb-y, 12px) * -1), 0) rotate(var(--amb-r, 4deg));
+  }
+}
+@keyframes amb-twinkle {
+  0%,
+  100% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+@keyframes amb-glow {
+  0%,
+  100% {
+    opacity: 0.45;
+  }
+  50% {
+    opacity: 0.9;
+  }
+}
+@keyframes amb-flicker {
+  0% {
+    transform: scale(1, 1) skewX(0deg);
+    opacity: 1;
+  }
+  13% {
+    transform: scale(0.94, 1.07) skewX(-3deg);
+    opacity: 0.92;
+  }
+  29% {
+    transform: scale(1.04, 0.95) skewX(2deg);
+    opacity: 1;
+  }
+  41% {
+    transform: scale(0.97, 1.08) skewX(-1.5deg);
+    opacity: 0.95;
+  }
+  60% {
+    transform: scale(1.02, 0.94) skewX(3deg);
+    opacity: 1;
+  }
+  78% {
+    transform: scale(0.96, 1.05) skewX(-2deg);
+    opacity: 0.9;
+  }
+  100% {
+    transform: scale(1, 1) skewX(0deg);
+    opacity: 1;
+  }
+}
+@keyframes amb-smoke {
+  0% {
+    transform: translateY(0) scaleX(1);
+    opacity: 0;
+  }
+  25% {
+    opacity: 0.5;
+  }
+  100% {
+    transform: translateY(-44px) scaleX(1.7);
+    opacity: 0;
+  }
+}
+@keyframes amb-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.55;
+  }
+  22%,
+  100% {
+    transform: scale(1.75);
+    opacity: 0;
+  }
+}
+@keyframes amb-shoot {
+  0% {
+    transform: translate(0, 0);
+    opacity: 0;
+  }
+  1.5% {
+    opacity: 1;
+  }
+  10%,
+  100% {
+    transform: translate(-280px, 170px);
+    opacity: 0;
+  }
+}
+@keyframes amb-draw {
+  0% {
+    stroke-dashoffset: 1;
+    opacity: 0;
+  }
+  35%,
+  85% {
+    stroke-dashoffset: 0;
+    opacity: 1;
+  }
+  100% {
+    stroke-dashoffset: 0;
+    opacity: 0;
+  }
+}
+@keyframes mka-marquee {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+/* Gold sheen CTA (Home hero primary): hover sweeps the gradient across */
+@utility sheen {
+  background-image: linear-gradient(
+    110deg,
+    rgba(217, 185, 106, 0) 40%,
+    rgba(217, 185, 106, 0.4) 50%,
+    rgba(217, 185, 106, 0) 60%
+  );
+  background-size: 260% 100%;
+  background-position: 100% 0;
+  background-repeat: no-repeat;
+  transition:
+    background-position 700ms var(--ease-mka),
+    transform 250ms var(--ease-mka);
+  &:hover {
+    background-position: 0 0;
+  }
+}
+
+/* ==========================================================================
+   Reduced motion (design superset): ambient loops off, transitions instant,
+   no smooth scroll. JS hooks render final states via useReducedMotion().
+   ========================================================================== */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

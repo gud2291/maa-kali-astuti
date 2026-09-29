@@ -1,0 +1,6 @@
+design/
+docs/
+public/
+src/lib/data/
+src/lib/art/
+pnpm-lock.yaml

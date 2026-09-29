@@ -5,3 +5,6 @@ docs/
 *.zip
 *.md
 !README.md
+scripts/
+.prettierrc.json
+.prettierignore

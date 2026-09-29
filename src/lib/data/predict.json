@@ -1,0 +1,55 @@
+{
+  "periods": [
+    [
+      "today",
+      "Today",
+      "आज"
+    ],
+    [
+      "tomorrow",
+      "Tomorrow",
+      "कल"
+    ],
+    [
+      "week",
+      "Weekly",
+      "साप्ताहिक"
+    ],
+    [
+      "month",
+      "Monthly",
+      "मासिक"
+    ],
+    [
+      "year",
+      "Yearly",
+      "वार्षिक"
+    ]
+  ],
+  "areas": [
+    [
+      "love",
+      "Love",
+      "प्रेम",
+      "heart"
+    ],
+    [
+      "career",
+      "Career",
+      "करियर",
+      "office"
+    ],
+    [
+      "health",
+      "Health",
+      "स्वास्थ्य",
+      "health"
+    ],
+    [
+      "finance",
+      "Finance",
+      "धन",
+      "coins"
+    ]
+  ]
+}

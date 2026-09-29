@@ -1,0 +1,362 @@
+[
+  {
+    "i": 0,
+    "key": "mesha",
+    "en": "Mesha",
+    "west": "Aries",
+    "hi": "मेष",
+    "lordHi": "Mangal",
+    "lord": "Mars",
+    "lordDev": "मंगल",
+    "el": "Fire",
+    "elHi": "अग्नि",
+    "start": [
+      4,
+      14
+    ],
+    "stone": "b-jasper",
+    "day": "Tuesday",
+    "dayHi": "मंगलवार",
+    "num": 9,
+    "colour": "Sindoor red",
+    "hex": "#A8322D",
+    "remedy": "Offer red flowers at a Hanuman temple on Tuesday and recite the Hanuman Chalisa once, slowly.",
+    "rud": [
+      "r3",
+      "r11"
+    ],
+    "amulet": "a-hanuman",
+    "dates": "14 Apr – 14 May",
+    "slug": "mesha"
+  },
+  {
+    "i": 1,
+    "key": "vrishabha",
+    "en": "Vrishabha",
+    "west": "Taurus",
+    "hi": "वृषभ",
+    "lordHi": "Shukra",
+    "lord": "Venus",
+    "lordDev": "शुक्र",
+    "el": "Earth",
+    "elHi": "पृथ्वी",
+    "start": [
+      5,
+      15
+    ],
+    "stone": "b-jade",
+    "day": "Friday",
+    "dayHi": "शुक्रवार",
+    "num": 6,
+    "colour": "Ivory white",
+    "hex": "#F4EDDD",
+    "remedy": "On Friday, offer white sweets to Maa Lakshmi and recite “Om Shukraya Namah” 108 times.",
+    "rud": [
+      "r6",
+      "r13"
+    ],
+    "amulet": "a-durga",
+    "dates": "15 May – 14 Jun",
+    "slug": "vrishabha"
+  },
+  {
+    "i": 2,
+    "key": "mithuna",
+    "en": "Mithuna",
+    "west": "Gemini",
+    "hi": "मिथुन",
+    "lordHi": "Budh",
+    "lord": "Mercury",
+    "lordDev": "बुध",
+    "el": "Air",
+    "elHi": "वायु",
+    "start": [
+      6,
+      15
+    ],
+    "stone": "b-citrine",
+    "day": "Wednesday",
+    "dayHi": "बुधवार",
+    "num": 5,
+    "colour": "Tulsi green",
+    "hex": "#1C6B54",
+    "remedy": "Feed green moong to a cow on Wednesday and recite “Om Budhaya Namah” 108 times.",
+    "rud": [
+      "r4",
+      "r10"
+    ],
+    "amulet": "a-vidya",
+    "dates": "15 Jun – 15 Jul",
+    "slug": "mithuna"
+  },
+  {
+    "i": 3,
+    "key": "karka",
+    "en": "Karka",
+    "west": "Cancer",
+    "hi": "कर्क",
+    "lordHi": "Chandra",
+    "lord": "Moon",
+    "lordDev": "चंद्र",
+    "el": "Water",
+    "elHi": "जल",
+    "start": [
+      7,
+      16
+    ],
+    "stone": "b-moon",
+    "day": "Monday",
+    "dayHi": "सोमवार",
+    "num": 2,
+    "colour": "Pearl white",
+    "hex": "#E7E9EB",
+    "remedy": "Offer water mixed with a little raw milk to a Shivling on Monday morning.",
+    "rud": [
+      "r2",
+      "r5"
+    ],
+    "amulet": "a-durga",
+    "dates": "16 Jul – 16 Aug",
+    "slug": "karka"
+  },
+  {
+    "i": 4,
+    "key": "simha",
+    "en": "Simha",
+    "west": "Leo",
+    "hi": "सिंह",
+    "lordHi": "Surya",
+    "lord": "Sun",
+    "lordDev": "सूर्य",
+    "el": "Fire",
+    "elHi": "अग्नि",
+    "start": [
+      8,
+      17
+    ],
+    "stone": "b-tiger",
+    "day": "Sunday",
+    "dayHi": "रविवार",
+    "num": 1,
+    "colour": "Saffron",
+    "hex": "#C9772E",
+    "remedy": "Offer water to the rising Sun from a copper lota and recite the Gayatri mantra 11 times.",
+    "rud": [
+      "r12",
+      "r5"
+    ],
+    "amulet": "a-bagla",
+    "dates": "17 Aug – 16 Sep",
+    "slug": "simha"
+  },
+  {
+    "i": 5,
+    "key": "kanya",
+    "en": "Kanya",
+    "west": "Virgo",
+    "hi": "कन्या",
+    "lordHi": "Budh",
+    "lord": "Mercury",
+    "lordDev": "बुध",
+    "el": "Earth",
+    "elHi": "पृथ्वी",
+    "start": [
+      9,
+      17
+    ],
+    "stone": "b-quartz",
+    "day": "Wednesday",
+    "dayHi": "बुधवार",
+    "num": 5,
+    "colour": "Tulsi green",
+    "hex": "#1C6B54",
+    "remedy": "Feed green moong to a cow on Wednesday and recite “Om Budhaya Namah” 108 times.",
+    "rud": [
+      "r4",
+      "r10"
+    ],
+    "amulet": "a-vidya",
+    "dates": "17 Sep – 16 Oct",
+    "slug": "kanya"
+  },
+  {
+    "i": 6,
+    "key": "tula",
+    "en": "Tula",
+    "west": "Libra",
+    "hi": "तुला",
+    "lordHi": "Shukra",
+    "lord": "Venus",
+    "lordDev": "शुक्र",
+    "el": "Air",
+    "elHi": "वायु",
+    "start": [
+      10,
+      17
+    ],
+    "stone": "b-rose",
+    "day": "Friday",
+    "dayHi": "शुक्रवार",
+    "num": 6,
+    "colour": "Ivory white",
+    "hex": "#F4EDDD",
+    "remedy": "On Friday, offer white sweets to Maa Lakshmi and recite “Om Shukraya Namah” 108 times.",
+    "rud": [
+      "r6",
+      "r13"
+    ],
+    "amulet": "a-durga",
+    "dates": "17 Oct – 15 Nov",
+    "slug": "tula"
+  },
+  {
+    "i": 7,
+    "key": "vrishchika",
+    "en": "Vrishchika",
+    "west": "Scorpio",
+    "hi": "वृश्चिक",
+    "lordHi": "Mangal",
+    "lord": "Mars",
+    "lordDev": "मंगल",
+    "el": "Water",
+    "elHi": "जल",
+    "start": [
+      11,
+      16
+    ],
+    "stone": "b-garnet",
+    "day": "Tuesday",
+    "dayHi": "मंगलवार",
+    "num": 9,
+    "colour": "Sindoor red",
+    "hex": "#A8322D",
+    "remedy": "Offer red flowers at a Hanuman temple on Tuesday and recite the Hanuman Chalisa once, slowly.",
+    "rud": [
+      "r3",
+      "r11"
+    ],
+    "amulet": "a-hanuman",
+    "dates": "16 Nov – 15 Dec",
+    "slug": "vrishchika"
+  },
+  {
+    "i": 8,
+    "key": "dhanu",
+    "en": "Dhanu",
+    "west": "Sagittarius",
+    "hi": "धनु",
+    "lordHi": "Guru",
+    "lord": "Jupiter",
+    "lordDev": "गुरु",
+    "el": "Fire",
+    "elHi": "अग्नि",
+    "start": [
+      12,
+      16
+    ],
+    "stone": "b-lapis",
+    "day": "Thursday",
+    "dayHi": "गुरुवार",
+    "num": 3,
+    "colour": "Turmeric yellow",
+    "hex": "#E0A63A",
+    "remedy": "Apply a turmeric tilak on Thursday, offer chana dal at a temple and recite “Om Gurave Namah” 108 times.",
+    "rud": [
+      "r5",
+      "m5"
+    ],
+    "amulet": "a-bagla",
+    "dates": "16 Dec – 13 Jan",
+    "slug": "dhanu"
+  },
+  {
+    "i": 9,
+    "key": "makara",
+    "en": "Makara",
+    "west": "Capricorn",
+    "hi": "मकर",
+    "lordHi": "Shani",
+    "lord": "Saturn",
+    "lordDev": "शनि",
+    "el": "Earth",
+    "elHi": "पृथ्वी",
+    "start": [
+      1,
+      14
+    ],
+    "stone": "b-pyrite",
+    "day": "Saturday",
+    "dayHi": "शनिवार",
+    "num": 8,
+    "colour": "Charcoal",
+    "hex": "#3A3835",
+    "remedy": "Light a sesame-oil diya under a peepal tree on Saturday evening and sit quietly for a few minutes.",
+    "rud": [
+      "r7",
+      "r14"
+    ],
+    "amulet": "a-bhairav",
+    "dates": "14 Jan – 12 Feb",
+    "slug": "makara"
+  },
+  {
+    "i": 10,
+    "key": "kumbha",
+    "en": "Kumbha",
+    "west": "Aquarius",
+    "hi": "कुंभ",
+    "lordHi": "Shani",
+    "lord": "Saturn",
+    "lordDev": "शनि",
+    "el": "Air",
+    "elHi": "वायु",
+    "start": [
+      2,
+      13
+    ],
+    "stone": "b-tourmaline",
+    "day": "Saturday",
+    "dayHi": "शनिवार",
+    "num": 8,
+    "colour": "Charcoal",
+    "hex": "#3A3835",
+    "remedy": "Light a sesame-oil diya under a peepal tree on Saturday evening and sit quietly for a few minutes.",
+    "rud": [
+      "r7",
+      "r14"
+    ],
+    "amulet": "a-bhairav",
+    "dates": "13 Feb – 13 Mar",
+    "slug": "kumbha"
+  },
+  {
+    "i": 11,
+    "key": "meena",
+    "en": "Meena",
+    "west": "Pisces",
+    "hi": "मीन",
+    "lordHi": "Guru",
+    "lord": "Jupiter",
+    "lordDev": "गुरु",
+    "el": "Water",
+    "elHi": "जल",
+    "start": [
+      3,
+      14
+    ],
+    "stone": "b-amethyst",
+    "day": "Thursday",
+    "dayHi": "गुरुवार",
+    "num": 3,
+    "colour": "Turmeric yellow",
+    "hex": "#E0A63A",
+    "remedy": "Apply a turmeric tilak on Thursday, offer chana dal at a temple and recite “Om Gurave Namah” 108 times.",
+    "rud": [
+      "r5",
+      "m5"
+    ],
+    "amulet": "a-bagla",
+    "dates": "14 Mar – 13 Apr",
+    "slug": "meena"
+  }
+]

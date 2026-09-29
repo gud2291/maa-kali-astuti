@@ -1,0 +1,1052 @@
+[
+  {
+    "id": "r2",
+    "cat": "rudraksha",
+    "sub": "2",
+    "mukhi": 2,
+    "name": "2 Mukhi Rudraksha",
+    "hi": "दो मुखी रुद्राक्ष",
+    "price": 551,
+    "mrp": 799,
+    "intent": "Harmony & Relationships",
+    "ik": "love",
+    "art": {
+      "t": "bead",
+      "m": 2
+    },
+    "stock": 14,
+    "badges": [
+      "energized"
+    ],
+    "rating": 4.6,
+    "reviews": 96,
+    "date": 18,
+    "pop": 441.59999999999997,
+    "catName": "Rudraksha & Malas",
+    "slug": "2-mukhi-rudraksha"
+  },
+  {
+    "id": "r3",
+    "cat": "rudraksha",
+    "sub": "3",
+    "mukhi": 3,
+    "name": "3 Mukhi Rudraksha",
+    "hi": "तीन मुखी रुद्राक्ष",
+    "price": 451,
+    "mrp": 699,
+    "intent": "Confidence & Release",
+    "ik": "courage",
+    "art": {
+      "t": "bead",
+      "m": 3
+    },
+    "stock": 14,
+    "badges": [
+      "energized"
+    ],
+    "rating": 4.6,
+    "reviews": 110,
+    "date": 17,
+    "pop": 505.99999999999994,
+    "catName": "Rudraksha & Malas",
+    "slug": "3-mukhi-rudraksha"
+  },
+  {
+    "id": "r4",
+    "cat": "rudraksha",
+    "sub": "4",
+    "mukhi": 4,
+    "name": "4 Mukhi Rudraksha",
+    "hi": "चार मुखी रुद्राक्ष",
+    "price": 451,
+    "mrp": 699,
+    "intent": "Learning & Focus",
+    "ik": "clarity",
+    "art": {
+      "t": "bead",
+      "m": 4
+    },
+    "stock": 14,
+    "badges": [
+      "energized"
+    ],
+    "rating": 4.6,
+    "reviews": 123,
+    "date": 16,
+    "pop": 565.8,
+    "catName": "Rudraksha & Malas",
+    "slug": "4-mukhi-rudraksha"
+  },
+  {
+    "id": "r5",
+    "cat": "rudraksha",
+    "sub": "5",
+    "mukhi": 5,
+    "name": "5 Mukhi Rudraksha",
+    "hi": "पंच मुखी रुद्राक्ष",
+    "price": 351,
+    "mrp": 549,
+    "intent": "Peace & Health",
+    "ik": "peace",
+    "art": {
+      "t": "bead",
+      "m": 5
+    },
+    "stock": 40,
+    "badges": [
+      "bestseller",
+      "energized"
+    ],
+    "rating": 4.8,
+    "reviews": 126,
+    "date": 15,
+    "pop": 604.8,
+    "catName": "Rudraksha & Malas",
+    "slug": "5-mukhi-rudraksha"
+  },
+  {
+    "id": "r6",
+    "cat": "rudraksha",
+    "sub": "6",
+    "mukhi": 6,
+    "name": "6 Mukhi Rudraksha",
+    "hi": "छह मुखी रुद्राक्ष",
+    "price": 551,
+    "mrp": 799,
+    "intent": "Courage & Willpower",
+    "ik": "courage",
+    "art": {
+      "t": "bead",
+      "m": 6
+    },
+    "stock": 14,
+    "badges": [
+      "energized"
+    ],
+    "rating": 4.6,
+    "reviews": 151,
+    "date": 14,
+    "pop": 694.5999999999999,
+    "catName": "Rudraksha & Malas",
+    "slug": "6-mukhi-rudraksha"
+  },
+  {
+    "id": "r7",
+    "cat": "rudraksha",
+    "sub": "7",
+    "mukhi": 7,
+    "name": "7 Mukhi Rudraksha",
+    "hi": "सात मुखी रुद्राक्ष",
+    "price": 751,
+    "mrp": 1099,
+    "intent": "Wealth & Abundance",
+    "ik": "wealth",
+    "art": {
+      "t": "bead",
+      "m": 7
+    },
+    "stock": 14,
+    "badges": [
+      "energized"
+    ],
+    "rating": 4.6,
+    "reviews": 164,
+    "date": 13,
+    "pop": 754.4,
+    "catName": "Rudraksha & Malas",
+    "slug": "7-mukhi-rudraksha"
+  },
+  {
+    "id": "r8",
+    "cat": "rudraksha",
+    "sub": "8",
+    "mukhi": 8,
+    "name": "8 Mukhi Rudraksha",
+    "hi": "आठ मुखी रुद्राक्ष",
+    "price": 1250,
+    "mrp": 1799,
+    "intent": "Removing Obstacles",
+    "ik": "clarity",
+    "art": {
+      "t": "bead",
+      "m": 8
+    },
+    "stock": 14,
+    "badges": [
+      "energized"
+    ],
+    "rating": 4.6,
+    "reviews": 28,
+    "date": 12,
+    "pop": 128.79999999999998,
+    "catName": "Rudraksha & Malas",
+    "slug": "8-mukhi-rudraksha"
+  },
+  {
+    "id": "r9",
+    "cat": "rudraksha",
+    "sub": "9",
+    "mukhi": 9,
+    "name": "9 Mukhi Rudraksha",
+    "hi": "नौ मुखी रुद्राक्ष",
+    "price": 1850,
+    "mrp": 2499,
+    "intent": "Shakti & Fearlessness",
+    "ik": "protection",
+    "art": {
+      "t": "bead",
+      "m": 9
+    },
+    "stock": 14,
+    "badges": [
+      "energized"
+    ],
+    "rating": 4.6,
+    "reviews": 42,
+    "date": 11,
+    "pop": 193.2,
+    "catName": "Rudraksha & Malas",
+    "slug": "9-mukhi-rudraksha"
+  },
+  {
+    "id": "r10",
+    "cat": "rudraksha",
+    "sub": "10",
+    "mukhi": 10,
+    "name": "10 Mukhi Rudraksha",
+    "hi": "दस मुखी रुद्राक्ष",
+    "price": 2100,
+    "mrp": 2999,
+    "intent": "Protection from Negativity",
+    "ik": "protection",
+    "art": {
+      "t": "bead",
+      "m": 10
+    },
+    "stock": 14,
+    "badges": [
+      "energized"
+    ],
+    "rating": 4.5,
+    "reviews": 87,
+    "date": 10,
+    "pop": 391.5,
+    "catName": "Rudraksha & Malas",
+    "slug": "10-mukhi-rudraksha"
+  },
+  {
+    "id": "r11",
+    "cat": "rudraksha",
+    "sub": "11",
+    "mukhi": 11,
+    "name": "11 Mukhi Rudraksha",
+    "hi": "ग्यारह मुखी रुद्राक्ष",
+    "price": 3100,
+    "mrp": 4199,
+    "intent": "Courage & Wisdom",
+    "ik": "courage",
+    "art": {
+      "t": "bead",
+      "m": 11
+    },
+    "stock": 14,
+    "badges": [
+      "energized"
+    ],
+    "rating": 4.5,
+    "reviews": 101,
+    "date": 9,
+    "pop": 454.5,
+    "catName": "Rudraksha & Malas",
+    "slug": "11-mukhi-rudraksha"
+  },
+  {
+    "id": "r12",
+    "cat": "rudraksha",
+    "sub": "12",
+    "mukhi": 12,
+    "name": "12 Mukhi Rudraksha",
+    "hi": "बारह मुखी रुद्राक्ष",
+    "price": 4100,
+    "mrp": 5499,
+    "intent": "Leadership & Radiance",
+    "ik": "courage",
+    "art": {
+      "t": "bead",
+      "m": 12
+    },
+    "stock": 0,
+    "badges": [
+      "energized"
+    ],
+    "rating": 4.5,
+    "reviews": 114,
+    "date": 8,
+    "pop": 513,
+    "catName": "Rudraksha & Malas",
+    "slug": "12-mukhi-rudraksha"
+  },
+  {
+    "id": "r13",
+    "cat": "rudraksha",
+    "sub": "13",
+    "mukhi": 13,
+    "name": "13 Mukhi Rudraksha",
+    "hi": "तेरह मुखी रुद्राक्ष",
+    "price": 6100,
+    "mrp": 7999,
+    "intent": "Attraction & Fulfilment",
+    "ik": "love",
+    "art": {
+      "t": "bead",
+      "m": 13
+    },
+    "stock": 2,
+    "badges": [
+      "energized"
+    ],
+    "rating": 4.5,
+    "reviews": 128,
+    "date": 7,
+    "pop": 576,
+    "catName": "Rudraksha & Malas",
+    "slug": "13-mukhi-rudraksha"
+  },
+  {
+    "id": "r14",
+    "cat": "rudraksha",
+    "sub": "14",
+    "mukhi": 14,
+    "name": "14 Mukhi Rudraksha",
+    "hi": "चौदह मुखी रुद्राक्ष",
+    "price": 11000,
+    "mrp": 13999,
+    "intent": "Intuition & Protection",
+    "ik": "protection",
+    "art": {
+      "t": "bead",
+      "m": 14
+    },
+    "stock": 1,
+    "badges": [
+      "rare"
+    ],
+    "rating": 4.5,
+    "reviews": 141,
+    "date": 6,
+    "pop": 634.5,
+    "catName": "Rudraksha & Malas",
+    "slug": "14-mukhi-rudraksha"
+  },
+  {
+    "id": "m5",
+    "cat": "rudraksha",
+    "sub": "malas",
+    "name": "5 Mukhi Rudraksha Mala",
+    "hi": "पंचमुखी रुद्राक्ष माला",
+    "price": 1100,
+    "mrp": 1499,
+    "rating": 4.8,
+    "reviews": 212,
+    "intent": "Japa & Peace",
+    "ik": "peace",
+    "badges": [
+      "bestseller"
+    ],
+    "stock": 22,
+    "art": {
+      "t": "mala",
+      "m": 5
+    },
+    "date": 9,
+    "pop": 1017.5999999999999,
+    "catName": "Rudraksha & Malas",
+    "slug": "5-mukhi-rudraksha-mala"
+  },
+  {
+    "id": "m7",
+    "cat": "rudraksha",
+    "sub": "malas",
+    "name": "7 Mukhi Rudraksha Mala",
+    "hi": "सातमुखी रुद्राक्ष माला",
+    "price": 3100,
+    "mrp": 3999,
+    "rating": 4.9,
+    "reviews": 64,
+    "intent": "Wealth & Abundance",
+    "ik": "wealth",
+    "badges": [
+      "energized"
+    ],
+    "stock": 4,
+    "art": {
+      "t": "mala",
+      "m": 7
+    },
+    "date": 30,
+    "pop": 313.6,
+    "catName": "Rudraksha & Malas",
+    "slug": "7-mukhi-rudraksha-mala"
+  },
+  {
+    "id": "b-pyrite",
+    "cat": "bracelets",
+    "stone": "pyrite",
+    "stoneName": "Pyrite",
+    "name": "Pyrite Bracelet",
+    "hi": "पायराइट ब्रेसलेट",
+    "price": 899,
+    "mrp": 1499,
+    "intent": "Wealth & Abundance",
+    "ik": "wealth",
+    "badges": [
+      "bestseller"
+    ],
+    "rating": 4.7,
+    "reviews": 318,
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "stock": 20,
+    "art": {
+      "t": "bracelet",
+      "s": "pyrite"
+    },
+    "date": 4,
+    "pop": 1494.6000000000001,
+    "catName": "Crystal Bracelets",
+    "slug": "pyrite-bracelet"
+  },
+  {
+    "id": "b-citrine",
+    "cat": "bracelets",
+    "stone": "citrine",
+    "stoneName": "Citrine",
+    "name": "Citrine Bracelet",
+    "hi": "सिट्रीन ब्रेसलेट",
+    "price": 1099,
+    "mrp": 1799,
+    "intent": "Success & Joy",
+    "ik": "wealth",
+    "badges": [],
+    "rating": 4.7,
+    "reviews": 23,
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "stock": 20,
+    "art": {
+      "t": "bracelet",
+      "s": "citrine"
+    },
+    "date": 12,
+    "pop": 108.10000000000001,
+    "catName": "Crystal Bracelets",
+    "slug": "citrine-bracelet"
+  },
+  {
+    "id": "b-jade",
+    "cat": "bracelets",
+    "stone": "jade",
+    "stoneName": "Green Jade",
+    "name": "Green Jade Bracelet",
+    "hi": "ग्रीन जेड ब्रेसलेट",
+    "price": 899,
+    "mrp": 1399,
+    "intent": "Prosperity & Harmony",
+    "ik": "wealth",
+    "badges": [],
+    "rating": 4.5,
+    "reviews": 60,
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "stock": 20,
+    "art": {
+      "t": "bracelet",
+      "s": "jade"
+    },
+    "date": 18,
+    "pop": 270,
+    "catName": "Crystal Bracelets",
+    "slug": "green-jade-bracelet"
+  },
+  {
+    "id": "b-tourmaline",
+    "cat": "bracelets",
+    "stone": "tourmaline",
+    "stoneName": "Black Tourmaline",
+    "name": "Black Tourmaline Bracelet",
+    "hi": "ब्लैक टूमलाइन ब्रेसलेट",
+    "price": 999,
+    "mrp": 1599,
+    "intent": "Negative Energy Protection",
+    "ik": "protection",
+    "badges": [
+      "energized"
+    ],
+    "rating": 4.8,
+    "reviews": 187,
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "stock": 20,
+    "art": {
+      "t": "bracelet",
+      "s": "tourmaline"
+    },
+    "date": 7,
+    "pop": 897.6,
+    "catName": "Crystal Bracelets",
+    "slug": "black-tourmaline-bracelet"
+  },
+  {
+    "id": "b-tiger",
+    "cat": "bracelets",
+    "stone": "tiger",
+    "stoneName": "Tiger Eye",
+    "name": "Tiger Eye Bracelet",
+    "hi": "टाइगर आई ब्रेसलेट",
+    "price": 849,
+    "mrp": 1399,
+    "intent": "Courage & Focus",
+    "ik": "courage",
+    "badges": [],
+    "rating": 4.6,
+    "reviews": 158,
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "stock": 20,
+    "art": {
+      "t": "bracelet",
+      "s": "tiger"
+    },
+    "date": 22,
+    "pop": 726.8,
+    "catName": "Crystal Bracelets",
+    "slug": "tiger-eye-bracelet"
+  },
+  {
+    "id": "b-rose",
+    "cat": "bracelets",
+    "stone": "rose",
+    "stoneName": "Rose Quartz",
+    "name": "Rose Quartz Bracelet",
+    "hi": "रोज़ क्वार्ट्ज़ ब्रेसलेट",
+    "price": 799,
+    "mrp": 1299,
+    "intent": "Love & Relationships",
+    "ik": "love",
+    "badges": [
+      "bestseller"
+    ],
+    "rating": 4.8,
+    "reviews": 204,
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "stock": 20,
+    "art": {
+      "t": "bracelet",
+      "s": "rose"
+    },
+    "date": 6,
+    "pop": 979.1999999999999,
+    "catName": "Crystal Bracelets",
+    "slug": "rose-quartz-bracelet"
+  },
+  {
+    "id": "b-amethyst",
+    "cat": "bracelets",
+    "stone": "amethyst",
+    "stoneName": "Amethyst",
+    "name": "Amethyst Bracelet",
+    "hi": "एमेथिस्ट ब्रेसलेट",
+    "price": 999,
+    "mrp": 1699,
+    "intent": "Intuition & Peace",
+    "ik": "peace",
+    "badges": [],
+    "rating": 4.8,
+    "reviews": 62,
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "stock": 20,
+    "art": {
+      "t": "bracelet",
+      "s": "amethyst"
+    },
+    "date": 15,
+    "pop": 297.59999999999997,
+    "catName": "Crystal Bracelets",
+    "slug": "amethyst-bracelet"
+  },
+  {
+    "id": "b-chakra",
+    "cat": "bracelets",
+    "stone": "chakra",
+    "stoneName": "Seven Chakra",
+    "name": "Seven Chakra Bracelet",
+    "hi": "सप्त चक्र ब्रेसलेट",
+    "price": 749,
+    "mrp": 1199,
+    "intent": "Chakra Balancing",
+    "ik": "health",
+    "badges": [
+      "new"
+    ],
+    "rating": 4.6,
+    "reviews": 49,
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "stock": 20,
+    "art": {
+      "t": "bracelet",
+      "s": "chakra"
+    },
+    "date": 2,
+    "pop": 225.39999999999998,
+    "catName": "Crystal Bracelets",
+    "slug": "seven-chakra-bracelet"
+  },
+  {
+    "id": "b-quartz",
+    "cat": "bracelets",
+    "stone": "quartz",
+    "stoneName": "Clear Quartz",
+    "name": "Clear Quartz Bracelet",
+    "hi": "क्लियर क्वार्ट्ज़ ब्रेसलेट",
+    "price": 799,
+    "mrp": 1299,
+    "intent": "Master Healer & Clarity",
+    "ik": "clarity",
+    "badges": [],
+    "rating": 4.9,
+    "reviews": 37,
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "stock": 20,
+    "art": {
+      "t": "bracelet",
+      "s": "quartz"
+    },
+    "date": 26,
+    "pop": 181.3,
+    "catName": "Crystal Bracelets",
+    "slug": "clear-quartz-bracelet"
+  },
+  {
+    "id": "b-lapis",
+    "cat": "bracelets",
+    "stone": "lapis",
+    "stoneName": "Lapis Lazuli",
+    "name": "Lapis Lazuli Bracelet",
+    "hi": "लैपिस लाज़ुली ब्रेसलेट",
+    "price": 1199,
+    "mrp": 1899,
+    "intent": "Wisdom & Truth",
+    "ik": "clarity",
+    "badges": [],
+    "rating": 4.9,
+    "reviews": 147,
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "stock": 3,
+    "art": {
+      "t": "bracelet",
+      "s": "lapis"
+    },
+    "date": 11,
+    "pop": 720.3000000000001,
+    "catName": "Crystal Bracelets",
+    "slug": "lapis-lazuli-bracelet"
+  },
+  {
+    "id": "b-moon",
+    "cat": "bracelets",
+    "stone": "moon",
+    "stoneName": "Moonstone",
+    "name": "Moonstone Bracelet",
+    "hi": "मूनस्टोन ब्रेसलेट",
+    "price": 1099,
+    "mrp": 1799,
+    "intent": "Emotional Balance & Intuition",
+    "ik": "peace",
+    "badges": [
+      "new"
+    ],
+    "rating": 4.5,
+    "reviews": 142,
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "stock": 20,
+    "art": {
+      "t": "bracelet",
+      "s": "moon"
+    },
+    "date": 3,
+    "pop": 639,
+    "catName": "Crystal Bracelets",
+    "slug": "moonstone-bracelet"
+  },
+  {
+    "id": "b-garnet",
+    "cat": "bracelets",
+    "stone": "garnet",
+    "stoneName": "Garnet",
+    "name": "Garnet Bracelet",
+    "hi": "गार्नेट ब्रेसलेट",
+    "price": 1299,
+    "mrp": 1999,
+    "intent": "Passion & Energy",
+    "ik": "love",
+    "badges": [],
+    "rating": 4.6,
+    "reviews": 147,
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "stock": 20,
+    "art": {
+      "t": "bracelet",
+      "s": "garnet"
+    },
+    "date": 19,
+    "pop": 676.1999999999999,
+    "catName": "Crystal Bracelets",
+    "slug": "garnet-bracelet"
+  },
+  {
+    "id": "b-blood",
+    "cat": "bracelets",
+    "stone": "blood",
+    "stoneName": "Bloodstone",
+    "name": "Bloodstone Bracelet",
+    "hi": "ब्लडस्टोन ब्रेसलेट",
+    "price": 999,
+    "mrp": 1599,
+    "intent": "Vitality & Strength",
+    "ik": "health",
+    "badges": [],
+    "rating": 4.7,
+    "reviews": 108,
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "stock": 20,
+    "art": {
+      "t": "bracelet",
+      "s": "blood"
+    },
+    "date": 24,
+    "pop": 507.6,
+    "catName": "Crystal Bracelets",
+    "slug": "bloodstone-bracelet"
+  },
+  {
+    "id": "b-jasper",
+    "cat": "bracelets",
+    "stone": "jasper",
+    "stoneName": "Red Jasper",
+    "name": "Red Jasper Bracelet",
+    "hi": "रेड जैस्पर ब्रेसलेट",
+    "price": 699,
+    "mrp": 999,
+    "intent": "Grounding & Stability",
+    "ik": "courage",
+    "badges": [],
+    "rating": 4.7,
+    "reviews": 98,
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "stock": 20,
+    "art": {
+      "t": "bracelet",
+      "s": "jasper"
+    },
+    "date": 28,
+    "pop": 460.6,
+    "catName": "Crystal Bracelets",
+    "slug": "red-jasper-bracelet"
+  },
+  {
+    "id": "b-malachite",
+    "cat": "bracelets",
+    "stone": "malachite",
+    "stoneName": "Malachite",
+    "name": "Malachite Bracelet",
+    "hi": "मैलाकाइट ब्रेसलेट",
+    "price": 1199,
+    "mrp": 1799,
+    "intent": "Transformation & Protection",
+    "ik": "protection",
+    "badges": [
+      "new"
+    ],
+    "rating": 4.8,
+    "reviews": 127,
+    "sizes": [
+      "S",
+      "M",
+      "L"
+    ],
+    "stock": 20,
+    "art": {
+      "t": "bracelet",
+      "s": "malachite"
+    },
+    "date": 1,
+    "pop": 609.6,
+    "catName": "Crystal Bracelets",
+    "slug": "malachite-bracelet"
+  },
+  {
+    "id": "a-bagla",
+    "cat": "amulets",
+    "name": "Maa Baglamukhi Amulet",
+    "hi": "माँ बगलामुखी कवच",
+    "price": 2100,
+    "mrp": 2700,
+    "intent": "Victory & Protection",
+    "ik": "protection",
+    "badges": [
+      "energized"
+    ],
+    "rating": 4.9,
+    "reviews": 96,
+    "stock": 16,
+    "art": {
+      "t": "amulet",
+      "th": "yellow"
+    },
+    "date": 5,
+    "pop": 470.40000000000003,
+    "catName": "Sacred Amulets on Bhojpatra",
+    "slug": "maa-baglamukhi-amulet"
+  },
+  {
+    "id": "a-hanuman",
+    "cat": "amulets",
+    "name": "Hanuman Amulet",
+    "hi": "हनुमान कवच",
+    "price": 1100,
+    "mrp": 1500,
+    "intent": "Courage & Sankat Mochan",
+    "ik": "courage",
+    "badges": [
+      "energized"
+    ],
+    "rating": 4.5,
+    "reviews": 107,
+    "stock": 16,
+    "art": {
+      "t": "amulet",
+      "th": "saffron"
+    },
+    "date": 14,
+    "pop": 481.5,
+    "catName": "Sacred Amulets on Bhojpatra",
+    "slug": "hanuman-amulet"
+  },
+  {
+    "id": "a-durga",
+    "cat": "amulets",
+    "name": "Durga Amulet",
+    "hi": "दुर्गा कवच",
+    "price": 1500,
+    "mrp": 1999,
+    "intent": "Universal Divine Shield",
+    "ik": "protection",
+    "badges": [
+      "energized"
+    ],
+    "rating": 4.5,
+    "reviews": 159,
+    "stock": 16,
+    "art": {
+      "t": "amulet",
+      "th": "red"
+    },
+    "date": 21,
+    "pop": 715.5,
+    "catName": "Sacred Amulets on Bhojpatra",
+    "slug": "durga-amulet"
+  },
+  {
+    "id": "a-kali",
+    "cat": "amulets",
+    "name": "Mahakali Amulet",
+    "hi": "महाकाली कवच",
+    "price": 2100,
+    "mrp": 2700,
+    "intent": "Destroyer of Negativity & Dark Forces",
+    "ik": "protection",
+    "badges": [
+      "energized"
+    ],
+    "rating": 4.7,
+    "reviews": 94,
+    "stock": 16,
+    "art": {
+      "t": "amulet",
+      "th": "black"
+    },
+    "date": 8,
+    "pop": 441.8,
+    "catName": "Sacred Amulets on Bhojpatra",
+    "slug": "mahakali-amulet"
+  },
+  {
+    "id": "a-vidya",
+    "cat": "amulets",
+    "name": "Mahavidya Amulet",
+    "hi": "महाविद्या कवच",
+    "price": 2100,
+    "mrp": 2700,
+    "intent": "Supreme Occult Knowledge & Power",
+    "ik": "clarity",
+    "badges": [
+      "energized"
+    ],
+    "rating": 4.9,
+    "reviews": 67,
+    "stock": 5,
+    "art": {
+      "t": "amulet",
+      "th": "redblack"
+    },
+    "date": 27,
+    "pop": 328.3,
+    "catName": "Sacred Amulets on Bhojpatra",
+    "slug": "mahavidya-amulet"
+  },
+  {
+    "id": "a-bhairav",
+    "cat": "amulets",
+    "name": "Bhairav Amulet",
+    "hi": "भैरव कवच",
+    "price": 1500,
+    "mrp": 1999,
+    "intent": "Fearlessness & Fierce Protection",
+    "ik": "courage",
+    "badges": [
+      "energized"
+    ],
+    "rating": 4.6,
+    "reviews": 50,
+    "stock": 16,
+    "art": {
+      "t": "amulet",
+      "th": "black"
+    },
+    "date": 16,
+    "pop": 229.99999999999997,
+    "catName": "Sacred Amulets on Bhojpatra",
+    "slug": "bhairav-amulet"
+  },
+  {
+    "id": "a-child",
+    "cat": "amulets",
+    "name": "Child Evil Eye Protection Amulet",
+    "hi": "बालमुखी · बुरी नज़र कवच",
+    "price": 1100,
+    "mrp": 1500,
+    "intent": "Balamukhi / Buri Nazar Kavach",
+    "ik": "protection",
+    "badges": [
+      "bestseller"
+    ],
+    "rating": 4.9,
+    "reviews": 158,
+    "stock": 16,
+    "art": {
+      "t": "amulet",
+      "th": "blackred"
+    },
+    "date": 10,
+    "pop": 774.2,
+    "catName": "Sacred Amulets on Bhojpatra",
+    "slug": "child-evil-eye-protection-amulet"
+  },
+  {
+    "id": "havan",
+    "cat": "havan",
+    "name": "Bitter Havan Packet – 100 g",
+    "hi": "कड़वा हवन – 100 ग्राम",
+    "price": 299,
+    "mrp": 399,
+    "rating": 4.7,
+    "reviews": 412,
+    "intent": "Wards off negativity & evil eye",
+    "ik": "protection",
+    "badges": [
+      "bestseller"
+    ],
+    "stock": 60,
+    "date": 13,
+    "pop": 1936.4,
+    "catName": "Havan Samagri",
+    "slug": "bitter-havan-packet-100-g",
+    "photo": "/images/p-bitter-havan.webp",
+    "photo2": "/images/p-bitter-havan-2.webp"
+  },
+  {
+    "id": "nag12",
+    "cat": "copper",
+    "name": "Hand-Energized Pure Copper 12 Nag",
+    "long": "Hand-Energized Pure Copper 12 Nag (Twelve Serpents Set) – For Wealth, Protection & Success",
+    "hi": "ऊर्जित शुद्ध ताम्र 12 नाग",
+    "price": 1250,
+    "mrp": 1599,
+    "rating": 4.9,
+    "reviews": 143,
+    "intent": "Wealth, Protection & Success",
+    "ik": "wealth",
+    "badges": [
+      "energized",
+      "featured"
+    ],
+    "stock": 9,
+    "date": 17,
+    "pop": 700.7,
+    "catName": "Energized Copper",
+    "slug": "copper-12-nag",
+    "photo": "/images/p-12-nag.webp",
+    "photo2": "/images/p-12-nag-2.webp"
+  }
+]

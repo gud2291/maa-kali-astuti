@@ -1,0 +1,47 @@
+{
+  "koota": [
+    [
+      "Varna",
+      1
+    ],
+    [
+      "Vashya",
+      2
+    ],
+    [
+      "Tara",
+      3
+    ],
+    [
+      "Yoni",
+      4
+    ],
+    [
+      "Graha Maitri",
+      5
+    ],
+    [
+      "Gana",
+      6
+    ],
+    [
+      "Bhakoot",
+      7
+    ],
+    [
+      "Nadi",
+      8
+    ]
+  ],
+  "nump": {
+    "1": "Surya",
+    "2": "Chandra",
+    "3": "Guru",
+    "4": "Rahu",
+    "5": "Budh",
+    "6": "Shukra",
+    "7": "Ketu",
+    "8": "Shani",
+    "9": "Mangal"
+  }
+}

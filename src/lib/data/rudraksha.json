@@ -1,0 +1,119 @@
+{
+  "2": {
+    "deity": "Ardhanarishvara",
+    "planet": "Moon",
+    "intent": "Harmony & Relationships",
+    "ik": "love",
+    "mantra": "Om Namah",
+    "price": 551,
+    "mrp": 799
+  },
+  "3": {
+    "deity": "Agni",
+    "planet": "Mars",
+    "intent": "Confidence & Release",
+    "ik": "courage",
+    "mantra": "Om Kleem Namah",
+    "price": 451,
+    "mrp": 699
+  },
+  "4": {
+    "deity": "Brahma",
+    "planet": "Mercury",
+    "intent": "Learning & Focus",
+    "ik": "clarity",
+    "mantra": "Om Hreem Namah",
+    "price": 451,
+    "mrp": 699
+  },
+  "5": {
+    "deity": "Kalagni Rudra",
+    "planet": "Jupiter",
+    "intent": "Peace & Health",
+    "ik": "peace",
+    "mantra": "Om Hreem Namah",
+    "price": 351,
+    "mrp": 549
+  },
+  "6": {
+    "deity": "Kartikeya",
+    "planet": "Venus",
+    "intent": "Courage & Willpower",
+    "ik": "courage",
+    "mantra": "Om Hreem Hum Namah",
+    "price": 551,
+    "mrp": 799
+  },
+  "7": {
+    "deity": "Mahalakshmi",
+    "planet": "Saturn",
+    "intent": "Wealth & Abundance",
+    "ik": "wealth",
+    "mantra": "Om Hum Namah",
+    "price": 751,
+    "mrp": 1099
+  },
+  "8": {
+    "deity": "Ganesha",
+    "planet": "Rahu",
+    "intent": "Removing Obstacles",
+    "ik": "clarity",
+    "mantra": "Om Hum Namah",
+    "price": 1250,
+    "mrp": 1799
+  },
+  "9": {
+    "deity": "Maa Durga",
+    "planet": "Ketu",
+    "intent": "Shakti & Fearlessness",
+    "ik": "protection",
+    "mantra": "Om Hreem Hum Namah",
+    "price": 1850,
+    "mrp": 2499
+  },
+  "10": {
+    "deity": "Vishnu",
+    "planet": "All nine grahas",
+    "intent": "Protection from Negativity",
+    "ik": "protection",
+    "mantra": "Om Hreem Namah Namah",
+    "price": 2100,
+    "mrp": 2999
+  },
+  "11": {
+    "deity": "Hanuman (Ekadasha Rudra)",
+    "planet": "Mars",
+    "intent": "Courage & Wisdom",
+    "ik": "courage",
+    "mantra": "Om Hreem Hum Namah",
+    "price": 3100,
+    "mrp": 4199
+  },
+  "12": {
+    "deity": "Surya",
+    "planet": "Sun",
+    "intent": "Leadership & Radiance",
+    "ik": "courage",
+    "mantra": "Om Kraum Sraum Raum Namah",
+    "price": 4100,
+    "mrp": 5499
+  },
+  "13": {
+    "deity": "Kamadeva",
+    "planet": "Venus",
+    "intent": "Attraction & Fulfilment",
+    "ik": "love",
+    "mantra": "Om Hreem Namah",
+    "price": 6100,
+    "mrp": 7999
+  },
+  "14": {
+    "deity": "Deva Mani (Shiva)",
+    "planet": "Saturn",
+    "intent": "Intuition & Protection",
+    "ik": "protection",
+    "mantra": "Om Namah",
+    "price": 11000,
+    "mrp": 13999
+  }
+}

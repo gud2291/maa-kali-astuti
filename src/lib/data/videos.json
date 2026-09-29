@@ -1,0 +1,250 @@
+{
+  "cats": [
+    [
+      "all",
+      "All",
+      "सभी"
+    ],
+    [
+      "pravachan",
+      "Pravachan",
+      "प्रवचन"
+    ],
+    [
+      "sadhana",
+      "Sadhana",
+      "साधना"
+    ],
+    [
+      "remedies",
+      "Remedies",
+      "उपाय"
+    ],
+    [
+      "qa",
+      "Q&A",
+      "प्रश्नोत्तर"
+    ]
+  ],
+  "videos": [
+    {
+      "id": "v1",
+      "cat": "pravachan",
+      "en": "Why sadhana is a science, not superstition",
+      "hi": [
+        "साधना विज्ञान है,",
+        "अंधविश्वास नहीं"
+      ],
+      "dur": "18:42",
+      "date": "14 Sep 2026",
+      "motif": "portrait",
+      "desc": "Why mantra, time and niyam behave like a method you can test, and why fear has no place in it."
+    },
+    {
+      "id": "v2",
+      "cat": "remedies",
+      "en": "How to identify an original Nepali Rudraksha",
+      "hi": [
+        "असली नेपाली रुद्राक्ष",
+        "कैसे पहचानें"
+      ],
+      "dur": "11:05",
+      "date": "2 Sep 2026",
+      "motif": "bead",
+      "desc": "Six checks you can do at home, from mukhi lines to the X-ray certificate, and the water test that proves nothing."
+    },
+    {
+      "id": "v3",
+      "cat": "sadhana",
+      "en": "Baglamukhi sadhana: who should begin, and when",
+      "hi": [
+        "बगलामुखी साधना:",
+        "किसे और कब"
+      ],
+      "dur": "24:10",
+      "date": "21 Aug 2026",
+      "motif": "yantra:baglamukhi",
+      "desc": "The niyam, the muhurat and the kind of seeker this sadhana suits, explained before anyone enrolls."
+    },
+    {
+      "id": "v4",
+      "cat": "remedies",
+      "en": "Wearing a kavach: the rules most people miss",
+      "hi": [
+        "कवच धारण के",
+        "नियम"
+      ],
+      "dur": "9:32",
+      "date": "9 Aug 2026",
+      "motif": "amulet",
+      "desc": "Which day to wear it, what to recite, and when a kavach should be taken off."
+    },
+    {
+      "id": "v5",
+      "cat": "qa",
+      "en": "Seekers ask: Sade Sati, Manglik and fear",
+      "hi": [
+        "साढ़ेसाती, मांगलिक",
+        "और डर"
+      ],
+      "dur": "32:18",
+      "date": "27 Jul 2026",
+      "motif": "chart",
+      "desc": "Live questions answered plainly: what these periods mean, and what they do not."
+    },
+    {
+      "id": "v6",
+      "cat": "pravachan",
+      "en": "The meaning of a diya at dusk",
+      "hi": [
+        "संध्या दीप",
+        "का अर्थ"
+      ],
+      "dur": "7:48",
+      "date": "12 Jul 2026",
+      "motif": "diya",
+      "desc": "A short discourse on sandhya, the lamp and the quiet minute that changes an evening."
+    },
+    {
+      "id": "v7",
+      "cat": "sadhana",
+      "en": "Kali sadhana is not for everyone. Here is why.",
+      "hi": [
+        "काली साधना",
+        "सबके लिए नहीं"
+      ],
+      "dur": "21:36",
+      "date": "28 Jun 2026",
+      "motif": "yantra:kali",
+      "desc": "Why this sadhana is offered only after a personal conversation, and what it asks of a seeker."
+    },
+    {
+      "id": "v8",
+      "cat": "qa",
+      "en": "Does a gemstone really work? Seekers ask",
+      "hi": [
+        "क्या रत्न सच में",
+        "काम करते हैं?"
+      ],
+      "dur": "26:04",
+      "date": "14 Jun 2026",
+      "motif": "gem",
+      "desc": "When a stone helps, when it does not, and why a mantra usually comes first."
+    },
+    {
+      "id": "v9",
+      "cat": "remedies",
+      "en": "Bitter Havan at home: the correct method",
+      "hi": [
+        "घर में कड़वा हवन",
+        "सही विधि"
+      ],
+      "dur": "8:15",
+      "date": "31 May 2026",
+      "motif": "havan",
+      "desc": "The day, the time, the quantity and the one mistake that fills a house with smoke."
+    },
+    {
+      "id": "v10",
+      "cat": "pravachan",
+      "en": "Mantra and the restless mind",
+      "hi": [
+        "मंत्र और",
+        "चंचल मन"
+      ],
+      "dur": "15:50",
+      "date": "17 May 2026",
+      "motif": "chakra",
+      "desc": "Why japa settles the mind, and how to begin when you cannot sit still for five minutes."
+    },
+    {
+      "id": "v11",
+      "cat": "sadhana",
+      "en": "Hanuman sadhana for fear at night",
+      "hi": [
+        "रात के डर के लिए",
+        "हनुमान साधना"
+      ],
+      "dur": "19:22",
+      "date": "3 May 2026",
+      "motif": "yantra:hanuman",
+      "desc": "A disciplined practice for seekers troubled by fear and disturbed sleep."
+    },
+    {
+      "id": "v12",
+      "cat": "qa",
+      "en": "Palmistry questions: the fate line and the marriage line",
+      "hi": [
+        "भाग्य रेखा और",
+        "विवाह रेखा"
+      ],
+      "dur": "28:40",
+      "date": "19 Apr 2026",
+      "motif": "palm",
+      "desc": "Seekers send palm photos and Sadhak Ji reads them live, line by line."
+    }
+  ],
+  "shorts": [
+    {
+      "id": "s1",
+      "en": "One mantra for a restless mind",
+      "hi": [
+        "चंचल मन के लिए",
+        "एक मंत्र"
+      ],
+      "dur": "0:48",
+      "motif": "chakra"
+    },
+    {
+      "id": "s2",
+      "en": "Where to keep the 12 Nag set",
+      "hi": [
+        "12 नाग",
+        "कहाँ रखें"
+      ],
+      "dur": "0:41",
+      "motif": "nag"
+    },
+    {
+      "id": "s3",
+      "en": "The rudraksha water test is a myth",
+      "hi": [
+        "रुद्राक्ष का",
+        "पानी टेस्ट"
+      ],
+      "dur": "0:55",
+      "motif": "bead"
+    },
+    {
+      "id": "s4",
+      "en": "Haldi mala or rudraksha mala?",
+      "hi": [
+        "हल्दी माला या",
+        "रुद्राक्ष माला?"
+      ],
+      "dur": "0:37",
+      "motif": "mala"
+    },
+    {
+      "id": "s5",
+      "en": "Why Tuesday for Hanuman ji",
+      "hi": [
+        "मंगलवार और",
+        "हनुमान जी"
+      ],
+      "dur": "0:52",
+      "motif": "yantra:hanuman"
+    },
+    {
+      "id": "s6",
+      "en": "Lighting the sandhya diya",
+      "hi": [
+        "संध्या दीप",
+        "कैसे जलाएँ"
+      ],
+      "dur": "0:44",
+      "motif": "diya"
+    }
+  ],
+  "subs": "1.2 lakh subscribers"
+}

@@ -1,0 +1,65 @@
+[
+  {
+    "k": "su",
+    "en": "Sun",
+    "hi": "Surya",
+    "ab": "Su",
+    "dev": "सू"
+  },
+  {
+    "k": "mo",
+    "en": "Moon",
+    "hi": "Chandra",
+    "ab": "Mo",
+    "dev": "चं"
+  },
+  {
+    "k": "ma",
+    "en": "Mars",
+    "hi": "Mangal",
+    "ab": "Ma",
+    "dev": "मं"
+  },
+  {
+    "k": "me",
+    "en": "Mercury",
+    "hi": "Budh",
+    "ab": "Me",
+    "dev": "बु"
+  },
+  {
+    "k": "ju",
+    "en": "Jupiter",
+    "hi": "Guru",
+    "ab": "Ju",
+    "dev": "गु"
+  },
+  {
+    "k": "ve",
+    "en": "Venus",
+    "hi": "Shukra",
+    "ab": "Ve",
+    "dev": "शु"
+  },
+  {
+    "k": "sa",
+    "en": "Saturn",
+    "hi": "Shani",
+    "ab": "Sa",
+    "dev": "श"
+  },
+  {
+    "k": "ra",
+    "en": "Rahu",
+    "hi": "Rahu",
+    "ab": "Ra",
+    "dev": "रा"
+  },
+  {
+    "k": "ke",
+    "en": "Ketu",
+    "hi": "Ketu",
+    "ab": "Ke",
+    "dev": "के"
+  }
+]
