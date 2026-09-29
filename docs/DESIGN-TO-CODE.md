@@ -36,7 +36,7 @@ The Claude Design output is the **spec**. The goal is 1:1 visual and motion fide
 ## 3. Motion attributes → components
 | Prototype attribute | Port |
 |---|---|
-| `data-reveal` | `<Reveal>` (fade-up 24px, 600ms, stagger 80ms, once; the threshold follows the design: 15%, or 25% for headings) |
+| `data-reveal` | `<Reveal>` (fade-up 24px, 700ms, delay = value × 80ms, EASE, once; IO threshold .12 — mka-core 482–489). Heading masks use .25 |
 | `data-mask` | `<MaskText>` (lines mask up; 60ms stagger) |
 | `data-fade` | `<Reveal variant="fade">` |
 | `data-ln`, `data-line`, `data-draw` | stroke-dashoffset draw (ornament rules draw from the centre; ScrollLine for scroll-filled lines) |
