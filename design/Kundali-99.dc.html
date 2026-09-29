@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..600,0..100;1,9..144,300..600,0..100&family=Manrope:wght@400;500;600;700&family=Mukta:wght@400;500;600&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap">
+<script src="mka-core.js"></script>
+<script src="mka-astro.js"></script>
+<style>
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#FBF7EE url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .16 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");color:#1F2A24;font-family:Manrope,Mukta,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#164E3F}
+a:hover{color:#1C6B54}
+button,input,select,textarea{font-family:inherit}
+input[type=date],input[type=time]{-webkit-appearance:none;appearance:none}
+:focus-visible{outline:2px solid #B8923A;outline-offset:2px}
+::selection{background:#D9B96A;color:#0E3B30}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+  <dc-import name="SiteChrome" active="kundali" hint-size="100%,108px"></dc-import>
+  <main id="main" style="flex:1">
+
+    <section data-screen-label="Kundali tool" style="position:relative;overflow:hidden;background-color:#0A1F1A;color:#E4EEE8">
+      <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none">{{ sky }}</div>
+      <div style="position:relative;max-width:1320px;margin:0 auto;padding:clamp(20px,4vw,48px) clamp(16px,4vw,32px) clamp(56px,8vw,112px);display:grid;grid-template-columns:{{ L.hero }};grid-template-areas:{{ L.areas }};gap:clamp(24px,4vw,40px) clamp(32px,5vw,80px);align-items:start">
+        <div style="grid-area:intro;display:flex;flex-direction:column;gap:16px;min-width:0">
+          <nav aria-label="Breadcrumb" style="display:flex;align-items:center;gap:8px;font:500 12.5px/1 Manrope,sans-serif;color:#9FB3AA"><a href="#" onClick="{{ soonHome }}" style="color:#9FB3AA;text-decoration:none">Home</a><span style="color:#B8923A">/</span><span aria-current="page" style="color:#E4EEE8">Kundali ₹99</span></nav>
+          <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#D9B96A">Janam Kundali · <span style="letter-spacing:0;text-transform:none;font-family:Mukta,sans-serif;font-weight:500;font-size:1.08em">जन्म कुंडली</span></span>
+          <h1 style="margin:0;font:400 clamp(40px,5.4vw,74px)/1.02 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.022em;color:#FBF7EE;text-wrap:balance">Your complete Kundali, <em style="font-style:italic;color:#D9B96A">ready in minutes.</em></h1>
+          <span style="font:400 clamp(18px,2vw,22px)/1.35 'Tiro Devanagari Hindi',serif;color:#D9B96A">आपकी संपूर्ण जन्म कुंडली, केवल ₹99 में</span>
+          <div style="display:flex;flex-wrap:wrap;align-items:baseline;gap:6px 12px;margin-top:4px">
+            <span style="font:700 40px/1 Manrope,sans-serif;letter-spacing:-.01em;color:#FBF7EE;font-variant-numeric:tabular-nums">₹99</span>
+            <span style="font:500 17px/1 Manrope,sans-serif;color:#9FB3AA;text-decoration:line-through;font-variant-numeric:tabular-nums">{{ mrp }}</span>
+            <span style="height:24px;padding:0 10px;border-radius:999px;background-color:#A8322D;color:#FBF7EE;display:inline-flex;align-items:center;font:700 11px/1 Manrope,sans-serif;letter-spacing:.06em">{{ off }}% OFF</span>
+            <span style="font:500 12.5px/1 Manrope,sans-serif;color:#C9D6CF">incl. all taxes</span>
+          </div>
+        </div>
+
+        <div style="grid-area:facts;display:flex;flex-direction:column;gap:18px;min-width:0">
+          <p style="margin:0;max-width:520px;font:400 clamp(16px,1.4vw,18px)/1.65 Manrope,sans-serif;color:#C9D6CF;text-wrap:pretty">See your Lagna chart, planetary positions and nakshatra free, right here. Pay ₹99 only if you want the full 28-page report as a PDF, in English or Hindi.</p>
+          <ul style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;max-width:520px">
+            <sc-for list="{{ facts }}" as="x" hint-placeholder-count="3">
+              <li style="display:grid;grid-template-columns:40px minmax(0,1fr);gap:14px;align-items:center;padding:14px 0;border-top:1px solid rgba(217,185,106,.22)"><span style="width:40px;height:40px;border-radius:999px;background-color:#10302A;color:#D9B96A;box-shadow:inset 0 0 0 1px rgba(217,185,106,.4);display:grid;place-items:center"><span style="width:20px;height:20px;display:block">{{ x.icon }}</span></span><span style="font:500 15px/1.5 Manrope,sans-serif;color:#E4EEE8">{{ x.t }}</span></li>
+            </sc-for>
+          </ul>
+          <span style="display:flex;align-items:center;gap:10px;font:600 13px/1.3 Manrope,sans-serif;color:#E4EEE8"><span style="width:84px;height:14px;display:block">{{ stars }}</span>4.8 from 3,400+ reports</span>
+        </div>
+
+        <div style="grid-area:card;position:relative;min-width:0;padding:clamp(20px,3vw,32px);border-radius:4px;background-color:#FBF7EE;color:#1F2A24;box-shadow:0 40px 80px -40px rgba(0,0,0,.7),inset 0 0 0 1px rgba(217,185,106,.55)">
+          <span aria-hidden="true" style="position:absolute;left:8px;top:8px;width:26px;height:26px;display:block">{{ corner }}</span>
+          <span aria-hidden="true" style="position:absolute;right:8px;top:8px;width:26px;height:26px;display:block;transform:scaleX(-1)">{{ corner }}</span>
+          <span aria-hidden="true" style="position:absolute;left:8px;bottom:8px;width:26px;height:26px;display:block;transform:scaleY(-1)">{{ corner }}</span>
+          <span aria-hidden="true" style="position:absolute;right:8px;bottom:8px;width:26px;height:26px;display:block;transform:scale(-1,-1)">{{ corner }}</span>
+
+          <sc-if value="{{ isForm }}" hint-placeholder-val="{{ true }}">
+            <form onSubmit="{{ submit }}" novalidate="" style="display:flex;flex-direction:column;gap:18px">
+              <div style="display:flex;flex-direction:column;gap:4px;padding:0 6px">
+                <span style="font:400 24px/1.2 Fraunces,serif;color:#0E3B30">Enter your birth details</span>
+                <span style="font:500 13px/1.45 Manrope,sans-serif;color:#5B6A61">Free chart preview. You pay only to download.</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <label for="k-name" style="font:600 13px/1.2 Manrope,sans-serif;color:#1F2A24">Name for the report</label>
+                <input id="k-name" type="text" autocomplete="name" value="{{ f.name }}" onChange="{{ on.name }}" aria-invalid="{{ bad.name }}" style="width:100%;height:52px;padding:0 14px;border:none;border-radius:2px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px {{ ring.name }};font:500 16px/1.2 Manrope,sans-serif;color:#1F2A24;outline:none" style-focus="box-shadow:inset 0 0 0 1.5px #164E3F">
+                <sc-if value="{{ bad.name }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font:600 12.5px/1.4 Manrope,sans-serif;color:#A8322D"><span style="width:14px;height:14px;display:block;flex:none">{{ ic.alert }}</span>{{ err.name }}</span></sc-if>
+              </div>
+              <div style="display:grid;grid-template-columns:{{ L.two }};gap:18px 12px">
+                <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+                  <label for="k-dob" style="font:600 13px/1.2 Manrope,sans-serif;color:#1F2A24">Date of birth</label>
+                  <input id="k-dob" type="date" min="1900-01-01" max="{{ todayIso }}" value="{{ f.dob }}" onChange="{{ on.dob }}" aria-invalid="{{ bad.dob }}" style="width:100%;height:52px;padding:0 12px;border:none;border-radius:2px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px {{ ring.dob }};font:500 16px/1.2 Manrope,sans-serif;color:#1F2A24;outline:none" style-focus="box-shadow:inset 0 0 0 1.5px #164E3F">
+                  <sc-if value="{{ bad.dob }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font:600 12.5px/1.4 Manrope,sans-serif;color:#A8322D"><span style="width:14px;height:14px;display:block;flex:none">{{ ic.alert }}</span>{{ err.dob }}</span></sc-if>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+                  <label for="k-tob" style="font:600 13px/1.2 Manrope,sans-serif;color:#1F2A24">Time of birth</label>
+                  <input id="k-tob" type="time" value="{{ f.tob }}" onChange="{{ on.tob }}" disabled="{{ f.unknown }}" aria-invalid="{{ bad.tob }}" style="width:100%;height:52px;padding:0 12px;border:none;border-radius:2px;background-color:{{ tobBg }};box-shadow:inset 0 0 0 1px {{ ring.tob }};font:500 16px/1.2 Manrope,sans-serif;color:#1F2A24;outline:none" style-focus="box-shadow:inset 0 0 0 1.5px #164E3F">
+                  <sc-if value="{{ bad.tob }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font:600 12.5px/1.4 Manrope,sans-serif;color:#A8322D"><span style="width:14px;height:14px;display:block;flex:none">{{ ic.alert }}</span>{{ err.tob }}</span></sc-if>
+                </div>
+              </div>
+              <label style="display:flex;align-items:center;gap:10px;min-height:32px;margin-top:-6px;font:500 14px/1.4 Manrope,sans-serif;color:#1F2A24;cursor:pointer"><input type="checkbox" checked="{{ f.unknown }}" onChange="{{ on.unknown }}" style="width:18px;height:18px;margin:0;accent-color:#164E3F">I don’t know my exact time</label>
+              <sc-if value="{{ f.unknown }}" hint-placeholder-val="{{ false }}"><span style="margin-top:-8px;font:500 12.5px/1.5 Manrope,sans-serif;color:#5B6A61">We calculate for 12:00 noon. Planet signs stay accurate; the Lagna may differ, and the report says so.</span></sc-if>
+              <div style="display:flex;flex-direction:column;gap:8px">
+                <label for="k-place" style="font:600 13px/1.2 Manrope,sans-serif;color:#1F2A24">Place of birth</label>
+                <div style="position:relative">
+                  <input id="k-place" type="text" role="combobox" aria-autocomplete="list" aria-controls="k-place-list" aria-expanded="{{ placeOpen }}" autocomplete="off" placeholder="Town or city" value="{{ f.place }}" onChange="{{ on.place }}" onFocus="{{ on.placeFocus }}" onBlur="{{ on.placeBlur }}" aria-invalid="{{ bad.place }}" style="width:100%;height:52px;padding:0 14px 0 42px;border:none;border-radius:2px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px {{ ring.place }};font:500 16px/1.2 Manrope,sans-serif;color:#1F2A24;outline:none" style-focus="box-shadow:inset 0 0 0 1.5px #164E3F">
+                  <span aria-hidden="true" style="position:absolute;left:14px;top:16px;width:20px;height:20px;display:block;color:#B8923A;pointer-events:none">{{ ic.pin }}</span>
+                  <sc-if value="{{ placeOpen }}" hint-placeholder-val="{{ false }}">
+                    <ul id="k-place-list" role="listbox" style="position:absolute;z-index:6;left:0;right:0;top:calc(100% + 6px);margin:0;padding:6px;list-style:none;background-color:#FFFDF8;border-radius:4px;box-shadow:inset 0 0 0 1px #EAE0CA,0 18px 36px -18px rgba(14,59,48,.35)">
+                      <sc-for list="{{ placeRes }}" as="c" hint-placeholder-count="4">
+                        <li role="option" aria-selected="false"><button type="button" onMouseDown="{{ c.pick }}" style="width:100%;min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 10px;border:none;border-radius:2px;background:none;text-align:left;cursor:pointer" style-hover="background-color:#F4EDDD"><span style="font:600 14.5px/1.2 Manrope,sans-serif;color:#1F2A24">{{ c.t }}</span><span style="font:500 12.5px/1.2 Manrope,sans-serif;color:#5B6A61">{{ c.s }}</span></button></li>
+                      </sc-for>
+                    </ul>
+                  </sc-if>
+                </div>
+                <sc-if value="{{ bad.place }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font:600 12.5px/1.4 Manrope,sans-serif;color:#A8322D"><span style="width:14px;height:14px;display:block;flex:none">{{ ic.alert }}</span>{{ err.place }}</span></sc-if>
+              </div>
+              <div role="radiogroup" aria-labelledby="k-l-lang" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px">
+                <span id="k-l-lang" style="font:600 13px/1.2 Manrope,sans-serif;color:#1F2A24">Report language</span>
+                <span style="display:inline-flex;padding:4px;gap:4px;border-radius:4px;background-color:#F4EDDD">
+                  <sc-for list="{{ langs }}" as="l" hint-placeholder-count="2"><button type="button" role="radio" aria-checked="{{ l.sel }}" onClick="{{ l.pick }}" style="height:40px;min-width:92px;padding:0 16px;border:none;border-radius:2px;background-color:{{ l.bg }};color:{{ l.ink }};box-shadow:{{ l.ring }};font:{{ l.font }};cursor:pointer;transition:background-color 200ms">{{ l.t }}</button></sc-for>
+                </span>
+              </div>
+              <div style="display:grid;grid-template-columns:{{ L.two }};gap:18px 12px">
+                <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+                  <label for="k-phone" style="font:600 13px/1.2 Manrope,sans-serif;color:#1F2A24">WhatsApp number</label>
+                  <div style="display:flex;height:52px;border-radius:2px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px {{ ring.phone }}">
+                    <span style="display:flex;align-items:center;padding:0 10px;font:600 15px/1 Manrope,sans-serif;color:#5B6A61;box-shadow:inset -1px 0 0 #EAE0CA">+91</span>
+                    <input id="k-phone" type="tel" inputmode="numeric" autocomplete="tel-national" value="{{ f.phone }}" onChange="{{ on.phone }}" aria-invalid="{{ bad.phone }}" style="flex:1;min-width:0;height:100%;padding:0 12px;border:none;background:transparent;font:500 16px/1.2 Manrope,sans-serif;color:#1F2A24;font-variant-numeric:tabular-nums;outline:none">
+                  </div>
+                  <sc-if value="{{ bad.phone }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font:600 12.5px/1.4 Manrope,sans-serif;color:#A8322D"><span style="width:14px;height:14px;display:block;flex:none">{{ ic.alert }}</span>{{ err.phone }}</span></sc-if>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+                  <label for="k-email" style="font:600 13px/1.2 Manrope,sans-serif;color:#1F2A24">Email <span style="font-weight:500;color:#5B6A61">(optional)</span></label>
+                  <input id="k-email" type="email" autocomplete="email" value="{{ f.email }}" onChange="{{ on.email }}" aria-invalid="{{ bad.email }}" style="width:100%;height:52px;padding:0 14px;border:none;border-radius:2px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px {{ ring.email }};font:500 16px/1.2 Manrope,sans-serif;color:#1F2A24;outline:none" style-focus="box-shadow:inset 0 0 0 1.5px #164E3F">
+                  <sc-if value="{{ bad.email }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font:600 12.5px/1.4 Manrope,sans-serif;color:#A8322D"><span style="width:14px;height:14px;display:block;flex:none">{{ ic.alert }}</span>{{ err.email }}</span></sc-if>
+                </div>
+              </div>
+              <button type="submit" style="height:54px;margin-top:4px;border:none;border-radius:4px;background-color:#164E3F;background-image:linear-gradient(110deg,rgba(217,185,106,0) 40%,rgba(217,185,106,.4) 50%,rgba(217,185,106,0) 60%);background-size:260% 100%;background-position:100% 0;background-repeat:no-repeat;color:#FBF7EE;display:flex;align-items:center;justify-content:center;gap:10px;font:600 15.5px/1 Manrope,sans-serif;letter-spacing:.02em;box-shadow:inset 0 0 0 1px rgba(217,185,106,.55);cursor:pointer;transition:background-position 700ms cubic-bezier(.22,1,.36,1)" style-hover="background-position:0 0"><span style="width:19px;height:19px;display:block">{{ ic.kundali }}</span>Generate my Kundali</button>
+              <span style="display:flex;align-items:center;justify-content:center;gap:7px;font:500 12.5px/1.4 Manrope,sans-serif;color:#5B6A61;text-align:center"><span style="width:14px;height:14px;display:block;flex:none;color:#B8923A">{{ ic.lock }}</span>Your details are used only to prepare this report.</span>
+            </form>
+          </sc-if>
+
+          <sc-if value="{{ isGen }}" hint-placeholder-val="{{ false }}">
+            <div role="status" aria-live="polite" style="display:flex;flex-direction:column;align-items:center;gap:20px;padding:8px 4px;text-align:center">
+              <div ref="{{ genRef }}" aria-hidden="true" style="position:relative;width:min(200px,58vw);aspect-ratio:1/1;border-radius:999px;background-color:#0A1F1A;box-shadow:0 0 0 1px rgba(184,146,58,.5),0 24px 48px -24px rgba(10,31,26,.8)">
+                <span data-ring="" style="position:absolute;inset:6%;display:block">{{ ch.outer }}</span>
+                <span data-ring="" style="position:absolute;inset:6%;display:block">{{ ch.middle }}</span>
+                <span data-ring="" style="position:absolute;inset:6%;display:block">{{ ch.inner }}</span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:6px"><span style="font:400 24px/1.2 Fraunces,serif;color:#0E3B30">Preparing {{ genName }} chart</span><span style="font:400 16px/1.35 'Tiro Devanagari Hindi',serif;color:#7A5C1C">आपकी कुंडली बन रही है</span></div>
+              <ol style="list-style:none;margin:0;padding:0;width:100%;max-width:360px;display:flex;flex-direction:column;text-align:left">
+                <sc-for list="{{ msgs }}" as="m" hint-placeholder-count="6">
+                  <li style="display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:center;padding:8px 0;border-top:1px solid #EAE0CA;opacity:{{ m.op }};transition:opacity 300ms">
+                    <span style="width:20px;height:20px;border-radius:999px;background-color:{{ m.bg }};color:#FBF7EE;box-shadow:{{ m.ring }};display:grid;place-items:center"><sc-if value="{{ m.done }}" hint-placeholder-val="{{ false }}"><span style="width:12px;height:12px;display:block">{{ ic.check }}</span></sc-if></span>
+                    <span style="font:{{ m.font }};color:{{ m.ink }}">{{ m.t }}</span>
+                  </li>
+                </sc-for>
+              </ol>
+              <span aria-hidden="true" style="position:relative;display:block;width:100%;max-width:360px;height:2px;background-color:#EAE0CA;overflow:hidden"><span style="position:absolute;inset:0;background-color:#B8923A;transform-origin:0 50%;transform:{{ genBar }};transition:transform 800ms linear"></span></span>
+            </div>
+          </sc-if>
+
+          <sc-if value="{{ isReady }}" hint-placeholder-val="{{ false }}">
+            <div style="display:flex;flex-direction:column;gap:18px;padding:4px 6px">
+              <span style="width:52px;height:52px;border-radius:999px;background-color:#0E3B30;color:#D9B96A;display:grid;place-items:center"><span style="width:26px;height:26px;display:block">{{ ic.kundali }}</span></span>
+              <div style="display:flex;flex-direction:column;gap:6px"><span style="font:400 26px/1.15 Fraunces,serif;color:#0E3B30">{{ readyT }}</span><span style="font:500 14px/1.55 Manrope,sans-serif;color:#5B6A61">{{ readyD }}</span></div>
+              <dl style="margin:0;display:flex;flex-direction:column">
+                <sc-for list="{{ birthRows }}" as="r" hint-placeholder-count="4"><div style="display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-top:1px solid #EAE0CA"><dt style="font:600 10.5px/1.5 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#5B6A61">{{ r.k }}</dt><dd style="margin:0;font:600 14px/1.45 Manrope,sans-serif;color:#1F2A24;text-align:right">{{ r.v }}</dd></div></sc-for>
+              </dl>
+              <div style="display:flex;flex-wrap:wrap;gap:10px">
+                <button type="button" onClick="{{ toPreview }}" style="flex:1 1 auto;height:50px;padding:0 20px;border:none;border-radius:4px;background-color:#164E3F;color:#FBF7EE;display:inline-flex;align-items:center;justify-content:center;gap:9px;font:600 14.5px/1 Manrope,sans-serif;box-shadow:inset 0 0 0 1px rgba(217,185,106,.55);cursor:pointer" style-hover="background-color:#1C6B54">{{ readyCta }}<span style="width:16px;height:16px;display:block;transform:rotate(90deg)">{{ ic.arrowR }}</span></button>
+                <button type="button" onClick="{{ edit }}" style="height:50px;padding:0 18px;border:none;border-radius:4px;background-color:#FBF7EE;box-shadow:inset 0 0 0 1px #164E3F;color:#164E3F;display:inline-flex;align-items:center;gap:8px;font:600 14.5px/1 Manrope,sans-serif;cursor:pointer" style-hover="background-color:#E4EEE8"><span style="width:16px;height:16px;display:block">{{ ic.edit }}</span>Edit details</button>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </div>
+    </section>
+    <sc-if value="{{ showPrev }}" hint-placeholder-val="{{ false }}">
+      <section id="preview" data-screen-label="Kundali preview" style="background-color:#FBF7EE;scroll-margin-top:60px">
+        <div style="max-width:1320px;margin:0 auto;padding:clamp(48px,7vw,96px) clamp(16px,4vw,32px) clamp(64px,8vw,112px)">
+          <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:clamp(24px,3vw,36px)">
+            <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">Free preview · <span style="letter-spacing:0;text-transform:none;font-family:Mukta,sans-serif;font-weight:500;font-size:1.08em">निःशुल्क झलक</span></span>
+            <h2 style="margin:0;font:400 clamp(32px,4vw,52px)/1.06 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.018em;color:#0E3B30;text-wrap:balance">{{ prevName }}</h2>
+            <span style="font:600 13.5px/1.4 Manrope,sans-serif;color:#5B6A61;font-variant-numeric:tabular-nums">{{ prevLine }}</span>
+          </div>
+          <sc-if value="{{ unknownTime }}" hint-placeholder-val="{{ false }}">
+            <div role="note" style="display:grid;grid-template-columns:22px minmax(0,1fr);gap:12px;margin-bottom:24px;padding:14px 16px;border-radius:4px;background-color:#F4EDDD;box-shadow:inset 0 0 0 1px rgba(184,146,58,.45);font:500 14px/1.55 Manrope,sans-serif;color:#1F2A24"><span style="width:20px;height:20px;display:block;color:#7A5C1C">{{ ic.info }}</span>Calculated for 12:00 noon because the birth time is unknown. Planet signs are reliable; the Lagna and house placements may shift.</div>
+          </sc-if>
+          <div style="display:grid;grid-template-columns:{{ L.prev }};gap:clamp(24px,4vw,56px);align-items:start">
+            <figure style="margin:0;display:flex;flex-direction:column;gap:12px">
+              <div ref="{{ chartRef }}" style="position:relative;aspect-ratio:1/1;padding:7%;border-radius:4px;background-color:#0A1F1A;box-shadow:0 36px 60px -36px rgba(10,31,26,.7),inset 0 0 0 1px rgba(217,185,106,.4)">{{ chart }}</div>
+              <figcaption style="display:flex;justify-content:space-between;gap:12px;font:600 12.5px/1.4 Manrope,sans-serif;color:#5B6A61"><span>Lagna chart · North-Indian style</span><span>Numbers mark the rashi in each house</span></figcaption>
+            </figure>
+            <div style="display:flex;flex-direction:column;gap:20px;min-width:0">
+              <div style="display:grid;grid-template-columns:{{ L.trio }};gap:10px">
+                <sc-for list="{{ trio }}" as="t" hint-placeholder-count="3">
+                  <div data-reveal="0" style="display:flex;flex-direction:column;gap:8px;padding:16px;border-radius:4px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px #EAE0CA">
+                    <span style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="font:700 10.5px/1.3 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7A5C1C">{{ t.k }}</span><span style="width:26px;height:26px;display:block">{{ t.glyph }}</span></span>
+                    <span style="display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 8px"><span style="font:400 23px/1.15 Fraunces,serif;color:#0E3B30">{{ t.v }}</span><sc-if value="{{ t.hasHi }}" hint-placeholder-val="{{ true }}"><span style="font:400 17px/1.3 'Tiro Devanagari Hindi',serif;color:#7A5C1C">{{ t.hi }}</span></sc-if></span>
+                    <span style="font:600 12.5px/1.3 Manrope,sans-serif;color:#5B6A61;font-variant-numeric:tabular-nums">{{ t.sub }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div role="table" aria-label="Planetary positions" style="border-radius:4px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px #EAE0CA;overflow:hidden;font-variant-numeric:tabular-nums">
+                <div role="row" style="display:grid;grid-template-columns:{{ L.tcols }};gap:8px;padding:12px 14px;background-color:#F4EDDD">
+                  <span role="columnheader" style="font:700 10.5px/1.2 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7A5C1C">Graha</span>
+                  <span role="columnheader" style="font:700 10.5px/1.2 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7A5C1C">Sign</span>
+                  <span role="columnheader" style="font:700 10.5px/1.2 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7A5C1C">House</span>
+                  <span role="columnheader" style="font:700 10.5px/1.2 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7A5C1C">Degree</span>
+                  <sc-if value="{{ L.nakCol }}" hint-placeholder-val="{{ true }}"><span role="columnheader" style="font:700 10.5px/1.2 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7A5C1C">Nakshatra</span></sc-if>
+                </div>
+                <sc-for list="{{ planets }}" as="p" hint-placeholder-count="9">
+                  <div role="row" style="display:grid;grid-template-columns:{{ L.tcols }};gap:8px;align-items:center;padding:10px 14px;background-color:{{ p.zebra }};border-top:1px solid #EAE0CA">
+                    <span role="rowheader" style="display:flex;flex-direction:column;gap:3px;min-width:0"><span style="display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px"><span style="font:700 14.5px/1.2 Manrope,sans-serif;color:#0E3B30">{{ p.en }}</span><span style="font:400 14px/1.2 'Tiro Devanagari Hindi',serif;color:#7A5C1C">{{ p.dev }}</span><sc-if value="{{ p.retro }}" hint-placeholder-val="{{ false }}"><span title="Retrograde" style="height:18px;padding:0 6px;border-radius:999px;background-color:#E4EEE8;color:#0E3B30;display:inline-flex;align-items:center;font:700 10px/1 Manrope,sans-serif">R</span></sc-if></span><sc-if value="{{ L.nakSub }}" hint-placeholder-val="{{ false }}"><span style="font:500 12px/1.2 Manrope,sans-serif;color:#5B6A61">{{ p.nak }}</span></sc-if></span>
+                    <span role="cell" style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="font:600 14px/1.2 Manrope,sans-serif;color:#1F2A24">{{ p.sign }}</span><span style="font:400 13px/1.2 'Tiro Devanagari Hindi',serif;color:#5B6A61">{{ p.signHi }}</span></span>
+                    <span role="cell" style="font:700 14px/1 Manrope,sans-serif;color:#0E3B30">{{ p.house }}</span>
+                    <span role="cell" style="font:600 13.5px/1 Manrope,sans-serif;color:#1F2A24">{{ p.deg }}</span>
+                    <sc-if value="{{ L.nakCol }}" hint-placeholder-val="{{ true }}"><span role="cell" style="font:500 13.5px/1.3 Manrope,sans-serif;color:#1F2A24">{{ p.nak }}</span></sc-if>
+                  </div>
+                </sc-for>
+              </div>
+            </div>
+          </div>
+
+          <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:10px 24px;margin:clamp(40px,6vw,72px) 0 20px">
+            <span style="font:400 clamp(24px,2.6vw,32px)/1.15 Fraunces,serif;color:#0E3B30">Inside the full report</span>
+            <span style="font:600 13px/1.4 Manrope,sans-serif;color:#5B6A61">28 pages · six shown here</span>
+          </div>
+          <div style="display:grid;grid-template-columns:{{ L.pages }};gap:clamp(12px,2vw,20px)">
+            <sc-for list="{{ pages }}" as="p" hint-placeholder-count="6">
+              <figure style="margin:0;display:flex;flex-direction:column;gap:10px">
+                <span style="position:relative;display:block;aspect-ratio:3/4;border-radius:3px;overflow:hidden;background-color:#FFFDF7;box-shadow:0 20px 40px -26px rgba(14,59,48,.5),0 0 0 1px #EAE0CA">
+                  <span style="position:absolute;inset:0;display:block;filter:{{ p.blur }};transform:scale(1.04);transition:filter 800ms cubic-bezier(.22,1,.36,1)">{{ p.svg }}</span>
+                  <span aria-hidden="true" style="position:absolute;inset:0;display:grid;place-items:center;opacity:{{ p.lockOp }};transition:opacity 500ms"><span style="width:44px;height:44px;border-radius:999px;background-color:#0E3B30;color:#D9B96A;display:grid;place-items:center;box-shadow:0 10px 24px -10px rgba(10,31,26,.6),inset 0 0 0 1px rgba(217,185,106,.5)"><span style="width:20px;height:20px;display:block">{{ ic.lock }}</span></span></span>
+                </span>
+                <figcaption style="display:flex;align-items:baseline;gap:8px;font:600 13px/1.35 Manrope,sans-serif;color:#1F2A24"><span style="font:italic 400 13.5px/1 Fraunces,serif;color:#7A5C1C">{{ p.n }}</span>{{ p.cap }}</figcaption>
+              </figure>
+            </sc-for>
+          </div>
+
+          <sc-if value="{{ notDone }}" hint-placeholder-val="{{ true }}">
+            <div style="position:relative;overflow:hidden;margin-top:clamp(28px,4vw,44px);display:grid;grid-template-columns:{{ L.payG }};gap:24px 48px;align-items:center;padding:clamp(22px,3.5vw,40px);border-radius:4px;background-color:#0E3B30;color:#E4EEE8;box-shadow:inset 0 0 0 1px rgba(217,185,106,.5)">
+              <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+                <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#D9B96A">Unlock the full report</span>
+                <span style="font:400 clamp(26px,3vw,38px)/1.1 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.015em;color:#FBF7EE">All 28 pages, <em style="font-style:italic;color:#D9B96A">yours to keep.</em></span>
+                <ul style="list-style:none;margin:4px 0 0;padding:0;display:grid;grid-template-columns:{{ L.two }};gap:10px 24px">
+                  <sc-for list="{{ unlock }}" as="u" hint-placeholder-count="4"><li style="display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px;font:500 14.5px/1.5 Manrope,sans-serif;color:#E4EEE8"><span style="width:18px;height:18px;display:block;margin-top:2px;color:#D9B96A">{{ ic.check }}</span>{{ u.t }}</li></sc-for>
+                </ul>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+                <span style="display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px"><span style="font:700 40px/1 Manrope,sans-serif;color:#FBF7EE;font-variant-numeric:tabular-nums">₹99</span><span style="font:500 16px/1 Manrope,sans-serif;color:#9FB3AA;text-decoration:line-through">{{ mrp }}</span><span style="font:700 12px/1 Manrope,sans-serif;color:#D9B96A;letter-spacing:.06em">SAVE {{ off }}%</span></span>
+                <button type="button" onClick="{{ openSheet }}" style="height:54px;padding:0 24px;border:none;border-radius:4px;background-color:#D9B96A;color:#0A1F1A;display:flex;align-items:center;justify-content:center;gap:10px;font:700 15.5px/1 Manrope,sans-serif;letter-spacing:.02em;cursor:pointer;transition:transform 200ms,background-color 200ms" style-hover="background-color:#E6CB86;transform:translateY(-1px)"><span style="width:18px;height:18px;display:block">{{ ic.lock }}</span>Pay ₹99 &amp; download</button>
+                <span style="font:500 12.5px/1.5 Manrope,sans-serif;color:#C9D6CF">UPI, cards and netbanking · secured by Razorpay</span>
+              </div>
+            </div>
+          </sc-if>
+          <sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+            <div style="margin-top:clamp(28px,4vw,44px);display:grid;grid-template-columns:{{ L.payG }};gap:24px 48px;align-items:center;padding:clamp(22px,3.5vw,40px);border-radius:4px;background-color:#F4EDDD;box-shadow:inset 0 0 0 1px rgba(184,146,58,.55)">
+              <div style="display:grid;grid-template-columns:72px minmax(0,1fr);gap:18px;align-items:center;min-width:0">
+                <span ref="{{ okRef }}" style="width:72px;height:72px;display:block"><svg viewBox="0 0 72 72" width="100%" height="100%" fill="none" aria-hidden="true"><circle cx="36" cy="36" r="33" stroke="#B8923A" stroke-width="1.5" pathLength="1" data-draw="" transform="rotate(-90 36 36)" style="stroke-dasharray:1;stroke-dashoffset:1"></circle><path d="M23 37l9 9 17-20" stroke="#164E3F" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" pathLength="1" data-draw="" style="stroke-dasharray:1;stroke-dashoffset:1"></path></svg></span>
+                <span style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">Payment received · ₹99</span><span style="font:400 clamp(26px,3vw,36px)/1.1 Fraunces,serif;color:#0E3B30">Your Kundali is <em style="font-style:italic;color:#B8923A">ready.</em></span><span style="font:500 14.5px/1.55 Manrope,sans-serif;color:#5B6A61">The PDF is on its way to WhatsApp {{ phoneMask }}, and stays in your account.</span></span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+                <button type="button" onClick="{{ download }}" style="height:54px;padding:0 24px;border:none;border-radius:4px;background-color:#164E3F;color:#FBF7EE;display:flex;align-items:center;justify-content:center;gap:10px;font:600 15.5px/1 Manrope,sans-serif;box-shadow:inset 0 0 0 1px rgba(217,185,106,.55);cursor:pointer" style-hover="background-color:#1C6B54"><span style="width:18px;height:18px;display:block">{{ ic.download }}</span>Download your report</button>
+                <a href="Consultation-Detail.dc.html#s=kundali" style="align-self:flex-start;display:inline-flex;align-items:center;gap:8px;padding:6px 0;font:600 14px/1.3 Manrope,sans-serif;color:#164E3F;text-decoration:none;background-image:linear-gradient(#B8923A,#B8923A);background-size:100% 1px;background-position:0 100%;background-repeat:no-repeat">Have Sadhak Ji read this chart with you<span style="width:15px;height:15px;display:block;flex:none">{{ ic.arrowR }}</span></a>
+              </div>
+            </div>
+          </sc-if>
+        </div>
+      </section>
+    </sc-if>
+    <section data-screen-label="What's inside" style="background-color:#F4EDDD;box-shadow:inset 0 1px 0 rgba(184,146,58,.35),inset 0 -1px 0 rgba(184,146,58,.35)">
+      <div style="max-width:1320px;margin:0 auto;padding:clamp(56px,8vw,112px) clamp(16px,4vw,32px);display:grid;grid-template-columns:{{ L.toc }};gap:clamp(28px,5vw,88px);align-items:start">
+        <div data-reveal="0" style="display:flex;flex-direction:column;gap:12px">
+          <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">01 — What’s inside</span>
+          <h2 style="margin:0;font:400 clamp(32px,3.8vw,50px)/1.08 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.018em;color:#0E3B30;text-wrap:balance">Twenty-eight pages, <em style="font-style:italic;color:#B8923A">in order.</em></h2>
+          <span style="font:400 18px/1.35 'Tiro Devanagari Hindi',serif;color:#7A5C1C">कुंडली में क्या-क्या है</span>
+          <p style="margin:4px 0 0;max-width:380px;font:400 15.5px/1.65 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty">Charts, degrees and dashas are calculated by software for your birth moment and place. The interpretations are written under Sadhak Ji’s guidance.</p>
+        </div>
+        <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column;border-top:1px solid rgba(184,146,58,.5)">
+          <sc-for list="{{ contents }}" as="c" hint-placeholder-count="10">
+            <li data-reveal="{{ c.i }}" style="display:flex;align-items:baseline;gap:14px;padding:16px 0;border-bottom:1px solid rgba(184,146,58,.28)">
+              <span style="flex:none;width:28px;font:italic 400 15px/1 Fraunces,serif;color:#7A5C1C;font-variant-numeric:tabular-nums">{{ c.n }}</span>
+              <span style="font:400 clamp(17px,1.6vw,20px)/1.3 Fraunces,serif;color:#0E3B30">{{ c.t }}</span>
+              <span aria-hidden="true" style="flex:1;min-width:16px;border-bottom:1.5px dotted rgba(184,146,58,.7);transform:translateY(-4px)"></span>
+              <span style="flex:none;font:600 13px/1 Manrope,sans-serif;color:#5B6A61;font-variant-numeric:tabular-nums">p. {{ c.p }}</span>
+            </li>
+          </sc-for>
+        </ol>
+      </div>
+    </section>
+
+    <section data-screen-label="Sample pages" style="position:relative;overflow:hidden;background-color:#0A1F1A;color:#E4EEE8">
+      <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none">{{ sky2 }}</div>
+      <div style="position:relative;max-width:1320px;margin:0 auto;padding:clamp(64px,9vw,128px) clamp(16px,4vw,32px)">
+        <div style="display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;margin-bottom:clamp(28px,4vw,56px)">
+          <span data-reveal="0" style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#D9B96A">02 — Sample pages</span>
+          <h2 data-reveal="1" style="margin:0;max-width:720px;font:400 clamp(32px,4vw,52px)/1.06 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.018em;color:#FBF7EE;text-wrap:balance">Printed as carefully as a <em style="font-style:italic;color:#D9B96A">family record.</em></h2>
+          <span data-reveal="2" style="max-width:460px;font:500 14px/1.55 Manrope,sans-serif;color:#C9D6CF">A4 pages with gold-ruled margins, designed to be printed and kept with your family papers.</span>
+        </div>
+        <div style="display:flex;justify-content:center;align-items:flex-start;gap:{{ L.sampGap }};overflow-x:{{ L.sampO }};scroll-snap-type:x mandatory;scrollbar-width:none;margin:{{ L.sampM }};padding:{{ L.sampP }}">
+          <sc-for list="{{ samples }}" as="p" hint-placeholder-count="4">
+            <figure data-reveal="{{ p.i }}" style="margin:0;flex:0 0 {{ L.sampW }};scroll-snap-align:center;display:flex;flex-direction:column;gap:14px;transform:{{ p.tf }}">
+              <span style="display:block;aspect-ratio:3/4;border-radius:3px;overflow:hidden;box-shadow:0 40px 60px -30px rgba(0,0,0,.65),0 0 0 1px rgba(217,185,106,.35);transition:transform 400ms cubic-bezier(.22,1,.36,1)" style-hover="transform:translateY(-8px)">{{ p.svg }}</span>
+              <figcaption style="display:flex;align-items:baseline;justify-content:center;gap:8px;font:500 13.5px/1.35 Manrope,sans-serif;color:#E4EEE8"><span style="font:italic 400 14px/1 Fraunces,serif;color:#D9B96A">{{ p.n }}</span>{{ p.cap }}</figcaption>
+            </figure>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section data-screen-label="Reviews" style="background-color:#FBF7EE">
+      <div style="max-width:1320px;margin:0 auto;padding:clamp(56px,8vw,112px) clamp(16px,4vw,32px);display:grid;grid-template-columns:{{ L.rev }};gap:clamp(32px,5vw,80px);align-items:start">
+        <figure data-reveal="0" style="margin:0;display:flex;flex-direction:column;gap:22px">
+          <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">03 — From readers</span>
+          <span style="width:96px;height:16px;display:block">{{ stars }}</span>
+          <blockquote style="margin:0;font:italic 400 clamp(26px,3.2vw,40px)/1.22 Fraunces,serif;font-variation-settings:'SOFT' 50;letter-spacing:-.01em;color:#0E3B30;text-wrap:pretty">“{{ rev0.q }}”</blockquote>
+          <figcaption style="display:flex;align-items:center;gap:12px"><span style="width:28px;height:1px;background-color:#B8923A"></span><span style="font:700 14px/1.3 Manrope,sans-serif;color:#1F2A24">{{ rev0.n }}</span><span style="font:500 13.5px/1.3 Manrope,sans-serif;color:#5B6A61">{{ rev0.c }}</span></figcaption>
+        </figure>
+        <div style="display:flex;flex-direction:column;border-top:1px solid #EAE0CA">
+          <sc-for list="{{ revRest }}" as="r" hint-placeholder-count="3">
+            <figure data-reveal="{{ r.i }}" style="margin:0;display:flex;flex-direction:column;gap:10px;padding:22px 0;border-bottom:1px solid #EAE0CA">
+              <blockquote style="margin:0;font:400 16px/1.6 Manrope,sans-serif;color:#1F2A24;text-wrap:pretty">“{{ r.q }}”</blockquote>
+              <figcaption style="font:600 13px/1.3 Manrope,sans-serif;color:#5B6A61"><span style="color:#1F2A24">{{ r.n }}</span> · {{ r.c }}</figcaption>
+            </figure>
+          </sc-for>
+          <a href="Consultation-Detail.dc.html#s=kundali" style="align-self:flex-start;margin-top:22px;display:inline-flex;align-items:center;gap:8px;padding:6px 0;font:600 14px/1.3 Manrope,sans-serif;color:#164E3F;text-decoration:none;background-image:linear-gradient(#B8923A,#B8923A);background-size:100% 1px;background-position:0 100%;background-repeat:no-repeat">Prefer a personal reading? Book a Kundali consultation<span style="width:15px;height:15px;display:block;flex:none">{{ ic.arrowR }}</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section data-screen-label="Kundali FAQ" style="background-color:#F4EDDD;box-shadow:inset 0 1px 0 rgba(184,146,58,.35)">
+      <div style="max-width:1320px;margin:0 auto;padding:clamp(56px,8vw,112px) clamp(16px,4vw,32px) {{ L.faqPb }};display:grid;grid-template-columns:{{ L.faq }};gap:clamp(28px,5vw,80px);align-items:start">
+        <div style="display:flex;flex-direction:column;gap:12px">
+          <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">04 — Questions</span>
+          <h2 style="margin:0;font:400 clamp(30px,3.4vw,44px)/1.1 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.018em;color:#0E3B30">Before you <em style="font-style:italic;color:#B8923A">generate.</em></h2>
+          <a href="https://wa.me/919000012345" target="_blank" rel="noopener" style="align-self:flex-start;margin-top:8px;display:inline-flex;align-items:center;gap:8px;font:600 14px/1 Manrope,sans-serif;color:#164E3F;text-decoration:none"><span style="width:17px;height:17px;display:block">{{ ic.whatsapp }}</span>Ask on WhatsApp</a>
+        </div>
+        <dc-import name="FaqList" set="kundali99" hint-size="100%,420px"></dc-import>
+      </div>
+    </section>
+  </main>
+  <dc-import name="SiteFooter" hint-size="100%,640px"></dc-import>
+
+  <sc-if value="{{ barOn }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:0;right:0;bottom:0;z-index:58;background-color:#FBF7EE;box-shadow:inset 0 1px 0 #EAE0CA,0 -12px 32px -18px rgba(14,59,48,.3);padding:12px 16px calc(12px + env(safe-area-inset-bottom))">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <span style="display:flex;flex-direction:column;gap:4px"><span style="display:flex;align-items:baseline;gap:8px"><span style="font:700 20px/1 Manrope,sans-serif;color:#0E3B30">₹99</span><span style="font:500 13px/1 Manrope,sans-serif;color:#5B6A61;text-decoration:line-through">{{ mrp }}</span></span><span style="font:600 12px/1.2 Manrope,sans-serif;color:#5B6A61">Full report · 28 pages</span></span>
+        <button type="button" onClick="{{ openSheet }}" style="height:52px;padding:0 22px;border:none;border-radius:4px;background-color:#164E3F;color:#FBF7EE;display:inline-flex;align-items:center;gap:8px;font:600 15px/1 Manrope,sans-serif;box-shadow:inset 0 0 0 1px rgba(217,185,106,.55);cursor:pointer"><span style="width:16px;height:16px;display:block">{{ ic.lock }}</span>Pay ₹99</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ sheet }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;inset:0;z-index:96;display:grid;align-items:{{ L.sheetPos }};justify-items:center;padding:{{ L.sheetPad }};background-color:rgba(10,31,26,.62)">
+      <div onClick="{{ closeSheet }}" aria-hidden="true" style="position:absolute;inset:0"></div>
+      <div ref="{{ sheetRef }}" role="dialog" aria-modal="true" aria-labelledby="k-pay-t" style="position:relative;width:100%;max-width:440px;max-height:92vh;overflow:auto;border-radius:{{ L.sheetR }};background-color:#FBF7EE;box-shadow:0 40px 80px -30px rgba(0,0,0,.6);padding:24px 22px {{ L.sheetPb }}">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding-bottom:16px;border-bottom:1px solid #EAE0CA">
+          <span style="display:flex;flex-direction:column;gap:4px"><span style="font:600 10.5px/1.2 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7A5C1C">Maa Kali Astuti</span><span id="k-pay-t" style="font:400 22px/1.2 Fraunces,serif;color:#0E3B30">Janam Kundali report</span><span style="font:500 13px/1.3 Manrope,sans-serif;color:#5B6A61">{{ f.name }} · 28-page PDF</span></span>
+          <button type="button" onClick="{{ closeSheet }}" aria-label="Close payment" style="width:44px;height:44px;flex:none;margin:-8px -10px 0 0;border:none;border-radius:4px;background:none;color:#1F2A24;display:grid;place-items:center;cursor:pointer" style-hover="background-color:#F4EDDD"><span style="width:20px;height:20px;display:block">{{ ic.close }}</span></button>
+        </div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between;gap:12px;padding:16px 0">
+          <span style="font:600 13px/1.3 Manrope,sans-serif;color:#5B6A61">Amount</span>
+          <span style="display:flex;align-items:baseline;gap:8px"><span style="font:500 14px/1 Manrope,sans-serif;color:#5B6A61;text-decoration:line-through">{{ mrp }}</span><span style="font:700 28px/1 Manrope,sans-serif;color:#0E3B30;font-variant-numeric:tabular-nums">₹99</span></span>
+        </div>
+        <sc-if value="{{ payIdle }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;gap:14px">
+            <span style="font:600 13px/1.2 Manrope,sans-serif;color:#1F2A24">Pay with</span>
+            <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+              <sc-for list="{{ apps }}" as="a" hint-placeholder-count="4">
+                <button type="button" onClick="{{ a.pick }}" aria-pressed="{{ a.sel }}" style="min-height:72px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:8px 4px;border:none;border-radius:4px;background-color:{{ a.bg }};box-shadow:{{ a.ring }};cursor:pointer;transition:box-shadow 200ms"><span style="width:30px;height:30px;border-radius:999px;background-color:{{ a.cBg }};color:{{ a.cInk }};display:grid;place-items:center;font:700 11px/1 Manrope,sans-serif">{{ a.ab }}</span><span style="font:600 11.5px/1.2 Manrope,sans-serif;color:#1F2A24;text-align:center">{{ a.t }}</span></button>
+              </sc-for>
+            </div>
+            <span style="font:500 12.5px/1.45 Manrope,sans-serif;color:#5B6A61">Report and receipt go to WhatsApp {{ phoneMask }}.</span>
+            <button type="button" onClick="{{ payNow }}" style="height:54px;margin-top:4px;border:none;border-radius:4px;background-color:#164E3F;color:#FBF7EE;display:flex;align-items:center;justify-content:center;gap:10px;font:600 15.5px/1 Manrope,sans-serif;box-shadow:inset 0 0 0 1px rgba(217,185,106,.55);cursor:pointer" style-hover="background-color:#1C6B54"><span style="width:18px;height:18px;display:block">{{ ic.lock }}</span>Pay ₹99</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ payProc }}" hint-placeholder-val="{{ false }}">
+          <div role="status" aria-live="assertive" style="display:flex;flex-direction:column;align-items:center;gap:16px;padding:18px 0 8px;text-align:center">
+            <div aria-hidden="true" style="position:relative;width:96px;height:96px;border-radius:999px;background-color:#0A1F1A">
+              <span data-amb="spin:6" style="position:absolute;inset:8%;display:block">{{ ch.outer }}</span>
+              <span data-amb="spin:-4" style="position:absolute;inset:8%;display:block">{{ ch.inner }}</span>
+            </div>
+            <span style="font:400 20px/1.25 Fraunces,serif;color:#0E3B30">Waiting for your bank</span>
+            <span style="font:500 13.5px/1.5 Manrope,sans-serif;color:#5B6A61">Approve the request in your UPI app. Please keep this page open.</span>
+          </div>
+        </sc-if>
+        <sc-if value="{{ payFail }}" hint-placeholder-val="{{ false }}">
+          <div role="alert" style="display:flex;flex-direction:column;gap:14px;padding-top:4px">
+            <span style="display:flex;align-items:center;gap:12px"><span style="width:44px;height:44px;flex:none;border-radius:999px;background-color:rgba(168,50,45,.1);color:#A8322D;display:grid;place-items:center"><span style="width:22px;height:22px;display:block">{{ ic.alert }}</span></span><span style="font:400 21px/1.25 Fraunces,serif;color:#0E3B30">The payment did not go through</span></span>
+            <span style="font:500 14px/1.6 Manrope,sans-serif;color:#1F2A24;text-wrap:pretty">No money was taken. If your bank shows a debit, it is refunded automatically within 5–7 working days. Your chart is saved, so you can try again.</span>
+            <div style="display:flex;flex-wrap:wrap;gap:10px">
+              <button type="button" onClick="{{ retry }}" style="flex:1 1 auto;height:50px;padding:0 20px;border:none;border-radius:4px;background-color:#164E3F;color:#FBF7EE;font:600 14.5px/1 Manrope,sans-serif;box-shadow:inset 0 0 0 1px rgba(217,185,106,.55);cursor:pointer">Try again</button>
+              <a href="https://wa.me/919000012345" target="_blank" rel="noopener" style="height:50px;padding:0 18px;border-radius:4px;box-shadow:inset 0 0 0 1px #164E3F;color:#164E3F;display:inline-flex;align-items:center;gap:8px;font:600 14.5px/1 Manrope,sans-serif;text-decoration:none"><span style="width:16px;height:16px;display:block">{{ ic.whatsapp }}</span>Get help</a>
+            </div>
+          </div>
+        </sc-if>
+        <span style="display:flex;align-items:center;justify-content:center;gap:7px;margin-top:18px;font:600 11.5px/1.3 Manrope,sans-serif;color:#5B6A61"><span style="width:13px;height:13px;display:block;color:#B8923A">{{ ic.shield }}</span>Secured by Razorpay · 256-bit encryption</span>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;demoState&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;form&quot;,&quot;generating&quot;,&quot;preview&quot;,&quot;success&quot;],&quot;default&quot;:&quot;form&quot;,&quot;tsType&quot;:&quot;'form'|'generating'|'preview'|'success'&quot;,&quot;section&quot;:&quot;Prototype&quot;},&quot;payOutcome&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;success&quot;,&quot;fail&quot;],&quot;default&quot;:&quot;success&quot;,&quot;tsType&quot;:&quot;'success'|'fail'&quot;,&quot;section&quot;:&quot;Prototype&quot;}}">
+class Component extends DCLogic {
+  state = { vw: window.innerWidth, ready: false, phase: 'form', f: { name: '', dob: '', tob: '', unknown: false, place: '', lang: 'en', phone: '', email: '' }, placeOpen: false, tried: false, msg: 0, K: null, city: null, sheet: false, pay: 'idle', app: 'gpay' };
+  componentDidMount() {
+    const go = () => { this.un = MKA.bind(this); this.setState({ ready: true }); this.demo(this.props.demoState); };
+    if (window.MKA && MKA.astroReady) go(); else this._w = setInterval(() => { if (window.MKA && MKA.astroReady) { clearInterval(this._w); go(); } }, 30);
+    this._key = (e) => { if (e.key === 'Escape' && this.state.sheet && this.state.pay !== 'processing') this.setState({ sheet: false, pay: 'idle' }); };
+    window.addEventListener('keydown', this._key);
+  }
+  componentDidUpdate() { const d = this.props.demoState; if (this.state.ready && this._ld !== undefined && this._ld !== d) this.demo(d); this._ld = d; }
+  componentWillUnmount() { window.removeEventListener('keydown', this._key); this.un && this.un(); clearInterval(this._w); clearInterval(this._m); clearInterval(this._ramp); clearTimeout(this._g); clearTimeout(this._p); clearTimeout(this._pb); }
+  iso(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  demo(st) {
+    const A = MKA.A, c = A.CITIES[0];
+    clearInterval(this._m); clearTimeout(this._g);
+    if (!st || st === 'form') { if (this.state.phase !== 'form') this.setState({ phase: 'form', K: null }); return; }
+    const f = { name: 'Ravi Sharma', dob: '1986-11-12', tob: '06:40', unknown: false, place: 'Varanasi, Uttar Pradesh', lang: 'en', phone: '9876543210', email: 'ravi.sharma@example.com' };
+    this.setState({ f, city: c, tried: false, sheet: false, pay: 'idle' }, () => {
+      if (st === 'generating') this.gen(true);
+      else this.setState({ K: A.kundali({ dob: f.dob, tob: f.tob, city: c }), phase: st === 'success' ? 'done' : 'preview' });
+    });
+  }
+  errs() {
+    const f = this.state.f, e = {};
+    if (f.name.trim().length < 2) e.name = 'Please enter the name for the report.';
+    if (!f.dob) e.dob = 'Date of birth is needed.'; else if (f.dob > this.iso(new Date())) e.dob = 'This date is in the future.'; else if (f.dob < '1900-01-01') e.dob = 'Please check the year.';
+    if (!f.unknown && !f.tob) e.tob = 'Add the time, or tick “I don’t know”.';
+    if (f.place.trim().length < 2) e.place = 'Choose your place of birth.';
+    if (!/^[6-9]\d{9}$/.test(f.phone)) e.phone = 'Enter a 10-digit WhatsApp number.';
+    if (f.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email)) e.email = 'This email address looks incomplete.';
+    return e;
+  }
+  gen(loop) {
+    const A = MKA.A, s = this.state;
+    if (!loop && Object.keys(this.errs()).length) { this.setState({ tried: true }); setTimeout(() => { const el = document.querySelector('[aria-invalid="true"]'); if (el) el.focus(); }, 60); return; }
+    const q = s.f.place.split(',')[0].trim(), city = s.city && s.city[0] === q ? s.city : (A.placeSearch(q)[0] || A.CITIES[0]);
+    this.setState({ phase: 'gen', msg: 0, city });
+    clearInterval(this._m); this._m = setInterval(() => this.setState((st) => ({ msg: loop ? (st.msg + 1) % 7 : Math.min(st.msg + 1, 6) })), 820);
+    if (!loop) this._g = setTimeout(() => { clearInterval(this._m); const f = this.state.f; this.setState({ K: A.kundali({ dob: f.dob, tob: f.tob, unknown: f.unknown, city }), phase: 'preview' }, () => this.scrollTo('preview')); }, 5300);
+  }
+  scrollTo(id) { setTimeout(() => { const el = document.getElementById(id); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 60, behavior: MKA.isReduced() ? 'auto' : 'smooth' }); }, 90); }
+  payNow() {
+    this.setState({ pay: 'processing' });
+    this._p = setTimeout(() => { if (this.props.payOutcome === 'fail') this.setState({ pay: 'failed' }); else this.setState({ pay: 'idle', sheet: false, phase: 'done' }, () => this.scrollTo('preview')); }, 1800);
+  }
+  download() {
+    const s = this.state, A = MKA.A, K = s.K, f = s.f, R = A.RASHI; if (!K) return;
+    const esc = (t) => String(t).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+    const inner = A.chart(K, { col: '#164E3F', ink: '#0E3B30', sub: '#7A5C1C', fs: 16, sw: 1.6, hi: f.lang === 'hi' }).replace(/^<svg[^>]*>/, '').replace(/<\/svg>$/, '');
+    let rows = ''; K.planets.forEach((p, i) => { const y = 772 + i * 26; rows += `<text x="90" y="${y}">${p.en}${p.retro ? ' (R)' : ''}</text><text x="250" y="${y}">${R[p.sign].en}</text><text x="410" y="${y}">${p.house}</text><text x="490" y="${y}">${p.degS}</text><text x="590" y="${y}">${p.nak}</text>`; });
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 1060" width="800" height="1060" font-family="Georgia,serif"><rect width="800" height="1060" fill="#FFFDF7"/><rect x="24" y="24" width="752" height="1012" fill="none" stroke="#B8923A"/><text x="400" y="92" text-anchor="middle" font-size="30" fill="#0E3B30">Janam Kundali</text><text x="400" y="124" text-anchor="middle" font-size="14" letter-spacing="2" fill="#7A5C1C" font-family="Arial,sans-serif">${esc(f.name.toUpperCase())}</text><text x="400" y="150" text-anchor="middle" font-size="13" fill="#5B6A61" font-family="Arial,sans-serif">${esc(this.birthLine())}</text><g transform="translate(200 184)">${inner}</g><g font-family="Arial,sans-serif" font-size="14" fill="#0E3B30"><text x="90" y="640">Lagna: ${R[K.lagna].en} ${K.lagnaDeg}</text><text x="90" y="666">Rashi (Moon sign): ${R[K.rashi].en}</text><text x="90" y="692">Nakshatra: ${K.nak}, pada ${K.pada}</text></g><g font-family="Arial,sans-serif" font-size="13" fill="#1F2A24"><g font-weight="700" fill="#7A5C1C" font-size="11" letter-spacing="1.5"><text x="90" y="742">GRAHA</text><text x="250" y="742">SIGN</text><text x="410" y="742">HOUSE</text><text x="490" y="742">DEGREE</text><text x="590" y="742">NAKSHATRA</text></g>${rows}</g><text x="400" y="1012" text-anchor="middle" font-size="10" letter-spacing="2" fill="#7A5C1C" font-family="Arial,sans-serif">MAA KALI ASTUTI · SADHAKPAWANPANDEY.COM</text></svg>`;
+    const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([svg], { type: 'image/svg+xml' })); a.download = 'Janam-Kundali-' + (f.name.trim().replace(/\s+/g, '-') || 'report') + '.svg'; document.body.appendChild(a); a.click(); a.remove();
+    MKA.ui.toast('Chart page saved. The full 28-page PDF is on its way to WhatsApp.', { tone: 'success' });
+  }
+  birthLine() { const f = this.state.f, d = f.dob ? new Date(f.dob + 'T12:00') : null, A = MKA.A; return (d ? `${d.getDate()} ${A.MON[d.getMonth()]} ${d.getFullYear()}` : '') + ' · ' + (f.unknown || !f.tob ? 'time unknown (noon)' : A.t12(f.tob)) + ' · ' + (f.place.split(',')[0] || ''); }
+  renderVals() {
+    const M = window.MKA, s = this.state, vw = s.vw, mob = vw < 768, desk = vw >= 1024;
+    const L = { mob, desk, hero: desk ? 'minmax(0,1.05fr) minmax(0,.95fr)' : 'minmax(0,1fr)', areas: desk ? "'intro card' 'facts card'" : "'intro' 'card' 'facts'", two: vw >= 420 ? 'repeat(2,minmax(0,1fr))' : 'minmax(0,1fr)', prev: desk ? 'minmax(0,1fr) minmax(0,1.1fr)' : 'minmax(0,1fr)', trio: vw >= 560 ? 'repeat(3,minmax(0,1fr))' : 'minmax(0,1fr)', pages: vw >= 1024 ? 'repeat(6,minmax(0,1fr))' : vw >= 600 ? 'repeat(3,minmax(0,1fr))' : 'repeat(2,minmax(0,1fr))', toc: desk ? 'minmax(0,.8fr) minmax(0,1.3fr)' : 'minmax(0,1fr)', rev: desk ? 'minmax(0,1.2fr) minmax(0,1fr)' : 'minmax(0,1fr)', faq: desk ? 'minmax(0,.8fr) minmax(0,1.6fr)' : 'minmax(0,1fr)', sheetPos: mob ? 'end' : 'center', sheetR: mob ? '8px 8px 0 0' : '4px', sheetPb: mob ? 'calc(24px + env(safe-area-inset-bottom))' : '28px', sampW: mob ? '72%' : 'min(24%,300px)', sampO: mob ? 'auto' : 'visible', sampM: mob ? '0 -16px' : '0', sampP: mob ? '12px 16px 24px' : '24px 0 8px', tcols: desk ? 'minmax(0,1.35fr) minmax(0,1fr) 56px 72px minmax(0,1.25fr)' : 'minmax(0,1.3fr) minmax(0,1fr) 48px 64px', nakCol: desk, nakSub: !desk, payG: desk ? 'minmax(0,1.3fr) minmax(0,.7fr)' : 'minmax(0,1fr)', sampGap: mob ? '16px' : 'clamp(16px,2.4vw,36px)', sheetPad: mob ? '0' : '24px', faqPb: mob ? 'clamp(88px,10vw,112px)' : 'clamp(56px,8vw,112px)' };
+    if (!M || !s.ready) return { L, ic: {}, f: s.f, on: {}, bad: {}, err: {}, ring: {}, facts: [], langs: [], placeRes: [], msgs: [], birthRows: [], trio: [], planets: [], pages: [], unlock: [], contents: [], samples: [], reviews: [], apps: [], isForm: true, ch: {} };
+    const ic = M.ic(React), A = M.A, R = A.RASHI, f = s.f, tried = s.tried && s.phase === 'form', E = tried ? this.errs() : {}, bad = {}, ring = {};
+    ['name', 'dob', 'tob', 'place', 'phone', 'email'].forEach((x) => { bad[x] = !!E[x]; ring[x] = E[x] ? '#A8322D' : '#EAE0CA'; });
+    const setF = (key, fn) => (e) => { const t = e.target, v = fn ? fn(t) : t.value; this.setState((st) => ({ f: Object.assign({}, st.f, { [key]: v }) })); };
+    const on = { name: setF('name'), dob: setF('dob'), tob: setF('tob'), unknown: setF('unknown', (t) => t.checked), phone: setF('phone', (t) => t.value.replace(/\D/g, '').slice(0, 10)), email: setF('email', (t) => t.value.trim()),
+      place: (e) => { const v = e.target.value; this.setState((st) => ({ f: Object.assign({}, st.f, { place: v }), placeOpen: true, city: null })); },
+      placeFocus: () => { clearTimeout(this._pb); this.setState({ placeOpen: true }); }, placeBlur: () => { this._pb = setTimeout(() => this.setState({ placeOpen: false }), 160); } };
+    const pq = f.place.trim(), placeRes = pq ? A.placeSearch(pq).map((c) => ({ t: c[0], s: c[1], pick: (e) => { e.preventDefault(); this.setState((st) => ({ f: Object.assign({}, st.f, { place: c[0] + ', ' + c[1] }), city: c, placeOpen: false })); } })) : [];
+    const langs = [['en', 'English', '600 14px/1 Manrope,sans-serif'], ['hi', 'हिंदी', '400 16px/1 Mukta,sans-serif']].map(([v, t, font]) => { const sel = f.lang === v; return { t, font, sel, bg: sel ? '#FFFDF8' : 'transparent', ink: sel ? '#0E3B30' : '#5B6A61', ring: sel ? '0 4px 12px -6px rgba(14,59,48,.35)' : 'none', pick: () => this.setState((st) => ({ f: Object.assign({}, st.f, { lang: v }) })) }; });
+    const MSG = ['Reading your birth details', 'Calculating planetary positions', 'Casting the Lagna chart', 'Placing the nine grahas in their houses', 'Working out Vimshottari dasha periods', 'Checking Manglik, Kaal Sarp and Sade Sati', 'Laying out your 28-page report'];
+    const msgs = MSG.map((t, i) => { const done = i < s.msg, cur = i === s.msg; return { t: cur ? t + '…' : t, done, op: i <= s.msg ? '1' : '.45', bg: done ? '#164E3F' : 'transparent', ring: done ? 'none' : cur ? 'inset 0 0 0 1.5px #B8923A' : 'inset 0 0 0 1px #EAE0CA', ink: cur ? '#0E3B30' : done ? '#1F2A24' : '#5B6A61', font: cur ? '700 14px/1.4 Manrope,sans-serif' : '500 14px/1.4 Manrope,sans-serif' }; });
+    const ch = A.chakra('#D9B96A'), K = s.K, hiC = f.lang === 'hi', done = s.phase === 'done';
+    const first = f.name.trim().split(/\s+/)[0] || '';
+    const kkey = K ? M.hash(K.lagna + '|' + K.planets.map((p) => p.sign + ':' + p.house).join(',') + hiC) : 'none';
+    const P = (kind, t, u, sub) => M.h(React, A.page(kind, t, u, sub), null, 'k99-pg-' + u + (sub || ''));
+    const pages = [['cover', 'Janam Kundali', 'Cover & birth details', 'p. 1'], ['chart', 'Lagna chart & positions', 'Lagna & Navamsa charts', 'p. 3'], ['dasha', 'Vimshottari dasha', '120-year dasha timeline', 'p. 8'], ['lines', 'Manglik & Kaal Sarp', 'Dosha checks, read honestly', 'p. 12'], ['lines', 'Career & marriage', 'Life areas, house by house', 'p. 18'], ['remedy', 'Remedies to follow', 'Gemstone, rudraksha & mantra', 'p. 26']].map(([kind, t, cap, n], i) => ({ n, cap, svg: P(kind, t, 'lk' + i, i === 0 && first ? f.name.trim().toUpperCase().slice(0, 22) : undefined), blur: done || i === 0 ? 'none' : 'blur(4.5px) saturate(.8)', locked: !done && i > 0, lockOp: !done && i > 0 ? '1' : '0' }));
+    const birthRows = [{ k: 'Name', v: f.name || '—' }, { k: 'Born', v: this.birthLine().split(' · ').slice(0, 2).join(' · ') }, { k: 'Place', v: f.place || '—' }, { k: 'Report', v: hiC ? 'हिंदी · PDF' : 'English · PDF' }];
+    const apps = [['gpay', 'Google Pay', 'G'], ['phonepe', 'PhonePe', 'Pe'], ['paytm', 'Paytm', 'P'], ['card', 'Card', 'Cd']].map(([v, t, ab]) => { const sel = s.app === v; return { t, ab, sel, bg: sel ? '#FFFDF8' : '#FBF7EE', ring: sel ? 'inset 0 0 0 1.5px #164E3F' : 'inset 0 0 0 1px #EAE0CA', cBg: sel ? '#164E3F' : '#F4EDDD', cInk: sel ? '#FBF7EE' : '#164E3F', pick: () => this.setState({ app: v }) }; });
+    return {
+      L, ic, f, on, bad, err: E, ring, placeRes, placeOpen: s.placeOpen && placeRes.length > 0, langs, todayIso: this.iso(new Date()), tobBg: f.unknown ? '#F4EDDD' : '#FFFDF8',
+      mrp: M.fmt(499), off: 80, stars: M.h(React, A.stars5('#D9B96A', 5), null, 'k99-stars'), corner: M.h(React, M.corner('#B8923A'), null, 'k99-corner'),
+      facts: [[ic.scroll, '28 pages: Lagna, Navamsa, dasha, doshas, remedies'], [ic.whatsapp, 'Instant PDF on WhatsApp and email'], [ic.kundali, 'Sidereal (Lahiri) positions, North-Indian chart style']].map(([icon, t]) => ({ icon, t })),
+      sky2: M.h(React, '<svg viewBox="0 0 1440 800" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">' + M.stars(mob ? 8 : 14, 1440, 800, 'k99-sky2') + '</svg>', null, 'k99-sky2' + (mob ? 'm' : 'd')),
+      sky: M.h(React, `<svg viewBox="0 0 1440 820" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">${M.stars(mob ? 16 : 28, 1440, 820, 'k99-sky')}<g transform="translate(1320 110)" opacity=".09">${M.mandala(320, '#D9B96A', .8)}</g></svg>`, null, 'k99-sky' + (mob ? 'm' : 'd')),
+      soonHome: M.soon('The Home page'), submit: (e) => { e.preventDefault(); this.gen(false); },
+      isForm: s.phase === 'form', isGen: s.phase === 'gen', isReady: s.phase === 'preview' || done, showPrev: !!K && (s.phase === 'preview' || done), isDone: done, notDone: !done,
+      genName: first ? first + '’s' : 'your', msgs, genBar: `scaleX(${(s.msg + 1) / MSG.length})`,
+      ch: { outer: M.h(React, ch.outer, null, 'k99-ch-o'), middle: M.h(React, ch.middle, null, 'k99-ch-m'), inner: M.h(React, ch.inner, null, 'k99-ch-i') },
+      genRef: (el) => { if (!el || el === this._gEl) return; this._gEl = el; if (M.isReduced()) return; const an = [...el.querySelectorAll('[data-ring]')].map((r, i) => r.animate([{ transform: 'rotate(0deg)' }, { transform: `rotate(${i === 1 ? -360 : 360}deg)` }], { duration: [9000, 7000, 5000][i], iterations: Infinity })); an.forEach((a) => (a.playbackRate = .12)); let t = 0; clearInterval(this._ramp); this._ramp = setInterval(() => { t++; const r = Math.min(2.6, .12 + t * .1); an.forEach((a) => (a.updatePlaybackRate ? a.updatePlaybackRate(r) : (a.playbackRate = r))); if (t > 26) clearInterval(this._ramp); }, 100); },
+      readyT: done ? 'Report unlocked' : 'Your chart is ready', readyD: done ? 'Download it below. A copy is on its way to WhatsApp' + (f.email ? ' and email.' : '.') : 'See it below: the chart, the nine grahas and your nakshatra.', readyCta: done ? 'Go to download' : 'View my chart', birthRows,
+      toPreview: () => this.scrollTo('preview'), edit: () => { this.setState({ phase: 'form', K: null, pay: 'idle' }); },
+      chart: K ? M.h(React, A.chart(K, { fs: 15, hi: hiC }), null, 'k99-chart-' + kkey) : null,
+      chartRef: (el) => { if (!el) return; if (el !== this._cEl || this._ck !== kkey) { this._cEl = el; this._ck = kkey; el.__ov = 0; requestAnimationFrame(() => { A.prime(el); A.onView(el, () => A.drawChart(el, { dur: 1200 }), .25); }); } },
+      trio: K ? [['Lagna', R[K.lagna], K.lagnaDeg + ' rising'], ['Rashi · Moon sign', R[K.rashi], 'Lord: ' + R[K.rashi].lordHi], ['Nakshatra', null, 'Pada ' + K.pada]].map(([k, r, sub]) => ({ k, v: r ? r.en : K.nak, hi: r ? r.hi : '', sub, glyph: r ? M.h(React, A.glyph(r.key, '#B8923A', 1.3), null, 'k99-gl-' + r.key) : M.h(React, M.icon('star', 1.3), null, 'k99-gl-nak'), hasHi: !!r })) : [],
+      planets: K ? K.planets.map((p, i) => ({ en: p.en, dev: p.dev, hiN: p.hi, sign: R[p.sign].en, signHi: R[p.sign].hi, house: p.house, deg: p.degS, nak: p.nak, retro: p.retro, zebra: i % 2 ? 'transparent' : 'rgba(244,237,221,.55)' })) : [],
+      unknownTime: !!K && K.unknown, prevName: first ? first + ', here is your chart.' : 'Here is your chart.', prevLine: this.birthLine(), pages,
+      unlock: ['All 28 pages as a PDF, in ' + (hiC ? 'Hindi' : 'English'), 'Navamsa (D9) and Chandra charts', 'Dasha periods to 2046 with dates', 'Gemstone, rudraksha and mantra remedies'].map((t) => ({ t })),
+      openSheet: () => this.setState({ sheet: true, pay: 'idle' }), closeSheet: () => { if (s.pay !== 'processing') this.setState({ sheet: false, pay: 'idle' }); },
+      sheet: s.sheet, payIdle: s.pay === 'idle', payProc: s.pay === 'processing', payFail: s.pay === 'failed', payNow: () => this.payNow(), retry: () => this.setState({ pay: 'idle' }), apps,
+      phoneMask: '+91 ' + (f.phone ? f.phone.slice(0, 2) + '•••••' + f.phone.slice(-3) : ''), download: () => this.download(),
+      sheetRef: (el) => { if (!el || el === this._sEl) return; this._sEl = el; if (!M.isReduced()) el.animate([{ transform: mob ? 'translateY(40px)' : 'translateY(16px)', opacity: 0 }, { transform: 'none', opacity: 1 }], { duration: 380, easing: M.EASE }); const b = el.querySelector('button'); if (b) b.focus({ preventScroll: true }); },
+      okRef: (el) => { if (!el || el === this._ok) return; this._ok = el; const ps = el.querySelectorAll('[data-draw]'); if (ps[0]) M.fx.drawIn(ps[0], 900, 100); if (ps[1]) M.fx.drawIn(ps[1], 480, 820); },
+      contents: [['Birth details & Panchang', '1–2'], ['Lagna (D1) & Chandra charts', '3–4'], ['Navamsa (D9) chart', '5'], ['Planetary positions & nakshatras', '6–7'], ['Vimshottari dasha, 120 years', '8–11'], ['Manglik, Kaal Sarp & Sade Sati', '12–14'], ['Yogas in your chart', '15–17'], ['Career, marriage, health & money', '18–23'], ['Gemstone & rudraksha guidance', '24–25'], ['Remedies you can follow', '26–28']].map(([t, p], i) => ({ n: String(i + 1).padStart(2, '0'), t, p, i: i % 3 })),
+      samples: [['cover', 'Janam Kundali', 'Cover'], ['chart', 'Lagna chart & positions', 'Lagna chart'], ['dasha', 'Vimshottari dasha', 'Dasha timeline'], ['remedy', 'Remedies to follow', 'Remedies']].map(([kind, t, cap], i) => ({ i, cap, n: '0' + (i + 1), svg: P(kind, t, 'sm' + i), tf: mob ? 'none' : ['rotate(-4deg) translateY(20px)', 'rotate(-1.2deg)', 'rotate(1.2deg)', 'rotate(4deg) translateY(20px)'][i] })),
+      reviews: A.K99REV.map((r, i) => ({ q: r.q, n: r.n, c: r.c, i })), rev0: A.K99REV[0], revRest: A.K99REV.slice(1).map((r, i) => ({ q: r.q, n: r.n, c: r.c, i: i + 1 })),
+      barOn: mob && s.phase === 'preview' && !s.sheet
+    };
+  }
+}
+
+</script>
+</body>
+</html>

@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..600,0..100;1,9..144,300..600,0..100&family=Manrope:wght@400;500;600;700&family=Mukta:wght@400;500;600&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap">
+<script src="mka-core.js"></script>
+<script src="mka-astro.js"></script>
+<style>
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#FBF7EE url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .16 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");color:#1F2A24;font-family:Manrope,Mukta,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#164E3F}
+a:hover{color:#1C6B54}
+button,input,select,textarea{font-family:inherit}
+:focus-visible{outline:2px solid #B8923A;outline-offset:2px}
+::selection{background:#D9B96A;color:#0E3B30}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+  <dc-import name="SiteChrome" active="consult" hint-size="100%,108px"></dc-import>
+  <main id="main" style="flex:1">
+
+    <section data-screen-label="Consultations hero" style="position:relative;overflow:hidden;background-color:#FBF7EE">
+      <div aria-hidden="true" style="position:absolute;left:-220px;top:-200px;width:680px;height:680px;opacity:.06;pointer-events:none">{{ mandala }}</div>
+      <div style="position:relative;max-width:1320px;margin:0 auto;padding:clamp(20px,4vw,44px) clamp(16px,4vw,32px) clamp(64px,8vw,112px);display:grid;grid-template-columns:{{ L.hero }};gap:clamp(40px,6vw,88px);align-items:center">
+        <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+          <nav aria-label="Breadcrumb" style="display:flex;align-items:center;gap:8px;font:500 12.5px/1 Manrope,sans-serif;color:#5B6A61"><a href="#" onClick="{{ soonHome }}" style="color:#5B6A61;text-decoration:none">Home</a><span style="color:#B8923A">/</span><span aria-current="page" style="color:#1F2A24">Consultations</span></nav>
+          <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">॥ Personal guidance ॥ · <span style="letter-spacing:0;text-transform:none;font-family:Mukta,sans-serif;font-weight:500;font-size:1.08em">परामर्श</span></span>
+          <h1 style="margin:0;font:400 clamp(40px,5.6vw,76px)/1.03 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.022em;color:#0E3B30;text-wrap:balance">Clear answers, <em style="font-style:italic;color:#B8923A">read</em> from your own chart.</h1>
+          <span style="font:400 clamp(18px,2vw,23px)/1.35 'Tiro Devanagari Hindi',serif;color:#7A5C1C">आपकी कुंडली से, आपके प्रश्नों के उत्तर</span>
+          <p style="margin:4px 0 0;max-width:540px;font:400 clamp(16px,1.4vw,18px)/1.65 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty">Kundali, palmistry, tarot and numerology with Sadhak Pawan Pandey. One seeker at a time, by call, video, WhatsApp or a written report, with guidance that continues until your doubts are resolved.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:10px">
+            <a href="Booking.dc.html" style="height:52px;padding:0 26px;border-radius:4px;background-color:#164E3F;background-image:linear-gradient(110deg,rgba(217,185,106,0) 40%,rgba(217,185,106,.4) 50%,rgba(217,185,106,0) 60%);background-size:260% 100%;background-position:100% 0;background-repeat:no-repeat;color:#FBF7EE;display:inline-flex;align-items:center;gap:10px;font:600 15px/1 Manrope,sans-serif;letter-spacing:.03em;text-decoration:none;box-shadow:inset 0 0 0 1px rgba(217,185,106,.55);transition:background-position 700ms cubic-bezier(.22,1,.36,1),transform 200ms" style-hover="background-position:0 0;transform:translateY(-1px);color:#FBF7EE"><span style="width:18px;height:18px;display:block">{{ ic.calendar }}</span>Book a consultation</a>
+            <a href="#services" onClick="{{ toServices }}" style="height:52px;padding:0 22px;border-radius:4px;background-color:#FBF7EE;box-shadow:inset 0 0 0 1px #164E3F;color:#164E3F;display:inline-flex;align-items:center;gap:8px;font:600 15px/1 Manrope,sans-serif;text-decoration:none;transition:background-color 150ms" style-hover="background-color:#E4EEE8">Compare the four</a>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 18px;margin-top:12px;font:600 13px/1.3 Manrope,sans-serif;color:#1F2A24">
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:15px;height:15px;display:block;color:#B8923A">{{ ic.starF }}</span>4.9 · 2,000+ seekers</span>
+            <span style="width:4px;height:4px;border-radius:999px;background-color:#B8923A"></span>
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:16px;display:block;color:#B8923A">{{ ic.seal }}</span>Satisfaction guarantee on Kundali</span>
+            <span style="width:4px;height:4px;border-radius:999px;background-color:#B8923A"></span>
+            <span style="display:flex;align-items:center;gap:6px"><span style="width:16px;height:16px;display:block;color:#B8923A">{{ ic.globe }}</span>Hindi or English</span>
+          </div>
+        </div>
+        <div style="position:relative;justify-self:center;width:100%;max-width:{{ L.archW }};padding-bottom:28px">
+          <div style="position:relative;aspect-ratio:300/380">
+            <span aria-hidden="true" style="position:absolute;left:8%;right:8%;bottom:-22px;height:40px;border-radius:50%;background-image:radial-gradient(closest-side,rgba(14,59,48,.28),rgba(14,59,48,0));pointer-events:none"></span>
+            <svg aria-hidden="true" viewBox="0 0 324 404" style="position:absolute;left:-4%;top:-3.2%;width:108%;height:106.3%;pointer-events:none;overflow:visible" fill="none" stroke="#B8923A" stroke-width="1"><path d="M2 404V162A160 160 0 0 1 322 162V404" opacity=".55"></path></svg>
+            <span style="position:absolute;inset:0;display:block">{{ portraitBg }}</span>
+            <div aria-hidden="true" style="position:absolute;left:50%;top:38.4%;width:74%;aspect-ratio:1/1;transform:translate(-50%,-50%);opacity:.6">
+              <span data-amb="spin:120" style="position:absolute;inset:0;display:block">{{ ch.outer }}</span>
+              <span data-amb="spin:-90" style="position:absolute;inset:0;display:block">{{ ch.middle }}</span>
+              <span data-amb="spin:60" style="position:absolute;inset:0;display:block">{{ ch.inner }}</span>
+            </div>
+            <span style="position:absolute;inset:0;display:block">{{ portraitFg }}</span>
+          </div>
+          <div style="position:absolute;left:{{ L.capL }};bottom:0;display:flex;flex-direction:column;gap:6px;padding:14px 18px;background-color:#FBF7EE;border-radius:4px;box-shadow:inset 0 0 0 1px rgba(184,146,58,.55),0 18px 36px -20px rgba(14,59,48,.4);max-width:260px">
+            <span style="font:400 19px/1.15 Fraunces,serif;color:#0E3B30">Sadhak Pawan Pandey</span>
+            <span style="font:500 12.5px/1.45 Manrope,sans-serif;color:#5B6A61">MBA · former MNC professional · 18 years of sadhana</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="services" data-screen-label="Four services" style="background-color:#F4EDDD;box-shadow:inset 0 1px 0 rgba(184,146,58,.35),inset 0 -1px 0 rgba(184,146,58,.35);scroll-margin-top:60px">
+      <div style="max-width:1320px;margin:0 auto;padding:clamp(56px,8vw,112px) clamp(16px,4vw,32px)">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:18px 56px;align-items:end;margin-bottom:clamp(28px,4vw,44px)">
+          <div data-reveal="0" style="display:flex;flex-direction:column;gap:12px">
+            <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">01 — Four ways to consult</span>
+            <h2 style="margin:0;font:400 clamp(32px,3.8vw,50px)/1.08 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.018em;color:#0E3B30;text-wrap:balance">Choose the reading that <em style="font-style:italic;color:#B8923A">fits</em> your question.</h2>
+            <span style="font:400 18px/1.35 'Tiro Devanagari Hindi',serif;color:#7A5C1C">चार विधियाँ, एक उद्देश्य</span>
+          </div>
+          <p data-reveal="1" style="margin:0;max-width:520px;font:400 16px/1.65 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty">All four begin the same way: Sadhak Ji studies your details before he speaks to you. Prices are per session, inclusive of taxes, with packages on each service page.</p>
+        </div>
+        <div style="display:flex;flex-direction:column;border-top:1px solid rgba(184,146,58,.5)">
+          <sc-for list="{{ svcs }}" as="s" hint-placeholder-count="4">
+            <article data-reveal="{{ s.i }}" style="display:grid;grid-template-columns:{{ L.rowCols }};gap:{{ L.rowGap }};align-items:center;padding:clamp(22px,3vw,34px) clamp(4px,1.6vw,22px);border-bottom:1px solid rgba(184,146,58,.5);transition:background-color 250ms" style-hover="background-color:#FBF7EE">
+              <div style="display:flex;align-items:center;gap:14px">
+                <span style="font:400 15px/1 Fraunces,serif;font-style:italic;color:#7A5C1C;font-variant-numeric:tabular-nums">{{ s.n }}</span>
+                <span style="width:52px;height:52px;border-radius:999px;background-color:#FBF7EE;box-shadow:inset 0 0 0 1px rgba(184,146,58,.6);display:grid;place-items:center;color:#164E3F;flex:none"><span style="width:26px;height:26px;display:block">{{ s.icon }}</span></span>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+                <div style="display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 12px">
+                  <a href="{{ s.href }}" style="font:400 clamp(24px,2.4vw,30px)/1.1 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.01em;color:#0E3B30;text-decoration:none" style-hover="color:#1C6B54">{{ s.name }}</a>
+                  <span style="font:400 16px/1.3 'Tiro Devanagari Hindi',serif;color:#7A5C1C">{{ s.hi }}</span>
+                </div>
+                <p style="margin:0;max-width:440px;font:400 15px/1.6 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty">{{ s.line }}</p>
+                <sc-if value="{{ s.guarantee }}" hint-placeholder-val="{{ false }}"><span style="align-self:flex-start;display:inline-flex;align-items:center;gap:7px;height:28px;padding:0 12px;border-radius:999px;background-color:#FBF7EE;box-shadow:inset 0 0 0 1px rgba(184,146,58,.6);font:700 10.5px/1 Manrope,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#7A5C1C"><span style="width:14px;height:14px;display:block">{{ ic.seal }}</span>Satisfaction guarantee</span></sc-if>
+              </div>
+              <dl style="margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 22px">
+                <div style="display:flex;flex-direction:column;gap:5px"><dt style="font:600 10.5px/1 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7A5C1C">Duration</dt><dd style="margin:0;font:600 14px/1.35 Manrope,sans-serif;color:#1F2A24">{{ s.dur }}</dd></div>
+                <div style="display:flex;flex-direction:column;gap:5px"><dt style="font:600 10.5px/1 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7A5C1C">Mode</dt><dd style="margin:0;display:flex;gap:8px;color:#164E3F"><sc-for list="{{ s.modes }}" as="m" hint-placeholder-count="3"><span title="{{ m.t }}" aria-label="{{ m.t }}" style="width:30px;height:30px;border-radius:999px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px #EAE0CA;display:grid;place-items:center"><span style="width:16px;height:16px;display:block">{{ m.icon }}</span></span></sc-for></dd></div>
+                <div style="display:flex;flex-direction:column;gap:5px"><dt style="font:600 10.5px/1 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7A5C1C">Delivery</dt><dd style="margin:0;font:500 14px/1.4 Manrope,sans-serif;color:#1F2A24">{{ s.deliver }}</dd></div>
+                <div style="display:flex;flex-direction:column;gap:5px"><dt style="font:600 10.5px/1 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7A5C1C">You get</dt><dd style="margin:0;font:500 14px/1.4 Manrope,sans-serif;color:#1F2A24">{{ s.get }}</dd></div>
+              </dl>
+              <div style="display:flex;flex-direction:{{ L.priceDir }};align-items:{{ L.priceAlign }};justify-content:space-between;gap:12px">
+                <span style="display:flex;flex-direction:column;gap:4px;align-items:{{ L.priceAlign }}"><span style="font:600 10.5px/1 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#5B6A61">From</span><span style="font:700 24px/1 Manrope,sans-serif;color:#0E3B30;font-variant-numeric:tabular-nums">{{ s.price }}</span></span>
+                <span style="display:flex;align-items:center;gap:14px">
+                  <a href="{{ s.href }}" style="font:600 13.5px/1 Manrope,sans-serif;color:#164E3F;text-decoration:none;padding:6px 0;background-image:linear-gradient(#B8923A,#B8923A);background-size:100% 1px;background-position:0 100%;background-repeat:no-repeat">Details</a>
+                  <a href="{{ s.book }}" style="height:44px;padding:0 18px;border-radius:4px;background-color:#164E3F;color:#FBF7EE;display:inline-flex;align-items:center;gap:8px;font:600 14px/1 Manrope,sans-serif;text-decoration:none;box-shadow:inset 0 0 0 1px rgba(217,185,106,.55);transition:background-color 150ms" style-hover="background-color:#1C6B54;color:#FBF7EE">Book<span style="width:15px;height:15px;display:block">{{ ic.arrowR }}</span></a>
+                </span>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;align-items:center;gap:10px 16px;margin-top:26px;font:500 14px/1.5 Manrope,sans-serif;color:#5B6A61">
+          <span>Not sure which one you need?</span>
+          <a href="https://wa.me/919000012345" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:7px;font-weight:600;color:#164E3F;text-decoration:none"><span style="width:16px;height:16px;display:block">{{ ic.whatsapp }}</span>Describe your question on WhatsApp</a>
+        </div>
+      </div>
+    </section>
+
+    <section data-screen-label="How it works" style="position:relative;overflow:hidden;background-color:#0A1F1A;color:#E4EEE8">
+      <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none">{{ sky }}</div>
+      <div style="position:relative;max-width:1320px;margin:0 auto;padding:clamp(64px,9vw,128px) clamp(16px,4vw,32px)">
+        <div style="display:flex;flex-direction:column;gap:12px;max-width:640px;margin-bottom:clamp(40px,6vw,72px)">
+          <span data-reveal="0" style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#D9B96A">02 — How it works · <span style="letter-spacing:0;text-transform:none;font-family:Mukta,sans-serif;font-weight:500;font-size:1.08em">प्रक्रिया</span></span>
+          <h2 data-reveal="1" style="margin:0;font:400 clamp(32px,4vw,54px)/1.06 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.018em;color:#FBF7EE">Four steps, and <em style="font-style:italic;color:#D9B96A">no</em> hurry.</h2>
+          <p data-reveal="2" style="margin:0;font:400 16px/1.65 Manrope,sans-serif;color:#C9D6CF;text-wrap:pretty">Your details reach Sadhak Ji before the session does. Nothing is read on the spot, and nothing ends when the call does.</p>
+        </div>
+        <div ref="{{ stepsRef }}" style="position:relative">
+        <span aria-hidden="true" data-line="1" style="position:absolute;left:{{ L.lineL }};top:{{ L.lineT }};right:{{ L.lineR }};bottom:{{ L.lineB }};width:{{ L.lineW }};height:{{ L.lineH }};background-color:rgba(217,185,106,.55);transform-origin:0 0;transform:{{ L.line0 }}"></span>
+        <ol style="position:relative;list-style:none;margin:0;padding:0;display:grid;grid-template-columns:{{ L.stepCols }};gap:{{ L.stepGap }}">
+          <sc-for list="{{ steps }}" as="st" hint-placeholder-count="4">
+            <li data-step="1" style="position:relative;display:grid;grid-template-columns:{{ L.stepInner }};gap:18px 20px;align-items:start">
+              <span style="position:relative;width:56px;height:56px;border-radius:999px;background-color:#0A1F1A;box-shadow:inset 0 0 0 1px #D9B96A;display:grid;place-items:center;font:400 24px/1 'Tiro Devanagari Hindi',serif;color:#D9B96A">{{ st.dev }}</span>
+              <div style="display:flex;flex-direction:column;gap:9px;padding-top:{{ L.stepPad }}">
+                <span style="width:24px;height:24px;display:block;color:#D9B96A">{{ st.icon }}</span>
+                <span style="font:400 22px/1.2 Fraunces,serif;color:#FBF7EE">{{ st.t }}</span>
+                <span style="font:400 14.5px/1.6 Manrope,sans-serif;color:#C9D6CF;text-wrap:pretty;max-width:280px">{{ st.d }}</span>
+              </div>
+            </li>
+          </sc-for>
+        </ol>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px 22px;margin-top:clamp(40px,5vw,64px);padding-top:22px;border-top:1px solid rgba(217,185,106,.2);font:500 13.5px/1.4 Manrope,sans-serif;color:#C9D6CF">
+          <span style="display:flex;align-items:center;gap:8px"><span style="width:16px;height:16px;display:block;color:#D9B96A">{{ ic.clock }}</span>Mon–Sat · 10:00–19:00 IST</span>
+          <span style="display:flex;align-items:center;gap:8px"><span style="width:16px;height:16px;display:block;color:#D9B96A">{{ ic.returns }}</span>Reschedule once, up to 12 hours before</span>
+          <span style="display:flex;align-items:center;gap:8px"><span style="width:16px;height:16px;display:block;color:#D9B96A">{{ ic.lock }}</span>Your details stay private</span>
+        </div>
+      </div>
+    </section>
+
+    <section data-screen-label="Credentials" style="background-color:#FBF7EE">
+      <div style="max-width:1320px;margin:0 auto;padding:clamp(64px,9vw,128px) clamp(16px,4vw,32px);display:grid;grid-template-columns:{{ L.cred }};gap:clamp(40px,6vw,96px);align-items:start">
+        <figure data-reveal="0" style="margin:0;position:relative;display:flex;flex-direction:column;gap:22px;padding-top:12px">
+          <span aria-hidden="true" style="font:400 120px/.6 Fraunces,serif;color:#B8923A;opacity:.5;height:48px">“</span>
+          <blockquote style="margin:0;font:400 clamp(28px,3.2vw,42px)/1.18 Fraunces,serif;font-style:italic;font-variation-settings:'SOFT' 50;letter-spacing:-.012em;color:#0E3B30;text-wrap:balance">Welcome to a space where ancient spiritual wisdom meets modern clarity.</blockquote>
+          <span style="display:block;width:180px;height:14px">{{ lotusRule }}</span>
+          <figcaption style="font:600 12px/1.4 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7A5C1C">Sadhak Pawan Pandey · Founder, Maa Kali Astuti</figcaption>
+        </figure>
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <span data-reveal="0" style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">03 — Who you speak with</span>
+          <h2 data-reveal="1" style="margin:0;font:400 clamp(32px,3.8vw,50px)/1.08 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.018em;color:#0E3B30">An MBA who chose <em style="font-style:italic;color:#B8923A">sadhana.</em></h2>
+          <span data-reveal="1" style="font:400 18px/1.35 'Tiro Devanagari Hindi',serif;color:#7A5C1C">साधक पवन पाण्डेय</span>
+          <p data-reveal="2" style="margin:0;max-width:560px;font:400 16.5px/1.7 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty">Sadhak Ji left a corporate career in multinational companies to give his life to sadhana, mantra and paranormal research under enlightened mentors. He treats spirituality as a time-tested science and rejects superstition, which is why his readings explain the reasoning behind every answer.</p>
+          <ul style="list-style:none;margin:8px 0 0;padding:0;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,250px),1fr));gap:0 28px;border-top:1px solid #EAE0CA">
+            <sc-for list="{{ creds }}" as="c" hint-placeholder-count="4">
+              <li style="display:grid;grid-template-columns:26px minmax(0,1fr);gap:14px;padding:16px 0;border-bottom:1px solid #EAE0CA">
+                <span style="width:24px;height:24px;display:block;color:#B8923A">{{ c.icon }}</span>
+                <span style="display:flex;flex-direction:column;gap:4px"><span style="font:600 15px/1.3 Manrope,sans-serif;color:#0E3B30">{{ c.t }}</span><span style="font:400 13.5px/1.5 Manrope,sans-serif;color:#5B6A61">{{ c.d }}</span></span>
+              </li>
+            </sc-for>
+          </ul>
+          <div ref="{{ statsRef }}" style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin-top:10px">
+            <sc-for list="{{ stats }}" as="st" hint-placeholder-count="3">
+              <div style="display:flex;flex-direction:column;gap:6px">
+                <span style="font:400 clamp(34px,4vw,52px)/1 Fraunces,serif;letter-spacing:-.02em;color:#0E3B30;font-variant-numeric:tabular-nums"><span data-count="{{ st.v }}">{{ st.v0 }}</span><span style="color:#B8923A">{{ st.suf }}</span></span>
+                <span style="font:500 13px/1.4 Manrope,sans-serif;color:#5B6A61">{{ st.t }}</span>
+              </div>
+            </sc-for>
+          </div>
+          <a href="#" onClick="{{ soonAbout }}" style="align-self:flex-start;margin-top:8px;display:inline-flex;align-items:center;gap:8px;font:600 14px/1 Manrope,sans-serif;color:#164E3F;text-decoration:none;padding:6px 0;background-image:linear-gradient(#B8923A,#B8923A);background-size:100% 1px;background-position:0 100%;background-repeat:no-repeat">Read his story<span style="width:16px;height:16px;display:block">{{ ic.arrowR }}</span></a>
+        </div>
+      </div>
+    </section>
+
+    <section data-screen-label="Testimonials" style="background-color:#F4EDDD;box-shadow:inset 0 1px 0 rgba(184,146,58,.35),inset 0 -1px 0 rgba(184,146,58,.35)">
+      <div style="max-width:1320px;margin:0 auto;padding:clamp(56px,8vw,112px) clamp(16px,4vw,32px)">
+        <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px 40px;margin-bottom:clamp(28px,4vw,44px)">
+          <div data-reveal="0" style="display:flex;flex-direction:column;gap:12px">
+            <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">04 — Seekers speak</span>
+            <h2 style="margin:0;font:400 clamp(32px,3.8vw,50px)/1.08 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.018em;color:#0E3B30">What seekers say <em style="font-style:italic;color:#B8923A">afterwards.</em></h2>
+          </div>
+          <div data-reveal="1" style="display:flex;align-items:center;gap:14px">
+            <span style="font:400 48px/1 Fraunces,serif;color:#0E3B30;font-variant-numeric:tabular-nums">4.9</span>
+            <span style="display:flex;flex-direction:column;gap:6px"><span style="display:block;width:84px;height:15px">{{ stars5 }}</span><span style="font:500 13px/1.3 Manrope,sans-serif;color:#5B6A61">from 2,000+ seekers</span></span>
+          </div>
+        </div>
+        <div style="display:{{ L.twD }};gap:14px;overflow-x:{{ L.twO }};scroll-snap-type:{{ L.twS }};scrollbar-width:none;margin:{{ L.twM }};padding:{{ L.twP }};column-count:{{ L.twC }};column-gap:20px">
+          <sc-for list="{{ testi }}" as="q" hint-placeholder-count="5">
+            <article style="flex:{{ L.tcF }};scroll-snap-align:start;break-inside:avoid;display:flex;flex-direction:column;gap:16px;padding:24px;margin:0 0 20px;background-color:#FFFDF8;border-radius:4px;box-shadow:inset 0 0 0 1px #EAE0CA">
+              <span style="display:block;width:72px;height:13px">{{ stars5 }}</span>
+              <p style="margin:0;font:400 {{ q.size }}/1.45 Fraunces,serif;font-variation-settings:'SOFT' 50;color:#0E3B30;text-wrap:pretty">{{ q.q }}</p>
+              <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding-top:14px;border-top:1px dashed #EAE0CA">
+                <span style="display:flex;flex-direction:column;gap:3px"><span style="font:600 14px/1.2 Manrope,sans-serif;color:#1F2A24">{{ q.n }}</span><span style="font:500 12.5px/1.2 Manrope,sans-serif;color:#5B6A61">{{ q.c }}</span></span>
+                <span style="height:26px;padding:0 10px;border-radius:999px;background-color:#E4EEE8;color:#164E3F;display:inline-flex;align-items:center;font:600 11.5px/1 Manrope,sans-serif;white-space:nowrap">{{ q.s }}</span>
+              </div>
+            </article>
+          </sc-for>
+          <button onClick="{{ soonVideo }}" aria-label="Play video testimonial from Sunita Pathak, Delhi" style="flex:{{ L.tcF }};scroll-snap-align:start;break-inside:avoid;position:relative;display:block;width:100%;margin:0 0 20px;padding:0;border:0;border-radius:4px;overflow:hidden;background-color:#0A1F1A;cursor:pointer;text-align:left;aspect-ratio:4/5">
+            <span aria-hidden="true" style="position:absolute;inset:0;display:block">{{ vidArt }}</span>
+            <span style="position:absolute;left:50%;top:44%;width:68px;height:68px;margin:-34px 0 0 -34px;border-radius:999px;background-color:rgba(10,31,26,.55);box-shadow:inset 0 0 0 1.5px #D9B96A;display:grid;place-items:center;color:#D9B96A"><span style="width:26px;height:26px;display:block;margin-left:4px">{{ ic.play }}</span></span>
+            <span style="position:absolute;left:20px;right:20px;bottom:20px;display:flex;flex-direction:column;gap:6px"><span style="font:600 10.5px/1 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#D9B96A">Video · 1:42</span><span style="font:400 20px/1.2 Fraunces,serif;color:#FBF7EE">“Why I trust Sadhak Ji”</span><span style="font:500 12.5px/1.2 Manrope,sans-serif;color:#C9D6CF">Sunita Pathak · Delhi · Kundali Reading</span></span>
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section data-screen-label="FAQ" style="background-color:#FBF7EE">
+      <div style="max-width:1320px;margin:0 auto;padding:clamp(64px,9vw,120px) clamp(16px,4vw,32px);display:grid;grid-template-columns:{{ L.faq }};gap:clamp(32px,5vw,80px);align-items:start">
+        <div style="display:flex;flex-direction:column;gap:14px;position:{{ L.faqPos }};top:96px">
+          <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">05 — Before you book</span>
+          <h2 style="margin:0;font:400 clamp(32px,3.6vw,46px)/1.08 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.018em;color:#0E3B30">Questions seekers <em style="font-style:italic;color:#B8923A">ask first.</em></h2>
+          <div style="position:relative;overflow:hidden;margin-top:14px;padding:22px;border-radius:4px;background-color:#0E3B30;color:#E4EEE8;display:flex;flex-direction:column;gap:10px">
+            <span style="width:26px;height:26px;display:block;color:#D9B96A">{{ ic.whatsapp }}</span>
+            <span style="font:400 21px/1.2 Fraunces,serif;color:#FBF7EE">Still unsure? Ask a person.</span>
+            <span style="font:400 14px/1.6 Manrope,sans-serif;color:#C9D6CF">Sadhak Ji’s office replies within a few hours, Mon–Sat, in Hindi or English.</span>
+            <a href="https://wa.me/919000012345" target="_blank" rel="noopener" style="align-self:flex-start;margin-top:4px;height:44px;padding:0 16px;border-radius:4px;box-shadow:inset 0 0 0 1px #D9B96A;color:#D9B96A;display:inline-flex;align-items:center;gap:8px;font:600 14px/1 Manrope,sans-serif;text-decoration:none" style-hover="background-color:rgba(217,185,106,.12);color:#D9B96A">+91 90000 12345</a>
+          </div>
+        </div>
+        <dc-import name="FaqList" set="consult" hint-size="100%,560px"></dc-import>
+      </div>
+    </section>
+  </main>
+  <dc-import name="SiteFooter" hint-size="100%,640px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { vw: window.innerWidth, ready: false };
+  componentDidMount() {
+    const go = () => { this.un = MKA.bind(this); this.setState({ ready: true }); };
+    if (window.MKA && MKA.astroReady) go(); else this._w = setInterval(() => { if (window.MKA && MKA.astroReady) { clearInterval(this._w); go(); } }, 30);
+  }
+  componentWillUnmount() { this.un && this.un(); clearInterval(this._w); }
+  count(root) {
+    const M = MKA;
+    root.querySelectorAll('[data-count]').forEach((el) => {
+      const to = +el.getAttribute('data-count');
+      if (M.isReduced()) { el.textContent = to.toLocaleString('en-IN'); return; }
+      const t0 = performance.now(), dur = 1600;
+      const tick = (t) => { const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3); el.textContent = Math.round(to * e).toLocaleString('en-IN'); if (p < 1) requestAnimationFrame(tick); };
+      requestAnimationFrame(tick);
+    });
+  }
+  renderVals() {
+    const M = window.MKA, s = this.state, vw = s.vw, mob = vw < 768, wide = vw >= 1100;
+    const L = {
+      hero: vw >= 980 ? 'minmax(0,1.15fr) minmax(0,.85fr)' : 'minmax(0,1fr)', archW: mob ? '300px' : '440px', capL: mob ? '-4px' : '-36px',
+      rowCols: wide ? '96px minmax(0,1.2fr) minmax(0,1.5fr) 220px' : 'minmax(0,1fr)', rowGap: wide ? '28px' : '18px', priceDir: wide ? 'column' : 'row', priceAlign: wide ? 'flex-end' : 'center',
+      stepCols: vw >= 900 ? 'repeat(4,minmax(0,1fr))' : 'minmax(0,1fr)', stepGap: vw >= 900 ? '28px' : '34px', stepInner: vw >= 900 ? 'minmax(0,1fr)' : '56px minmax(0,1fr)', stepPad: vw >= 900 ? '4px' : '2px',
+      lineL: vw >= 900 ? '28px' : '27.5px', lineT: '28px', lineR: vw >= 900 ? '0' : 'auto', lineB: vw >= 900 ? 'auto' : '28px', lineW: vw >= 900 ? 'auto' : '1px', lineH: vw >= 900 ? '1px' : 'auto', line0: vw >= 900 ? 'scaleX(0)' : 'scaleY(0)',
+      cred: vw >= 980 ? 'minmax(0,.9fr) minmax(0,1.1fr)' : 'minmax(0,1fr)',
+      twD: mob ? 'flex' : 'block', twO: mob ? 'auto' : 'visible', twS: mob ? 'x mandatory' : 'none', twM: mob ? '0 -16px' : '0', twP: mob ? '0 16px 6px' : '0', twC: mob ? 'auto' : vw >= 1100 ? 3 : 2, tcF: mob ? '0 0 84%' : 'none',
+      faq: vw >= 980 ? 'minmax(0,.8fr) minmax(0,1.4fr)' : 'minmax(0,1fr)', faqPos: vw >= 980 ? 'sticky' : 'static'
+    };
+    if (!M || !s.ready) return { L, ic: {}, ch: {}, svcs: [], steps: [], creds: [], stats: [], testi: [], five: [] };
+    const ic = M.ic(React), A = M.A;
+    const five = [1, 2, 3, 4, 5];
+    return {
+      L, ic, five, stars5: M.h(React, A.stars5('#B8923A'), null, 'stars5-gold'),
+      soonHome: M.soon('The Home page'), soonAbout: M.soon('About Sadhak Ji'), soonVideo: M.soon('Video testimonials'),
+      toServices: (e) => { e.preventDefault(); const el = document.getElementById('services'); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 60, behavior: M.isReduced() ? 'auto' : 'smooth' }); },
+      mandala: M.h(React, `<svg viewBox="-300 -300 600 600" width="100%" height="100%">${M.mandala(296, '#7A5C1C', 1)}</svg>`, null, 'cons-mandala'),
+      portraitBg: M.h(React, A.portrait('cons', 'bg'), null, 'cons-pbg'), portraitFg: M.h(React, A.portrait('cons', 'fg'), null, 'cons-pfg'),
+      ch: (() => { const c = A.chakra('#D9B96A'); return { outer: M.h(React, c.outer, null, 'cons-ch-o'), middle: M.h(React, c.middle, null, 'cons-ch-m'), inner: M.h(React, c.inner, null, 'cons-ch-i') }; })(),
+      svcs: M.SERVICES.map((x, i) => { const d = A.SVC[x.key]; return { i, n: '0' + (i + 1), name: x.name, hi: x.hi, line: x.line, icon: ic[x.icon], dur: x.key === 'palm' ? 'Report in 48 hrs' : `${d.tiers[0].mins}–${d.tiers[2].mins} min`, deliver: d.deliver, get: d.get, price: M.fmt(d.tiers[0].price), guarantee: !!d.guarantee, href: d.href, book: d.book, modes: d.modes.map((m) => ({ t: A.MODES[m].t, icon: ic[A.MODES[m].ic] })) }; }),
+      sky: M.h(React, `<svg viewBox="0 0 1440 640" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">${M.stars(mob ? 22 : 40, 1440, 640, 'cons-sky')}<g transform="translate(1320 560)" opacity=".1">${M.mandala(300, '#D9B96A', .8)}</g></svg>`, null, 'cons-sky' + (mob ? 'm' : 'd')),
+      steps: A.STEPS.map(([k, t, d], i) => ({ icon: ic[k], t, d, dev: ['१', '२', '३', '४'][i] })),
+      stepsRef: (el) => { if (!el || el === this._steps) return; this._steps = el; A.onView(el, () => { const ln = el.querySelector('[data-line]'); if (ln && !M.isReduced()) ln.animate([{ transform: vw >= 900 ? 'scaleX(0)' : 'scaleY(0)' }, { transform: 'none' }], { duration: 1400, easing: M.EASE, fill: 'forwards' }); else if (ln) ln.style.transform = 'none'; M.fx.stagger(el, '[data-step]', { y: 16, dur: 600, step: 180 }); }, .25); },
+      creds: [['cert', 'MBA, former MNC professional', 'Years in multinational companies before full-time sadhana'], ['flame', '18 years of sadhana', 'Under enlightened mentors in the Shakta tradition'], ['eye', 'Paranormal researcher', 'Case work on energy disturbances in homes and workplaces'], ['scroll', 'Published author', 'Writing on the lived experience of the spiritual path']].map(([k, t, d]) => ({ icon: ic[k], t, d })),
+      stats: [[18, '+', 'Years of sadhana'], [12000, '+', 'Seekers guided'], [3500, '+', 'Rituals performed']].map(([v, suf, t]) => ({ v, v0: M.isReduced() ? v.toLocaleString('en-IN') : '0', suf, t })),
+      statsRef: (el) => { if (!el || el === this._stats) return; this._stats = el; A.onView(el, () => this.count(el), .4); },
+      lotusRule: M.h(React, M.lotusRule('#B8923A'), null, 'cons-rule'),
+      testi: A.TESTI.map((q, i) => ({ q: q.q, n: q.n, c: q.c, s: q.s, size: i % 3 === 0 ? '20px' : '18px' })),
+      vidArt: M.h(React, `<svg viewBox="0 0 400 500" width="100%" height="100%" preserveAspectRatio="xMidYMid slice"><rect width="400" height="500" fill="#0A1F1A"/><g transform="translate(200 220)" opacity=".22">${M.mandala(200, '#D9B96A', .8)}</g><rect y="300" width="400" height="200" fill="url(#vtg)"/><defs><linearGradient id="vtg" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#0A1F1A" stop-opacity="0"/><stop offset="1" stop-color="#0A1F1A"/></linearGradient></defs></svg>`, null, 'cons-vid')
+    };
+  }
+}
+</script>
+</body>
+</html>

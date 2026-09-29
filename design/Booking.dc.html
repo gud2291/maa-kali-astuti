@@ -1,0 +1,605 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..600,0..100;1,9..144,300..600,0..100&family=Manrope:wght@400;500;600;700&family=Mukta:wght@400;500;600&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap">
+<script src="mka-core.js"></script>
+<script src="mka-astro.js"></script>
+<style>
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#FBF7EE url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .16 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");color:#1F2A24;font-family:Manrope,Mukta,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#164E3F}
+a:hover{color:#1C6B54}
+button,input,select,textarea{font-family:inherit}
+input[type=date],input[type=time]{-webkit-appearance:none;appearance:none}
+:focus-visible{outline:2px solid #B8923A;outline-offset:2px}
+::selection{background:#D9B96A;color:#0E3B30}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+  <dc-import name="SiteChrome" mode="checkout" active="consult" back-href="Consultations.dc.html" back-label="Consultations" secure-label="Secure booking" tabbar="off" fab-lift="104px" hint-size="100%,64px"></dc-import>
+  <main id="main" style="flex:1">
+
+    <sc-if value="{{ inFlow }}" hint-placeholder-val="{{ true }}">
+      <section data-screen-label="Booking stepper" style="background-color:#FBF7EE">
+        <div style="max-width:1320px;margin:0 auto;padding:clamp(20px,3vw,40px) clamp(16px,4vw,32px) {{ L.padB }};display:grid;grid-template-columns:{{ L.cols }};gap:clamp(28px,4vw,64px);align-items:start">
+          <div style="min-width:0;display:flex;flex-direction:column;gap:clamp(24px,3vw,32px)">
+            <div style="display:flex;flex-direction:column;gap:10px">
+              <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">Book a consultation · <span style="letter-spacing:0;text-transform:none;font-family:Mukta,sans-serif;font-weight:500;font-size:1.08em">परामर्श</span></span>
+              <h1 style="margin:0;font:400 clamp(34px,4.4vw,56px)/1.05 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.02em;color:#0E3B30;text-wrap:balance">{{ head.a }}<em style="font-style:italic;color:#B8923A">{{ head.b }}</em></h1>
+            </div>
+
+            <ol aria-label="Booking steps" style="list-style:none;margin:0;padding:0;position:relative;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:4px">
+              <span aria-hidden="true" style="position:absolute;left:12.5%;right:12.5%;top:22px;height:1px;background-color:#EAE0CA"></span>
+              <span aria-hidden="true" style="position:absolute;left:12.5%;right:12.5%;top:22px;height:1px;background-color:#B8923A;transform-origin:0 50%;transform:{{ stepFill }};transition:transform 700ms cubic-bezier(.22,1,.36,1)"></span>
+              <sc-for list="{{ steps }}" as="s" hint-placeholder-count="4">
+                <li style="position:relative;display:flex;justify-content:center">
+                  <button type="button" onClick="{{ s.go }}" disabled="{{ s.lock }}" aria-current="{{ s.cur }}" aria-label="{{ s.aria }}" style="display:flex;flex-direction:column;align-items:center;gap:8px;min-width:44px;padding:0 2px;border:none;background:none;cursor:{{ s.cursor }}">
+                    <span style="width:44px;height:44px;border-radius:999px;background-color:{{ s.bg }};color:{{ s.ink }};box-shadow:{{ s.ring }};display:grid;place-items:center;font:700 14px/1 Manrope,sans-serif;transition:background-color 300ms,color 300ms">
+                      <sc-if value="{{ s.done }}" hint-placeholder-val="{{ false }}"><span style="width:18px;height:18px;display:block">{{ ic.check }}</span></sc-if>
+                      <sc-if value="{{ s.open }}" hint-placeholder-val="{{ true }}">{{ s.n }}</sc-if>
+                    </span>
+                    <span style="font:600 12px/1.25 Manrope,sans-serif;color:{{ s.lab }};text-align:center">{{ s.t }}</span>
+                  </button>
+                </li>
+              </sc-for>
+            </ol>
+
+            <sc-if value="{{ is1 }}" hint-placeholder-val="{{ true }}">
+              <div style="display:flex;flex-direction:column;gap:34px">
+                <div role="radiogroup" aria-labelledby="bk-l-svc" style="display:flex;flex-direction:column;gap:14px">
+                  <span id="bk-l-svc" style="font:400 22px/1.25 Fraunces,serif;color:#0E3B30">Which consultation?</span>
+                  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px">
+                    <sc-for list="{{ svcs }}" as="v" hint-placeholder-count="4">
+                      <button type="button" role="radio" aria-checked="{{ v.sel }}" onClick="{{ v.pick }}" style="position:relative;display:flex;flex-direction:column;align-items:flex-start;gap:12px;padding:16px;border:none;border-radius:4px;background-color:{{ v.bg }};box-shadow:{{ v.ring }};text-align:left;cursor:pointer;transition:box-shadow 200ms,background-color 200ms" style-hover="box-shadow:inset 0 0 0 1px #B8923A">
+                        <span style="width:42px;height:42px;border-radius:999px;background-color:{{ v.icBg }};color:{{ v.icInk }};display:grid;place-items:center;transition:background-color 250ms"><span style="width:22px;height:22px;display:block">{{ v.icon }}</span></span>
+                        <span style="display:flex;flex-direction:column;gap:3px;padding-right:18px"><span style="font:400 18px/1.2 Fraunces,serif;color:#0E3B30">{{ v.name }}</span><span style="font:400 14px/1.35 'Tiro Devanagari Hindi',serif;color:#7A5C1C">{{ v.hi }}</span></span>
+                        <span style="font:600 12.5px/1.35 Manrope,sans-serif;color:#5B6A61;font-variant-numeric:tabular-nums">from {{ v.from }} · {{ v.dur }}</span>
+                        <span aria-hidden="true" style="position:absolute;top:14px;right:14px;width:18px;height:18px;border-radius:999px;box-shadow:inset 0 0 0 1.5px {{ v.dot }};display:grid;place-items:center"><span style="width:8px;height:8px;border-radius:999px;background-color:#164E3F;transform:{{ v.dotS }};transition:transform 260ms cubic-bezier(.34,1.56,.64,1)"></span></span>
+                      </button>
+                    </sc-for>
+                  </div>
+                </div>
+
+                <div role="radiogroup" aria-labelledby="bk-l-mode" style="display:flex;flex-direction:column;gap:14px">
+                  <span id="bk-l-mode" style="font:400 22px/1.25 Fraunces,serif;color:#0E3B30">How would you like to meet?</span>
+                  <div style="display:flex;flex-wrap:wrap;gap:8px">
+                    <sc-for list="{{ modes }}" as="m" hint-placeholder-count="3">
+                      <button type="button" role="radio" aria-checked="{{ m.sel }}" onClick="{{ m.pick }}" style="height:44px;padding:0 16px 0 12px;border:none;border-radius:999px;background-color:{{ m.bg }};color:{{ m.ink }};box-shadow:{{ m.ring }};display:inline-flex;align-items:center;gap:8px;font:600 14px/1 Manrope,sans-serif;cursor:pointer;transition:background-color 200ms,color 200ms"><span style="width:17px;height:17px;display:block">{{ m.icon }}</span>{{ m.t }}</button>
+                    </sc-for>
+                  </div>
+                  <span style="font:500 13.5px/1.5 Manrope,sans-serif;color:#5B6A61">{{ modeNote }}</span>
+                </div>
+
+                <div role="radiogroup" aria-labelledby="bk-l-tier" style="display:flex;flex-direction:column;gap:14px">
+                  <span id="bk-l-tier" style="font:400 22px/1.25 Fraunces,serif;color:#0E3B30">Package</span>
+                  <div style="display:flex;flex-direction:column;gap:10px">
+                    <sc-for list="{{ tiers }}" as="t" hint-placeholder-count="3">
+                      <button type="button" role="radio" aria-checked="{{ t.sel }}" onClick="{{ t.pick }}" style="display:grid;grid-template-columns:18px minmax(0,1fr) auto;gap:14px;align-items:start;padding:16px 18px;border:none;border-radius:4px;background-color:{{ t.bg }};box-shadow:{{ t.ring }};text-align:left;cursor:pointer;transition:box-shadow 200ms,background-color 200ms" style-hover="box-shadow:inset 0 0 0 1px #B8923A">
+                        <span aria-hidden="true" style="width:18px;height:18px;margin-top:1px;border-radius:999px;box-shadow:inset 0 0 0 1.5px {{ t.dot }};display:grid;place-items:center"><span style="width:8px;height:8px;border-radius:999px;background-color:#164E3F;transform:{{ t.dotS }};transition:transform 260ms cubic-bezier(.34,1.56,.64,1)"></span></span>
+                        <span style="display:flex;flex-direction:column;gap:5px;min-width:0">
+                          <span style="display:flex;align-items:center;flex-wrap:wrap;gap:6px 10px"><span style="font:700 15.5px/1.2 Manrope,sans-serif;color:#0E3B30">{{ t.t }}</span><span style="font:600 12.5px/1 Manrope,sans-serif;color:#5B6A61">{{ t.mins }}</span><sc-if value="{{ t.rec }}" hint-placeholder-val="{{ false }}"><span style="height:22px;padding:0 9px;border-radius:999px;background-color:#0E3B30;color:#D9B96A;display:inline-flex;align-items:center;font:700 10px/1 Manrope,sans-serif;letter-spacing:.12em;text-transform:uppercase">Most chosen</span></sc-if></span>
+                          <span style="font:500 13.5px/1.5 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty">{{ t.line }}</span>
+                        </span>
+                        <span style="font:700 17px/1.2 Manrope,sans-serif;color:#0E3B30;font-variant-numeric:tabular-nums">{{ t.price }}</span>
+                      </button>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ is2 }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:22px">
+                <div style="display:grid;grid-template-columns:{{ L.two }};gap:20px 18px">
+                  <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+                    <label for="bk-name" style="font:600 13px/1.2 Manrope,sans-serif;color:#1F2A24">Full name</label>
+                    <input id="bk-name" type="text" autocomplete="name" value="{{ f.name }}" onChange="{{ on.name }}" aria-invalid="{{ bad.name }}" style="width:100%;height:52px;padding:0 14px;border:none;border-radius:2px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px {{ ring.name }};font:500 16px/1.2 Manrope,sans-serif;color:#1F2A24;outline:none" style-focus="box-shadow:inset 0 0 0 1.5px #164E3F">
+                    <sc-if value="{{ bad.name }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font:600 12.5px/1.4 Manrope,sans-serif;color:#A8322D"><span style="width:14px;height:14px;display:block;flex:none">{{ ic.alert }}</span>{{ err.name }}</span></sc-if>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+                    <label for="bk-phone" style="font:600 13px/1.2 Manrope,sans-serif;color:#1F2A24">WhatsApp number</label>
+                    <div style="display:flex;height:52px;border-radius:2px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px {{ ring.phone }}">
+                      <span style="display:flex;align-items:center;padding:0 12px;font:600 15px/1 Manrope,sans-serif;color:#5B6A61;box-shadow:inset -1px 0 0 #EAE0CA">+91</span>
+                      <input id="bk-phone" type="tel" inputmode="numeric" autocomplete="tel-national" value="{{ f.phone }}" onChange="{{ on.phone }}" aria-invalid="{{ bad.phone }}" style="flex:1;min-width:0;height:100%;padding:0 14px;border:none;border-radius:2px;background:transparent;font:500 16px/1.2 Manrope,sans-serif;color:#1F2A24;font-variant-numeric:tabular-nums;outline:none" style-focus="box-shadow:inset 0 0 0 1.5px #164E3F">
+                    </div>
+                    <sc-if value="{{ bad.phone }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font:600 12.5px/1.4 Manrope,sans-serif;color:#A8322D"><span style="width:14px;height:14px;display:block;flex:none">{{ ic.alert }}</span>{{ err.phone }}</span></sc-if>
+                  </div>
+                </div>
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <label for="bk-email" style="font:600 13px/1.2 Manrope,sans-serif;color:#1F2A24">Email <span style="font-weight:500;color:#5B6A61">(optional, for a copy of the confirmation)</span></label>
+                  <input id="bk-email" type="email" autocomplete="email" value="{{ f.email }}" onChange="{{ on.email }}" aria-invalid="{{ bad.email }}" style="width:100%;height:52px;padding:0 14px;border:none;border-radius:2px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px {{ ring.email }};font:500 16px/1.2 Manrope,sans-serif;color:#1F2A24;outline:none" style-focus="box-shadow:inset 0 0 0 1.5px #164E3F">
+                  <sc-if value="{{ bad.email }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font:600 12.5px/1.4 Manrope,sans-serif;color:#A8322D"><span style="width:14px;height:14px;display:block;flex:none">{{ ic.alert }}</span>{{ err.email }}</span></sc-if>
+                </div>
+
+                <sc-if value="{{ needDob }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;flex-direction:column;gap:18px;padding-top:22px;border-top:1px solid #EAE0CA">
+                    <span style="font:400 22px/1.25 Fraunces,serif;color:#0E3B30">{{ d2.birthTitle }}</span>
+                    <div style="display:grid;grid-template-columns:{{ L.two }};gap:20px 18px">
+                      <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+                        <label for="bk-dob" style="font:600 13px/1.2 Manrope,sans-serif;color:#1F2A24">Date of birth</label>
+                        <input id="bk-dob" type="date" max="{{ todayIso }}" value="{{ f.dob }}" onChange="{{ on.dob }}" aria-invalid="{{ bad.dob }}" style="width:100%;height:52px;padding:0 14px;border:none;border-radius:2px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px {{ ring.dob }};font:500 16px/1.2 Manrope,sans-serif;color:#1F2A24;outline:none" style-focus="box-shadow:inset 0 0 0 1.5px #164E3F">
+                        <sc-if value="{{ bad.dob }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font:600 12.5px/1.4 Manrope,sans-serif;color:#A8322D"><span style="width:14px;height:14px;display:block;flex:none">{{ ic.alert }}</span>{{ err.dob }}</span></sc-if>
+                      </div>
+                      <sc-if value="{{ isKundali }}" hint-placeholder-val="{{ true }}">
+                        <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+                          <label for="bk-tob" style="font:600 13px/1.2 Manrope,sans-serif;color:#1F2A24">Time of birth</label>
+                          <input id="bk-tob" type="time" value="{{ f.tob }}" onChange="{{ on.tob }}" disabled="{{ f.unknown }}" aria-invalid="{{ bad.tob }}" style="width:100%;height:52px;padding:0 14px;border:none;border-radius:2px;background-color:{{ tobBg }};box-shadow:inset 0 0 0 1px {{ ring.tob }};font:500 16px/1.2 Manrope,sans-serif;color:#1F2A24;outline:none" style-focus="box-shadow:inset 0 0 0 1.5px #164E3F">
+                          <label style="display:flex;align-items:center;gap:10px;min-height:32px;font:500 13.5px/1.4 Manrope,sans-serif;color:#1F2A24;cursor:pointer"><input type="checkbox" checked="{{ f.unknown }}" onChange="{{ on.unknown }}" style="width:18px;height:18px;margin:0;accent-color:#164E3F">I don’t know my exact time</label>
+                          <sc-if value="{{ bad.tob }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font:600 12.5px/1.4 Manrope,sans-serif;color:#A8322D"><span style="width:14px;height:14px;display:block;flex:none">{{ ic.alert }}</span>{{ err.tob }}</span></sc-if>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ isNum }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+                          <label for="bk-mob" style="font:600 13px/1.2 Manrope,sans-serif;color:#1F2A24">Mobile number to analyse</label>
+                          <div style="display:flex;height:52px;border-radius:2px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px {{ ring.mobile }}">
+                            <span style="display:flex;align-items:center;padding:0 12px;font:600 15px/1 Manrope,sans-serif;color:#5B6A61;box-shadow:inset -1px 0 0 #EAE0CA">+91</span>
+                            <input id="bk-mob" type="tel" inputmode="numeric" value="{{ f.mobile }}" onChange="{{ on.mobile }}" placeholder="Same as WhatsApp" aria-invalid="{{ bad.mobile }}" style="flex:1;min-width:0;height:100%;padding:0 14px;border:none;background:transparent;font:500 16px/1.2 Manrope,sans-serif;color:#1F2A24;font-variant-numeric:tabular-nums;outline:none">
+                          </div>
+                          <sc-if value="{{ bad.mobile }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font:600 12.5px/1.4 Manrope,sans-serif;color:#A8322D"><span style="width:14px;height:14px;display:block;flex:none">{{ ic.alert }}</span>{{ err.mobile }}</span></sc-if>
+                        </div>
+                      </sc-if>
+                    </div>
+                    <sc-if value="{{ isKundali }}" hint-placeholder-val="{{ true }}">
+                      <div style="display:flex;flex-direction:column;gap:8px">
+                        <label for="bk-place" style="font:600 13px/1.2 Manrope,sans-serif;color:#1F2A24">Place of birth</label>
+                        <div style="position:relative">
+                          <input id="bk-place" type="text" role="combobox" aria-autocomplete="list" aria-controls="bk-place-list" aria-expanded="{{ placeOpen }}" autocomplete="off" placeholder="Town or city" value="{{ f.place }}" onChange="{{ on.place }}" onFocus="{{ on.placeFocus }}" onBlur="{{ on.placeBlur }}" aria-invalid="{{ bad.place }}" style="width:100%;height:52px;padding:0 14px 0 42px;border:none;border-radius:2px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px {{ ring.place }};font:500 16px/1.2 Manrope,sans-serif;color:#1F2A24;outline:none" style-focus="box-shadow:inset 0 0 0 1.5px #164E3F">
+                          <span aria-hidden="true" style="position:absolute;left:14px;top:16px;width:20px;height:20px;display:block;color:#B8923A;pointer-events:none">{{ ic.pin }}</span>
+                          <sc-if value="{{ placeOpen }}" hint-placeholder-val="{{ false }}">
+                            <ul id="bk-place-list" role="listbox" style="position:absolute;z-index:6;left:0;right:0;top:calc(100% + 6px);margin:0;padding:6px;list-style:none;background-color:#FFFDF8;border-radius:4px;box-shadow:inset 0 0 0 1px #EAE0CA,0 18px 36px -18px rgba(14,59,48,.35)">
+                              <sc-for list="{{ placeRes }}" as="c" hint-placeholder-count="4">
+                                <li role="option" aria-selected="false"><button type="button" onMouseDown="{{ c.pick }}" style="width:100%;min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:8px 10px;border:none;border-radius:2px;background:none;text-align:left;cursor:pointer" style-hover="background-color:#F4EDDD"><span style="font:600 14.5px/1.2 Manrope,sans-serif;color:#1F2A24">{{ c.t }}</span><span style="font:500 12.5px/1.2 Manrope,sans-serif;color:#5B6A61">{{ c.s }}</span></button></li>
+                              </sc-for>
+                            </ul>
+                          </sc-if>
+                        </div>
+                        <sc-if value="{{ bad.place }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font:600 12.5px/1.4 Manrope,sans-serif;color:#A8322D"><span style="width:14px;height:14px;display:block;flex:none">{{ ic.alert }}</span>{{ err.place }}</span></sc-if>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ isNum }}" hint-placeholder-val="{{ false }}">
+                      <div style="display:flex;flex-direction:column;gap:8px">
+                        <label for="bk-biz" style="font:600 13px/1.2 Manrope,sans-serif;color:#1F2A24">Business or brand name <span style="font-weight:500;color:#5B6A61">(optional)</span></label>
+                        <input id="bk-biz" type="text" value="{{ f.biz }}" onChange="{{ on.biz }}" style="width:100%;height:52px;padding:0 14px;border:none;border-radius:2px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px #EAE0CA;font:500 16px/1.2 Manrope,sans-serif;color:#1F2A24;outline:none" style-focus="box-shadow:inset 0 0 0 1.5px #164E3F">
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ isPalm }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:16px;padding-top:22px;border-top:1px solid #EAE0CA">
+                    <div style="display:flex;flex-direction:column;gap:6px">
+                      <span style="font:400 22px/1.25 Fraunces,serif;color:#0E3B30">Photos of both palms</span>
+                      <span style="font:500 14px/1.55 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty">The left hand shows what you were born with, the right what you are making of it. Clear photos give a more precise reading.</span>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px">
+                      <sc-for list="{{ guide }}" as="g" hint-placeholder-count="3">
+                        <figure style="margin:0;display:flex;flex-direction:column;gap:8px">
+                          <span style="position:relative;display:block;aspect-ratio:1/1;border-radius:4px;background-color:#F4EDDD;overflow:hidden">
+                            <span style="position:absolute;inset:8% 12% 4% 4%;display:block;transform:{{ g.tf }}">{{ g.art }}</span>
+                            <sc-if value="{{ g.shade }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position:absolute;inset:0;background-image:linear-gradient(118deg,rgba(14,59,48,0) 52%,rgba(14,59,48,.42) 53%)"></span></sc-if>
+                            <span style="position:absolute;top:8px;right:8px;width:24px;height:24px;border-radius:999px;background-color:{{ g.bBg }};color:#FBF7EE;display:grid;place-items:center"><span style="width:14px;height:14px;display:block">{{ g.bIc }}</span></span>
+                          </span>
+                          <figcaption style="font:500 12.5px/1.4 Manrope,sans-serif;color:#1F2A24;text-wrap:pretty">{{ g.t }}</figcaption>
+                        </figure>
+                      </sc-for>
+                    </div>
+                    <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px">
+                      <sc-for list="{{ palms }}" as="p" hint-placeholder-count="2">
+                        <div style="display:flex;flex-direction:column;gap:8px;min-width:0">
+                          <label style="position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;aspect-ratio:4/5;padding:14px;border-radius:4px;border:{{ p.border }};background-color:#FFFDF8;box-shadow:{{ p.ring }};cursor:pointer;overflow:hidden;text-align:center;transition:background-color 200ms" style-hover="background-color:#F4EDDD">
+                            <input type="file" accept="image/*" onChange="{{ p.pick }}" aria-label="{{ p.aria }}" aria-invalid="{{ p.bad }}" style="position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer">
+                            <sc-if value="{{ p.has }}" hint-placeholder-val="{{ false }}"><img src="{{ p.url }}" alt="{{ p.alt }}" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;pointer-events:none"></sc-if>
+                            <sc-if value="{{ p.empty }}" hint-placeholder-val="{{ true }}">
+                              <span style="width:46px;height:46px;border-radius:999px;background-color:#F4EDDD;color:#164E3F;display:grid;place-items:center;pointer-events:none"><span style="width:22px;height:22px;display:block">{{ ic.camera }}</span></span>
+                              <span style="display:flex;flex-direction:column;gap:4px;pointer-events:none"><span style="font:700 14.5px/1.2 Manrope,sans-serif;color:#0E3B30">{{ p.label }}</span><span style="font:500 12.5px/1.4 Manrope,sans-serif;color:#5B6A61">Tap to take or upload</span></span>
+                            </sc-if>
+                          </label>
+                          <sc-if value="{{ p.has }}" hint-placeholder-val="{{ false }}">
+                            <div style="display:flex;align-items:center;justify-content:space-between;gap:8px;min-width:0"><span style="display:flex;align-items:center;gap:6px;min-width:0;font:600 12.5px/1.3 Manrope,sans-serif;color:#2F7A4F"><span style="width:14px;height:14px;display:block;flex:none">{{ ic.checkc }}</span><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ p.label }} added</span></span><button type="button" onClick="{{ p.remove }}" style="flex:none;min-height:44px;padding:0 4px;border:none;background:none;font:600 13px/1 Manrope,sans-serif;color:#164E3F;text-decoration:underline;text-underline-offset:3px;cursor:pointer">Remove</button></div>
+                          </sc-if>
+                          <sc-if value="{{ p.bad }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font:600 12.5px/1.4 Manrope,sans-serif;color:#A8322D"><span style="width:14px;height:14px;display:block;flex:none">{{ ic.alert }}</span>{{ p.err }}</span></sc-if>
+                        </div>
+                      </sc-for>
+                    </div>
+                    <span style="display:flex;align-items:flex-start;gap:8px;font:500 12.5px/1.5 Manrope,sans-serif;color:#5B6A61"><span style="width:15px;height:15px;display:block;flex:none;margin-top:1px;color:#B8923A">{{ ic.lock }}</span>Photos are seen only by Sadhak Ji and deleted 30 days after your report.</span>
+                  </div>
+                </sc-if>
+
+                <div style="display:flex;flex-direction:column;gap:8px;padding-top:22px;border-top:1px solid #EAE0CA">
+                  <label for="bk-q" style="font:400 22px/1.25 Fraunces,serif;color:#0E3B30">{{ d2.qTitle }}</label>
+                  <span style="font:500 13.5px/1.5 Manrope,sans-serif;color:#5B6A61">{{ d2.qHint }}</span>
+                  <textarea id="bk-q" rows="4" value="{{ f.q }}" onChange="{{ on.q }}" aria-invalid="{{ bad.q }}" placeholder="{{ d2.qPh }}" style="width:100%;min-height:120px;padding:14px;border:none;border-radius:2px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px {{ ring.q }};font:500 16px/1.55 Manrope,sans-serif;color:#1F2A24;outline:none;resize:vertical" style-focus="box-shadow:inset 0 0 0 1.5px #164E3F"></textarea>
+                  <sc-if value="{{ bad.q }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font:600 12.5px/1.4 Manrope,sans-serif;color:#A8322D"><span style="width:14px;height:14px;display:block;flex:none">{{ ic.alert }}</span>{{ err.q }}</span></sc-if>
+                </div>
+                <div role="radiogroup" aria-labelledby="bk-l-lang" style="display:flex;flex-direction:column;gap:10px">
+                  <span id="bk-l-lang" style="font:600 13px/1.2 Manrope,sans-serif;color:#1F2A24">Session language</span>
+                  <div style="display:inline-flex;align-self:flex-start;padding:4px;border-radius:4px;background-color:#F4EDDD;gap:4px">
+                    <sc-for list="{{ langs }}" as="l" hint-placeholder-count="2">
+                      <button type="button" role="radio" aria-checked="{{ l.sel }}" onClick="{{ l.pick }}" style="height:44px;padding:0 20px;border:none;border-radius:2px;background-color:{{ l.bg }};color:{{ l.ink }};box-shadow:{{ l.ring }};font:{{ l.font }};cursor:pointer;transition:background-color 200ms">{{ l.t }}</button>
+                    </sc-for>
+                  </div>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ is3 }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:20px">
+                <sc-if value="{{ needsSlot }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:grid;grid-template-columns:{{ L.slot }};gap:24px;align-items:start">
+                    <div style="padding:clamp(14px,2vw,20px);border-radius:4px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px #EAE0CA">
+                      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:10px">
+                        <span aria-live="polite" style="font:400 21px/1.2 Fraunces,serif;color:#0E3B30">{{ cal.title }}</span>
+                        <span style="display:flex;gap:4px">
+                          <button type="button" onClick="{{ cal.prev }}" disabled="{{ cal.prevDis }}" aria-label="Previous month" style="width:44px;height:44px;border:none;border-radius:4px;background:none;color:{{ cal.prevInk }};display:grid;place-items:center;cursor:pointer" style-hover="background-color:#F4EDDD"><span style="width:18px;height:18px;display:block">{{ ic.chevL }}</span></button>
+                          <button type="button" onClick="{{ cal.next }}" disabled="{{ cal.nextDis }}" aria-label="Next month" style="width:44px;height:44px;border:none;border-radius:4px;background:none;color:{{ cal.nextInk }};display:grid;place-items:center;cursor:pointer" style-hover="background-color:#F4EDDD"><span style="width:18px;height:18px;display:block">{{ ic.chevR }}</span></button>
+                        </span>
+                      </div>
+                      <div role="grid" aria-label="Choose a date" style="display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px;text-align:center">
+                        <sc-for list="{{ cal.dows }}" as="w" hint-placeholder-count="7"><span style="padding:6px 0;font:700 10.5px/1 Manrope,sans-serif;letter-spacing:.1em;text-transform:uppercase;color:#5B6A61">{{ w }}</span></sc-for>
+                        <sc-for list="{{ cal.cells }}" as="c" hint-placeholder-count="35">
+                          <button type="button" onClick="{{ c.pick }}" disabled="{{ c.dis }}" aria-pressed="{{ c.sel }}" aria-label="{{ c.aria }}" aria-hidden="{{ c.blank }}" tabindex="{{ c.tab }}" style="position:relative;height:44px;padding:0;border:none;border-radius:4px;background-color:{{ c.bg }};color:{{ c.ink }};opacity:{{ c.op }};font:600 14px/1 Manrope,sans-serif;font-variant-numeric:tabular-nums;cursor:{{ c.cur }};transition:background-color 200ms,color 200ms">{{ c.n }}<sc-if value="{{ c.today }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position:absolute;left:50%;bottom:6px;width:4px;height:4px;margin-left:-2px;border-radius:999px;background-color:#B8923A"></span></sc-if></button>
+                        </sc-for>
+                      </div>
+                      <div style="display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:14px;padding-top:12px;border-top:1px solid #EAE0CA;font:500 12.5px/1.4 Manrope,sans-serif;color:#5B6A61">
+                        <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:2px;background-color:#F4EDDD;box-shadow:inset 0 0 0 1px #EAE0CA"></span>Open</span>
+                        <span style="display:flex;align-items:center;gap:6px"><span style="width:10px;height:10px;border-radius:2px;background-color:#164E3F"></span>Selected</span>
+                        <span>Closed on Sundays · up to 30 days ahead</span>
+                      </div>
+                    </div>
+                    <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+                      <div style="display:flex;flex-direction:column;gap:4px">
+                        <span style="font:400 21px/1.2 Fraunces,serif;color:#0E3B30">{{ slot.title }}</span>
+                        <span style="display:flex;align-items:center;gap:6px;font:600 12.5px/1.4 Manrope,sans-serif;color:#5B6A61"><span style="width:14px;height:14px;display:block;flex:none;color:#B8923A">{{ ic.clock }}</span>All times in IST (UTC+5:30) · {{ slot.len }}</span>
+                      </div>
+                      <sc-if value="{{ slot.none }}" hint-placeholder-val="{{ true }}">
+                        <div style="display:flex;align-items:center;gap:14px;padding:18px;border-radius:4px;background-color:#F4EDDD">
+                          <span style="width:40px;height:40px;flex:none;border-radius:999px;background-color:#FBF7EE;color:#B8923A;display:grid;place-items:center"><span style="width:20px;height:20px;display:block">{{ ic.calendar }}</span></span>
+                          <span style="font:500 14px/1.5 Manrope,sans-serif;color:#1F2A24">Pick a date on the calendar to see the open times.</span>
+                        </div>
+                      </sc-if>
+                      <sc-for list="{{ slot.groups }}" as="g" hint-placeholder-count="0">
+                        <div style="display:flex;flex-direction:column;gap:10px">
+                          <span style="font:600 10.5px/1 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7A5C1C">{{ g.t }}</span>
+                          <div style="display:flex;flex-wrap:wrap;gap:8px">
+                            <sc-for list="{{ g.items }}" as="x" hint-placeholder-count="3">
+                              <button type="button" onClick="{{ x.pick }}" disabled="{{ x.dis }}" aria-pressed="{{ x.sel }}" aria-label="{{ x.aria }}" style="height:44px;min-width:98px;padding:0 14px;border:none;border-radius:999px;background-color:{{ x.bg }};color:{{ x.ink }};box-shadow:{{ x.ring }};font:600 14px/1 Manrope,sans-serif;font-variant-numeric:tabular-nums;text-decoration:{{ x.deco }};cursor:{{ x.cur }};transition:background-color 200ms,color 200ms">{{ x.t }}</button>
+                            </sc-for>
+                          </div>
+                        </div>
+                      </sc-for>
+                      <sc-if value="{{ slot.local }}" hint-placeholder-val="{{ false }}">
+                        <span style="display:flex;align-items:flex-start;gap:8px;padding:12px 14px;border-radius:4px;background-color:#E4EEE8;font:500 13.5px/1.5 Manrope,sans-serif;color:#0E3B30"><span style="width:16px;height:16px;display:block;flex:none;margin-top:2px">{{ ic.globe }}</span>That is {{ slot.localT }} where you are ({{ slot.tz }}).</span>
+                      </sc-if>
+                      <sc-if value="{{ bad.slot }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font:600 12.5px/1.4 Manrope,sans-serif;color:#A8322D"><span style="width:14px;height:14px;display:block;flex:none">{{ ic.alert }}</span>{{ err.slot }}</span></sc-if>
+                    </div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ isReport }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;flex-direction:column;gap:20px;padding:clamp(18px,3vw,28px);border-radius:4px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px #EAE0CA">
+                    <span style="font:500 15px/1.6 Manrope,sans-serif;color:#1F2A24;text-wrap:pretty">No slot is needed for a written report. Here is when each part happens:</span>
+                    <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column">
+                      <sc-for list="{{ timeline }}" as="t" hint-placeholder-count="3">
+                        <li style="position:relative;display:grid;grid-template-columns:40px minmax(0,1fr);gap:16px;padding-bottom:{{ t.pb }}">
+                          <span aria-hidden="true" style="position:absolute;left:19.5px;top:40px;bottom:0;width:1px;background-color:{{ t.line }}"></span>
+                          <span style="width:40px;height:40px;border-radius:999px;background-color:{{ t.bg }};color:{{ t.ink }};box-shadow:inset 0 0 0 1px rgba(184,146,58,.55);display:grid;place-items:center"><span style="width:18px;height:18px;display:block">{{ t.icon }}</span></span>
+                          <span style="display:flex;flex-direction:column;gap:4px;padding-top:2px"><span style="font:700 11px/1.2 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7A5C1C">{{ t.when }}</span><span style="font:500 15px/1.5 Manrope,sans-serif;color:#1F2A24">{{ t.t }}</span></span>
+                        </li>
+                      </sc-for>
+                    </ol>
+                  </div>
+                </sc-if>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ is4 }}" hint-placeholder-val="{{ false }}">
+              <div style="display:flex;flex-direction:column;gap:22px">
+                <sc-if value="{{ L.mob }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;flex-direction:column;border-radius:4px;background-color:#F4EDDD;box-shadow:inset 0 0 0 1px rgba(184,146,58,.45)">
+                    <div style="display:flex;align-items:center;gap:12px;padding:16px 16px 12px"><span style="width:40px;height:40px;flex:none;border-radius:999px;background-color:#0E3B30;color:#D9B96A;display:grid;place-items:center"><span style="width:20px;height:20px;display:block">{{ sum.icon }}</span></span><span style="display:flex;flex-direction:column;gap:2px"><span style="font:400 19px/1.2 Fraunces,serif;color:#0E3B30">{{ sum.name }}</span><span style="font:400 13.5px/1.35 'Tiro Devanagari Hindi',serif;color:#7A5C1C">{{ sum.hi }}</span></span></div>
+                    <dl style="margin:0;padding:0 16px 6px">
+                      <sc-for list="{{ sum.rows }}" as="r" hint-placeholder-count="4">
+                        <div style="display:flex;justify-content:space-between;gap:14px;padding:11px 0;border-top:1px solid rgba(184,146,58,.3)"><dt style="font:600 11px/1.4 Manrope,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#5B6A61">{{ r.k }}</dt><dd style="margin:0;font:600 14px/1.4 Manrope,sans-serif;color:#1F2A24;text-align:right">{{ r.v }}</dd></div>
+                      </sc-for>
+                    </dl>
+                  </div>
+                </sc-if>
+                <div role="radiogroup" aria-labelledby="bk-l-pay" style="display:flex;flex-direction:column;gap:10px">
+                  <span id="bk-l-pay" style="font:400 22px/1.25 Fraunces,serif;color:#0E3B30;margin-bottom:4px">Pay with</span>
+                  <sc-for list="{{ methods }}" as="m" hint-placeholder-count="3">
+                    <div style="border-radius:4px;background-color:#FFFDF8;box-shadow:{{ m.ring }};transition:box-shadow 200ms">
+                      <button type="button" role="radio" aria-checked="{{ m.sel }}" onClick="{{ m.pick }}" style="width:100%;min-height:64px;display:grid;grid-template-columns:18px 24px minmax(0,1fr) auto;gap:12px;align-items:center;padding:10px 16px;border:none;background:none;text-align:left;cursor:pointer">
+                        <span aria-hidden="true" style="width:18px;height:18px;border-radius:999px;box-shadow:inset 0 0 0 1.5px {{ m.dot }};display:grid;place-items:center"><span style="width:8px;height:8px;border-radius:999px;background-color:#164E3F;transform:{{ m.dotS }};transition:transform 260ms cubic-bezier(.34,1.56,.64,1)"></span></span>
+                        <span style="width:22px;height:22px;display:block;color:#164E3F">{{ m.icon }}</span>
+                        <span style="display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font:700 15px/1.2 Manrope,sans-serif;color:#0E3B30">{{ m.t }}</span><span style="font:500 12.5px/1.4 Manrope,sans-serif;color:#5B6A61">{{ m.sub }}</span></span>
+                        <sc-if value="{{ m.tag }}" hint-placeholder-val="{{ false }}"><span style="height:22px;padding:0 9px;border-radius:999px;background-color:#E4EEE8;color:#0E3B30;display:inline-flex;align-items:center;font:700 10px/1 Manrope,sans-serif;letter-spacing:.12em;text-transform:uppercase">{{ m.tag }}</span></sc-if>
+                      </button>
+                      <sc-if value="{{ m.upi }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex;flex-direction:column;gap:12px;padding:4px 16px 18px">
+                          <div style="display:grid;grid-template-columns:{{ L.upi }};gap:8px">
+                            <sc-for list="{{ apps }}" as="a" hint-placeholder-count="4">
+                              <button type="button" onClick="{{ a.pick }}" aria-pressed="{{ a.sel }}" style="min-height:64px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;padding:8px;border:none;border-radius:4px;background-color:{{ a.bg }};box-shadow:{{ a.ring }};cursor:pointer;transition:box-shadow 200ms,background-color 200ms"><span style="width:28px;height:28px;border-radius:999px;background-color:{{ a.cBg }};color:{{ a.cInk }};display:grid;place-items:center;font:700 11px/1 Manrope,sans-serif">{{ a.ab }}</span><span style="font:600 12.5px/1.2 Manrope,sans-serif;color:#1F2A24">{{ a.t }}</span></button>
+                            </sc-for>
+                          </div>
+                          <sc-if value="{{ upiIdOpen }}" hint-placeholder-val="{{ false }}">
+                            <div style="display:flex;flex-direction:column;gap:8px">
+                              <label for="bk-upi" style="font:600 13px/1.2 Manrope,sans-serif;color:#1F2A24">UPI ID</label>
+                              <input id="bk-upi" type="text" autocomplete="off" placeholder="yourname@okhdfc" value="{{ upiId }}" onChange="{{ on.upi }}" aria-invalid="{{ bad.upi }}" style="width:100%;height:52px;padding:0 14px;border:none;border-radius:2px;background-color:#FBF7EE;box-shadow:inset 0 0 0 1px {{ ring.upi }};font:500 16px/1.2 Manrope,sans-serif;color:#1F2A24;outline:none" style-focus="box-shadow:inset 0 0 0 1.5px #164E3F">
+                              <sc-if value="{{ bad.upi }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font:600 12.5px/1.4 Manrope,sans-serif;color:#A8322D"><span style="width:14px;height:14px;display:block;flex:none">{{ ic.alert }}</span>{{ err.upi }}</span></sc-if>
+                            </div>
+                          </sc-if>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ m.nb }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex;flex-direction:column;gap:10px;padding:4px 16px 18px">
+                          <div style="display:flex;flex-wrap:wrap;gap:8px">
+                            <sc-for list="{{ banks }}" as="b" hint-placeholder-count="6">
+                              <button type="button" onClick="{{ b.pick }}" aria-pressed="{{ b.sel }}" style="height:44px;padding:0 16px;border:none;border-radius:999px;background-color:{{ b.bg }};color:{{ b.ink }};box-shadow:{{ b.ring }};font:600 13.5px/1 Manrope,sans-serif;cursor:pointer">{{ b.t }}</button>
+                            </sc-for>
+                          </div>
+                          <sc-if value="{{ bad.bank }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font:600 12.5px/1.4 Manrope,sans-serif;color:#A8322D"><span style="width:14px;height:14px;display:block;flex:none">{{ ic.alert }}</span>{{ err.bank }}</span></sc-if>
+                        </div>
+                      </sc-if>
+                    </div>
+                  </sc-for>
+                </div>
+                <span style="display:flex;align-items:flex-start;gap:8px;font:500 13px/1.55 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty"><span style="width:15px;height:15px;display:block;flex:none;margin-top:2px;color:#B8923A">{{ ic.shield }}</span>Payments are processed by Razorpay. Rescheduling is allowed once, up to 12 hours before your slot.</span>
+              </div>
+            </sc-if>
+
+            <div style="display:{{ L.navD }};align-items:center;justify-content:space-between;gap:14px;padding-top:24px;border-top:1px solid #EAE0CA">
+              <sc-if value="{{ canBack }}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{ back }}" style="min-height:44px;padding:0 4px;border:none;background:none;display:inline-flex;align-items:center;gap:8px;font:600 14.5px/1 Manrope,sans-serif;color:#164E3F;cursor:pointer"><span style="width:16px;height:16px;display:block">{{ ic.arrowL }}</span>Back</button></sc-if>
+              <sc-if value="{{ noBack }}" hint-placeholder-val="{{ true }}"><a href="https://wa.me/919000012345" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;gap:8px;font:600 14px/1 Manrope,sans-serif;color:#164E3F;text-decoration:none"><span style="width:17px;height:17px;display:block">{{ ic.whatsapp }}</span>Not sure? Ask on WhatsApp</a></sc-if>
+              <button type="button" onClick="{{ next }}" style="height:52px;padding:0 26px;border:none;border-radius:4px;background-color:#164E3F;background-image:linear-gradient(110deg,rgba(217,185,106,0) 40%,rgba(217,185,106,.4) 50%,rgba(217,185,106,0) 60%);background-size:260% 100%;background-position:100% 0;background-repeat:no-repeat;color:#FBF7EE;display:inline-flex;align-items:center;gap:10px;font:600 15px/1 Manrope,sans-serif;letter-spacing:.02em;box-shadow:inset 0 0 0 1px rgba(217,185,106,.55);cursor:pointer;transition:background-position 700ms cubic-bezier(.22,1,.36,1),transform 200ms" style-hover="background-position:0 0;transform:translateY(-1px)"><sc-if value="{{ is4 }}" hint-placeholder-val="{{ false }}"><span style="width:17px;height:17px;display:block">{{ ic.lock }}</span></sc-if>{{ cta }}<sc-if value="{{ notPay }}" hint-placeholder-val="{{ true }}"><span style="width:17px;height:17px;display:block">{{ ic.arrowR }}</span></sc-if></button>
+            </div>
+          </div>
+
+          <sc-if value="{{ L.desk }}" hint-placeholder-val="{{ true }}">
+            <aside aria-label="Booking summary" style="position:sticky;top:88px;display:flex;flex-direction:column;border-radius:4px;overflow:hidden;background-color:#0A1F1A;color:#E4EEE8;box-shadow:0 30px 60px -34px rgba(10,31,26,.6),inset 0 0 0 1px rgba(217,185,106,.35)">
+              <div style="position:relative;padding:28px 28px 22px;overflow:hidden">
+                <span aria-hidden="true" style="position:absolute;inset:0;display:block;pointer-events:none">{{ sky }}</span>
+                <div style="position:relative;display:flex;align-items:center;gap:14px">
+                  <span style="width:54px;height:54px;flex:none;border-radius:999px;background-color:#10302A;color:#D9B96A;box-shadow:inset 0 0 0 1px rgba(217,185,106,.55);display:grid;place-items:center"><span style="width:26px;height:26px;display:block">{{ sum.icon }}</span></span>
+                  <span style="display:flex;flex-direction:column;gap:4px"><span style="font:400 15px/1.3 'Tiro Devanagari Hindi',serif;color:#D9B96A">{{ sum.hi }}</span><span style="font:400 25px/1.1 Fraunces,serif;font-variation-settings:'SOFT' 40;color:#FBF7EE">{{ sum.name }}</span></span>
+                </div>
+              </div>
+              <dl style="margin:0;padding:0 28px">
+                <sc-for list="{{ sum.rows }}" as="r" hint-placeholder-count="4">
+                  <div style="display:flex;justify-content:space-between;gap:16px;padding:14px 0;border-top:1px solid rgba(217,185,106,.2)"><dt style="font:600 10.5px/1.5 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#9FB3AA">{{ r.k }}</dt><dd style="margin:0;font:600 14px/1.45 Manrope,sans-serif;color:{{ r.ink }};text-align:right">{{ r.v }}</dd></div>
+                </sc-for>
+              </dl>
+              <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin:0 28px;padding:18px 0 22px;border-top:1px solid rgba(217,185,106,.45)">
+                <span style="display:flex;flex-direction:column;gap:4px"><span style="font:600 10.5px/1 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#9FB3AA">Total</span><span style="font:500 12.5px/1 Manrope,sans-serif;color:#C9D6CF">incl. all taxes</span></span>
+                <span style="font:700 32px/1 Manrope,sans-serif;letter-spacing:-.01em;color:#D9B96A;font-variant-numeric:tabular-nums">{{ sum.price }}</span>
+              </div>
+              <ul style="list-style:none;margin:0;padding:18px 28px 24px;display:flex;flex-direction:column;gap:12px;background-color:#10302A">
+                <sc-for list="{{ trust }}" as="t" hint-placeholder-count="3">
+                  <li style="display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px;font:500 13px/1.5 Manrope,sans-serif;color:#C9D6CF"><span style="width:18px;height:18px;display:block;color:#D9B96A">{{ t.icon }}</span>{{ t.t }}</li>
+                </sc-for>
+              </ul>
+            </aside>
+          </sc-if>
+        </div>
+      </section>
+    </sc-if>
+
+    <sc-if value="{{ isDone }}" hint-placeholder-val="{{ false }}">
+      <section data-screen-label="Booking confirmed" style="position:relative;overflow:hidden;background-color:#0A1F1A;color:#E4EEE8">
+        <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none">{{ skyWide }}</div>
+        <div style="position:relative;max-width:1320px;margin:0 auto;padding:clamp(40px,7vw,104px) clamp(16px,4vw,32px);display:grid;grid-template-columns:{{ L.done }};gap:clamp(36px,5vw,80px);align-items:center">
+          <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+            <span ref="{{ okRef }}" style="width:92px;height:92px;display:block">
+              <svg viewBox="0 0 92 92" width="100%" height="100%" fill="none" aria-hidden="true"><circle cx="46" cy="46" r="43" stroke="#D9B96A" stroke-width="1.5" pathLength="1" data-draw="" transform="rotate(-90 46 46)" style="stroke-dasharray:1;stroke-dashoffset:1"></circle><circle cx="46" cy="46" r="36" stroke="#D9B96A" stroke-width=".6" opacity=".45"></circle><path d="M30 47l11 11 22-25" stroke="#D9B96A" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" pathLength="1" data-draw="" style="stroke-dasharray:1;stroke-dashoffset:1"></path></svg>
+            </span>
+            <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#D9B96A">Booking {{ done.id }}</span>
+            <h1 style="margin:0;font:400 clamp(40px,5.4vw,72px)/1.03 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.022em;color:#FBF7EE;text-wrap:balance">Your session is <em style="font-style:italic;color:#D9B96A">booked.</em></h1>
+            <span style="font:400 clamp(18px,2vw,22px)/1.35 'Tiro Devanagari Hindi',serif;color:#D9B96A">आपका परामर्श निश्चित हो गया है</span>
+            <p style="margin:0;max-width:520px;font:400 16px/1.65 Manrope,sans-serif;color:#C9D6CF;text-wrap:pretty">{{ done.line }}</p>
+            <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:6px">
+              <sc-if value="{{ done.cal }}" hint-placeholder-val="{{ true }}">
+                <a href="{{ done.gcal }}" target="_blank" rel="noopener" style="height:50px;padding:0 20px;border-radius:4px;background-color:#D9B96A;color:#0A1F1A;display:inline-flex;align-items:center;gap:9px;font:700 14.5px/1 Manrope,sans-serif;text-decoration:none;transition:transform 200ms" style-hover="transform:translateY(-1px);color:#0A1F1A"><span style="width:17px;height:17px;display:block">{{ ic.calendar }}</span>Add to Google Calendar</a>
+                <button type="button" onClick="{{ done.ics }}" style="height:50px;padding:0 20px;border:none;border-radius:4px;background:none;box-shadow:inset 0 0 0 1px #D9B96A;color:#F6E7BC;display:inline-flex;align-items:center;gap:9px;font:600 14.5px/1 Manrope,sans-serif;cursor:pointer;transition:background-color 200ms" style-hover="background-color:rgba(217,185,106,.12)"><span style="width:17px;height:17px;display:block">{{ ic.download }}</span>Apple or Outlook (.ics)</button>
+              </sc-if>
+              <a href="https://wa.me/919000012345" target="_blank" rel="noopener" style="height:50px;padding:0 20px;border-radius:4px;box-shadow:inset 0 0 0 1px rgba(217,185,106,.45);color:#E4EEE8;display:inline-flex;align-items:center;gap:9px;font:600 14.5px/1 Manrope,sans-serif;text-decoration:none" style-hover="color:#FBF7EE;background-color:rgba(217,185,106,.08)"><span style="width:17px;height:17px;display:block">{{ ic.whatsapp }}</span>Message the office</a>
+            </div>
+          </div>
+          <dl style="margin:0;padding:clamp(20px,3vw,32px);border-radius:4px;background-color:#10302A;box-shadow:inset 0 0 0 1px rgba(217,185,106,.4);display:flex;flex-direction:column">
+            <sc-for list="{{ done.rows }}" as="r" hint-placeholder-count="5">
+              <div style="display:grid;grid-template-columns:{{ L.dRow }};gap:4px 20px;padding:14px 0;border-bottom:1px solid rgba(217,185,106,.18)"><dt style="font:600 10.5px/1.6 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#9FB3AA">{{ r.k }}</dt><dd style="margin:0;font:600 15px/1.5 Manrope,sans-serif;color:#FBF7EE">{{ r.v }}</dd></div>
+            </sc-for>
+            <span style="padding-top:16px;font:500 13px/1.55 Manrope,sans-serif;color:#C9D6CF">Need to change the time? Use the link in your WhatsApp confirmation, up to 12 hours before the session.</span>
+          </dl>
+        </div>
+      </section>
+      <section data-screen-label="What happens next" style="background-color:#FBF7EE">
+        <div style="max-width:1320px;margin:0 auto;padding:clamp(56px,8vw,112px) clamp(16px,4vw,32px)">
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px 56px;align-items:end;margin-bottom:clamp(32px,4vw,52px)">
+            <div data-reveal="0" style="display:flex;flex-direction:column;gap:12px">
+              <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">What happens next</span>
+              <h2 style="margin:0;font:400 clamp(30px,3.6vw,46px)/1.08 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.018em;color:#0E3B30">Sadhak Ji reads <em style="font-style:italic;color:#B8923A">before</em> he speaks.</h2>
+            </div>
+            <p data-reveal="1" style="margin:0;max-width:460px;font:400 15.5px/1.65 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty">Your details reach his desk today. You will hear from the office on WhatsApp if anything needs checking.</p>
+          </div>
+          <ol style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:{{ L.next }};gap:0 28px">
+            <sc-for list="{{ nextSteps }}" as="n" hint-placeholder-count="4">
+              <li data-reveal="{{ n.i }}" style="display:grid;grid-template-columns:{{ L.nextRow }};gap:14px 18px;padding:22px 0;border-top:1px solid {{ n.rule }}">
+                <span style="width:44px;height:44px;border-radius:999px;background-color:{{ n.bg }};color:{{ n.ink }};box-shadow:inset 0 0 0 1px rgba(184,146,58,.55);display:grid;place-items:center"><span style="width:22px;height:22px;display:block">{{ n.icon }}</span></span>
+                <span style="display:flex;flex-direction:column;gap:6px"><span style="font:700 11px/1.2 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:{{ n.stC }}">{{ n.st }}</span><span style="font:400 20px/1.25 Fraunces,serif;color:#0E3B30">{{ n.t }}</span><span style="font:400 14.5px/1.55 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty">{{ n.d }}</span></span>
+              </li>
+            </sc-for>
+          </ol>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:clamp(32px,4vw,48px)">
+            <a href="Consultations.dc.html" style="height:50px;padding:0 22px;border-radius:4px;background-color:#164E3F;color:#FBF7EE;display:inline-flex;align-items:center;gap:9px;font:600 14.5px/1 Manrope,sans-serif;text-decoration:none;box-shadow:inset 0 0 0 1px rgba(217,185,106,.55)" style-hover="background-color:#1C6B54;color:#FBF7EE">Back to consultations</a>
+            <a href="Shop.dc.html" style="height:50px;padding:0 22px;border-radius:4px;background-color:#FBF7EE;box-shadow:inset 0 0 0 1px #164E3F;color:#164E3F;display:inline-flex;align-items:center;gap:9px;font:600 14.5px/1 Manrope,sans-serif;text-decoration:none" style-hover="background-color:#E4EEE8">Browse energized products<span style="width:16px;height:16px;display:block">{{ ic.arrowR }}</span></a>
+          </div>
+        </div>
+      </section>
+      <dc-import name="SiteFooter" tabbar="off" hint-size="100%,640px"></dc-import>
+    </sc-if>
+  </main>
+
+  <sc-if value="{{ barOn }}" hint-placeholder-val="{{ false }}">
+    <div style="position:fixed;left:0;right:0;bottom:0;z-index:55;background-color:#FBF7EE;box-shadow:inset 0 1px 0 #EAE0CA,0 -12px 32px -18px rgba(14,59,48,.3);padding:12px 16px calc(12px + env(safe-area-inset-bottom))">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <span style="display:flex;flex-direction:column;gap:4px;min-width:0"><span style="font:700 20px/1 Manrope,sans-serif;color:#0E3B30;font-variant-numeric:tabular-nums">{{ sum.price }}</span><span style="font:600 12px/1.2 Manrope,sans-serif;color:#5B6A61;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sum.short }}</span></span>
+        <span style="display:flex;align-items:center;gap:6px;flex:none">
+          <sc-if value="{{ canBack }}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{ back }}" aria-label="Previous step" style="width:52px;height:52px;border:none;border-radius:4px;background-color:#FBF7EE;box-shadow:inset 0 0 0 1px #164E3F;color:#164E3F;display:grid;place-items:center;cursor:pointer"><span style="width:18px;height:18px;display:block">{{ ic.arrowL }}</span></button></sc-if>
+          <button type="button" onClick="{{ next }}" style="height:52px;padding:0 22px;border:none;border-radius:4px;background-color:#164E3F;color:#FBF7EE;display:inline-flex;align-items:center;gap:8px;font:600 15px/1 Manrope,sans-serif;box-shadow:inset 0 0 0 1px rgba(217,185,106,.55);cursor:pointer">{{ ctaS }}<span style="width:16px;height:16px;display:block">{{ ic.arrowR }}</span></button>
+        </span>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ processing }}" hint-placeholder-val="{{ false }}">
+    <div role="status" aria-live="assertive" style="position:fixed;inset:0;z-index:95;background-color:rgba(10,31,26,.95);display:grid;place-items:center;padding:24px">
+      <div style="display:flex;flex-direction:column;align-items:center;gap:22px;text-align:center">
+        <div aria-hidden="true" style="position:relative;width:148px;height:148px">
+          <span data-amb="spin:8" style="position:absolute;inset:0;display:block">{{ ch.outer }}</span>
+          <span data-amb="spin:-6" style="position:absolute;inset:0;display:block">{{ ch.middle }}</span>
+          <span data-amb="spin:4" style="position:absolute;inset:0;display:block">{{ ch.inner }}</span>
+        </div>
+        <span style="font:400 26px/1.2 Fraunces,serif;color:#FBF7EE">Confirming your payment</span>
+        <span style="max-width:300px;font:500 14px/1.55 Manrope,sans-serif;color:#C9D6CF">Please keep this page open. It takes a few seconds.</span>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { vw: window.innerWidth, ready: false, step: 1, svc: 'kundali', mode: 'call', tier: 'detailed',
+    f: { name: '', phone: '', email: '', dob: '', tob: '', unknown: false, place: '', q: '', lang: 'hi', mobile: '', biz: '' },
+    palm: { left: null, right: null }, placeOpen: false, tried: {}, month: 0, date: null, time: null,
+    pay: 'upi', app: 'gpay', upiId: '', bank: '', processing: false, bid: '' };
+  componentDidMount() {
+    const go = () => { this.un = MKA.bind(this); this.fromHash(); this.setState({ ready: true }); };
+    if (window.MKA && MKA.astroReady) go(); else this._w = setInterval(() => { if (window.MKA && MKA.astroReady) { clearInterval(this._w); go(); } }, 30);
+  }
+  componentWillUnmount() { this.un && this.un(); clearInterval(this._w); clearTimeout(this._t); clearTimeout(this._pb); }
+  fromHash() {
+    const h = MKA.hashParams(), A = MKA.A, svc = A.SVC[h.s] ? h.s : 'kundali', d = A.SVC[svc];
+    const tier = d.tiers.some((t) => t.k === h.tier) ? h.tier : (d.tiers.find((t) => t.rec) || d.tiers[0]).k;
+    this.setState({ svc, tier, mode: d.modes[0] });
+  }
+  toTop() { window.scrollTo({ top: 0, behavior: MKA.isReduced() ? 'auto' : 'smooth' }); }
+  needsSlot() { return this.state.mode !== 'report'; }
+  errs(step) {
+    const s = this.state, f = s.f, e = {}, k = s.svc, ph = /^[6-9]\d{9}$/;
+    if (step === 2) {
+      if (f.name.trim().length < 2) e.name = 'Please enter your full name.';
+      if (!ph.test(f.phone)) e.phone = 'Enter a 10-digit mobile number.';
+      if (f.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email)) e.email = 'This email address looks incomplete.';
+      if (k === 'kundali' || k === 'numerology') { if (!f.dob) e.dob = 'Your date of birth is needed.'; else if (f.dob > this.iso(new Date())) e.dob = 'Date of birth cannot be in the future.'; }
+      if (k === 'kundali') { if (!f.unknown && !f.tob) e.tob = 'Add your birth time, or tick “I don’t know”.'; if (f.place.trim().length < 2) e.place = 'Choose your place of birth.'; }
+      if (k === 'numerology' && f.mobile && !ph.test(f.mobile)) e.mobile = 'Enter a 10-digit mobile number.';
+      if (k === 'palm') { if (!s.palm.left) e.left = 'Add a photo of your left palm.'; if (!s.palm.right) e.right = 'Add a photo of your right palm.'; }
+      if (k === 'tarot' && f.q.trim().length < 8) e.q = 'Write the question you want the cards to answer.';
+    }
+    if (step === 3 && this.needsSlot() && !(s.date && s.time)) e.slot = s.date ? 'Choose a time for your session.' : 'Choose a date and a time.';
+    if (step === 4 && s.pay === 'upi' && s.app === 'id' && !/^[\w.\-]{2,}@[a-z]{2,}$/i.test(s.upiId)) e.upi = 'Enter a UPI ID such as name@okhdfc.';
+    if (step === 4 && s.pay === 'nb' && !s.bank) e.bank = 'Choose your bank.';
+    return e;
+  }
+  iso(d) { return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0'); }
+  next() {
+    const s = this.state, e = this.errs(s.step);
+    if (Object.keys(e).length) {
+      this.setState({ tried: Object.assign({}, s.tried, { [s.step]: 1 }) });
+      setTimeout(() => { const el = document.querySelector('[aria-invalid="true"]'); if (el) { el.focus({ preventScroll: true }); window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 140, behavior: MKA.isReduced() ? 'auto' : 'smooth' }); } }, 60);
+      return;
+    }
+    if (s.step < 4) { this.setState({ step: s.step + 1 }); this.toTop(); return; }
+    this.setState({ processing: true });
+    this._t = setTimeout(() => { this.setState({ processing: false, step: 5, bid: 'MKA-B' + Date.now().toString(36).slice(-5).toUpperCase() }); window.scrollTo(0, 0); }, 2000);
+  }
+  renderVals() {
+    const M = window.MKA, s = this.state, vw = s.vw, mob = vw < 768, desk = vw >= 1024;
+    const L = { mob, desk, cols: desk ? 'minmax(0,1.5fr) minmax(0,1fr)' : 'minmax(0,1fr)', two: vw >= 560 ? 'repeat(2,minmax(0,1fr))' : 'minmax(0,1fr)', slot: vw >= 1180 || (vw >= 700 && !desk) ? 'minmax(0,1.05fr) minmax(0,1fr)' : 'minmax(0,1fr)', navD: mob ? 'none' : 'flex', upi: vw >= 560 ? 'repeat(4,minmax(0,1fr))' : 'repeat(2,minmax(0,1fr))', padB: mob ? '132px' : 'clamp(64px,8vw,112px)', done: desk ? 'minmax(0,1.1fr) minmax(0,.9fr)' : 'minmax(0,1fr)', dRow: vw >= 560 ? '130px minmax(0,1fr)' : 'minmax(0,1fr)', next: vw >= 1024 ? 'repeat(4,minmax(0,1fr))' : vw >= 640 ? 'repeat(2,minmax(0,1fr))' : 'minmax(0,1fr)', nextRow: vw >= 1024 ? 'minmax(0,1fr)' : '44px minmax(0,1fr)' };
+    if (!M || !s.ready) return { L, ic: {}, head: {}, steps: [], svcs: [], modes: [], tiers: [], f: s.f, on: {}, bad: {}, err: {}, ring: {}, d2: {}, guide: [], palms: [], langs: [], cal: { dows: [], cells: [] }, slot: { groups: [] }, timeline: [], sum: { rows: [] }, methods: [], apps: [], banks: [], trust: [], done: { rows: [] }, nextSteps: [], ch: {}, inFlow: true, is1: true, stepFill: 'scaleX(0)' };
+    const ic = M.ic(React), A = M.A, k = s.svc, d = A.SVC[k], tier = d.tiers.find((t) => t.k === s.tier) || d.tiers[0], step = s.step, need = this.needsSlot();
+    const tried = !!s.tried[step], E = tried ? this.errs(step) : {}, bad = {}, ring = {};
+    ['name', 'phone', 'email', 'dob', 'tob', 'place', 'mobile', 'q', 'slot', 'upi', 'bank', 'left', 'right'].forEach((x) => { bad[x] = !!E[x]; ring[x] = E[x] ? '#A8322D' : '#EAE0CA'; });
+    const setF = (key, fn) => (e) => { const t = e.target, v = fn ? fn(t) : t.value; this.setState((st) => ({ f: Object.assign({}, st.f, { [key]: v }) })); };
+    const dig = (t) => t.value.replace(/\D/g, '').slice(0, 10);
+    const on = {
+      name: setF('name'), phone: setF('phone', dig), email: setF('email', (t) => t.value.trim()), dob: setF('dob'), tob: setF('tob'), unknown: setF('unknown', (t) => t.checked), mobile: setF('mobile', dig), biz: setF('biz'), q: setF('q'),
+      place: (e) => { const v = e.target.value; this.setState((st) => ({ f: Object.assign({}, st.f, { place: v }), placeOpen: true })); },
+      placeFocus: () => { clearTimeout(this._pb); this.setState({ placeOpen: true }); }, placeBlur: () => { this._pb = setTimeout(() => this.setState({ placeOpen: false }), 160); },
+      upi: (e) => this.setState({ upiId: e.target.value.trim() })
+    };
+    const mLabel = (m) => A.MODES[m].t, minsL = k === 'palm' && s.mode === 'report' ? 'Written report' : tier.mins + ' min';
+    const deliver = M.addDays(2), mins = tier.mins;
+    const whenV = need ? (s.date && s.time ? `${M.dfmt(s.date)} · ${A.t12(s.time)} IST` : 'Not chosen yet') : 'Report by ' + M.dfmt(deliver);
+    const langT = s.f.lang === 'hi' ? 'Hindi' : 'English';
+    const sum = { icon: ic[d.icon], name: d.name, hi: d.hi, price: M.fmt(tier.price), short: `${tier.t} · ${minsL} · ${mLabel(s.mode)}`,
+      rows: [{ k: 'Package', v: `${tier.t} · ${minsL}`, ink: '#FBF7EE' }, { k: 'Mode', v: mLabel(s.mode), ink: '#FBF7EE' }, { k: need ? 'When' : 'Delivery', v: whenV, ink: need && !(s.date && s.time) ? '#9FB3AA' : '#FBF7EE' }, { k: 'Language', v: langT, ink: '#FBF7EE' }] };
+    const HEAD = { 1: ['Choose your ', 'consultation.'], 2: ['A few details ', 'about you.'], 3: need ? ['Pick a ', 'date and time.'] : ['Your report ', 'timeline.'], 4: ['Review and ', 'pay.'] };
+    const STEPT = ['Service', 'Your details', need ? 'Date & time' : 'Delivery', 'Payment'];
+    const steps = STEPT.map((t, i) => { const n = i + 1, done = n < step, cur = n === step; return { n, t, done, open: !done, cur: cur ? 'step' : undefined, lock: !done, cursor: done ? 'pointer' : 'default', aria: `Step ${n}: ${t}${done ? ' (completed, go back)' : cur ? ' (current)' : ''}`, bg: done ? '#164E3F' : cur ? '#0E3B30' : '#FBF7EE', ink: done || cur ? '#FBF7EE' : '#5B6A61', ring: cur ? 'inset 0 0 0 1px #0E3B30,0 0 0 4px rgba(184,146,58,.28)' : done ? 'none' : 'inset 0 0 0 1px #EAE0CA', lab: cur ? '#0E3B30' : done ? '#164E3F' : '#5B6A61', go: () => { if (done) { this.setState({ step: n }); this.toTop(); } } }; });
+    const svcs = M.SERVICES.map((x) => { const o = A.SVC[x.key], sel = x.key === k; return { name: x.name, hi: x.hi, icon: ic[x.icon], from: M.fmt(o.tiers[0].price), dur: x.key === 'palm' ? 'report in 48 hrs' : `${o.tiers[0].mins}–${o.tiers[2].mins} min`, sel, bg: sel ? '#FFFDF8' : '#FBF7EE', ring: sel ? 'inset 0 0 0 1.5px #164E3F,0 14px 30px -20px rgba(14,59,48,.4)' : 'inset 0 0 0 1px #EAE0CA', icBg: sel ? '#0E3B30' : '#F4EDDD', icInk: sel ? '#D9B96A' : '#164E3F', dot: sel ? '#164E3F' : '#B8923A', dotS: sel ? 'scale(1)' : 'scale(0)',
+      pick: () => { if (sel) return; const nd = A.SVC[x.key], nt = (nd.tiers.find((t) => t.rec) || nd.tiers[0]).k; this.setState({ svc: x.key, mode: nd.modes[0], tier: nt, date: null, time: null, tried: {} }); try { history.replaceState(null, '', '#s=' + x.key + '&tier=' + nt); } catch (er) {} } }; });
+    const modes = d.modes.map((m) => { const sel = m === s.mode; return { t: A.MODES[m].t, icon: ic[A.MODES[m].ic], sel, bg: sel ? '#0E3B30' : '#FFFDF8', ink: sel ? '#FBF7EE' : '#164E3F', ring: sel ? 'none' : 'inset 0 0 0 1px #EAE0CA', pick: () => this.setState({ mode: m, time: m === 'report' ? null : s.time }) }; });
+    const MN = { call: 'Sadhak Ji calls you on your WhatsApp number at the booked time.', video: 'A video link reaches you on WhatsApp an hour before the session.', wa: 'Sadhak Ji calls you on WhatsApp at the booked time.', report: 'A written report arrives on WhatsApp and email within 48 hours.' };
+    const tiers = d.tiers.map((t) => { const sel = t.k === tier.k; return { t: t.t, mins: k === 'palm' && s.mode === 'report' && !/video/i.test(t.inc.join(' ')) ? 'Written report' : t.mins + ' min', price: M.fmt(t.price), line: t.inc[1] || t.inc[0], rec: !!t.rec, sel, bg: sel ? '#FFFDF8' : '#FBF7EE', ring: sel ? 'inset 0 0 0 1.5px #164E3F' : 'inset 0 0 0 1px #EAE0CA', dot: sel ? '#164E3F' : '#B8923A', dotS: sel ? 'scale(1)' : 'scale(0)', pick: () => { this.setState({ tier: t.k, time: null }); try { history.replaceState(null, '', '#s=' + k + '&tier=' + t.k); } catch (er) {} } }; });
+    const D2 = { kundali: ['Birth details', 'Your question or concern', 'Optional. Sadhak Ji reads it before the session.', 'For example: when is a good time to change jobs?'], palm: ['', 'Your question or concern', 'Optional. The report will answer it directly.', 'For example: what does my fate line say about a career change?'], tarot: ['', 'Your question for the cards', 'Required. One clear, present-tense question works best.', 'For example: what should I focus on in this relationship?'], numerology: ['Name & numbers', 'Your question or concern', 'Optional. Mention a launch or a name change you are planning.', 'For example: is my shop name right for the business?'] }[k];
+    const hand = (u) => M.h(React, A.palmArt('#B8923A', '#164E3F', false), null, 'bk-hand');
+    const guide = [{ t: 'Daylight, palm open and flat', tf: 'none', shade: false, bBg: '#2F7A4F', bIc: ic.check }, { t: 'Fingers together, whole hand in frame', tf: 'scale(.84)', shade: false, bBg: '#2F7A4F', bIc: ic.check }, { t: 'No flash, filters or heavy shadow', tf: 'rotate(-14deg)', shade: true, bBg: '#A8322D', bIc: ic.close }].map((g) => Object.assign(g, { art: hand() }));
+    const pickPalm = (side) => (e) => { const file = e.target.files && e.target.files[0]; e.target.value = ''; if (!file) return; if (!/^image\//.test(file.type)) { M.ui.toast('Please choose a photo (JPG or PNG).', { tone: 'error' }); return; } if (file.size > 15 * 1024 * 1024) { M.ui.toast('That photo is over 15 MB. Please choose a smaller one.', { tone: 'error' }); return; } this.setState((st) => { const old = st.palm[side]; if (old) URL.revokeObjectURL(old.url); return { palm: Object.assign({}, st.palm, { [side]: { url: URL.createObjectURL(file), name: file.name } }) }; }); };
+    const palms = [['left', 'Left palm'], ['right', 'Right palm']].map(([side, label]) => { const p = s.palm[side], b = !!E[side]; return { label, has: !!p, empty: !p, url: p ? p.url : '', alt: label + ' photo', aria: 'Upload ' + label.toLowerCase() + ' photo', pick: pickPalm(side), remove: () => this.setState((st) => { const old = st.palm[side]; if (old) URL.revokeObjectURL(old.url); return { palm: Object.assign({}, st.palm, { [side]: null }) }; }), bad: b, err: E[side] || '', border: p ? '1px solid transparent' : b ? '1px dashed #A8322D' : '1px dashed #B8923A', ring: p ? 'inset 0 0 0 1px #B8923A' : 'none' }; });
+    const langs = [['hi', 'हिंदी', "400 16px/1 Mukta,sans-serif"], ['en', 'English', '600 14.5px/1 Manrope,sans-serif']].map(([v, t, font]) => { const sel = s.f.lang === v; return { t, font, sel, bg: sel ? '#FFFDF8' : 'transparent', ink: sel ? '#0E3B30' : '#5B6A61', ring: sel ? '0 4px 12px -6px rgba(14,59,48,.35)' : 'none', pick: () => this.setState((st) => ({ f: Object.assign({}, st.f, { lang: v }) })) }; });
+    const pq = s.f.place.trim(), placeRes = pq.length >= 1 ? A.placeSearch(pq).map((c) => ({ t: c[0], s: c[1], pick: (e) => { e.preventDefault(); this.setState((st) => ({ f: Object.assign({}, st.f, { place: c[0] + ', ' + c[1] }), placeOpen: false })); } })) : [];
+    const today = M.addDays(0), first = M.addDays(1), last = M.addDays(30), base = new Date(today.getFullYear(), today.getMonth() + s.month, 1, 12);
+    const lead = (base.getDay() + 6) % 7, dim = new Date(base.getFullYear(), base.getMonth() + 1, 0).getDate(), cells = [];
+    for (let i = 0; i < lead; i++) cells.push({ n: '', blank: true, dis: true, tab: -1, op: '0', bg: 'transparent', ink: '#5B6A61', cur: 'default', aria: '', pick: null, today: false, sel: false });
+    for (let n = 1; n <= dim; n++) { const dt = new Date(base.getFullYear(), base.getMonth(), n, 12), ok = dt >= first && dt <= last && dt.getDay() !== 0, sel = !!s.date && dt.toDateString() === s.date.toDateString(); cells.push({ n, blank: undefined, dis: !ok, tab: ok ? 0 : -1, op: '1', sel, today: dt.toDateString() === today.toDateString(), bg: sel ? '#164E3F' : ok ? '#F4EDDD' : 'transparent', ink: sel ? '#FBF7EE' : ok ? '#0E3B30' : '#A9B5AE', cur: ok ? 'pointer' : 'default', aria: M.dlong(dt) + (ok ? '' : dt.getDay() === 0 ? ', closed' : ', unavailable'), pick: () => this.setState({ date: dt, time: null }) }); }
+    const nextDis = new Date(base.getFullYear(), base.getMonth() + 1, 1, 12) > last;
+    const cal = { title: A.MONL[base.getMonth()] + ' ' + base.getFullYear(), dows: ['Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa', 'Su'], cells, prevDis: s.month === 0, nextDis, prevInk: s.month === 0 ? '#C9CFC9' : '#164E3F', nextInk: nextDis ? '#C9CFC9' : '#164E3F', prev: () => this.setState({ month: Math.max(0, s.month - 1) }), next: () => { if (!nextDis) this.setState({ month: s.month + 1 }); } };
+    let groups = [];
+    if (s.date) { const list = A.slotsFor(s.date, mins), G = [['Morning', (h) => h < 12], ['Afternoon', (h) => h >= 12 && h < 16], ['Evening', (h) => h >= 16]]; groups = G.map(([t, fn]) => ({ t, items: list.filter((x) => fn(+x.t.split(':')[0])).map((x) => { const sel = s.time === x.t; return { t: A.t12(x.t), dis: !x.free, sel, aria: A.t12(x.t) + (x.free ? '' : ', booked'), bg: sel ? '#164E3F' : x.free ? '#FFFDF8' : 'transparent', ink: sel ? '#FBF7EE' : x.free ? '#0E3B30' : '#A9B5AE', ring: sel ? 'none' : 'inset 0 0 0 1px #EAE0CA', deco: x.free ? 'none' : 'line-through', cur: x.free ? 'pointer' : 'not-allowed', pick: () => this.setState({ time: x.t }) }; }) })).filter((g) => g.items.length); }
+    const tzOff = -new Date().getTimezoneOffset(); let localT = '', tz = '';
+    if (s.date && s.time && tzOff !== 330) { const at = A.istDate(s.date, s.time); localT = at.toLocaleString([], { weekday: 'short', hour: 'numeric', minute: '2-digit' }); try { tz = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch (er) { tz = 'local time'; } }
+    const slot = { title: s.date ? M.dlong(s.date) : 'Open times', len: mins + '-minute session', none: !s.date, groups, local: !!localT, localT, tz };
+    const timeline = [['Today', k === 'palm' ? 'Your photos and question reach Sadhak Ji.' : 'Your details and question reach Sadhak Ji.', ic.upload], [M.dfmt(M.addDays(1)), k === 'palm' ? 'He studies both palms, line by line.' : 'He studies your details before writing.', ic.eye], [M.dfmt(deliver), 'Your report arrives on WhatsApp and email.', ic.report]].map(([when, t, icon], i, a) => ({ when, t, icon, pb: i < a.length - 1 ? '22px' : '0', line: i < a.length - 1 ? 'rgba(184,146,58,.5)' : 'transparent', bg: i === 0 ? '#0E3B30' : '#FBF7EE', ink: i === 0 ? '#D9B96A' : '#164E3F' }));
+    const METH = [['upi', 'UPI', 'Google Pay, PhonePe, Paytm, BHIM or any UPI app', 'bolt', 'Fastest'], ['card', 'Debit or credit card', 'Visa, Mastercard, RuPay · entered in Razorpay’s secure window', 'card', ''], ['nb', 'Netbanking', 'All major Indian banks', 'bank', '']];
+    const methods = METH.map(([v, t, sub, icn, tag]) => { const sel = s.pay === v; return { t, sub, tag, icon: ic[icn], sel, upi: sel && v === 'upi', nb: sel && v === 'nb', dot: sel ? '#164E3F' : '#B8923A', dotS: sel ? 'scale(1)' : 'scale(0)', ring: sel ? 'inset 0 0 0 1.5px #164E3F' : 'inset 0 0 0 1px #EAE0CA', pick: () => this.setState({ pay: v }) }; });
+    const apps = [['gpay', 'Google Pay', 'G'], ['phonepe', 'PhonePe', 'Pe'], ['paytm', 'Paytm', 'P'], ['id', 'UPI ID', '@']].map(([v, t, ab]) => { const sel = s.app === v; return { t, ab, sel, bg: sel ? '#FFFDF8' : '#FBF7EE', ring: sel ? 'inset 0 0 0 1.5px #164E3F' : 'inset 0 0 0 1px #EAE0CA', cBg: sel ? '#164E3F' : '#F4EDDD', cInk: sel ? '#FBF7EE' : '#164E3F', pick: () => this.setState({ app: v }) }; });
+    const banks = ['SBI', 'HDFC Bank', 'ICICI Bank', 'Axis Bank', 'Kotak', 'Bank of Baroda'].map((t) => { const sel = s.bank === t; return { t, sel, bg: sel ? '#164E3F' : '#FBF7EE', ink: sel ? '#FBF7EE' : '#164E3F', ring: sel ? 'none' : 'inset 0 0 0 1px #EAE0CA', pick: () => this.setState({ bank: t }) }; });
+    const trust = [[ic.returns, 'Reschedule once, up to 12 hours before your slot'], [ic.lock, 'Your details are seen only by Sadhak Ji and his office'], d.guarantee ? [ic.seal, 'Satisfaction guarantee: guidance continues until your questions are answered'] : [ic.chat, 'Follow-up questions answered on WhatsApp']].map(([icon, t]) => ({ icon, t }));
+    const ch = A.chakra('#D9B96A'), CTA = { 1: 'Continue to your details', 2: need ? 'Continue to date & time' : 'Continue to delivery', 3: 'Continue to payment', 4: 'Pay ' + M.fmt(tier.price) + ' securely' };
+    const payT = s.pay === 'upi' ? 'UPI · ' + (apps.find((a) => a.sel) || apps[0]).t : s.pay === 'card' ? 'Card' : 'Netbanking · ' + (s.bank || '');
+    const evt = need && s.date && s.time ? { id: s.bid || 'mka', start: A.istDate(s.date, s.time), mins, title: `${d.name} with Sadhak Pawan Pandey`, desc: `${tier.t} package, ${mLabel(s.mode)}. Booking ${s.bid}. Maa Kali Astuti will message you on WhatsApp before the session.`, loc: s.mode === 'video' ? 'Video link on WhatsApp' : 'Phone / WhatsApp call' } : null;
+    const done = { id: s.bid, cal: !!evt, gcal: evt ? A.gcal(evt) : '#',
+      ics: () => { if (!evt) return; const a = document.createElement('a'); a.href = URL.createObjectURL(new Blob([A.ics(evt)], { type: 'text/calendar' })); a.download = 'maa-kali-astuti-' + s.bid + '.ics'; document.body.appendChild(a); a.click(); a.remove(); },
+      line: `Confirmation sent to WhatsApp on +91 ${s.f.phone.replace(/(\d{5})(\d{5})/, '$1 $2') || 'your number'}${s.f.email ? ' and to ' + s.f.email : ''}. ${need ? 'Please be free five minutes before the session.' : 'Your report arrives by ' + M.dlong(deliver) + '.'}`,
+      rows: [{ k: 'Consultation', v: d.name }, { k: 'Package', v: `${tier.t} · ${minsL}` }, { k: 'Mode', v: mLabel(s.mode) }, { k: need ? 'When' : 'Delivery', v: need && s.date && s.time ? `${M.dlong(s.date)} · ${A.t12(s.time)} IST` : 'By ' + M.dlong(deliver) }, { k: 'Paid', v: `${M.fmt(tier.price)} · ${payT}` }] };
+    const nextSteps = A.STEPS.map(([icn, t, dd], i) => ({ i, icon: ic[icn], t, d: dd, st: i === 0 ? 'Done' : i === 1 ? 'Next' : 'Then', stC: i === 0 ? '#2F7A4F' : '#7A5C1C', bg: i === 0 ? '#0E3B30' : '#FBF7EE', ink: i === 0 ? '#D9B96A' : '#164E3F', rule: i === 0 ? '#B8923A' : '#EAE0CA' }));
+    return {
+      L, ic, head: { a: HEAD[Math.min(step, 4)][0], b: HEAD[Math.min(step, 4)][1] }, steps, stepFill: `scaleX(${Math.min(step - 1, 3) / 3})`,
+      inFlow: step <= 4, isDone: step === 5, is1: step === 1, is2: step === 2, is3: step === 3, is4: step === 4, notPay: step !== 4,
+      svcs, modes, modeNote: MN[s.mode], tiers, f: s.f, on, bad, err: E, ring, tobBg: s.f.unknown ? '#F4EDDD' : '#FFFDF8', todayIso: this.iso(today),
+      isKundali: k === 'kundali', isPalm: k === 'palm', isNum: k === 'numerology', needDob: k === 'kundali' || k === 'numerology',
+      d2: { birthTitle: D2[0], qTitle: D2[1], qHint: D2[2], qPh: D2[3] }, guide, palms, langs, placeOpen: s.placeOpen && placeRes.length > 0, placeRes,
+      needsSlot: need, isReport: !need, cal, slot, timeline, sum, methods, apps, banks, upiIdOpen: s.app === 'id', upiId: s.upiId, trust,
+      canBack: step > 1 && step <= 4, noBack: step === 1, back: () => { if (step > 1) { this.setState({ step: step - 1 }); this.toTop(); } },
+      next: () => this.next(), cta: CTA[Math.min(step, 4)], ctaS: step === 4 ? 'Pay ' + M.fmt(tier.price) : 'Continue', barOn: mob && step <= 4 && !s.processing,
+      processing: s.processing, ch: { outer: M.h(React, ch.outer, null, 'bk-ch-o'), middle: M.h(React, ch.middle, null, 'bk-ch-m'), inner: M.h(React, ch.inner, null, 'bk-ch-i') },
+      sky: M.h(React, `<svg viewBox="0 0 420 160" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">${M.stars(16, 420, 160, 'bk-sum')}<g transform="translate(380 40)" opacity=".16">${M.mandala(120, '#D9B96A', .8)}</g></svg>`, null, 'bk-sky'),
+      skyWide: M.h(React, `<svg viewBox="0 0 1440 640" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">${M.stars(mob ? 16 : 28, 1440, 640, 'bk-done')}<g transform="translate(1260 120)" opacity=".1">${M.mandala(300, '#D9B96A', .8)}</g></svg>`, null, 'bk-sky-w' + (mob ? 'm' : 'd')),
+      done, nextSteps,
+      okRef: (el) => { if (!el || el === this._ok) return; this._ok = el; const ps = el.querySelectorAll('[data-draw]'); if (ps[0]) M.fx.drawIn(ps[0], 1000, 150); if (ps[1]) M.fx.drawIn(ps[1], 520, 950); }
+    };
+  }
+}
+
+</script>
+</body>
+</html>

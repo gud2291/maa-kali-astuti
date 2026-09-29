@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..600,0..100;1,9..144,300..600,0..100&family=Manrope:wght@400;500;600;700&family=Mukta:wght@400;500;600&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap">
+<script src="mka-core.js"></script>
+<script src="mka-astro.js"></script>
+<style>
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#FBF7EE url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .16 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");color:#1F2A24;font-family:Manrope,Mukta,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#164E3F}
+a:hover{color:#1C6B54}
+button,input,select,textarea{font-family:inherit}
+:focus-visible{outline:2px solid #B8923A;outline-offset:2px}
+::selection{background:#D9B96A;color:#0E3B30}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+  <dc-import name="SiteChrome" active="courses" tabbar="off" fab-lift="92px" hint-size="100%,108px"></dc-import>
+  <main id="main" style="flex:1">
+
+    <section data-screen-label="Course hero" style="position:relative;overflow:hidden;background-color:#0A1F1A;color:#E4EEE8">
+      <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none">{{ sky }}</div>
+      <div style="position:relative;max-width:1320px;margin:0 auto;padding:clamp(20px,4vw,48px) clamp(16px,4vw,32px) clamp(56px,8vw,112px);display:grid;grid-template-columns:{{ L.hero }};gap:clamp(36px,6vw,96px);align-items:center">
+        <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+          <nav aria-label="Breadcrumb" style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;font:500 12.5px/1 Manrope,sans-serif;color:#9FB3AA"><a href="#" onClick="{{ soonHome }}" style="color:#9FB3AA;text-decoration:none">Home</a><span style="color:#B8923A">/</span><a href="Sadhana-Courses.dc.html" style="color:#9FB3AA;text-decoration:none">Sadhana Courses</a><span style="color:#B8923A">/</span><span aria-current="page" style="color:#E4EEE8">{{ c.en }}</span></nav>
+          <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#D9B96A">{{ c.deity }}</span>
+          <h1 style="margin:0;font:400 clamp(44px,6vw,88px)/1 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.024em;color:#FBF7EE">{{ c.a }} <em style="font-style:italic;color:#D9B96A">Sadhana</em></h1>
+          <span style="font:400 clamp(22px,2.4vw,30px)/1.3 'Tiro Devanagari Hindi',serif;color:#D9B96A">{{ c.hi }}</span>
+          <p style="margin:0;max-width:540px;font:400 clamp(16px,1.4vw,18px)/1.65 Manrope,sans-serif;color:#C9D6CF;text-wrap:pretty">{{ c.essence }}</p>
+          <dl style="margin:6px 0 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:14px 24px;max-width:600px;padding:18px 0;border-top:1px solid rgba(217,185,106,.28);border-bottom:1px solid rgba(217,185,106,.28)">
+            <sc-for list="{{ facts }}" as="x" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:6px"><dt style="font:600 10.5px/1 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#9FB3AA">{{ x.k }}</dt><dd style="margin:0;font:600 15px/1.35 Manrope,sans-serif;color:#FBF7EE">{{ x.v }}</dd></div></sc-for>
+          </dl>
+          <div ref="{{ ctaRef }}" style="display:flex;flex-wrap:wrap;align-items:center;gap:12px 20px;margin-top:4px">
+            <a href="#enquire" onClick="{{ toEnquire }}" style="height:52px;padding:0 24px;border-radius:4px;background-color:#D9B96A;color:#0A1F1A;display:inline-flex;align-items:center;gap:9px;font:700 15px/1 Manrope,sans-serif;text-decoration:none;transition:transform 200ms" style-hover="transform:translateY(-1px);color:#0A1F1A"><span style="width:17px;height:17px;display:block">{{ ic.chat }}</span>Enquire about {{ c.en }}</a>
+            <span style="display:flex;align-items:center;gap:8px;font:500 13.5px/1.4 Manrope,sans-serif;color:#C9D6CF"><span style="width:16px;height:16px;display:block;color:#D9B96A">{{ ic.scroll }}</span>Syllabus shared upon inquiry</span>
+          </div>
+        </div>
+        <div style="position:relative;justify-self:center;width:100%;max-width:{{ L.archW }}">
+          <span aria-hidden="true" style="position:absolute;inset:-12px;border-radius:50% 50% 6px 6px / 35.7% 35.7% 6px 6px;box-shadow:inset 0 0 0 1px rgba(217,185,106,.45);pointer-events:none"></span>
+          <div style="position:relative;aspect-ratio:5/7;border-radius:50% 50% 4px 4px / 35.7% 35.7% 4px 4px;overflow:hidden;background-color:#10302A;box-shadow:0 40px 60px -40px rgba(0,0,0,.6),inset 0 0 0 1px rgba(217,185,106,.55)">
+            <span aria-hidden="true" style="position:absolute;inset:0;display:block">{{ archSky }}</span>
+            <span ref="{{ yRef }}" onMouseEnter="{{ redraw }}" style="position:absolute;left:10%;right:10%;top:22%;aspect-ratio:1/1;display:block">{{ yantra }}</span>
+            <span style="position:absolute;left:0;right:0;bottom:7%;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center"><span style="font:600 10.5px/1 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#C9D6CF">{{ c.en }} yantra</span></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section data-screen-label="Overview" style="background-color:#FBF7EE">
+      <div style="max-width:1320px;margin:0 auto;padding:clamp(56px,8vw,112px) clamp(16px,4vw,32px);display:grid;grid-template-columns:{{ L.split }};gap:clamp(24px,5vw,80px);align-items:start">
+        <div data-reveal="0" style="display:flex;flex-direction:column;gap:12px">
+          <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">01 — Overview</span>
+          <span style="font:400 18px/1.35 'Tiro Devanagari Hindi',serif;color:#7A5C1C">परिचय</span>
+        </div>
+        <div style="display:flex;flex-direction:column;gap:22px;max-width:760px">
+          <p data-reveal="1" style="margin:0;font:400 clamp(22px,2.4vw,30px)/1.45 Fraunces,serif;font-variation-settings:'SOFT' 40;color:#0E3B30;text-wrap:pretty">{{ c.overview }}</p>
+          <p data-reveal="2" style="margin:0;font:400 16px/1.7 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty">The practice follows a fixed sequence that Sadhak Ji gives you personally at diksha. It is done at home, at the same hour each day, with a weekly review of your japa record and experiences.</p>
+        </div>
+      </div>
+    </section>
+
+    <section data-screen-label="What you attain" style="background-color:#F4EDDD;box-shadow:inset 0 1px 0 rgba(184,146,58,.35),inset 0 -1px 0 rgba(184,146,58,.35)">
+      <div style="max-width:1320px;margin:0 auto;padding:clamp(56px,8vw,112px) clamp(16px,4vw,32px)">
+        <div data-reveal="0" style="display:flex;flex-direction:column;gap:12px;margin-bottom:clamp(24px,3vw,40px)">
+          <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">02 — What you attain</span>
+          <h2 style="margin:0;font:400 clamp(32px,3.8vw,50px)/1.08 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.018em;color:#0E3B30;text-wrap:balance">What seekers carry <em style="font-style:italic;color:#B8923A">out of it.</em></h2>
+        </div>
+        <ol style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:{{ L.two }};gap:0 clamp(24px,4vw,64px);border-top:1px solid rgba(184,146,58,.5)">
+          <sc-for list="{{ attain }}" as="a" hint-placeholder-count="4">
+            <li data-reveal="{{ a.i }}" style="display:grid;grid-template-columns:48px minmax(0,1fr);gap:16px;align-items:baseline;padding:24px 0;border-bottom:1px solid rgba(184,146,58,.5)"><span style="font:400 30px/1 'Tiro Devanagari Hindi',serif;color:#B8923A">{{ a.n }}</span><span style="font:400 clamp(19px,1.8vw,22px)/1.4 Fraunces,serif;color:#0E3B30;text-wrap:pretty">{{ a.t }}</span></li>
+          </sc-for>
+        </ol>
+      </div>
+    </section>
+
+    <section data-screen-label="Structure" style="background-color:#FBF7EE">
+      <div style="max-width:1320px;margin:0 auto;padding:clamp(56px,8vw,112px) clamp(16px,4vw,32px);display:grid;grid-template-columns:{{ L.split }};gap:clamp(28px,5vw,80px);align-items:start">
+        <div style="display:flex;flex-direction:column;gap:14px;position:{{ L.stick }};top:96px">
+          <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">03 — Structure</span>
+          <h2 style="margin:0;font:400 clamp(30px,3.4vw,44px)/1.1 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.018em;color:#0E3B30">{{ c.days }} days, <em style="font-style:italic;color:#B8923A">five stages.</em></h2>
+          <dl style="margin:6px 0 0;display:flex;flex-direction:column">
+            <sc-for list="{{ struct }}" as="x" hint-placeholder-count="3"><div style="display:flex;justify-content:space-between;gap:14px;padding:12px 0;border-top:1px solid #EAE0CA"><dt style="font:600 10.5px/1.5 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#5B6A61">{{ x.k }}</dt><dd style="margin:0;font:600 14px/1.45 Manrope,sans-serif;color:#1F2A24;text-align:right">{{ x.v }}</dd></div></sc-for>
+          </dl>
+          <span style="align-self:flex-start;height:26px;padding:0 10px;border-radius:999px;background-color:#F4EDDD;box-shadow:inset 0 0 0 1px rgba(184,146,58,.5);display:inline-flex;align-items:center;font:600 11.5px/1 Manrope,sans-serif;color:#7A5C1C">Duration, mode and modules to be confirmed</span>
+        </div>
+        <ol style="list-style:none;margin:0;padding:0;display:flex;flex-direction:column">
+          <sc-for list="{{ modules }}" as="m" hint-placeholder-count="5">
+            <li data-reveal="{{ m.r }}" style="position:relative;display:grid;grid-template-columns:56px minmax(0,1fr);gap:18px;padding-bottom:{{ m.pb }}">
+              <span aria-hidden="true" style="position:absolute;left:27.5px;top:56px;bottom:0;width:1px;background-color:{{ m.line }}"></span>
+              <span style="width:56px;height:56px;border-radius:999px;background-color:#0E3B30;color:#D9B96A;box-shadow:inset 0 0 0 1px rgba(217,185,106,.55);display:grid;place-items:center;font:italic 400 20px/1 Fraunces,serif">{{ m.n }}</span>
+              <span style="display:flex;flex-direction:column;gap:6px;padding-top:6px"><span style="font:700 10.5px/1.2 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7A5C1C">{{ m.when }}</span><span style="font:400 clamp(20px,2vw,24px)/1.2 Fraunces,serif;color:#0E3B30">{{ m.t }}</span><span style="font:400 15px/1.6 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty">{{ m.d }}</span></span>
+            </li>
+          </sc-for>
+        </ol>
+      </div>
+    </section>
+    <section data-screen-label="Discipline and niyam" style="position:relative;overflow:hidden;background-color:#0A1F1A;color:#E4EEE8">
+      <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none">{{ sky2 }}</div>
+      <div style="position:relative;max-width:1320px;margin:0 auto;padding:clamp(64px,9vw,128px) clamp(16px,4vw,32px)">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:16px 56px;align-items:end;margin-bottom:clamp(32px,4vw,52px)">
+          <div data-reveal="0" style="display:flex;flex-direction:column;gap:12px">
+            <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#D9B96A">04 — Discipline &amp; niyam · <span style="letter-spacing:0;text-transform:none;font-family:Mukta,sans-serif;font-weight:500;font-size:1.08em">नियम</span></span>
+            <h2 style="margin:0;font:400 clamp(32px,4vw,52px)/1.06 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.018em;color:#FBF7EE;text-wrap:balance">The rules are <em style="font-style:italic;color:#D9B96A">the practice.</em></h2>
+          </div>
+          <div data-reveal="1" style="display:flex;flex-direction:column;gap:6px;max-width:460px;padding:16px 18px;border-radius:4px;background-color:#10302A;box-shadow:inset 0 0 0 1px rgba(217,185,106,.45)"><span style="font:700 10.5px/1.2 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#D9B96A">Specific to {{ c.en }}</span><span style="font:500 15px/1.55 Manrope,sans-serif;color:#FBF7EE">{{ c.niyam }}</span></div>
+        </div>
+        <ul style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:{{ L.two }};gap:0 clamp(24px,4vw,64px);border-top:1px solid rgba(217,185,106,.3)">
+          <sc-for list="{{ niyam }}" as="n" hint-placeholder-count="6">
+            <li data-reveal="{{ n.i }}" style="display:grid;grid-template-columns:24px minmax(0,1fr);gap:16px;align-items:center;padding:18px 0;border-bottom:1px solid rgba(217,185,106,.3)"><span aria-hidden="true" style="width:22px;height:22px;display:block;color:#D9B96A">{{ ic.lotus }}</span><span style="font:400 clamp(18px,1.8vw,21px)/1.4 Fraunces,serif;color:#FBF7EE">{{ n.t }}</span></li>
+          </sc-for>
+        </ul>
+      </div>
+    </section>
+
+    <section data-screen-label="Guidance and support" style="background-color:#FBF7EE">
+      <div style="max-width:1320px;margin:0 auto;padding:clamp(56px,8vw,112px) clamp(16px,4vw,32px)">
+        <div data-reveal="0" style="display:flex;flex-direction:column;gap:12px;margin-bottom:clamp(24px,3vw,40px)">
+          <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">05 — Guidance &amp; support</span>
+          <h2 style="margin:0;font:400 clamp(30px,3.6vw,46px)/1.08 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.018em;color:#0E3B30">You do not practise <em style="font-style:italic;color:#B8923A">alone.</em></h2>
+        </div>
+        <div style="display:grid;grid-template-columns:{{ L.three }};gap:0 clamp(24px,3vw,48px)">
+          <sc-for list="{{ support }}" as="x" hint-placeholder-count="3">
+            <div data-reveal="{{ x.i }}" style="display:flex;flex-direction:column;gap:12px;padding:24px 0;border-top:1px solid #B8923A">
+              <span style="width:44px;height:44px;border-radius:999px;background-color:#F4EDDD;color:#164E3F;display:grid;place-items:center"><span style="width:22px;height:22px;display:block">{{ x.icon }}</span></span>
+              <span style="font:400 21px/1.25 Fraunces,serif;color:#0E3B30">{{ x.t }}</span>
+              <span style="font:400 15px/1.6 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty">{{ x.d }}</span>
+            </div>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section data-screen-label="Fee and payment" style="background-color:#F4EDDD;box-shadow:inset 0 1px 0 rgba(184,146,58,.35),inset 0 -1px 0 rgba(184,146,58,.35)">
+      <div style="max-width:1320px;margin:0 auto;padding:clamp(56px,8vw,112px) clamp(16px,4vw,32px);display:grid;grid-template-columns:{{ L.fee }};gap:clamp(24px,4vw,56px);align-items:stretch">
+        <div data-reveal="0" style="display:flex;flex-direction:column;gap:16px;padding:clamp(22px,3vw,36px);border-radius:4px;background-color:#0E3B30;color:#E4EEE8;box-shadow:inset 0 0 0 1px rgba(217,185,106,.5)">
+          <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#D9B96A">06 — Fee</span>
+          <span style="display:flex;align-items:baseline;flex-wrap:wrap;gap:6px 14px"><span style="font:400 clamp(44px,5vw,64px)/1 Fraunces,serif;letter-spacing:-.015em;color:#FBF7EE;font-variant-numeric:tabular-nums">₹50,000</span><span style="font:500 13.5px/1.3 Manrope,sans-serif;color:#C9D6CF">for the complete sadhana</span></span>
+          <ul style="list-style:none;margin:6px 0 0;padding:16px 0 0;display:flex;flex-direction:column;gap:11px;border-top:1px solid rgba(217,185,106,.3)">
+            <sc-for list="{{ feeInc }}" as="x" hint-placeholder-count="5"><li style="display:grid;grid-template-columns:18px minmax(0,1fr);gap:10px;font:500 14.5px/1.5 Manrope,sans-serif;color:#E4EEE8"><span style="width:18px;height:18px;display:block;margin-top:2px;color:#D9B96A">{{ ic.check }}</span>{{ x.t }}</li></sc-for>
+          </ul>
+        </div>
+        <div data-reveal="1" style="display:flex;flex-direction:column;justify-content:center;gap:4px">
+          <span style="font:400 clamp(24px,2.6vw,32px)/1.2 Fraunces,serif;color:#0E3B30;margin-bottom:10px">Payment</span>
+          <dl style="margin:0;display:flex;flex-direction:column">
+            <sc-for list="{{ pay }}" as="p" hint-placeholder-count="4"><div style="display:grid;grid-template-columns:140px minmax(0,1fr);gap:16px;padding:14px 0;border-top:1px solid rgba(184,146,58,.4)"><dt style="font:600 10.5px/1.6 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7A5C1C">{{ p.k }}</dt><dd style="margin:0;font:500 15px/1.5 Manrope,sans-serif;color:#1F2A24">{{ p.v }}</dd></div></sc-for>
+          </dl>
+        </div>
+      </div>
+    </section>
+
+    <section id="enquire" data-screen-label="Course inquiry" style="background-color:#FBF7EE;scroll-margin-top:60px">
+      <div style="max-width:1320px;margin:0 auto;padding:clamp(56px,8vw,112px) clamp(16px,4vw,32px);display:grid;grid-template-columns:{{ L.enq }};gap:clamp(28px,5vw,80px);align-items:start">
+        <div style="display:flex;flex-direction:column;gap:14px;max-width:480px">
+          <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">07 — Enquire</span>
+          <h2 style="margin:0;font:400 clamp(32px,3.8vw,50px)/1.08 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.018em;color:#0E3B30;text-wrap:balance">Ask about <em style="font-style:italic;color:#B8923A">{{ c.en }}.</em></h2>
+          <p style="margin:0;font:400 16px/1.7 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty">The office replies within two working days to arrange your conversation with Sadhak Ji. The full syllabus, dates and preparation are shared after that call.</p>
+          <a href="https://wa.me/919000012345" target="_blank" rel="noopener" style="align-self:flex-start;margin-top:6px;display:inline-flex;align-items:center;gap:8px;font:600 14px/1 Manrope,sans-serif;color:#164E3F;text-decoration:none"><span style="width:17px;height:17px;display:block">{{ ic.whatsapp }}</span>Or message on WhatsApp</a>
+        </div>
+        <dc-import name="InquiryForm" kind="course" preset="{{ c.key }}" hint-size="100%,760px"></dc-import>
+      </div>
+      <div style="max-width:1320px;margin:0 auto;padding:0 clamp(16px,4vw,32px) clamp(88px,10vw,128px)">
+        <span style="display:block;margin-bottom:18px;padding-top:clamp(32px,4vw,48px);border-top:1px solid #EAE0CA;font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">The other sadhanas</span>
+        <div style="display:grid;grid-template-columns:{{ L.others }};gap:12px">
+          <sc-for list="{{ others }}" as="o" hint-placeholder-count="5">
+            <a href="{{ o.href }}" style="display:flex;flex-direction:column;align-items:center;gap:10px;padding:18px 12px;border-radius:4px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px #EAE0CA;text-align:center;text-decoration:none;transition:box-shadow 200ms,transform 200ms" style-hover="box-shadow:inset 0 0 0 1px #B8923A;transform:translateY(-2px)"><span style="width:56px;height:56px;display:block">{{ o.y }}</span><span style="font:400 17px/1.2 Fraunces,serif;color:#0E3B30">{{ o.en }}</span><span style="font:400 14px/1.3 'Tiro Devanagari Hindi',serif;color:#7A5C1C">{{ o.hi }}</span></a>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+  </main>
+  <dc-import name="SiteFooter" tabbar="off" hint-size="100%,640px"></dc-import>
+
+  <div aria-hidden="{{ stickyHidden }}" style="position:fixed;left:0;right:0;z-index:55;top:{{ L.stT }};bottom:{{ L.stB }};transform:{{ stickyY }};transition:transform 380ms cubic-bezier(.22,1,.36,1);background-color:#FBF7EE;box-shadow:{{ L.stLine }};padding-bottom:{{ L.stSafe }}">
+    <div style="max-width:1320px;margin:0 auto;height:{{ L.stH }};padding:0 clamp(16px,4vw,32px);display:flex;align-items:center;justify-content:space-between;gap:14px">
+      <span style="display:flex;align-items:center;gap:12px;min-width:0">
+        <sc-if value="{{ L.desk }}" hint-placeholder-val="{{ true }}"><span style="width:40px;height:40px;flex:none;border-radius:999px;background-color:#0A1F1A;display:grid;place-items:center;padding:6px"><span style="width:100%;height:100%;display:block">{{ yantra }}</span></span></sc-if>
+        <span style="display:flex;flex-direction:column;gap:4px;min-width:0"><span style="font:400 18px/1.1 Fraunces,serif;color:#0E3B30;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ c.en }}</span><span style="font:600 12.5px/1 Manrope,sans-serif;color:#5B6A61;font-variant-numeric:tabular-nums">₹50,000 · {{ c.days }} days</span></span>
+      </span>
+      <a href="#enquire" onClick="{{ toEnquire }}" tabindex="{{ stickyTab }}" style="flex:none;height:46px;padding:0 20px;border-radius:4px;background-color:#164E3F;color:#FBF7EE;display:inline-flex;align-items:center;gap:9px;font:600 14.5px/1 Manrope,sans-serif;text-decoration:none;box-shadow:inset 0 0 0 1px rgba(217,185,106,.55)" style-hover="background-color:#1C6B54;color:#FBF7EE"><span style="width:17px;height:17px;display:block">{{ ic.chat }}</span>Enquire</a>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { vw: window.innerWidth, ready: false, key: 'kali', sticky: false };
+  componentDidMount() {
+    const go = () => { this.un = MKA.bind(this); this.parse(); this.setState({ ready: true }); };
+    if (window.MKA && MKA.astroReady) go(); else this._w = setInterval(() => { if (window.MKA && MKA.astroReady) { clearInterval(this._w); go(); } }, 30);
+    this.onHash = () => { this.parse(); window.scrollTo(0, 0); };
+    window.addEventListener('hashchange', this.onHash);
+  }
+  componentWillUnmount() { this.un && this.un(); clearInterval(this._w); window.removeEventListener('hashchange', this.onHash); this.io && this.io.disconnect(); }
+  componentDidUpdate() { const k = this.state.key; if (this._lk !== undefined && this._lk !== k && this._y) { this._y.__ov = 0; this.drawY(); } this._lk = k; }
+  parse() { const h = MKA.hashParams(); this.setState({ key: MKA.A.COURSES.some((c) => c.key === h.c) ? h.c : 'kali' }); }
+  drawY() { const el = this._y, A = MKA.A; if (!el) return; requestAnimationFrame(() => { A.prime(el); A.onView(el, () => A.drawYantra(el, 1800), .3); }); }
+  toEnquire(e) { if (e) e.preventDefault(); const el = document.getElementById('enquire'); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 60, behavior: MKA.isReduced() ? 'auto' : 'smooth' }); }
+  renderVals() {
+    const M = window.MKA, s = this.state, vw = s.vw, mob = vw < 768, desk = vw >= 1024;
+    const L = { hero: desk ? 'minmax(0,1.15fr) minmax(0,.85fr)' : 'minmax(0,1fr)', archW: mob ? '300px' : '420px', split: desk ? 'minmax(0,.8fr) minmax(0,1.6fr)' : 'minmax(0,1fr)', two: vw >= 768 ? 'repeat(2,minmax(0,1fr))' : 'minmax(0,1fr)', three: vw >= 900 ? 'repeat(3,minmax(0,1fr))' : 'minmax(0,1fr)', stick: desk ? 'sticky' : 'static', fee: desk ? 'minmax(0,1fr) minmax(0,1fr)' : 'minmax(0,1fr)', enq: desk ? 'minmax(0,.85fr) minmax(0,1.15fr)' : 'minmax(0,1fr)', others: vw >= 1024 ? 'repeat(5,minmax(0,1fr))' : vw >= 600 ? 'repeat(3,minmax(0,1fr))' : 'repeat(2,minmax(0,1fr))',
+      stT: mob ? 'auto' : '64px', stB: mob ? '0' : 'auto', stLine: mob ? 'inset 0 1px 0 #EAE0CA' : 'inset 0 -1px 0 rgba(184,146,58,.45)', stH: mob ? '72px' : '64px', stSafe: mob ? 'env(safe-area-inset-bottom)' : '0', desk: !mob };
+    if (!M || !s.ready) return { L, ic: {}, c: {}, facts: [], attain: [], struct: [], modules: [], niyam: [], support: [], feeInc: [], pay: [], others: [], stickyY: 'translateY(-120%)' };
+    const ic = M.ic(React), A = M.A, c = A.course(s.key), d = c.days;
+    const WHEN = ['Days 1–7', 'Day 8', `Days 8–${d - 2}`, 'Every week', `Days ${d - 1}–${d}`];
+    const DEV = ['१', '२', '३', '४', '५', '६'];
+    return {
+      L, ic, soonHome: M.soon('The Home page'), toEnquire: (e) => this.toEnquire(e),
+      c: { en: c.en, a: c.en.replace(/\s*Sadhana$/, ''), hi: c.hi, deity: c.deity, essence: c.essence, overview: c.overview, days: d, key: c.key, niyam: c.niyam },
+      facts: [{ k: 'Duration', v: `${d} days` }, { k: 'Mode', v: 'Diksha in person or on video' }, { k: 'Fee', v: '₹50,000, all-inclusive' }],
+      attain: c.attain.map((t, i) => ({ t, n: DEV[i], i: i % 2 })),
+      struct: [{ k: 'Duration', v: `${d} days, plus 7 of preparation` }, { k: 'Daily practice', v: '60–90 minutes at home' }, { k: 'Diksha', v: 'In person or on video' }],
+      modules: A.MODULES.map(([t, dd], i, a) => ({ n: String(i + 1).padStart(2, '0'), t, d: dd, when: WHEN[i], r: i % 2, pb: i < a.length - 1 ? '28px' : '0', line: i < a.length - 1 ? 'rgba(184,146,58,.5)' : 'transparent' })),
+      niyam: A.NIYAM.map((t, i) => ({ t, i: i % 2 })),
+      support: [[ic.calendar, 'Weekly check-ins', 'Your japa record and experiences reviewed every week, by call or video.'], [ic.whatsapp, 'Questions answered on WhatsApp', 'Through the sadhana, from the office and from Sadhak Ji, usually within a day.'], [ic.lotus, 'Guidance after completion', 'How to keep the practice alive once the anushthan ends, and what to avoid.']].map(([icon, t, dd], i) => ({ icon, t, d: dd, i })),
+      feeInc: ['Personal diksha and sankalp', 'Energized yantra and mala, posted before diksha', 'Written vidhi and niyam, in Hindi or English', 'Weekly check-ins for the full duration', 'Closing havan and purnahuti guidance'].map((t) => ({ t })),
+      pay: [{ k: 'When you pay', v: 'Only after the eligibility conversation' }, { k: 'How', v: 'UPI, netbanking or bank transfer' }, { k: 'Instalments', v: '3 × ₹16,667 over three months [confirm]' }, { k: 'Refunds', v: 'In full until diksha; not after, as the sankalp is taken' }],
+      others: A.COURSES.filter((x) => x.key !== c.key).map((x) => ({ en: x.en, hi: x.hi, href: x.href, y: M.h(React, A.yantra(x.key, '#B8923A', 'o' + x.key, 1.2), null, 'cd-oy-' + x.key) })),
+      yantra: M.h(React, A.yantra(c.key, '#D9B96A', 'cd' + c.key, 1), null, 'cd-y-' + c.key),
+      yRef: (el) => { if (el && el !== this._y) { this._y = el; this.drawY(); } }, redraw: () => { const t = Date.now(); if ((this._rdT || 0) > t || !this._y || M.isReduced()) return; this._rdT = t + 2000; A.drawYantra(this._y, 1600); },
+      sky2: M.h(React, '<svg viewBox="0 0 1440 800" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">' + M.stars(mob ? 8 : 14, 1440, 800, 'cd-sky2') + '</svg>', null, 'cd-sky2' + (mob ? 'm' : 'd')),
+      sky: M.h(React, `<svg viewBox="0 0 1440 820" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">${M.stars(mob ? 16 : 28, 1440, 820, 'cd-sky')}</svg>`, null, 'cd-sky' + (mob ? 'm' : 'd')),
+      archSky: M.h(React, `<svg viewBox="0 0 500 700" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">${M.stars(mob ? 6 : 10, 500, 700, 'cd-arch')}<circle cx="250" cy="330" r="220" fill="none" stroke="#D9B96A" stroke-width=".6" opacity=".22"/></svg>`, null, 'cd-archsky'),
+      lotus: M.h(React, M.lotusRule('#D9B96A'), null, 'cd-lotus'),
+      ctaRef: (el) => { if (!el || el === this._cta) return; this._cta = el; this.io && this.io.disconnect(); this.io = new IntersectionObserver(([e]) => this.setState({ sticky: !e.isIntersecting && e.boundingClientRect.top < 0 }), { threshold: 0 }); this.io.observe(el); },
+      stickyY: s.sticky ? 'none' : mob ? 'translateY(110%)' : 'translateY(calc(-100% - 72px))', stickyHidden: !s.sticky, stickyTab: s.sticky ? 0 : -1
+    };
+  }
+}
+
+</script>
+</body>
+</html>

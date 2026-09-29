@@ -1,0 +1,25 @@
+# deps & build
+node_modules/
+.next/
+out/
+build/
+.vercel/
+*.tsbuildinfo
+next-env.d.ts
+
+# env
+.env*
+!.env.example
+
+# logs & os
+npm-debug.log*
+pnpm-debug.log*
+.DS_Store
+Thumbs.db
+
+# design export archives / bundles (the extracted design/ folder is kept)
+*.zip
+*(standalone).html
+
+# local claude settings
+.claude/settings.local.json

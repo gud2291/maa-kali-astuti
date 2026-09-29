@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..600,0..100;1,9..144,300..600,0..100&family=Manrope:wght@400;500;600;700&family=Mukta:wght@400;500;600&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap">
+<script src="mka-core.js"></script>
+<script src="mka-astro.js"></script>
+<script src="mka-home.js"></script>
+<style>
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#FBF7EE url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .16 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");color:#1F2A24;font-family:Manrope,Mukta,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#164E3F}
+a:hover{color:#1C6B54}
+button,input{font-family:inherit}
+:focus-visible{outline:2px solid #B8923A;outline-offset:2px}
+::selection{background:#D9B96A;color:#0E3B30}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+  <dc-import name="SiteChrome" active="videos" hint-size="100%,108px"></dc-import>
+  <main id="main" style="flex:1">
+
+    <section id="player" data-screen-label="01 Featured discourse" style="position:relative;overflow:hidden;background-color:#0A1F1A;color:#E4EEE8;scroll-margin-top:64px">
+      <div aria-hidden="true" style="position:absolute;inset:0;pointer-events:none">{{ sky }}</div>
+      <div aria-hidden="true" style="position:absolute;right:-260px;top:-300px;width:760px;height:760px;opacity:.06;pointer-events:none">{{ mandala }}</div>
+      <div style="position:relative;max-width:1320px;margin:0 auto;padding:clamp(20px,4vw,44px) clamp(16px,4vw,32px) clamp(56px,8vw,104px)">
+        <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px 40px;margin-bottom:clamp(24px,3.4vw,44px)">
+          <div style="display:flex;flex-direction:column;gap:14px;max-width:760px">
+            <nav aria-label="Breadcrumb" style="display:flex;align-items:center;gap:8px;font:500 12.5px/1 Manrope,sans-serif;color:#9FB3AA"><a href="Home.dc.html" style="color:#9FB3AA;text-decoration:none">Home</a><span style="color:#B8923A">/</span><span aria-current="page" style="color:#E4EEE8">Videos</span></nav>
+            <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#D9B96A">॥ Discourses ॥ · <span style="letter-spacing:0;text-transform:none;font-family:Mukta,sans-serif;font-weight:500;font-size:1.12em">प्रवचन एवं शॉर्ट्स</span></span>
+            <h1 style="margin:0;font:400 clamp(40px,5.4vw,76px)/1.02 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.022em;color:#FBF7EE;text-wrap:balance">Discourses from the <em style="font-style:italic;color:#D9B96A">sadhana</em> path.</h1>
+            <span style="font:400 clamp(18px,2vw,22px)/1.35 'Tiro Devanagari Hindi',serif;color:#D9B96A">साधना पथ के प्रवचन, सरल भाषा में</span>
+          </div>
+          <div style="display:flex;flex-direction:column;align-items:flex-start;gap:10px">
+            <span style="font:500 13.5px/1.4 Manrope,sans-serif;color:#C9D6CF">{{ subs }} · a new discourse every Sunday</span>
+            <button type="button" onClick="{{ sub }}" style="height:50px;padding:0 22px;border:0;border-radius:4px;background-color:#D9B96A;color:#0A1F1A;display:inline-flex;align-items:center;gap:9px;font:700 14.5px/1 Manrope,sans-serif;white-space:nowrap;cursor:pointer" style-hover="background-color:#E6CB86"><span style="width:19px;height:19px;display:block">{{ ic.youtube }}</span>Subscribe on YouTube</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:{{ L.feat }};gap:clamp(20px,3vw,48px);align-items:start">
+          <div style="position:relative;aspect-ratio:16/9;border-radius:4px;overflow:hidden;background-color:#000;box-shadow:inset 0 0 0 1px rgba(217,185,106,.35),0 40px 80px -48px rgba(0,0,0,.8)">
+            <span style="position:absolute;inset:0;display:block;opacity:{{ thumbOp }};transition:opacity 400ms">{{ feat.thumb }}</span>
+            <sc-if value="{{ idle }}" hint-placeholder-val="{{ true }}">
+              <button type="button" onClick="{{ play }}" aria-label="{{ feat.aria }}" style="position:absolute;inset:0;border:0;background:transparent;cursor:pointer;display:grid;place-items:center">
+                <span style="width:92px;height:92px;border-radius:999px;background-color:rgba(10,31,26,.6);box-shadow:inset 0 0 0 1.5px #D9B96A,0 0 0 12px rgba(217,185,106,.12);display:grid;place-items:center;color:#D9B96A;transition:transform 250ms" style-hover="transform:scale(1.06)"><span style="width:34px;height:34px;display:block;margin-left:5px">{{ ic.play }}</span></span>
+                <span style="position:absolute;right:14px;bottom:14px;height:26px;padding:0 9px;border-radius:3px;background-color:rgba(10,31,26,.85);color:#FBF7EE;display:inline-flex;align-items:center;font:700 12px/1 Manrope,sans-serif;font-variant-numeric:tabular-nums">{{ feat.dur }}</span>
+              </button>
+            </sc-if>
+            <sc-if value="{{ on }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;inset:0;display:flex;flex-direction:column;justify-content:flex-end;background-image:linear-gradient(rgba(0,0,0,0) 55%,rgba(0,0,0,.75))">
+                <div style="display:flex;align-items:center;gap:12px;padding:14px 16px">
+                  <button type="button" onClick="{{ toggle }}" aria-label="{{ togLabel }}" style="width:40px;height:40px;border:0;border-radius:999px;background-color:rgba(251,247,238,.14);color:#FBF7EE;display:grid;place-items:center;cursor:pointer"><span style="width:18px;height:18px;display:block">{{ togIcon }}</span></button>
+                  <span style="position:relative;flex:1;height:3px;border-radius:999px;background-color:rgba(251,247,238,.25)"><span ref="{{ barRef }}" style="position:absolute;left:0;top:0;bottom:0;width:100%;border-radius:999px;background-color:#D9B96A;transform-origin:0 50%;transform:scaleX(0)"></span></span>
+                  <span style="font:600 12px/1 Manrope,sans-serif;color:#FBF7EE;font-variant-numeric:tabular-nums;white-space:nowrap"><span ref="{{ timeRef }}"></span> / {{ feat.dur }}</span>
+                </div>
+                <span style="padding:0 16px 12px;font:500 11.5px/1.3 Manrope,sans-serif;color:#C9D6CF">Preview playback · the YouTube player loads here in the live site</span>
+              </div>
+            </sc-if>
+          </div>
+          <div ref="{{ infoRef }}" style="display:flex;flex-direction:column;gap:14px;min-width:0">
+            <span style="align-self:flex-start;height:26px;padding:0 11px;border-radius:999px;box-shadow:inset 0 0 0 1px rgba(217,185,106,.5);color:#D9B96A;display:inline-flex;align-items:center;font:700 10.5px/1 Manrope,sans-serif;letter-spacing:.12em;text-transform:uppercase">{{ feat.cat }}</span>
+            <h2 style="margin:0;font:400 clamp(24px,2.4vw,32px)/1.18 Fraunces,serif;font-variation-settings:'SOFT' 40;color:#FBF7EE;text-wrap:balance">{{ feat.en }}</h2>
+            <span style="font:400 18px/1.35 'Tiro Devanagari Hindi',serif;color:#D9B96A">{{ feat.hi }}</span>
+            <p style="margin:0;font:400 15.5px/1.7 Manrope,sans-serif;color:#C9D6CF;text-wrap:pretty">{{ feat.desc }}</p>
+            <dl style="margin:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;padding:14px 0;border-top:1px solid rgba(217,185,106,.2);border-bottom:1px solid rgba(217,185,106,.2)">
+              <div style="display:flex;flex-direction:column;gap:5px"><dt style="font:600 10px/1.2 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#9FB3AA">Published</dt><dd style="margin:0;font:600 14px/1.3 Manrope,sans-serif;color:#FBF7EE">{{ feat.date }}</dd></div>
+              <div style="display:flex;flex-direction:column;gap:5px"><dt style="font:600 10px/1.2 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#9FB3AA">Length</dt><dd style="margin:0;font:600 14px/1.3 Manrope,sans-serif;color:#FBF7EE;font-variant-numeric:tabular-nums">{{ feat.dur }}</dd></div>
+            </dl>
+            <div style="display:flex;flex-wrap:wrap;gap:10px">
+              <a href="{{ shareHref }}" target="_blank" rel="noopener" style="height:46px;padding:0 16px;border-radius:4px;box-shadow:inset 0 0 0 1px rgba(217,185,106,.55);color:#F6E7BC;display:inline-flex;align-items:center;gap:8px;font:600 13.5px/1 Manrope,sans-serif;text-decoration:none" style-hover="background-color:rgba(217,185,106,.1);color:#FBF7EE"><span style="width:16px;height:16px;display:block">{{ ic.whatsapp }}</span>Share</a>
+              <a href="Consultations.dc.html" style="height:46px;padding:0 16px;border-radius:4px;box-shadow:inset 0 0 0 1px rgba(217,185,106,.55);color:#F6E7BC;display:inline-flex;align-items:center;gap:8px;font:600 13.5px/1 Manrope,sans-serif;text-decoration:none" style-hover="background-color:rgba(217,185,106,.1);color:#FBF7EE"><span style="width:16px;height:16px;display:block">{{ ic.calendar }}</span>Ask Sadhak Ji directly</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section data-screen-label="02 Library" style="background-color:#FBF7EE">
+      <div style="max-width:1320px;margin:0 auto;padding:clamp(56px,8vw,112px) clamp(16px,4vw,32px)">
+        <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:20px 40px;margin-bottom:clamp(24px,3vw,40px)">
+          <div data-reveal="0" style="display:flex;flex-direction:column;gap:12px">
+            <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">01 — The library</span>
+            <h2 style="margin:0;font:400 clamp(32px,3.8vw,50px)/1.08 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.018em;color:#0E3B30">Every discourse, <em style="font-style:italic;color:#B8923A">by theme.</em></h2>
+          </div>
+          <div role="tablist" aria-label="Video categories" style="display:flex;gap:24px;overflow-x:auto;scrollbar-width:none;max-width:100%;box-shadow:inset 0 -1px 0 #EAE0CA">
+            <sc-for list="{{ tabs }}" as="t" hint-placeholder-count="5"><button type="button" role="tab" aria-selected="{{ t.on }}" onClick="{{ t.pick }}" style="flex:none;border:0;background:transparent;padding:12px 0;min-height:44px;display:flex;align-items:center;gap:7px;font:600 14px/1 Manrope,sans-serif;color:{{ t.color }};box-shadow:{{ t.line }};cursor:pointer;white-space:nowrap">{{ t.en }}<span style="font:500 13.5px/1 Mukta,sans-serif;color:#7A5C1C">{{ t.hi }}</span><span style="font:600 12px/1 Manrope,sans-serif;color:#5B6A61">{{ t.n }}</span></button></sc-for>
+          </div>
+        </div>
+        <div ref="{{ gridRef }}" role="tabpanel" style="display:grid;grid-template-columns:{{ L.grid }};gap:clamp(24px,3vw,40px) clamp(14px,2vw,28px)">
+          <sc-for list="{{ grid }}" as="v" hint-placeholder-count="6">
+            <article data-card="" style="display:flex;flex-direction:column;gap:14px;min-width:0">
+              <button type="button" onClick="{{ v.play }}" aria-label="{{ v.aria }}" style="position:relative;display:block;width:100%;aspect-ratio:16/9;padding:0;border:0;border-radius:4px;overflow:hidden;background-color:#0A1F1A;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(184,146,58,.35);transition:transform 300ms,box-shadow 300ms" style-hover="transform:translateY(-3px);box-shadow:inset 0 0 0 1px #B8923A,0 24px 44px -28px rgba(14,59,48,.6)">
+                <span style="position:absolute;inset:0;display:block">{{ v.thumb }}</span>
+                <span style="position:absolute;left:50%;top:50%;width:56px;height:56px;margin:-28px 0 0 -28px;border-radius:999px;background-color:rgba(10,31,26,.6);box-shadow:inset 0 0 0 1.5px #D9B96A;display:grid;place-items:center;color:#D9B96A"><span style="width:22px;height:22px;display:block;margin-left:3px">{{ ic.play }}</span></span>
+                <span style="position:absolute;right:8px;bottom:8px;height:22px;padding:0 7px;border-radius:2px;background-color:rgba(10,31,26,.85);color:#FBF7EE;display:inline-flex;align-items:center;font:700 11px/1 Manrope,sans-serif;font-variant-numeric:tabular-nums">{{ v.dur }}</span>
+                <sc-if value="{{ v.now }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:8px;top:8px;height:22px;padding:0 8px;border-radius:999px;background-color:#D9B96A;color:#0A1F1A;display:inline-flex;align-items:center;font:700 10px/1 Manrope,sans-serif;letter-spacing:.08em;text-transform:uppercase">Now playing</span></sc-if>
+              </button>
+              <div style="display:flex;flex-direction:column;gap:7px">
+                <span style="font:600 10.5px/1.2 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7A5C1C">{{ v.cat }} · {{ v.date }}</span>
+                <span style="font:400 clamp(19px,1.7vw,22px)/1.25 Fraunces,serif;color:#0E3B30;text-wrap:balance">{{ v.en }}</span>
+                <span style="font:400 14.5px/1.6 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty">{{ v.desc }}</span>
+              </div>
+            </article>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section data-screen-label="03 Shorts" style="background-color:#F4EDDD;box-shadow:inset 0 1px 0 rgba(184,146,58,.35),inset 0 -1px 0 rgba(184,146,58,.35)">
+      <div style="max-width:1320px;margin:0 auto;padding:clamp(56px,8vw,112px) clamp(16px,4vw,32px)">
+        <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 40px;margin-bottom:clamp(22px,3vw,36px)">
+          <div data-reveal="0" style="display:flex;flex-direction:column;gap:12px">
+            <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">02 — Shorts</span>
+            <h2 style="margin:0;font:400 clamp(32px,3.8vw,50px)/1.08 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.018em;color:#0E3B30">One answer, <em style="font-style:italic;color:#B8923A">one minute.</em></h2>
+          </div>
+          <span data-reveal="1" style="max-width:380px;font:400 15px/1.6 Manrope,sans-serif;color:#5B6A61">Tap a Short to watch; tap the right edge for the next one.</span>
+        </div>
+        <sc-if value="{{ L.stories }}" hint-placeholder-val="{{ false }}">
+          <div role="list" aria-label="Shorts" style="display:flex;gap:14px;overflow-x:auto;scrollbar-width:none;margin:0 -16px 20px;padding:4px 16px 6px">
+            <sc-for list="{{ shorts }}" as="s" hint-placeholder-count="5">
+              <button type="button" role="listitem" onClick="{{ s.open }}" aria-label="{{ s.aria }}" style="flex:none;width:76px;border:0;background:transparent;padding:0;display:flex;flex-direction:column;align-items:center;gap:7px;cursor:pointer">
+                <span style="width:72px;height:72px;border-radius:999px;padding:3px;background-image:conic-gradient(#D9B96A,#B8683D,#D9B96A);display:block"><span style="display:block;width:100%;height:100%;border-radius:999px;overflow:hidden;box-shadow:0 0 0 2px #F4EDDD">{{ s.thumb }}</span></span>
+                <span style="font:600 11px/1.25 Manrope,sans-serif;color:#1F2A24;text-align:center;max-width:76px;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical">{{ s.en }}</span>
+              </button>
+            </sc-for>
+          </div>
+        </sc-if>
+        <div style="display:flex;gap:14px;overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;margin:0 {{ L.railM }};padding:4px {{ L.railP }} 8px">
+          <sc-for list="{{ shorts }}" as="s" hint-placeholder-count="6">
+            <button type="button" onClick="{{ s.open }}" aria-label="{{ s.aria }}" data-reveal="{{ s.r }}" style="flex:0 0 {{ L.shortW }};scroll-snap-align:start;position:relative;aspect-ratio:9/16;padding:0;border:0;border-radius:6px;overflow:hidden;background-color:#0A1F1A;cursor:pointer;box-shadow:0 20px 40px -26px rgba(14,59,48,.6);transition:transform 300ms" style-hover="transform:translateY(-4px)">
+              <span style="position:absolute;inset:0;display:block">{{ s.thumb }}</span>
+              <span style="position:absolute;right:8px;top:8px;height:22px;padding:0 7px;border-radius:2px;background-color:rgba(10,31,26,.85);color:#FBF7EE;display:inline-flex;align-items:center;gap:5px;font:700 11px/1 Manrope,sans-serif;font-variant-numeric:tabular-nums"><span style="width:11px;height:11px;display:block">{{ ic.play }}</span>{{ s.dur }}</span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="Subscribe" style="position:relative;overflow:hidden;background-color:#164E3F;color:#E4EEE8">
+      <div aria-hidden="true" style="position:absolute;right:-140px;top:50%;width:460px;height:460px;transform:translateY(-50%);opacity:.1;pointer-events:none">{{ mandala }}</div>
+      <div style="position:relative;max-width:1320px;margin:0 auto;padding:clamp(44px,6vw,80px) clamp(16px,4vw,32px);display:grid;grid-template-columns:{{ L.sub }};gap:24px 48px;align-items:center">
+        <div style="display:grid;grid-template-columns:64px minmax(0,1fr);gap:18px;align-items:center">
+          <span style="width:64px;height:64px;border-radius:999px;box-shadow:inset 0 0 0 1px #D9B96A;color:#D9B96A;display:grid;place-items:center"><span style="width:30px;height:30px;display:block">{{ ic.youtube }}</span></span>
+          <span style="display:flex;flex-direction:column;gap:6px"><span style="font:400 clamp(24px,2.6vw,34px)/1.15 Fraunces,serif;color:#FBF7EE;text-wrap:balance">New discourses every Sunday, answered questions every month.</span><span style="font:500 14px/1.4 Manrope,sans-serif;color:#C9D6CF">@SadhakPawanPandey · {{ subs }}</span></span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:{{ L.subJ }}">
+          <button type="button" onClick="{{ sub }}" style="height:52px;padding:0 22px;border:0;border-radius:4px;background-color:#D9B96A;color:#0A1F1A;display:inline-flex;align-items:center;gap:9px;font:700 14.5px/1 Manrope,sans-serif;white-space:nowrap;cursor:pointer" style-hover="background-color:#E6CB86"><span style="width:19px;height:19px;display:block">{{ ic.youtube }}</span>Subscribe on YouTube</button>
+          <a href="https://wa.me/919000012345?text=Send%20me%20new%20discourses" target="_blank" rel="noopener" style="height:52px;padding:0 20px;border-radius:4px;box-shadow:inset 0 0 0 1px #D9B96A;color:#F6E7BC;display:inline-flex;align-items:center;gap:9px;font:600 14.5px/1 Manrope,sans-serif;text-decoration:none" style-hover="background-color:rgba(217,185,106,.12);color:#FBF7EE"><span style="width:18px;height:18px;display:block">{{ ic.whatsapp }}</span>Get new videos on WhatsApp</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <dc-import name="SiteFooter" hint-size="100%,640px"></dc-import>
+
+  <sc-if value="{{ shortOpen }}" hint-placeholder-val="{{ false }}">
+    <div role="dialog" aria-modal="true" aria-label="{{ sv.en }}" ref="{{ svRef }}" style="position:fixed;inset:0;z-index:120;background-color:rgba(6,20,15,.94);display:flex;align-items:center;justify-content:center;padding:16px">
+      <div style="position:relative;height:min(86vh,720px);aspect-ratio:9/16;max-width:100%;border-radius:8px;overflow:hidden;background-color:#0A1F1A;box-shadow:0 30px 80px -20px rgba(0,0,0,.8)">
+        <span style="position:absolute;inset:0;display:block">{{ sv.thumb }}</span>
+        <div style="position:absolute;left:10px;right:10px;top:10px;display:flex;gap:4px"><sc-for list="{{ svSeg }}" as="g" hint-placeholder-count="6"><span style="flex:1;height:3px;border-radius:999px;background-color:rgba(251,247,238,.3);overflow:hidden"><span data-sg="" style="display:block;height:100%;background-color:#FBF7EE;transform-origin:0 50%;transform:{{ g.tf }}"></span></span></sc-for></div>
+        <button type="button" onClick="{{ svPrev }}" aria-label="Previous short" style="position:absolute;left:0;top:0;bottom:0;width:35%;border:0;background:transparent;cursor:pointer"></button>
+        <button type="button" onClick="{{ svNext }}" aria-label="Next short" style="position:absolute;right:0;top:0;bottom:0;width:35%;border:0;background:transparent;cursor:pointer"></button>
+        <button type="button" onClick="{{ svClose }}" aria-label="Close" style="position:absolute;right:10px;top:22px;width:44px;height:44px;border:0;border-radius:999px;background-color:rgba(10,31,26,.6);color:#FBF7EE;display:grid;place-items:center;cursor:pointer"><span style="width:20px;height:20px;display:block">{{ ic.close }}</span></button>
+        <div style="position:absolute;left:0;right:0;bottom:0;padding:18px 16px;background-image:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.7));display:flex;flex-direction:column;gap:4px"><span style="font:600 15px/1.35 Manrope,sans-serif;color:#FBF7EE">{{ sv.en }}</span><span style="font:500 12px/1.3 Manrope,sans-serif;color:#C9D6CF">Shorts · {{ sv.dur }} · preview</span></div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { vw: window.innerWidth, ready: false, cat: 'all', vid: 'v1', vplay: false, short: -1 };
+  componentDidMount() {
+    const go = () => { this.un = MKA.bind(this); const h = MKA.hashParams(); this.setState({ ready: true, cat: MKA.H.VCAT[h.c] ? h.c : 'all', vid: MKA.H.VIDEOS.some((v) => v.id === h.v) ? h.v : 'v1' }); };
+    if (window.MKA && MKA.homeReady) go(); else this._w = setInterval(() => { if (window.MKA && MKA.homeReady) { clearInterval(this._w); go(); } }, 30);
+    this._key = (e) => { if (this.state.short < 0) return; if (e.key === 'Escape') this.svClose(); if (e.key === 'ArrowRight') this.svOpen(this.state.short + 1); if (e.key === 'ArrowLeft') this.svOpen(Math.max(0, this.state.short - 1)); };
+    window.addEventListener('keydown', this._key);
+  }
+  componentWillUnmount() { this.un && this.un(); clearInterval(this._w); clearInterval(this._vi); if (this._van) this._van.cancel(); if (this._sva) this._sva.cancel(); window.removeEventListener('keydown', this._key); document.body.style.overflow = ''; }
+  componentDidUpdate() {
+    const ps = this._prev || this.state; this._prev = { cat: this.state.cat, vid: this.state.vid };
+    document.body.style.overflow = this.state.short >= 0 ? 'hidden' : '';
+    if (ps.cat !== this.state.cat && this._grid && !MKA.isReduced()) this._grid.querySelectorAll('[data-card]').forEach((c, i) => c.animate([{ opacity: 0, transform: 'translateY(14px)' }, { opacity: 1, transform: 'none' }], { duration: 480, delay: i * 50, easing: MKA.EASE, fill: 'backwards' }));
+    if (ps.vid !== this.state.vid && this._info && !MKA.isReduced()) this._info.animate([{ opacity: 0 }, { opacity: 1 }], { duration: 350 });
+  }
+  video() { return MKA.H.VIDEOS.find((v) => v.id === this.state.vid) || MKA.H.VIDEOS[0]; }
+  start() {
+    const M = MKA, total = M.H.secs(this.video().dur);
+    this.setState({ vplay: 'play' }, () => {
+      if (this._van) this._van.cancel();
+      if (this._vb && !M.isReduced()) { this._van = this._vb.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: total * 1000, fill: 'forwards' }); this._van.currentTime = (this._vs || 0) * 1000; }
+      clearInterval(this._vi); this._vs = this._vs || 0; this.tick();
+      this._vi = setInterval(() => { if (this.state.vplay !== 'play') return; this._vs = Math.min(total, this._vs + 1); this.tick(); }, 1000);
+    });
+  }
+  tick() { if (!this._vt) return; const t = Math.floor(this._vs || 0); this._vt.textContent = Math.floor(t / 60) + ':' + String(t % 60).padStart(2, '0'); }
+  pause() { this.setState({ vplay: 'pause' }); if (this._van) this._van.pause(); }
+  pick(id) {
+    clearInterval(this._vi); if (this._van) this._van.cancel(); this._vs = 0;
+    this.setState({ vid: id }, () => { const el = document.getElementById('player'); if (el) window.scrollTo({ top: el.getBoundingClientRect().top + window.scrollY - 60, behavior: MKA.isReduced() ? 'auto' : 'smooth' }); this.start(); });
+  }
+  svOpen(i) {
+    const M = MKA, n = M.H.SHORTS.length; if (i < 0 || i >= n) { this.svClose(); return; }
+    this.setState({ short: i }, () => { const root = this._sv; if (!root) return; const segs = root.querySelectorAll('[data-sg]'); segs.forEach((g, j) => { g.getAnimations().forEach((a) => a.cancel()); g.style.transform = j < i ? 'scaleX(1)' : 'scaleX(0)'; }); const g = segs[i]; if (g) { if (M.isReduced()) g.style.transform = 'scaleX(1)'; else { if (this._sva) this._sva.cancel(); this._sva = g.animate([{ transform: 'scaleX(0)' }, { transform: 'scaleX(1)' }], { duration: M.H.secs(M.H.SHORTS[i].dur) * 1000, fill: 'forwards' }); this._sva.onfinish = () => this.svOpen(i + 1); } } const c = root.querySelector('button[aria-label="Close"]'); if (c) c.focus(); });
+  }
+  svClose() { if (this._sva) this._sva.cancel(); this.setState({ short: -1 }); }
+  renderVals() {
+    const M = window.MKA, s = this.state, vw = s.vw, mob = vw < 768, desk = vw >= 1024;
+    const L = { feat: desk ? 'minmax(0,8fr) minmax(0,4fr)' : 'minmax(0,1fr)', grid: vw >= 1024 ? 'repeat(3,minmax(0,1fr))' : vw >= 640 ? 'repeat(2,minmax(0,1fr))' : 'minmax(0,1fr)', stories: mob, shortW: mob ? '46%' : desk ? 'calc((100% - 70px) / 6)' : '30%', railM: mob ? '-16px' : '0', railP: mob ? '16px' : '0', sub: vw >= 900 ? 'minmax(0,1.3fr) minmax(0,1fr)' : 'minmax(0,1fr)', subJ: vw >= 900 ? 'flex-end' : 'flex-start' };
+    if (!M || !s.ready || !M.H) return { L, ic: {}, feat: {}, tabs: [], grid: [], shorts: [], svSeg: [], sv: {}, idle: true };
+    const H = M.H, ic = M.ic(React), v = this.video(), cat = (k) => (H.VCAT[k] || {}).en || '';
+    const list = H.VIDEOS.filter((x) => s.cat === 'all' || x.cat === s.cat), sh = s.short >= 0 ? H.SHORTS[s.short] : null;
+    return {
+      L, ic, subs: H.SUBS, sub: () => M.ui.toast('The YouTube channel link will be added here.', { tone: 'info' }),
+      sky: M.h(React, `<svg viewBox="0 0 1440 800" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">${M.stars(mob ? 14 : 26, 1440, 800, 'vd-sky')}</svg>`, null, 'vd-sky' + (mob ? 'm' : 'd')),
+      mandala: M.h(React, `<svg viewBox="-300 -300 600 600" width="100%" height="100%">${M.mandala(296, '#D9B96A', 1)}</svg>`, null, 'vd-mandala'),
+      feat: { thumb: M.h(React, H.thumb(v, 'vf' + v.id), null, 'vd-f-' + v.id), en: v.en, hi: v.hi.join(' '), desc: v.desc, dur: v.dur, date: v.date, cat: cat(v.cat), aria: 'Play: ' + v.en + ', ' + v.dur },
+      idle: !s.vplay, on: !!s.vplay, thumbOp: s.vplay ? .55 : 1, play: () => this.start(),
+      toggle: () => (s.vplay === 'play' ? this.pause() : this.start()), togLabel: s.vplay === 'play' ? 'Pause' : 'Play', togIcon: s.vplay === 'play' ? ic.pause : ic.play,
+      barRef: (el) => { this._vb = el; }, timeRef: (el) => { this._vt = el; if (el) this.tick(); }, infoRef: (el) => { this._info = el; }, gridRef: (el) => { this._grid = el; },
+      shareHref: 'https://wa.me/?text=' + encodeURIComponent(v.en + ' — Sadhak Pawan Pandey, Maa Kali Astuti'),
+      tabs: H.VCATS.map(([k, en, hi]) => { const on = s.cat === k; return { en, hi, n: k === 'all' ? H.VIDEOS.length : H.VIDEOS.filter((x) => x.cat === k).length, on, color: on ? '#0E3B30' : '#5B6A61', line: on ? 'inset 0 -2px 0 #B8923A' : 'none', pick: () => { this.setState({ cat: k }); try { history.replaceState(null, '', '#c=' + k); } catch (e) {} } }; }),
+      grid: list.map((x) => ({ en: x.en, desc: x.desc, dur: x.dur, date: x.date, cat: cat(x.cat), now: x.id === s.vid && !!s.vplay, aria: 'Play ' + x.en + ', ' + x.dur, thumb: M.h(React, H.thumb(x, 'vg' + x.id), null, 'vd-g-' + x.id), play: () => this.pick(x.id) })),
+      shorts: H.SHORTS.map((x, i) => ({ en: x.en, dur: x.dur, r: i % 3, aria: 'Watch short: ' + x.en + ', ' + x.dur, thumb: M.h(React, H.thumb(x, 'vs' + x.id, true), null, 'vd-s-' + x.id), open: () => this.svOpen(i) })),
+      shortOpen: !!sh, sv: sh ? { en: sh.en, dur: sh.dur, thumb: M.h(React, H.thumb(sh, 'vsv' + sh.id, true), null, 'vd-sv-' + sh.id) } : {},
+      svSeg: H.SHORTS.map((x, j) => ({ tf: j < s.short ? 'scaleX(1)' : 'scaleX(0)' })), svRef: (el) => { this._sv = el; },
+      svPrev: () => this.svOpen(Math.max(0, s.short - 1)), svNext: () => this.svOpen(s.short + 1), svClose: () => this.svClose()
+    };
+  }
+}
+</script>
+</body>
+</html>

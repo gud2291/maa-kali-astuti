@@ -1,0 +1,7 @@
+design/
+design-brief/
+client-requirements/
+docs/
+*.zip
+*.md
+!README.md

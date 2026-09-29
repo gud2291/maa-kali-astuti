@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..600,0..100;1,9..144,300..600,0..100&family=Manrope:wght@400;500;600;700&family=Mukta:wght@400;500;600&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap">
+<script src="mka-core.js"></script>
+<script src="mka-astro.js"></script>
+</helmet>
+<div style="display:flex;flex-direction:column;border-top:1px solid #EAE0CA">
+  <sc-for list="{{ items }}" as="f" hint-placeholder-count="5">
+    <div style="border-bottom:1px solid #EAE0CA">
+      <h3 style="margin:0;font:inherit">
+        <button onClick="{{ f.toggle }}" aria-expanded="{{ f.open }}" aria-controls="{{ f.id }}" style="width:100%;border:0;background:transparent;display:grid;grid-template-columns:32px minmax(0,1fr) 30px;gap:10px;align-items:start;padding:20px 0;text-align:left;cursor:pointer;color:#0E3B30;transition:color 150ms" style-hover="color:#1C6B54">
+          <span style="font:600 11px/1 Manrope,sans-serif;letter-spacing:.14em;color:#7A5C1C;padding-top:8px;font-variant-numeric:tabular-nums">{{ f.n }}</span>
+          <span style="font:400 clamp(18px,1.7vw,21px)/1.35 Fraunces,serif;font-variation-settings:'SOFT' 40;text-wrap:pretty">{{ f.q }}</span>
+          <span style="width:30px;height:30px;border-radius:999px;box-shadow:{{ f.ring }};background-color:{{ f.bg }};display:grid;place-items:center;color:#164E3F;transform:{{ f.rot }};transition:transform 300ms cubic-bezier(.22,1,.36,1),background-color 200ms,box-shadow 200ms"><span style="width:14px;height:14px;display:block">{{ plus }}</span></span>
+        </button>
+      </h3>
+      <sc-if value="{{ f.open }}" hint-placeholder-val="{{ false }}">
+        <div id="{{ f.id }}" ref="{{ f.ref }}" role="region" style="padding:0 40px 24px 42px;max-width:760px;font:400 15.5px/1.7 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty">{{ f.a }}</div>
+      </sc-if>
+    </div>
+  </sc-for>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;$preview&quot;:{&quot;width&quot;:720,&quot;height&quot;:560},&quot;set&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;consult&quot;,&quot;kundali99&quot;,&quot;courses&quot;,&quot;kundali&quot;,&quot;palm&quot;,&quot;tarot&quot;,&quot;numerology&quot;,&quot;rituals&quot;],&quot;default&quot;:&quot;consult&quot;,&quot;tsType&quot;:&quot;string&quot;},&quot;openFirst&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;yes&quot;,&quot;no&quot;],&quot;default&quot;:&quot;yes&quot;,&quot;tsType&quot;:&quot;'yes'|'no'&quot;}}">
+class Component extends DCLogic {
+  state = { open: 0, ready: false };
+  uid = Math.random().toString(36).slice(2, 7);
+  componentDidMount() {
+    const go = () => this.setState({ ready: true, open: this.props.openFirst === 'no' ? -1 : 0 });
+    if (window.MKA && MKA.astroReady) go(); else this._w = setInterval(() => { if (window.MKA && MKA.astroReady) { clearInterval(this._w); go(); } }, 30);
+  }
+  componentWillUnmount() { clearInterval(this._w); }
+  renderVals() {
+    const M = window.MKA;
+    if (!M || !this.state.ready) return { items: [] };
+    const set = M.A.FAQ[this.props.set] || M.A.FAQ.consult, ic = M.ic(React);
+    return {
+      plus: ic.plus,
+      items: set.map(([q, a], i) => {
+        const open = this.state.open === i;
+        return {
+          n: String(i + 1).padStart(2, '0'), q, a, open, id: 'faq-' + this.uid + '-' + i,
+          rot: open ? 'rotate(45deg)' : 'none', bg: open ? '#E4EEE8' : 'transparent', ring: open ? 'inset 0 0 0 1px #1C6B54' : 'inset 0 0 0 1px #EAE0CA',
+          toggle: () => this.setState({ open: open ? -1 : i }),
+          ref: (el) => { if (el && el !== this['_a' + i]) { this['_a' + i] = el; M.fx.enter(el, { y: -6, dur: 320 }); } }
+        };
+      })
+    };
+  }
+}
+</script>
+</body>
+</html>

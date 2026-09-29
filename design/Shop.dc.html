@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..600,0..100;1,9..144,300..600,0..100&family=Manrope:wght@400;500;600;700&family=Mukta:wght@400;500;600&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap">
+<script src="mka-core.js"></script>
+<style>
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#FBF7EE url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .16 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");color:#1F2A24;font-family:Manrope,Mukta,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#164E3F}
+a:hover{color:#1C6B54}
+button,input,select,textarea{font-family:inherit}
+:focus-visible{outline:2px solid #B8923A;outline-offset:2px}
+::selection{background:#D9B96A;color:#0E3B30}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important;scroll-behavior:auto!important}}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+  <dc-import name="SiteChrome" active="shop" hint-size="100%,108px"></dc-import>
+  <main id="main" style="flex:1">
+    <section style="position:relative;overflow:hidden;background-color:#F4EDDD;box-shadow:inset 0 -1px 0 rgba(184,146,58,.35)">
+      <div aria-hidden="true" style="position:absolute;right:-120px;top:50%;width:620px;height:620px;margin-top:-310px;opacity:.07;pointer-events:none">{{ mandala }}</div>
+      <div style="position:relative;max-width:1480px;margin:0 auto;padding:clamp(22px,4vw,44px) clamp(16px,3vw,24px) clamp(28px,4vw,48px);display:grid;grid-template-columns:minmax(0,1fr) auto;gap:24px;align-items:center">
+        <div style="display:flex;flex-direction:column;gap:14px;min-width:0">
+          <nav aria-label="Breadcrumb" style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font:500 12.5px/1 Manrope,sans-serif;color:#5B6A61">
+            <a href="#" onClick="{{ soonHome }}" style="color:#5B6A61;text-decoration:none">Home</a><span style="color:#B8923A">/</span>
+            <a href="#c=all" onClick="{{ goAll }}" style="color:#5B6A61;text-decoration:none">Shop</a>
+            <sc-if value="{{ hasCat }}" hint-placeholder-val="{{ false }}"><span style="color:#B8923A">/</span><span aria-current="page" style="color:#1F2A24">{{ head.crumb }}</span></sc-if>
+          </nav>
+          <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">{{ head.eyebrow }}</span>
+          <h1 style="margin:0;font:400 clamp(38px,5.2vw,68px)/1.04 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.02em;color:#0E3B30;text-wrap:balance">{{ head.a }}<em style="font-style:italic;color:#B8923A">{{ head.i }}</em></h1>
+          <span style="font:400 clamp(18px,2vw,22px)/1.35 'Tiro Devanagari Hindi',serif;color:#7A5C1C">{{ head.hi }}</span>
+          <p style="margin:0;max-width:560px;font:400 clamp(15px,1.4vw,17px)/1.65 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty">{{ head.desc }}</p>
+          <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;font:600 13px/1 Manrope,sans-serif;color:#1F2A24">
+            <span style="font-variant-numeric:tabular-nums">{{ head.count }}</span>
+            <span style="width:4px;height:4px;border-radius:999px;background-color:#B8923A"></span>
+            <span style="display:flex;align-items:center;gap:6px;font-weight:500;color:#5B6A61"><span style="width:15px;height:15px;display:block;color:#B8923A">{{ ic.flame }}</span>Energized in Mahapuja before dispatch</span>
+          </div>
+        </div>
+        <div aria-hidden="true" style="position:relative;width:{{ stoneW }};height:{{ stoneH }};flex:none">
+          <svg viewBox="0 0 200 260" width="100%" height="100%" style="position:absolute;inset:0" fill="none" stroke="#B8923A" stroke-width="1"><path d="M6 258V104A94 94 0 0 1 100 8a94 94 0 0 1 94 96v154" opacity=".7"></path><path d="M16 258V106a84 84 0 0 1 84-88 84 84 0 0 1 84 88v152" opacity=".35"></path></svg>
+          <sc-for list="{{ stones }}" as="st" hint-placeholder-count="1">
+            <span data-amb="{{ st.amb }}" style="position:absolute;left:{{ st.l }};top:{{ st.t }};width:{{ st.w }};height:{{ st.h }};display:block;filter:drop-shadow(0 16px 18px rgba(14,59,48,.18))">{{ st.el }}</span>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <div style="max-width:1480px;margin:0 auto;padding:0 clamp(16px,3vw,24px)">
+      <div role="tablist" aria-label="Categories" style="display:flex;gap:26px;overflow-x:auto;scrollbar-width:none;border-bottom:1px solid #EAE0CA;margin-top:8px">
+        <sc-for list="{{ tabs }}" as="tb" hint-placeholder-count="6">
+          <button role="tab" aria-selected="{{ tb.on }}" onClick="{{ tb.pick }}" style="flex:none;border:0;background:transparent;padding:18px 0 14px;margin-bottom:-1px;font:600 14px/1 Manrope,Mukta,sans-serif;color:{{ tb.color }};box-shadow:{{ tb.line }};cursor:pointer;white-space:nowrap;transition:color 150ms">{{ tb.t }} <span style="font-weight:500;color:#5B6A61;font-variant-numeric:tabular-nums">{{ tb.n }}</span></button>
+        </sc-for>
+      </div>
+      <sc-if value="{{ hasSubs }}" hint-placeholder-val="{{ true }}">
+        <div style="display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;padding:16px 0 4px">
+          <sc-for list="{{ subs }}" as="sc" hint-placeholder-count="8">
+            <button onClick="{{ sc.pick }}" aria-pressed="{{ sc.on }}" style="flex:none;height:36px;padding:0 15px;border-radius:999px;border:0;background-color:{{ sc.bg }};box-shadow:{{ sc.ring }};color:{{ sc.color }};font:600 13px/1 Manrope,Mukta,sans-serif;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background-color 150ms,box-shadow 150ms">{{ sc.t }}</button>
+          </sc-for>
+        </div>
+      </sc-if>
+    </div>
+
+    <sc-if value="{{ mob }}" hint-placeholder-val="{{ false }}">
+      <div style="position:sticky;top:56px;z-index:30;background-color:rgba(251,247,238,.95);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);box-shadow:inset 0 -1px 0 #EAE0CA;margin-top:12px">
+        <div style="display:grid;grid-template-columns:1fr 1px 1fr;align-items:center;height:52px">
+          <button onClick="{{ openFilter }}" style="height:100%;border:0;background:transparent;display:flex;align-items:center;justify-content:center;gap:8px;font:600 14px/1 Manrope,sans-serif;color:#164E3F;cursor:pointer"><span style="width:18px;height:18px;display:block">{{ ic.filter }}</span>Filter<sc-if value="{{ hasActive }}" hint-placeholder-val="{{ false }}"><span style="min-width:20px;height:20px;padding:0 6px;border-radius:999px;background-color:#B8923A;color:#0E3B30;font:700 11px/20px Manrope,sans-serif">{{ activeN }}</span></sc-if></button>
+          <span style="height:24px;background-color:#EAE0CA"></span>
+          <button onClick="{{ openSort }}" style="height:100%;border:0;background:transparent;display:flex;align-items:center;justify-content:center;gap:8px;font:600 14px/1 Manrope,sans-serif;color:#164E3F;cursor:pointer"><span style="width:18px;height:18px;display:block">{{ ic.sort }}</span>{{ sortLabel }}</button>
+        </div>
+      </div>
+    </sc-if>
+
+    <div style="max-width:1480px;margin:0 auto;padding:clamp(16px,3vw,28px) clamp(16px,3vw,24px) clamp(56px,7vw,96px);display:grid;grid-template-columns:{{ layoutCols }};gap:40px;align-items:start">
+      <sc-if value="{{ fpBackdrop }}" hint-placeholder-val="{{ false }}"><div onClick="{{ closeSheet }}" style="position:fixed;inset:0;z-index:84;background-color:rgba(10,31,26,.45)"></div></sc-if>
+      <aside aria-label="Filters" ref="{{ fpRef }}" style="{{ fpStyle }}">
+        <sc-if value="{{ mob }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0 10px;border-bottom:1px solid #EAE0CA">
+            <span style="font:400 24px/1 Fraunces,serif;color:#0E3B30">Filters</span>
+            <button onClick="{{ closeSheet }}" aria-label="Close filters" style="width:44px;height:44px;border:0;background:transparent;color:#164E3F;display:grid;place-items:center;cursor:pointer"><span style="width:22px;height:22px;display:block">{{ ic.close }}</span></button>
+          </div>
+        </sc-if>
+        <sc-if value="{{ desk }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;align-items:center;justify-content:space-between;padding-bottom:14px;border-bottom:1px solid #EAE0CA">
+            <span style="font:600 11px/1 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#1F2A24">Refine</span>
+            <sc-if value="{{ hasActive }}" hint-placeholder-val="{{ false }}"><button onClick="{{ clearAll }}" style="border:0;background:transparent;padding:4px 0;font:600 12.5px/1 Manrope,sans-serif;color:#A8322D;cursor:pointer">Clear all</button></sc-if>
+          </div>
+        </sc-if>
+        <sc-for list="{{ groups }}" as="g" hint-placeholder-count="5">
+          <div style="border-bottom:1px solid #EAE0CA">
+            <button onClick="{{ g.toggle }}" aria-expanded="{{ g.open }}" style="width:100%;border:0;background:transparent;display:flex;align-items:center;justify-content:space-between;padding:16px 0;font:600 14px/1 Manrope,sans-serif;color:#0E3B30;cursor:pointer">{{ g.t }}<span style="width:16px;height:16px;display:block;color:#5B6A61;transform:{{ g.chev }};transition:transform 250ms">{{ ic.chevD }}</span></button>
+            <sc-if value="{{ g.open }}" hint-placeholder-val="{{ true }}">
+              <div style="padding:0 0 16px;display:flex;flex-direction:column;gap:2px">
+                <sc-if value="{{ g.isList }}" hint-placeholder-val="{{ true }}">
+                  <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="4">
+                    <button role="{{ it.role }}" aria-checked="{{ it.on }}" onClick="{{ it.pick }}" style="border:0;background:transparent;display:flex;align-items:center;gap:10px;padding:7px 0;min-height:36px;font:500 14px/1.3 Manrope,Mukta,sans-serif;color:#1F2A24;cursor:pointer;text-align:left">
+                      <span style="width:18px;height:18px;flex:none;border-radius:{{ it.rad }};box-shadow:{{ it.box }};background-color:{{ it.fill }};color:#FBF7EE;display:grid;place-items:center;transition:background-color 150ms,box-shadow 150ms"><span style="width:12px;height:12px;display:block;opacity:{{ it.tick }}">{{ ic.check }}</span></span>
+                      <span style="flex:1">{{ it.t }}</span>
+                      <span style="font:500 12px/1 Manrope,sans-serif;color:#5B6A61;font-variant-numeric:tabular-nums">{{ it.n }}</span>
+                    </button>
+                  </sc-for>
+                  <sc-if value="{{ g.more }}" hint-placeholder-val="{{ false }}"><button onClick="{{ g.moreClick }}" style="align-self:flex-start;border:0;background:transparent;padding:6px 0;font:600 13px/1 Manrope,sans-serif;color:#164E3F;cursor:pointer">{{ g.moreLabel }}</button></sc-if>
+                </sc-if>
+                <sc-if value="{{ g.isChips }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:6px">
+                    <sc-for list="{{ g.items }}" as="it" hint-placeholder-count="13"><button aria-pressed="{{ it.on }}" onClick="{{ it.pick }}" style="height:38px;border:0;border-radius:4px;background-color:{{ it.fill }};box-shadow:{{ it.box }};color:{{ it.color }};font:700 13px/1 Manrope,sans-serif;font-variant-numeric:tabular-nums;cursor:pointer;transition:background-color 150ms,box-shadow 150ms">{{ it.t }}</button></sc-for>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ g.isPrice }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;justify-content:space-between;font:700 14px/1 Manrope,sans-serif;color:#0E3B30;font-variant-numeric:tabular-nums;padding:2px 0 10px"><span>{{ pr.minS }}</span><span>{{ pr.maxS }}</span></div>
+                  <div ref="{{ pr.trackRef }}" style="position:relative;height:30px;margin:0 10px">
+                    <div style="position:absolute;left:0;right:0;top:14px;height:2px;border-radius:999px;background-color:#EAE0CA"></div>
+                    <div style="position:absolute;top:14px;height:2px;background-color:#164E3F;left:{{ pr.l }};right:{{ pr.r }}"></div>
+                    <button role="slider" aria-label="Minimum price" aria-valuemin="0" aria-valuemax="12000" aria-valuenow="{{ pr.min }}" onPointerDown="{{ pr.downMin }}" onKeyDown="{{ pr.keyMin }}" style="position:absolute;top:4px;left:{{ pr.l }};width:22px;height:22px;margin-left:-11px;border-radius:999px;border:0;background-color:#FBF7EE;box-shadow:inset 0 0 0 1.5px #164E3F,0 4px 10px -4px rgba(14,59,48,.5);cursor:grab;touch-action:none"></button>
+                    <button role="slider" aria-label="Maximum price" aria-valuemin="0" aria-valuemax="12000" aria-valuenow="{{ pr.max }}" onPointerDown="{{ pr.downMax }}" onKeyDown="{{ pr.keyMax }}" style="position:absolute;top:4px;left:{{ pr.lr }};width:22px;height:22px;margin-left:-11px;border-radius:999px;border:0;background-color:#FBF7EE;box-shadow:inset 0 0 0 1.5px #164E3F,0 4px 10px -4px rgba(14,59,48,.5);cursor:grab;touch-action:none"></button>
+                  </div>
+                  <span style="font:500 12px/1.4 Manrope,sans-serif;color:#5B6A61;padding-top:6px">Most offerings sit between ₹300 and ₹2,500.</span>
+                </sc-if>
+                <sc-if value="{{ g.isToggle }}" hint-placeholder-val="{{ false }}">
+                  <button role="switch" aria-checked="{{ g.on }}" onClick="{{ g.flip }}" style="border:0;background:transparent;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:4px 0;font:500 14px/1.3 Manrope,sans-serif;color:#1F2A24;cursor:pointer;width:100%">In stock only<span style="position:relative;width:40px;height:24px;border-radius:999px;background-color:{{ g.trackC }};transition:background-color 200ms"><span style="position:absolute;top:3px;left:3px;width:18px;height:18px;border-radius:999px;background-color:#FBF7EE;box-shadow:0 1px 3px rgba(14,59,48,.3);transform:{{ g.knob }};transition:transform 250ms cubic-bezier(.22,1,.36,1)"></span></span></button>
+                </sc-if>
+              </div>
+            </sc-if>
+          </div>
+        </sc-for>
+        <sc-if value="{{ mob }}" hint-placeholder-val="{{ false }}">
+          <div style="position:sticky;bottom:0;display:grid;grid-template-columns:1fr 2fr;gap:10px;padding:14px 0 calc(8px + env(safe-area-inset-bottom));background-color:#FBF7EE;box-shadow:0 -1px 0 #EAE0CA">
+            <button onClick="{{ clearAll }}" style="height:52px;border-radius:4px;border:1px solid #164E3F;background-color:#FBF7EE;color:#164E3F;font:600 14px/1 Manrope,sans-serif;cursor:pointer">Clear</button>
+            <button onClick="{{ closeSheet }}" style="height:52px;border-radius:4px;border:0;background-color:#164E3F;color:#FBF7EE;font:600 15px/1 Manrope,sans-serif;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(217,185,106,.55)">Show {{ total }} results</button>
+          </div>
+        </sc-if>
+      </aside>
+
+      <div style="min-width:0">
+        <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:{{ barGap }}">
+          <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;min-height:34px">
+            <span style="font:500 14px/1 Manrope,sans-serif;color:#5B6A61;font-variant-numeric:tabular-nums;margin-right:6px">{{ countLine }}</span>
+            <sc-for list="{{ chips }}" as="ch" hint-placeholder-count="0">
+              <button onClick="{{ ch.remove }}" aria-label="{{ ch.aria }}" style="height:32px;padding:0 10px 0 13px;border-radius:999px;border:0;background-color:#E4EEE8;color:#164E3F;font:600 12.5px/1 Manrope,sans-serif;display:flex;align-items:center;gap:6px;cursor:pointer" style-hover="background-color:#D5E5DB">{{ ch.t }}<span style="width:13px;height:13px;display:block">{{ ic.close }}</span></button>
+            </sc-for>
+          </div>
+          <sc-if value="{{ desk }}" hint-placeholder-val="{{ true }}">
+            <div style="position:relative">
+              <button onClick="{{ toggleSort }}" aria-haspopup="listbox" aria-expanded="{{ sortOpen }}" style="height:40px;padding:0 14px;border-radius:4px;border:0;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px #EAE0CA;display:flex;align-items:center;gap:10px;font:600 13.5px/1 Manrope,sans-serif;color:#1F2A24;cursor:pointer" style-hover="box-shadow:inset 0 0 0 1px #1C6B54"><span style="color:#5B6A61;font-weight:500">Sort</span>{{ sortLabel }}<span style="width:14px;height:14px;display:block;color:#5B6A61">{{ ic.chevD }}</span></button>
+              <sc-if value="{{ sortOpen }}" hint-placeholder-val="{{ false }}">
+                <div role="listbox" style="position:absolute;right:0;top:46px;z-index:20;width:230px;padding:6px;border-radius:4px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px #EAE0CA,0 18px 36px -18px rgba(14,59,48,.35)">
+                  <sc-for list="{{ sorts }}" as="so" hint-placeholder-count="5"><button role="option" aria-selected="{{ so.on }}" onClick="{{ so.pick }}" style="width:100%;height:40px;padding:0 10px;border:0;border-radius:3px;background-color:{{ so.bg }};display:flex;align-items:center;justify-content:space-between;font:500 14px/1 Manrope,sans-serif;color:#1F2A24;cursor:pointer;text-align:left" style-hover="background-color:#F4EDDD">{{ so.t }}<span style="width:15px;height:15px;display:block;color:#164E3F;opacity:{{ so.tick }}">{{ ic.check }}</span></button></sc-for>
+                </div>
+              </sc-if>
+            </div>
+          </sc-if>
+        </div>
+
+        <sc-if value="{{ isEmpty }}" hint-placeholder-val="{{ false }}">
+          <div style="display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:clamp(40px,8vw,96px) 16px;border-radius:4px;background-color:#F4EDDD;box-shadow:inset 0 0 0 1px rgba(184,146,58,.3)">
+            <span style="width:120px;height:120px;display:block">{{ emptyArt }}</span>
+            <span style="font:400 clamp(24px,3vw,32px)/1.2 Fraunces,serif;color:#0E3B30">No offerings match these filters</span>
+            <span style="max-width:420px;font:400 15px/1.6 Manrope,sans-serif;color:#5B6A61">Remove a filter or two, or tell us what you are seeking on WhatsApp and we will suggest one offering.</span>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:6px">
+              <button onClick="{{ clearAll }}" style="height:48px;padding:0 22px;border-radius:4px;border:0;background-color:#164E3F;color:#FBF7EE;font:600 14px/1 Manrope,sans-serif;cursor:pointer;box-shadow:inset 0 0 0 1px rgba(217,185,106,.55)">Clear filters</button>
+              <a href="https://wa.me/919000012345" target="_blank" rel="noopener" style="height:48px;padding:0 20px;border-radius:4px;box-shadow:inset 0 0 0 1px #164E3F;color:#164E3F;display:flex;align-items:center;gap:8px;font:600 14px/1 Manrope,sans-serif;text-decoration:none"><span style="width:17px;height:17px;display:block">{{ ic.whatsapp }}</span>Ask on WhatsApp</a>
+            </div>
+          </div>
+        </sc-if>
+
+        <div ref="{{ gridRef }}" style="display:grid;grid-template-columns:repeat({{ cols }},minmax(0,1fr));gap:clamp(14px,2vw,28px) clamp(12px,1.8vw,24px)">
+          <sc-for list="{{ cells }}" as="c" hint-placeholder-count="6">
+            <sc-if value="{{ c.isCard }}" hint-placeholder-val="{{ true }}"><div data-card="1" style="min-width:0"><dc-import name="ProductCard" pid="{{ c.id }}" size="{{ cardSize }}" hint-size="100%,440px"></dc-import></div></sc-if>
+            <sc-if value="{{ c.isSkel }}" hint-placeholder-val="{{ false }}">
+              <div aria-hidden="true" style="display:flex;flex-direction:column;gap:12px">
+                <div ref="{{ shimmer }}" style="aspect-ratio:4/5;border-radius:4px;background-color:#F4EDDD;background-image:linear-gradient(100deg,rgba(234,224,202,0) 30%,rgba(234,224,202,.9) 50%,rgba(234,224,202,0) 70%);background-size:220% 100%;background-repeat:no-repeat"></div>
+                <div style="width:40%;height:10px;border-radius:2px;background-color:#EAE0CA"></div>
+                <div style="width:85%;height:16px;border-radius:2px;background-color:#EAE0CA"></div>
+                <div style="width:55%;height:14px;border-radius:2px;background-color:#EAE0CA"></div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ c.isBanner }}" hint-placeholder-val="{{ false }}">
+              <div data-card="1" style="grid-column:1/-1;position:relative;overflow:hidden;border-radius:4px;background-color:#0A1F1A;color:#FBF7EE;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:20px;padding:clamp(22px,4vw,40px) clamp(20px,4vw,48px)">
+                <div aria-hidden="true" style="position:absolute;inset:0;opacity:.9;pointer-events:none">{{ bannerSky }}</div>
+                <div style="position:relative;display:flex;flex-direction:column;gap:12px;max-width:560px">
+                  <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#D9B96A">Free recommendation</span>
+                  <span style="font:400 clamp(24px,3vw,36px)/1.12 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.015em">{{ banner.a }}<em style="font-style:italic;color:#D9B96A">{{ banner.i }}</em></span>
+                  <span style="font:400 15px/1.6 Manrope,sans-serif;color:#E4EEE8">{{ banner.body }}</span>
+                  <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px">
+                    <a href="https://wa.me/919000012345" target="_blank" rel="noopener" style="height:46px;padding:0 18px;border-radius:4px;background-color:#D9B96A;color:#0A1F1A;display:flex;align-items:center;gap:8px;font:700 14px/1 Manrope,sans-serif;text-decoration:none"><span style="width:17px;height:17px;display:block">{{ ic.whatsapp }}</span>Ask on WhatsApp</a>
+                    <a href="Consultations.dc.html" style="height:46px;padding:0 18px;border-radius:4px;box-shadow:inset 0 0 0 1px #D9B96A;color:#D9B96A;display:flex;align-items:center;gap:8px;font:600 14px/1 Manrope,sans-serif;text-decoration:none">Book a consultation</a>
+                  </div>
+                </div>
+                <sc-if value="{{ desk }}" hint-placeholder-val="{{ true }}"><span aria-hidden="true" data-amb="float:9:10:4" style="position:relative;width:180px;height:220px;display:block">{{ bannerArt }}</span></sc-if>
+              </div>
+            </sc-if>
+          </sc-for>
+        </div>
+
+        <sc-if value="{{ showMore }}" hint-placeholder-val="{{ true }}">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:14px;margin-top:clamp(36px,5vw,56px)">
+            <span style="font:500 13px/1 Manrope,sans-serif;color:#5B6A61;font-variant-numeric:tabular-nums">{{ showing }}</span>
+            <div style="width:200px;height:2px;border-radius:999px;background-color:#EAE0CA;overflow:hidden"><div style="height:100%;background-color:#B8923A;width:{{ shownPct }};transition:width 500ms cubic-bezier(.22,1,.36,1)"></div></div>
+            <sc-if value="{{ canMore }}" hint-placeholder-val="{{ true }}"><button onClick="{{ loadMore }}" style="height:48px;padding:0 28px;border-radius:4px;border:1px solid #164E3F;background-color:#FBF7EE;color:#164E3F;font:600 14px/1 Manrope,sans-serif;letter-spacing:.03em;cursor:pointer;transition:background-color 150ms" style-hover="background-color:#E4EEE8">Load more</button></sc-if>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+    <section style="max-width:1480px;margin:0 auto;padding:0 clamp(16px,3vw,24px) clamp(56px,7vw,96px)">
+      <div style="max-width:760px;padding-top:32px;border-top:1px solid #EAE0CA">
+        <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">Buyer's note</span>
+        <h2 style="margin:10px 0 12px;font:400 26px/1.2 Fraunces,serif;color:#0E3B30">{{ seo.h }}</h2>
+        <div style="position:relative;max-height:{{ seoH }};overflow:hidden;transition:max-height 500ms cubic-bezier(.22,1,.36,1)">
+          <p style="margin:0 0 12px;font:400 15px/1.7 Manrope,sans-serif;color:#5B6A61">{{ seo.p1 }}</p>
+          <p style="margin:0;font:400 15px/1.7 Manrope,sans-serif;color:#5B6A61">{{ seo.p2 }}</p>
+          <sc-if value="{{ seoFade }}" hint-placeholder-val="{{ true }}"><div style="position:absolute;left:0;right:0;bottom:0;height:56px;background-image:linear-gradient(rgba(251,247,238,0),#FBF7EE)"></div></sc-if>
+        </div>
+        <button onClick="{{ toggleSeo }}" style="margin-top:10px;border:0;background:transparent;padding:4px 0;font:600 13px/1 Manrope,sans-serif;color:#164E3F;cursor:pointer">{{ seoBtn }}</button>
+      </div>
+    </section>
+  </main>
+  <dc-import name="SiteFooter" hint-size="100%,640px"></dc-import>
+
+  <sc-if value="{{ sortSheet }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ closeSheet }}" style="position:fixed;inset:0;z-index:84;background-color:rgba(10,31,26,.45)"></div>
+    <div ref="{{ sheetIn }}" role="dialog" aria-modal="true" aria-label="Sort" style="position:fixed;left:0;right:0;bottom:0;z-index:85;background-color:#FBF7EE;border-radius:8px 8px 0 0;padding:10px 20px calc(18px + env(safe-area-inset-bottom))">
+      <div style="width:40px;height:4px;border-radius:999px;background-color:#EAE0CA;margin:0 auto 14px"></div>
+      <span style="display:block;font:400 24px/1 Fraunces,serif;color:#0E3B30;margin-bottom:8px">Sort by</span>
+      <sc-for list="{{ sorts }}" as="so" hint-placeholder-count="5"><button role="radio" aria-checked="{{ so.on }}" onClick="{{ so.pickClose }}" style="width:100%;min-height:52px;border:0;border-bottom:1px solid #EAE0CA;background:transparent;display:flex;align-items:center;justify-content:space-between;font:500 16px/1 Manrope,sans-serif;color:#1F2A24;cursor:pointer;text-align:left">{{ so.t }}<span style="width:22px;height:22px;border-radius:999px;box-shadow:{{ so.ring }};display:grid;place-items:center"><span style="width:10px;height:10px;border-radius:999px;background-color:#164E3F;opacity:{{ so.tick }}"></span></span></button></sc-for>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;demo&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;live&quot;,&quot;loading&quot;,&quot;empty&quot;],&quot;default&quot;:&quot;live&quot;,&quot;tsType&quot;:&quot;'live'|'loading'|'empty'&quot;,&quot;section&quot;:&quot;Prototype state&quot;}}">
+class Component extends DCLogic {
+  state = { vw: window.innerWidth, ready: false, cat: 'all', sub: null, intents: [], mukhi: [], stones: [], stock: false, rating: 0, price: [0, 12000], pd: null, sort: 'popular', shown: 12, loading: true, sheet: null, closed: {}, allStones: false, seo: false, sortOpen: false };
+  componentDidMount() {
+    const go = () => { this.un = MKA.bind(this); this.parse(); this.setState({ ready: true }); this._lt = setTimeout(() => this.setState({ loading: false }), 650); };
+    if (window.MKA && MKA.ready) go(); else this._w = setInterval(() => { if (window.MKA && MKA.ready) { clearInterval(this._w); go(); } }, 30);
+    this.onHash = () => this.parse();
+    window.addEventListener('hashchange', this.onHash);
+    this.onMove = (e) => this.drag(e); this.onUp = () => this.dragEnd();
+  }
+  componentWillUnmount() { this.un && this.un(); clearInterval(this._w); clearTimeout(this._lt); window.removeEventListener('hashchange', this.onHash); window.removeEventListener('pointermove', this.onMove); window.removeEventListener('pointerup', this.onUp); document.body.style.overflow = ''; }
+  componentDidUpdate(pp, ps) {
+    const key = this.resKey;
+    if (key !== this._lastKey && !this.state.loading && this.gridEl) { this._lastKey = key; MKA.fx.stagger(this.gridEl, '[data-card]', { y: 10, dur: 380, step: 40 }); }
+    const lock = !!this.state.sheet && this.state.vw < 1024;
+    document.body.style.overflow = lock ? 'hidden' : '';
+    if (this.state.sheet === 'filter' && ps.sheet !== 'filter' && this.fpEl && !MKA.isReduced()) this.fpEl.animate([{ transform: 'translateY(100%)' }, { transform: 'none' }], { duration: 380, easing: MKA.EASE });
+  }
+  parse() {
+    const M = MKA, h = M.hashParams();
+    const cat = M.CATS.some((c) => c.key === h.c) ? h.c : 'all';
+    this.setState({ cat, sub: h.sub || null, intents: h.intent ? [h.intent] : [], sort: h.sort || this.state.sort, shown: 12, mukhi: [], stones: [] });
+  }
+  pushHash() {
+    const s = this.state, parts = [];
+    if (s.cat !== 'all') parts.push('c=' + s.cat);
+    if (s.sub) parts.push('sub=' + s.sub);
+    if (s.intents.length === 1) parts.push('intent=' + s.intents[0]);
+    try { history.replaceState(null, '', parts.length ? '#' + parts.join('&') : location.pathname + location.search); } catch (e) {}
+  }
+  change(patch) {
+    this.setState(Object.assign({ loading: true, shown: 12, sortOpen: false }, patch), () => { this.pushHash(); clearTimeout(this._lt); this._lt = setTimeout(() => this.setState({ loading: false }), 380); });
+  }
+  toggleIn(key, v) { const a = this.state[key].slice(), i = a.indexOf(v); if (i > -1) a.splice(i, 1); else a.push(v); this.change({ [key]: a }); }
+  toPos(v) { return Math.sqrt(v / 12000); }
+  toVal(p) { return Math.round((12000 * p * p) / 50) * 50; }
+  dragStart(which, e) { e.preventDefault(); this._drag = which; this.setState({ pd: this.state.price.slice() }); window.addEventListener('pointermove', this.onMove); window.addEventListener('pointerup', this.onUp); }
+  drag(e) {
+    if (!this._drag || !this.trackEl) return;
+    const r = this.trackEl.getBoundingClientRect(), p = Math.max(0, Math.min(1, (e.clientX - r.left) / r.width)), v = this.toVal(p), pd = (this.state.pd || this.state.price).slice();
+    if (this._drag === 'min') pd[0] = Math.min(v, pd[1] - 100); else pd[1] = Math.max(v, pd[0] + 100);
+    this.setState({ pd });
+  }
+  dragEnd() { window.removeEventListener('pointermove', this.onMove); window.removeEventListener('pointerup', this.onUp); if (this._drag && this.state.pd) this.change({ price: this.state.pd, pd: null }); this._drag = null; }
+  keyPrice(which, e) {
+    const step = e.key === 'ArrowRight' || e.key === 'ArrowUp' ? 1 : e.key === 'ArrowLeft' || e.key === 'ArrowDown' ? -1 : 0; if (!step) return; e.preventDefault();
+    const pr = this.state.price.slice(), i = which === 'min' ? 0 : 1; pr[i] = this.toVal(Math.max(0, Math.min(1, this.toPos(pr[i]) + step * .03)));
+    if (pr[0] < pr[1] - 50) this.change({ price: pr });
+  }
+  base() { const s = this.state, M = MKA; return M.P.filter((p) => s.cat === 'all' || p.cat === s.cat); }
+  results() {
+    const s = this.state, M = MKA;
+    if (this.props.demo === 'empty') return [];
+    let r = this.base().filter((p) => (!s.sub || (s.sub === 'malas' ? p.sub === 'malas' : String(p.mukhi) === s.sub))
+      && (!s.intents.length || s.intents.includes(p.ik)) && (!s.mukhi.length || s.mukhi.includes(p.mukhi)) && (!s.stones.length || s.stones.includes(p.stone))
+      && (!s.stock || p.stock > 0) && p.rating >= s.rating && p.price >= s.price[0] && p.price <= s.price[1]);
+    const by = { popular: (a, b) => b.pop - a.pop, newest: (a, b) => a.date - b.date, low: (a, b) => a.price - b.price, high: (a, b) => b.price - a.price, rating: (a, b) => b.rating - a.rating || b.reviews - a.reviews }[s.sort];
+    return r.slice().sort(by);
+  }
+  renderVals() {
+    const M = window.MKA, s = this.state;
+    if (!M || !s.ready) return { ic: {}, head: {}, tabs: [], subs: [], groups: [], chips: [], cells: [], sorts: [], pr: {}, banner: {}, seo: {}, stones: [], cols: 3, layoutCols: '1fr', fpStyle: { display: 'none' }, mob: false, desk: true, showMore: false, hasSubs: false };
+    const ic = M.ic(React), vw = s.vw, mob = vw < 768, side = vw >= 1024;
+    const cols = vw >= 1400 ? 4 : vw >= 768 ? 3 : 2;
+    const cat = M.CATS.find((c) => c.key === s.cat), idx = M.CATS.indexOf(cat);
+    const res = this.results(), total = res.length, loading = s.loading || this.props.demo === 'loading';
+    this.resKey = [s.cat, s.sub, s.intents, s.mukhi, s.stones, s.stock, s.rating, s.price, s.sort, s.shown].join('|');
+    const head = cat
+      ? { crumb: cat.name, eyebrow: `0${idx + 2} — ${cat.name}`, a: cat.name.split(' ').slice(0, -1).join(' ') + ' ', i: cat.name.split(' ').slice(-1)[0], hi: cat.hi, desc: cat.desc, count: `${this.base().length} offerings` }
+      : { crumb: '', eyebrow: '— The Shop · सभी उत्पाद', a: 'All sacred ', i: 'offerings', hi: 'अनुष्ठान से ऊर्जित, श्रद्धा से आप तक', desc: 'Rudraksha, crystal bracelets, Bhojpatra kavach, havan samagri and copper — every piece energized in Mahapuja on an auspicious muhurat before it ships.', count: `${M.P.length} offerings` };
+    const artFor = { rudraksha: [['bead5', M.byId.r5]], bracelets: [['br', M.byId['b-rose']]], amulets: [['am', M.byId['a-bagla']]], havan: [['hv', M.byId.havan]], copper: [['cu', M.byId.nag12]], all: [['b', M.byId.r7], ['br', M.byId['b-pyrite']], ['am', M.byId['a-bagla']]] }[s.cat];
+    const sw = mob ? 118 : 200, sh = mob ? 154 : 260;
+    const stones = artFor.length === 1
+      ? [{ el: M.img(React, artFor[0][1], 'main', 'hdr'), l: '4%', t: '8%', w: '92%', h: '92%', amb: 'float:9:14:5:.2' }]
+      : [{ el: M.img(React, artFor[0][1], 'main', 'hdrA'), l: '26%', t: '2%', w: '56%', h: '56%', amb: 'float:8:12:6:.1' }, { el: M.img(React, artFor[1][1], 'main', 'hdrB'), l: '-6%', t: '40%', w: '62%', h: '62%', amb: 'float:10:16:-5:.5' }, { el: M.img(React, artFor[2][1], 'main', 'hdrC'), l: '48%', t: '38%', w: '56%', h: '60%', amb: 'float:11:10:4:.8' }];
+    const cnt = (k) => M.P.filter((p) => k === 'all' || p.cat === k).length;
+    const tabs = [{ k: 'all', t: 'All' }].concat(M.CATS.map((c) => ({ k: c.key, t: c.name }))).map((tb) => ({ t: tb.t, n: cnt(tb.k), on: s.cat === tb.k, color: s.cat === tb.k ? '#0E3B30' : '#5B6A61', line: s.cat === tb.k ? 'inset 0 -2px 0 #B8923A' : 'none', pick: () => this.change({ cat: tb.k, sub: null, mukhi: [], stones: [] }) }));
+    const chip = (t, on, pick) => ({ t, on, pick, bg: on ? '#164E3F' : '#FFFDF8', color: on ? '#FBF7EE' : '#164E3F', ring: on ? 'inset 0 0 0 1px #164E3F' : 'inset 0 0 0 1px #EAE0CA' });
+    let subs = [];
+    if (s.cat === 'rudraksha') subs = [chip('All', !s.sub, () => this.change({ sub: null }))].concat(Array.from({ length: 13 }, (_, i) => chip(`${i + 2} Mukhi`, s.sub === String(i + 2), () => this.change({ sub: s.sub === String(i + 2) ? null : String(i + 2) }))), [chip('Malas', s.sub === 'malas', () => this.change({ sub: s.sub === 'malas' ? null : 'malas' }))]);
+    else if (s.cat !== 'havan' && s.cat !== 'copper') subs = M.INTENTS.map((i) => chip(i.en, s.intents.includes(i.key), () => this.toggleIn('intents', i.key)));
+    const inBase = this.base();
+    const box = (on, radio) => ({ rad: radio ? '999px' : '3px', box: on ? 'inset 0 0 0 1.5px #164E3F' : 'inset 0 0 0 1.5px #C9BFA6', fill: on ? '#164E3F' : '#FFFDF8', tick: on ? 1 : 0, role: radio ? 'radio' : 'checkbox' });
+    const G = (k, t, extra) => Object.assign({ t, open: !s.closed[k], chev: s.closed[k] ? 'none' : 'rotate(180deg)', toggle: () => this.setState({ closed: Object.assign({}, s.closed, { [k]: !s.closed[k] }) }), isList: false, isChips: false, isPrice: false, isToggle: false, items: [], more: false }, extra);
+    const groups = [
+      G('cat', 'Category', { isList: true, items: [{ k: 'all', t: 'All offerings' }].concat(M.CATS.map((c) => ({ k: c.key, t: c.name }))).map((c) => Object.assign({ t: c.t, n: cnt(c.k), on: s.cat === c.k, pick: () => this.change({ cat: c.k, sub: null, mukhi: [], stones: [] }) }, box(s.cat === c.k, true))) }),
+      G('intent', 'Intention', { isList: true, items: M.INTENTS.map((i) => Object.assign({ t: i.en + ' · ' + i.hi, n: inBase.filter((p) => p.ik === i.key).length, on: s.intents.includes(i.key), pick: () => this.toggleIn('intents', i.key) }, box(s.intents.includes(i.key)))) }),
+      G('price', 'Price', { isPrice: true })
+    ];
+    if (s.cat === 'all' || s.cat === 'rudraksha') groups.push(G('mukhi', 'Mukhi (Rudraksha)', { isChips: true, items: Array.from({ length: 13 }, (_, i) => { const m = i + 2, on = s.mukhi.includes(m); return { t: m, on, fill: on ? '#164E3F' : '#FFFDF8', box: on ? 'inset 0 0 0 1px #164E3F' : 'inset 0 0 0 1px #EAE0CA', color: on ? '#FBF7EE' : '#164E3F', pick: () => this.toggleIn('mukhi', m) }; }) }));
+    if (s.cat === 'all' || s.cat === 'bracelets') { const all = M.P.filter((p) => p.cat === 'bracelets'); groups.push(G('stone', 'Crystal type', { isList: true, items: (s.allStones ? all : all.slice(0, 6)).map((p) => Object.assign({ t: p.stoneName, n: '', on: s.stones.includes(p.stone), pick: () => this.toggleIn('stones', p.stone) }, box(s.stones.includes(p.stone)))), more: true, moreLabel: s.allStones ? 'Show fewer' : 'Show all 15', moreClick: () => this.setState({ allStones: !s.allStones }) })); }
+    groups.push(G('avail', 'Availability', { isToggle: true, on: s.stock, trackC: s.stock ? '#164E3F' : '#C9BFA6', knob: s.stock ? 'translateX(16px)' : 'none', flip: () => this.change({ stock: !s.stock }) }));
+    groups.push(G('rating', 'Rating', { isList: true, items: [[4.8, '4.8 ★ & above'], [4.5, '4.5 ★ & above'], [0, 'Any rating']].map(([v, t]) => Object.assign({ t, n: '', on: s.rating === v, pick: () => this.change({ rating: v }) }, box(s.rating === v, true))) }));
+    const pv = s.pd || s.price, pl = this.toPos(pv[0]), ph = this.toPos(pv[1]);
+    const pr = { min: pv[0], max: pv[1], minS: M.fmt(pv[0]), maxS: pv[1] >= 12000 ? '₹12,000+' : M.fmt(pv[1]), l: pl * 100 + '%', r: (1 - ph) * 100 + '%', lr: ph * 100 + '%', trackRef: (el) => { this.trackEl = el; }, downMin: (e) => this.dragStart('min', e), downMax: (e) => this.dragStart('max', e), keyMin: (e) => this.keyPrice('min', e), keyMax: (e) => this.keyPrice('max', e) };
+    const chips = [];
+    if (s.sub) chips.push({ t: s.sub === 'malas' ? 'Malas' : s.sub + ' Mukhi', remove: () => this.change({ sub: null }) });
+    s.intents.forEach((k) => chips.push({ t: M.INTENTS.find((i) => i.key === k).en, remove: () => this.toggleIn('intents', k) }));
+    s.mukhi.forEach((m) => chips.push({ t: m + ' Mukhi', remove: () => this.toggleIn('mukhi', m) }));
+    s.stones.forEach((k) => chips.push({ t: M.STONES[k] ? M.P.find((p) => p.stone === k).stoneName : k, remove: () => this.toggleIn('stones', k) }));
+    if (s.price[0] > 0 || s.price[1] < 12000) chips.push({ t: `${M.fmt(s.price[0])}–${s.price[1] >= 12000 ? '₹12,000+' : M.fmt(s.price[1])}`, remove: () => this.change({ price: [0, 12000] }) });
+    if (s.stock) chips.push({ t: 'In stock', remove: () => this.change({ stock: false }) });
+    if (s.rating) chips.push({ t: s.rating + '★ & above', remove: () => this.change({ rating: 0 }) });
+    chips.forEach((c) => (c.aria = 'Remove filter ' + c.t));
+    const clearAll = () => this.change({ sub: null, intents: [], mukhi: [], stones: [], stock: false, rating: 0, price: [0, 12000] });
+    const shown = res.slice(0, s.shown), bi = cols * 2;
+    let cells = loading ? Array.from({ length: Math.min(s.shown, mob ? 6 : cols * 2) }, () => ({ isSkel: true })) : shown.map((p) => ({ isCard: true, id: p.id }));
+    if (!loading && shown.length > bi) cells.splice(bi, 0, { isBanner: true });
+    if (s.moreLoading) cells = cells.concat(Array.from({ length: cols }, () => ({ isSkel: true })));
+    const sortsDef = [['popular', 'Popular'], ['newest', 'Newest'], ['low', 'Price: low to high'], ['high', 'Price: high to low'], ['rating', 'Top rated']];
+    const sorts = sortsDef.map(([k, t]) => ({ t, on: s.sort === k, tick: s.sort === k ? 1 : 0, bg: s.sort === k ? '#F4EDDD' : 'transparent', ring: s.sort === k ? 'inset 0 0 0 1.5px #164E3F' : 'inset 0 0 0 1.5px #C9BFA6', pick: () => this.change({ sort: k }), pickClose: () => this.change({ sort: k, sheet: null }) }));
+    const bannerTxt = { rudraksha: ['Not sure which Rudraksha ', 'suits you?'], bracelets: ['Not sure which stone suits ', 'your rashi?'], amulets: ['Which kavach fits ', 'your concern?'] }[s.cat] || ['Not sure where ', 'to begin?'];
+    const seoMap = {
+      rudraksha: ['How we source original Nepali Rudraksha', 'Every bead in this collection comes from Nepal, where Rudraksha trees grow at the altitude that gives beads dense wood and deep, naturally formed mukhi lines. We reject beads with filled cracks, carved lines or joined halves, the three most common signs of a fake.', 'Each bead is X-ray tested so the internal seed chambers can be matched to the visible mukhi count, then energized with a sankalp during Mahapuja. Your packet carries the lab certificate number and the date of energization.'],
+      bracelets: ['Choosing a crystal bracelet', 'Pick one intention rather than several. A stone chosen for a single purpose, worn daily and cleansed weekly, is easier to live with than a stack of bracelets. If you know your rashi, our team can match the stone to its ruling planet.', 'All beads are 8 mm natural stone on durable stretch cord. Sizes run S (14–15 cm), M (15.5–16.5 cm) and L (17–18 cm); add 1 cm to your wrist measurement for a comfortable fit.'],
+      all: ['What “energized in Mahapuja” means', 'Every order is included in the sankalp of the next Mahapuja performed by Sadhak Pawan Pandey on an auspicious muhurat. Products are purified with Ganga jal, placed before the yantra during mantra japa and havan, then sealed and dispatched.', 'This is why orders ship two to four days after energization rather than the same day. You can add personal energization with your name and gotra on any product page.']
+    };
+    const seo = seoMap[s.cat] || seoMap.all;
+    const fpStyle = side
+      ? { position: 'sticky', top: '100px', maxHeight: 'calc(100vh - 116px)', overflow: 'auto', scrollbarWidth: 'thin', paddingRight: '6px' }
+      : { position: 'fixed', left: 0, right: 0, bottom: 0, zIndex: 85, maxHeight: '88vh', overflow: 'auto', backgroundColor: '#FBF7EE', borderRadius: '8px 8px 0 0', padding: '6px 20px 0', boxShadow: '0 -20px 50px -20px rgba(10,31,26,.5)', display: s.sheet === 'filter' ? 'block' : 'none' };
+    return {
+      ic, mob: !side, desk: side, cols, cardSize: mob ? 'compact' : 'std',
+      mandala: M.h(React, `<svg viewBox="-300 -300 600 600" width="100%" height="100%">${M.mandala(296, '#7A5C1C', 1)}</svg>`, null, 'shop-mandala'),
+      head, hasCat: !!cat, stones, stoneW: sw + 'px', stoneH: sh + 'px',
+      soonHome: M.soon('The Home page'), soonConsult: M.soon('Consultations'), goAll: (e) => { e.preventDefault(); this.change({ cat: 'all', sub: null }); },
+      tabs, subs, hasSubs: subs.length > 0,
+      layoutCols: side ? '260px minmax(0,1fr)' : 'minmax(0,1fr)',
+      fpStyle, fpRef: (el) => { this.fpEl = el; }, fpBackdrop: !side && s.sheet === 'filter',
+      groups, pr, chips, hasActive: chips.length > 0, activeN: chips.length, clearAll,
+      countLine: loading ? 'Finding offerings…' : `${total} ${total === 1 ? 'offering' : 'offerings'}`,
+      barGap: chips.length || side ? '22px' : '14px',
+      sortLabel: sortsDef.find((x) => x[0] === s.sort)[1], sorts, sortOpen: s.sortOpen, toggleSort: () => this.setState({ sortOpen: !s.sortOpen }),
+      openFilter: () => this.setState({ sheet: 'filter' }), openSort: () => this.setState({ sheet: 'sort' }), closeSheet: () => this.setState({ sheet: null }), sortSheet: s.sheet === 'sort',
+      sheetIn: (el) => { if (el && el !== this._sh) { this._sh = el; if (!M.isReduced()) el.animate([{ transform: 'translateY(100%)' }, { transform: 'none' }], { duration: 360, easing: M.EASE }); } },
+      total, isEmpty: !loading && total === 0, emptyArt: M.h(React, `<svg viewBox="0 0 120 120" width="100%" height="100%" fill="none" stroke="#B8923A" stroke-width="1.2" stroke-linecap="round"><circle cx="60" cy="60" r="56" stroke-dasharray="2 5"/><g transform="translate(24 24) scale(3)">${'<path d="M12 5c2 2.4 2.6 5.4 0 9.5C9.4 10.4 10 7.4 12 5z"/><path d="M12 14.5C10.7 10.8 8.4 9 4.8 8.9c.2 3.4 2.6 5.6 7.2 5.6zM12 14.5c1.3-3.7 3.6-5.5 7.2-5.6-.2 3.4-2.6 5.6-7.2 5.6z"/><path d="M4.5 15.8c2 1.8 4.6 2.7 7.5 2.7s5.5-.9 7.5-2.7"/>'}</g></svg>`, null, 'empty-lotus'),
+      cells, gridRef: (el) => { this.gridEl = el; }, shimmer: (el) => M.fx.shimmer(el),
+      banner: { a: bannerTxt[0], i: bannerTxt[1], body: 'Share your birth details on WhatsApp. Sadhak Ji\'s team replies within a day with one recommendation, and the reason for it.' },
+      bannerSky: M.h(React, `<svg viewBox="0 0 900 260" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">${M.stars(26, 900, 260, 'ban')}<g transform="translate(760 130)" opacity=".18">${M.mandala(200, '#D9B96A', .8)}</g></svg>`, null, 'bannersky'),
+      bannerArt: M.img(React, s.cat === 'bracelets' ? M.byId['b-moon'] : s.cat === 'amulets' ? M.byId['a-kali'] : M.byId.r5, 'main', 'banner'),
+      showMore: !loading && total > 0, canMore: s.shown < total, showing: `Showing ${Math.min(s.shown, total)} of ${total}`, shownPct: Math.round((Math.min(s.shown, total) / Math.max(1, total)) * 100) + '%',
+      loadMore: () => { this.setState({ moreLoading: true }); setTimeout(() => this.setState({ moreLoading: false, shown: s.shown + 12 }), 520); },
+      seo: { h: seo[0], p1: seo[1], p2: seo[2] }, seoH: s.seo ? '600px' : '96px', seoFade: !s.seo, seoBtn: s.seo ? 'Read less' : 'Read more', toggleSeo: () => this.setState({ seo: !s.seo })
+    };
+  }
+}
+</script>
+</body>
+</html>

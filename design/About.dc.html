@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT@0,9..144,300..600,0..100;1,9..144,300..600,0..100&family=Manrope:wght@400;500;600;700&family=Mukta:wght@400;500;600&family=Tiro+Devanagari+Hindi:ital@0;1&display=swap">
+<script src="mka-core.js"></script>
+<script src="mka-astro.js"></script>
+<script src="mka-home.js"></script>
+<style>
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:#FBF7EE url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .35 0 0 0 0 .28 0 0 0 0 .16 0 0 0 .05 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");color:#1F2A24;font-family:Manrope,Mukta,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:#164E3F}
+a:hover{color:#1C6B54}
+button{font-family:inherit}
+:focus-visible{outline:2px solid #B8923A;outline-offset:2px}
+::selection{background:#D9B96A;color:#0E3B30}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition-duration:.01ms!important}}
+</style>
+</helmet>
+<div style="min-height:100vh;display:flex;flex-direction:column">
+  <dc-import name="SiteChrome" active="about" hint-size="100%,108px"></dc-import>
+  <main id="main" style="flex:1">
+
+    <section data-screen-label="01 About hero" style="position:relative;overflow:hidden;background-color:#FBF7EE">
+      <div aria-hidden="true" style="position:absolute;left:-240px;top:-220px;width:720px;height:720px;opacity:.06;pointer-events:none">{{ mandalaInk }}</div>
+      <div style="position:relative;max-width:1320px;margin:0 auto;padding:clamp(20px,4vw,44px) clamp(16px,4vw,32px) clamp(64px,8vw,120px);display:grid;grid-template-columns:{{ L.hero }};gap:clamp(40px,6vw,96px);align-items:center">
+        <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+          <nav aria-label="Breadcrumb" style="display:flex;align-items:center;gap:8px;font:500 12.5px/1 Manrope,sans-serif;color:#5B6A61"><a href="Home.dc.html" style="color:#5B6A61;text-decoration:none">Home</a><span style="color:#B8923A">/</span><span aria-current="page" style="color:#1F2A24">About Sadhak Ji</span></nav>
+          <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">॥ The founder ॥ · <span style="letter-spacing:0;text-transform:none;font-family:Mukta,sans-serif;font-weight:500;font-size:1.12em">साधक पवन पाण्डेय</span></span>
+          <h1 style="margin:0;font:400 clamp(36px,4.6vw,64px)/1.06 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.02em;color:#0E3B30;text-wrap:balance">Welcome to a space where ancient spiritual wisdom meets <em style="font-style:italic;color:#B8923A">modern clarity.</em></h1>
+          <span style="font:400 clamp(18px,2vw,23px)/1.35 'Tiro Devanagari Hindi',serif;color:#7A5C1C">साधना से स्पष्टता तक</span>
+          <p style="margin:4px 0 0;max-width:560px;font:400 clamp(16px,1.3vw,18px)/1.7 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty">Sadhak Pawan Pandey holds an MBA and spent years in multinational companies before giving his life to sadhana, mantra and paranormal research under enlightened mentors. He founded Maa Kali Astuti to bring that practice to seekers honestly: as a science, without superstition or fear.</p>
+          <div style="display:flex;flex-wrap:wrap;gap:8px">
+            <sc-for list="{{ creds }}" as="c" hint-placeholder-count="4"><span style="height:34px;padding:0 13px;border-radius:999px;background-color:#FFFDF8;box-shadow:inset 0 0 0 1px #EAE0CA;color:#164E3F;display:inline-flex;align-items:center;gap:7px;font:500 13px/1 Manrope,sans-serif;white-space:nowrap"><span style="width:16px;height:16px;display:block;color:#B8923A">{{ c.icon }}</span>{{ c.t }}</span></sc-for>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:12px;margin-top:6px">
+            <a href="Consultations.dc.html" style="height:52px;padding:0 24px;border-radius:4px;background-color:#164E3F;background-image:linear-gradient(110deg,rgba(217,185,106,0) 40%,rgba(217,185,106,.4) 50%,rgba(217,185,106,0) 60%);background-size:260% 100%;background-position:100% 0;background-repeat:no-repeat;color:#FBF7EE;display:inline-flex;align-items:center;gap:10px;font:600 15px/1 Manrope,sans-serif;text-decoration:none;box-shadow:inset 0 0 0 1px rgba(217,185,106,.55);transition:background-position 700ms cubic-bezier(.22,1,.36,1)" style-hover="background-position:0 0;color:#FBF7EE"><span style="width:18px;height:18px;display:block">{{ ic.calendar }}</span>Book a consultation</a>
+            <a href="Videos.dc.html" style="height:52px;padding:0 22px;border-radius:4px;background-color:#FBF7EE;box-shadow:inset 0 0 0 1px #164E3F;color:#164E3F;display:inline-flex;align-items:center;gap:8px;font:600 15px/1 Manrope,sans-serif;text-decoration:none" style-hover="background-color:#E4EEE8"><span style="width:18px;height:18px;display:block">{{ ic.youtube }}</span>Watch his discourses</a>
+          </div>
+        </div>
+        <div style="position:relative;justify-self:center;width:100%;max-width:{{ L.archW }};padding-bottom:28px">
+          <div style="position:relative;aspect-ratio:300/380">
+            <span aria-hidden="true" style="position:absolute;left:8%;right:8%;bottom:-22px;height:40px;border-radius:50%;background-image:radial-gradient(closest-side,rgba(14,59,48,.28),rgba(14,59,48,0))"></span>
+            <svg aria-hidden="true" viewBox="0 0 324 404" style="position:absolute;left:-4%;top:-3.2%;width:108%;height:106.3%;pointer-events:none;overflow:visible" fill="none" stroke="#B8923A" stroke-width="1"><path d="M2 404V162A160 160 0 0 1 322 162V404" opacity=".55"></path></svg>
+            <span style="position:absolute;inset:0;display:block">{{ pBg }}</span>
+            <div aria-hidden="true" style="position:absolute;left:50%;top:38.4%;width:74%;aspect-ratio:1/1;transform:translate(-50%,-50%);opacity:.6">
+              <span data-amb="spin:120" style="position:absolute;inset:0;display:block">{{ ch.outer }}</span>
+              <span data-amb="spin:-90" style="position:absolute;inset:0;display:block">{{ ch.middle }}</span>
+              <span data-amb="spin:60" style="position:absolute;inset:0;display:block">{{ ch.inner }}</span>
+            </div>
+            <span style="position:absolute;inset:0;display:block">{{ pFg }}</span>
+          </div>
+          <div style="position:absolute;left:{{ L.capL }};bottom:0;display:flex;flex-direction:column;gap:6px;padding:14px 18px;background-color:#FBF7EE;border-radius:4px;box-shadow:inset 0 0 0 1px rgba(184,146,58,.55),0 18px 36px -20px rgba(14,59,48,.4);max-width:270px">
+            <span style="font:400 19px/1.15 Fraunces,serif;color:#0E3B30">Sadhak Pawan Pandey</span>
+            <span style="font:500 12.5px/1.45 Manrope,sans-serif;color:#5B6A61">Founder, Maa Kali Astuti · 18 years of sadhana</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section data-screen-label="02 His story" style="position:relative;background-color:#0A1F1A;color:#E4EEE8">
+      <div aria-hidden="true" style="position:absolute;inset:0;overflow:hidden;pointer-events:none">{{ sky }}</div>
+      <div style="position:relative;max-width:1320px;margin:0 auto;padding:clamp(64px,9vw,128px) clamp(16px,4vw,32px) clamp(48px,6vw,96px)">
+        <div style="display:flex;flex-direction:column;gap:12px;max-width:720px;margin-bottom:clamp(32px,5vw,72px)">
+          <span data-reveal="0" style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#D9B96A">01 — His story · <span style="letter-spacing:0;text-transform:none;font-family:Mukta,sans-serif;font-weight:500;font-size:1.12em">जीवन यात्रा</span></span>
+          <h2 data-reveal="1" style="margin:0;font:400 clamp(34px,4.4vw,60px)/1.05 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.02em;color:#FBF7EE;text-wrap:balance">Six chapters, <em style="font-style:italic;color:#D9B96A">one practice.</em></h2>
+        </div>
+        <div style="display:grid;grid-template-columns:{{ L.story }};gap:clamp(32px,6vw,104px);align-items:start">
+          <sc-if value="{{ L.sticky }}" hint-placeholder-val="{{ true }}">
+            <div style="position:sticky;top:110px;display:grid;grid-template-columns:44px minmax(0,1fr);gap:24px;align-items:center">
+              <ol aria-hidden="true" style="position:relative;list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:30px">
+                <span style="position:absolute;left:21.5px;top:10px;bottom:10px;width:1px;background-color:rgba(217,185,106,.25)"></span>
+                <span style="position:absolute;left:21px;top:10px;width:2px;height:calc(100% - 20px);background-color:#D9B96A;transform-origin:50% 0;transform:{{ railFill }};transition:transform 500ms cubic-bezier(.22,1,.36,1)"></span>
+                <sc-for list="{{ dots }}" as="d" hint-placeholder-count="6"><li style="position:relative;width:44px;height:44px;border-radius:999px;background-color:{{ d.bg }};box-shadow:{{ d.ring }};display:grid;place-items:center;font:400 17px/1 'Tiro Devanagari Hindi',serif;color:{{ d.ink }};transition:background-color 400ms,color 400ms,box-shadow 400ms">{{ d.n }}</li></sc-for>
+              </ol>
+              <div ref="{{ winRef }}" style="position:relative;width:100%;max-width:400px;aspect-ratio:300/380;border-radius:50% 50% 4px 4px / 39.5% 39.5% 4px 4px;overflow:hidden;background-color:#10302A;box-shadow:inset 0 0 0 1px rgba(217,185,106,.55),0 40px 80px -50px rgba(0,0,0,.8)">
+                <span aria-hidden="true" style="position:absolute;inset:8px;border-radius:50% 50% 2px 2px / 39.5% 39.5% 2px 2px;box-shadow:inset 0 0 0 1px rgba(217,185,106,.28)"></span>
+                <sc-for list="{{ arts }}" as="a" hint-placeholder-count="1"><span data-art="{{ a.i }}" style="position:absolute;inset:0;display:block;opacity:{{ a.op }};transition:opacity 700ms cubic-bezier(.22,1,.36,1)">{{ a.el }}</span></sc-for>
+                <span style="position:absolute;left:0;right:0;bottom:18px;display:flex;justify-content:center"><span style="height:28px;padding:0 12px;border-radius:999px;background-color:rgba(10,31,26,.75);box-shadow:inset 0 0 0 1px rgba(217,185,106,.5);color:#F6E7BC;display:inline-flex;align-items:center;font:700 11.5px/1 Manrope,sans-serif;letter-spacing:.1em;font-variant-numeric:tabular-nums">{{ activeYr }}</span></span>
+              </div>
+            </div>
+          </sc-if>
+          <ol ref="{{ chapsRef }}" style="position:relative;list-style:none;margin:0;padding:0">
+            <sc-if value="{{ L.mobLine }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="position:absolute;left:21.5px;top:22px;bottom:22px;width:1px;background-color:rgba(217,185,106,.25)"></span><span ref="{{ mFillRef }}" aria-hidden="true" style="position:absolute;left:21px;top:22px;bottom:22px;width:2px;background-color:#D9B96A;transform-origin:50% 0;transform:scaleY(0)"></span></sc-if>
+            <sc-for list="{{ chapters }}" as="c" hint-placeholder-count="3">
+              <li data-chap="{{ c.i }}" style="position:relative;display:grid;grid-template-columns:{{ L.chapCols }};gap:18px;min-height:{{ L.chapH }};padding-bottom:{{ L.chapPb }};opacity:{{ c.op }};transition:opacity 500ms">
+                <sc-if value="{{ L.mobLine }}" hint-placeholder-val="{{ false }}"><span style="position:relative;width:44px;height:44px;border-radius:999px;background-color:{{ c.dotBg }};box-shadow:inset 0 0 0 1px rgba(217,185,106,.55);display:grid;place-items:center;font:400 17px/1 'Tiro Devanagari Hindi',serif;color:{{ c.dotInk }}">{{ c.dev }}</span></sc-if>
+                <div style="display:flex;flex-direction:column;gap:12px;min-width:0">
+                  <span style="font:700 12px/1.2 Manrope,sans-serif;letter-spacing:.16em;color:#D9B96A;font-variant-numeric:tabular-nums">{{ c.yr }}</span>
+                  <h3 style="margin:0;font:400 clamp(26px,3vw,40px)/1.12 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.012em;color:#FBF7EE;text-wrap:balance">{{ c.t }}</h3>
+                  <span style="font:400 19px/1.35 'Tiro Devanagari Hindi',serif;color:#D9B96A">{{ c.hi }}</span>
+                  <sc-if value="{{ L.mobLine }}" hint-placeholder-val="{{ false }}"><span style="display:block;width:180px;aspect-ratio:300/380;margin:6px 0;border-radius:50% 50% 4px 4px / 39.5% 39.5% 4px 4px;overflow:hidden;background-color:#10302A;box-shadow:inset 0 0 0 1px rgba(217,185,106,.45)">{{ c.art }}</span></sc-if>
+                  <p style="margin:0;max-width:560px;font:400 17px/1.75 Manrope,sans-serif;color:#E4EEE8;text-wrap:pretty">{{ c.d }}</p>
+                  <p style="margin:0;max-width:540px;padding-left:16px;box-shadow:inset 1px 0 0 rgba(217,185,106,.5);font:italic 400 17px/1.55 Fraunces,serif;color:#C9D6CF;text-wrap:pretty">{{ c.note }}</p>
+                </div>
+              </li>
+            </sc-for>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section data-screen-label="03 Science, not superstition" style="background-color:#FBF7EE">
+      <div style="max-width:1320px;margin:0 auto;padding:clamp(64px,9vw,136px) clamp(16px,4vw,32px);display:grid;grid-template-columns:{{ L.pil }};gap:clamp(36px,6vw,104px);align-items:start">
+        <div style="display:flex;flex-direction:column;gap:16px;position:{{ L.pilPos }};top:110px">
+          <span data-reveal="0" style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">02 — The approach</span>
+          <h2 data-reveal="1" style="margin:0;font:400 clamp(36px,4.8vw,66px)/1.02 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.022em;color:#0E3B30;text-wrap:balance">Science, <em style="font-style:italic;color:#B8923A">not</em> superstition.</h2>
+          <span data-reveal="1" style="font:400 21px/1.35 'Tiro Devanagari Hindi',serif;color:#7A5C1C">अंधविश्वास नहीं, विज्ञान</span>
+          <p data-reveal="2" style="margin:6px 0 0;max-width:480px;font:400 16.5px/1.7 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty">Superstition is rejected here. Spirituality is treated as a time-tested science: under proper guidance, the conscious practice of mantra and inner energy changes how a life is lived and how its difficulties are carried.</p>
+        </div>
+        <ol style="list-style:none;margin:0;padding:0;border-top:1px solid #EAE0CA">
+          <sc-for list="{{ pillars }}" as="p" hint-placeholder-count="3">
+            <li data-reveal="{{ p.i }}" style="display:grid;grid-template-columns:{{ L.pCols }};gap:18px 28px;align-items:start;padding:clamp(24px,3vw,40px) 0;border-bottom:1px solid #EAE0CA">
+              <span style="font:italic 400 clamp(40px,4vw,56px)/1 Fraunces,serif;color:#B8923A">{{ p.n }}</span>
+              <span style="display:flex;flex-direction:column;gap:12px"><span style="display:flex;align-items:center;gap:12px"><span style="width:40px;height:40px;flex:none;border-radius:999px;background-color:#F4EDDD;box-shadow:inset 0 0 0 1px rgba(184,146,58,.5);color:#B8923A;display:grid;place-items:center"><span style="width:20px;height:20px;display:block">{{ p.icon }}</span></span><span style="font:400 clamp(22px,2.2vw,28px)/1.2 Fraunces,serif;color:#0E3B30">{{ p.t }}</span></span><span style="max-width:560px;font:400 16px/1.7 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty">{{ p.d }}</span></span>
+            </li>
+          </sc-for>
+        </ol>
+      </div>
+    </section>
+
+    <section data-screen-label="04 Published works" style="background-color:#F4EDDD;box-shadow:inset 0 1px 0 rgba(184,146,58,.35),inset 0 -1px 0 rgba(184,146,58,.35)">
+      <div style="max-width:1320px;margin:0 auto;padding:clamp(64px,9vw,128px) clamp(16px,4vw,32px)">
+        <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 40px;margin-bottom:clamp(32px,4vw,56px)">
+          <div data-reveal="0" style="display:flex;flex-direction:column;gap:12px">
+            <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">03 — Published works</span>
+            <h2 style="margin:0;font:400 clamp(32px,3.8vw,50px)/1.08 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.018em;color:#0E3B30">Written from <em style="font-style:italic;color:#B8923A">practice.</em></h2>
+            <span style="font:400 19px/1.35 'Tiro Devanagari Hindi',serif;color:#7A5C1C">प्रकाशित कृतियाँ</span>
+          </div>
+          <p data-reveal="1" style="margin:0;max-width:420px;font:400 15.5px/1.65 Manrope,sans-serif;color:#5B6A61">Books drawn from his own sadhana and case notes. Copies are available through Sadhak Ji’s office.</p>
+        </div>
+        <div style="display:grid;grid-template-columns:{{ L.books }};gap:clamp(28px,4vw,56px) clamp(20px,3vw,40px)">
+          <sc-for list="{{ books }}" as="b" hint-placeholder-count="3">
+            <article data-reveal="{{ b.i }}" style="display:flex;flex-direction:column;gap:18px">
+              <span style="position:relative;display:block;width:78%;max-width:260px;aspect-ratio:3/4;margin:0 auto;transition:transform 400ms cubic-bezier(.22,1,.36,1)" style-hover="transform:translateY(-6px) rotate(-1deg)">{{ b.cover }}</span>
+              <span style="height:1px;background-image:linear-gradient(90deg,rgba(184,146,58,0),rgba(184,146,58,.6),rgba(184,146,58,0))"></span>
+              <span style="display:flex;flex-direction:column;gap:8px;text-align:center;align-items:center">
+                <span style="font:400 23px/1.25 'Tiro Devanagari Hindi',serif;color:#0E3B30">{{ b.hi }}</span>
+                <span style="font:italic 400 18px/1.3 Fraunces,serif;color:#1F2A24">{{ b.en }}</span>
+                <span style="font:600 11px/1.3 Manrope,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#7A5C1C">{{ b.year }} · {{ b.pages }}</span>
+                <span style="max-width:340px;font:400 14.5px/1.6 Manrope,sans-serif;color:#5B6A61;text-wrap:pretty">{{ b.line }}</span>
+                <a href="{{ b.ask }}" target="_blank" rel="noopener" style="margin-top:4px;display:inline-flex;align-items:center;gap:7px;min-height:40px;font:600 13.5px/1 Manrope,sans-serif;color:#164E3F;text-decoration:none"><span style="width:16px;height:16px;display:block">{{ ic.whatsapp }}</span>Ask about a copy</a>
+              </span>
+            </article>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section data-screen-label="05 Media" style="background-color:#FBF7EE">
+      <div style="max-width:1320px;margin:0 auto;padding:clamp(64px,9vw,128px) clamp(16px,4vw,32px)">
+        <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:16px 40px;margin-bottom:clamp(24px,3.4vw,44px)">
+          <div data-reveal="0" style="display:flex;flex-direction:column;gap:12px">
+            <span style="font:600 11px/1.2 Manrope,sans-serif;letter-spacing:.16em;text-transform:uppercase;color:#7A5C1C">04 — Hear him speak</span>
+            <h2 style="margin:0;font:400 clamp(32px,3.8vw,50px)/1.08 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.018em;color:#0E3B30">Discourses on <em style="font-style:italic;color:#B8923A">YouTube.</em></h2>
+          </div>
+          <a href="Videos.dc.html" style="display:inline-flex;align-items:center;gap:8px;padding:6px 0;font:600 14px/1.3 Manrope,sans-serif;color:#164E3F;text-decoration:none;background-image:linear-gradient(#B8923A,#B8923A);background-size:100% 1px;background-position:0 100%;background-repeat:no-repeat">All discourses and Shorts<span style="width:15px;height:15px;display:block">{{ ic.arrowR }}</span></a>
+        </div>
+        <div style="display:grid;grid-template-columns:{{ L.media }};gap:clamp(16px,2vw,28px)">
+          <sc-for list="{{ media }}" as="v" hint-placeholder-count="3">
+            <a href="{{ v.href }}" data-reveal="{{ v.i }}" style="display:flex;flex-direction:column;gap:14px;text-decoration:none;color:#1F2A24">
+              <span style="position:relative;display:block;aspect-ratio:16/9;border-radius:4px;overflow:hidden;background-color:#0A1F1A;box-shadow:inset 0 0 0 1px rgba(184,146,58,.35);transition:transform 300ms" style-hover="transform:translateY(-3px)">
+                <span style="position:absolute;inset:0;display:block">{{ v.thumb }}</span>
+                <span style="position:absolute;left:50%;top:50%;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:999px;background-color:rgba(10,31,26,.6);box-shadow:inset 0 0 0 1.5px #D9B96A;display:grid;place-items:center;color:#D9B96A"><span style="width:20px;height:20px;display:block;margin-left:3px">{{ ic.play }}</span></span>
+                <span style="position:absolute;right:8px;bottom:8px;height:22px;padding:0 7px;border-radius:2px;background-color:rgba(10,31,26,.85);color:#FBF7EE;display:inline-flex;align-items:center;font:700 11px/1 Manrope,sans-serif;font-variant-numeric:tabular-nums">{{ v.dur }}</span>
+              </span>
+              <span style="display:flex;flex-direction:column;gap:6px"><span style="font:600 10.5px/1.2 Manrope,sans-serif;letter-spacing:.14em;text-transform:uppercase;color:#7A5C1C">{{ v.cat }}</span><span style="font:400 20px/1.25 Fraunces,serif;color:#0E3B30;text-wrap:balance">{{ v.en }}</span></span>
+            </a>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <section aria-label="Speak with Sadhak Ji" style="position:relative;overflow:hidden;background-color:#164E3F;color:#E4EEE8">
+      <div aria-hidden="true" style="position:absolute;right:-160px;top:50%;width:520px;height:520px;transform:translateY(-50%);opacity:.1;pointer-events:none">{{ mandalaGold }}</div>
+      <div style="position:relative;max-width:1320px;margin:0 auto;padding:clamp(48px,7vw,96px) clamp(16px,4vw,32px);display:grid;grid-template-columns:{{ L.cta }};gap:24px 48px;align-items:center">
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <h2 style="margin:0;font:400 clamp(30px,3.6vw,48px)/1.08 Fraunces,serif;font-variation-settings:'SOFT' 40;letter-spacing:-.018em;color:#FBF7EE;text-wrap:balance">Speak with Sadhak Ji, <em style="font-style:italic;color:#D9B96A">one to one.</em></h2>
+          <span style="font:400 16px/1.6 Manrope,sans-serif;color:#C9D6CF;max-width:560px">Every consultation is read personally, in Hindi or English, with guidance that continues until your doubts are resolved.</span>
+        </div>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;justify-content:{{ L.ctaJ }}">
+          <a href="Booking.dc.html" style="height:52px;padding:0 22px;border-radius:4px;background-color:#D9B96A;color:#0A1F1A;display:inline-flex;align-items:center;gap:9px;font:700 14.5px/1 Manrope,sans-serif;text-decoration:none;white-space:nowrap" style-hover="background-color:#E6CB86;color:#0A1F1A"><span style="width:18px;height:18px;display:block">{{ ic.calendar }}</span>Book a consultation</a>
+          <a href="https://wa.me/919000012345" target="_blank" rel="noopener" style="height:52px;padding:0 20px;border-radius:4px;box-shadow:inset 0 0 0 1px #D9B96A;color:#F6E7BC;display:inline-flex;align-items:center;gap:9px;font:600 14.5px/1 Manrope,sans-serif;text-decoration:none;white-space:nowrap" style-hover="background-color:rgba(217,185,106,.12);color:#FBF7EE"><span style="width:18px;height:18px;display:block">{{ ic.whatsapp }}</span>WhatsApp his office</a>
+        </div>
+      </div>
+    </section>
+  </main>
+  <dc-import name="SiteFooter" hint-size="100%,640px"></dc-import>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script>
+class Component extends DCLogic {
+  state = { vw: window.innerWidth, ready: false, ch: 0 };
+  componentDidMount() {
+    const go = () => { this.un = MKA.bind(this); this.setState({ ready: true }, () => requestAnimationFrame(() => { this.measure(); this.drawArt(0); })); };
+    if (window.MKA && MKA.homeReady) go(); else this._w = setInterval(() => { if (window.MKA && MKA.homeReady) { clearInterval(this._w); go(); } }, 30);
+    this.onScroll = () => { if (this._rq) return; this._rq = requestAnimationFrame(() => { this._rq = 0; this.measure(); }); };
+    window.addEventListener('scroll', this.onScroll, { passive: true }); window.addEventListener('resize', this.onScroll);
+  }
+  componentWillUnmount() { this.un && this.un(); clearInterval(this._w); window.removeEventListener('scroll', this.onScroll); window.removeEventListener('resize', this.onScroll); cancelAnimationFrame(this._rq); if (this._spin) this._spin.cancel(); }
+  componentDidUpdate() { const ch = this.state.ch; if (this._prevCh !== undefined && this._prevCh !== ch) this.drawArt(ch); this._prevCh = ch; }
+  measure() {
+    const root = this._chaps; if (!root) return;
+    const vh = window.innerHeight, items = [...root.querySelectorAll('[data-chap]')]; let best = 0;
+    items.forEach((el, i) => { if (el.getBoundingClientRect().top < vh * .55) best = i; });
+    if (best !== this.state.ch) this.setState({ ch: best });
+    if (this._mf) { const r = root.getBoundingClientRect(), p = MKA.isReduced() ? 1 : Math.max(0, Math.min(1, (vh * .6 - r.top) / Math.max(1, r.height))); this._mf.style.transform = `scaleY(${p})`; }
+  }
+  drawArt(i) {
+    const M = MKA, win = this._win; if (!win) return;
+    const art = win.querySelector(`[data-art="${i}"]`); if (!art) return;
+    const paths = [...art.querySelectorAll('[data-cd]')], yan = art.querySelectorAll('[data-d]');
+    if (!M.isReduced()) {
+      paths.forEach((p, j) => { p.getAnimations().forEach((a) => a.cancel()); p.style.strokeDasharray = '1'; p.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], { duration: 1400, delay: j * 90, easing: M.EASE, fill: 'both' }); });
+      if (yan.length) M.A.drawYantra(art, 1600);
+    }
+    const sp = art.querySelector('[data-spin]');
+    if (sp && !M.isReduced() && !this._spin) this._spin = sp.animate([{ transform: 'rotate(0deg)' }, { transform: 'rotate(360deg)' }], { duration: 90000, iterations: Infinity });
+  }
+  renderVals() {
+    const M = window.MKA, s = this.state, vw = s.vw, mob = vw < 768, desk = vw >= 1024;
+    const L = { hero: vw >= 980 ? 'minmax(0,1.15fr) minmax(0,.85fr)' : 'minmax(0,1fr)', archW: mob ? '300px' : '430px', capL: mob ? '-4px' : '-36px',
+      story: desk ? 'minmax(0,.9fr) minmax(0,1.1fr)' : 'minmax(0,1fr)', sticky: desk, mobLine: !desk, chapCols: desk ? 'minmax(0,1fr)' : '44px minmax(0,1fr)', chapH: desk ? '72vh' : 'auto', chapPb: desk ? '0' : '44px',
+      pil: desk ? 'minmax(0,.9fr) minmax(0,1.1fr)' : 'minmax(0,1fr)', pilPos: desk ? 'sticky' : 'static', pCols: mob ? 'minmax(0,1fr)' : '80px minmax(0,1fr)',
+      books: vw >= 900 ? 'repeat(3,minmax(0,1fr))' : vw >= 600 ? 'repeat(2,minmax(0,1fr))' : 'minmax(0,1fr)', media: vw >= 900 ? 'repeat(3,minmax(0,1fr))' : vw >= 600 ? 'repeat(2,minmax(0,1fr))' : 'minmax(0,1fr)',
+      cta: vw >= 900 ? 'minmax(0,1.3fr) minmax(0,1fr)' : 'minmax(0,1fr)', ctaJ: vw >= 900 ? 'flex-end' : 'flex-start' };
+    if (!M || !s.ready || !M.H) return { L, ic: {}, ch: {}, creds: [], dots: [], arts: [], chapters: [], pillars: [], books: [], media: [] };
+    const ic = M.ic(React), A = M.A, H = M.H, T = H.TIMELINE, c = this._c || (this._c = A.chakra('#D9B96A'));
+    return {
+      L, ic,
+      mandalaInk: M.h(React, `<svg viewBox="-300 -300 600 600" width="100%" height="100%">${M.mandala(296, '#7A5C1C', 1)}</svg>`, null, 'ab-mi'), mandalaGold: M.h(React, `<svg viewBox="-300 -300 600 600" width="100%" height="100%">${M.mandala(296, '#D9B96A', 1)}</svg>`, null, 'ab-mg'),
+      sky: M.h(React, `<svg viewBox="0 0 1440 1400" width="100%" height="100%" preserveAspectRatio="xMidYMid slice">${M.stars(mob ? 18 : 34, 1440, 1400, 'ab-sky')}</svg>`, null, 'ab-sky' + (mob ? 'm' : 'd')),
+      pBg: M.h(React, A.portrait('ab', 'bg'), null, 'ab-pbg'), pFg: M.h(React, A.portrait('ab', 'fg'), null, 'ab-pfg'),
+      ch: { outer: M.h(React, c.outer, null, 'ab-co'), middle: M.h(React, c.middle, null, 'ab-cm'), inner: M.h(React, c.inner, null, 'ab-ci') },
+      creds: [['cert', 'MBA · former MNC professional'], ['flame', '18 years of sadhana'], ['eye', 'Paranormal researcher'], ['scroll', 'Published author']].map(([k, t]) => ({ icon: ic[k], t })),
+      winRef: (el) => { if (el && el !== this._win) { this._win = el; requestAnimationFrame(() => this.drawArt(this.state.ch)); } }, chapsRef: (el) => { if (el && el !== this._chaps) { this._chaps = el; requestAnimationFrame(() => this.measure()); } }, mFillRef: (el) => { if (el) this._mf = el; },
+      railFill: `scaleY(${(s.ch / (T.length - 1)).toFixed(3)})`, activeYr: T[s.ch].yr,
+      dots: T.map((x, i) => ({ n: x.dev, bg: i <= s.ch ? '#D9B96A' : '#0A1F1A', ink: i <= s.ch ? '#0A1F1A' : '#D9B96A', ring: i === s.ch ? '0 0 0 6px rgba(217,185,106,.16)' : 'inset 0 0 0 1px rgba(217,185,106,.5)' })),
+      arts: T.map((x, i) => ({ i, op: i === s.ch ? 1 : 0, el: M.h(React, H.chapter(x.k, 'abw' + x.k), null, 'ab-w-' + x.k) })),
+      chapters: T.map((x, i) => ({ i, yr: x.yr, dev: x.dev, t: x.t, hi: x.hi, d: x.d, note: x.note, op: desk ? (i === s.ch ? 1 : .38) : 1, dotBg: i <= s.ch ? '#D9B96A' : '#0A1F1A', dotInk: i <= s.ch ? '#0A1F1A' : '#D9B96A', art: desk ? null : M.h(React, H.chapter(x.k, 'abm' + x.k), null, 'ab-m-' + x.k) })),
+      pillars: H.PILLARS.map(([k, t, d], i) => ({ i, n: ['i', 'ii', 'iii'][i] + '.', icon: ic[k], t, d })),
+      books: H.BOOKS.map((b, i) => ({ i, hi: b.hi.join(' '), en: b.en, year: b.year, pages: b.pages, line: b.line, cover: M.h(React, H.book(b, 'ab' + b.key), null, 'ab-b-' + b.key), ask: 'https://wa.me/919000012345?text=' + encodeURIComponent('I would like a copy of ' + b.en) })),
+      media: [H.VIDEOS[0], H.VIDEOS[2], H.VIDEOS[4]].map((v, i) => ({ i, en: v.en, dur: v.dur, cat: (H.VCAT[v.cat] || {}).en, href: 'Videos.dc.html#v=' + v.id, thumb: M.h(React, H.thumb(v, 'abv' + v.id), null, 'ab-v-' + v.id) }))
+    };
+  }
+}
+</script>
+</body>
+</html>
