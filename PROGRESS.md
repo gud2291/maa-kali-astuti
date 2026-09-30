@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti
 
-**Phase:** F — Frontend (client demo) · **Next step:** F14
+**Phase:** F — Frontend (client demo) · **Next step:** F15
 Resume in a fresh session with: `/next`
 
 | Step | Title | Status |
@@ -19,7 +19,7 @@ Resume in a fresh session with: `/next`
 | F11 | Kundali ₹99 + Love Calculator | DONE |
 | F12 | Rashifal + Rashi detail | DONE |
 | F13 | Sadhana Courses + Course detail + Rituals | DONE |
-| F14 | About + Videos + 404 | TODO |
+| F14 | About + Videos + 404 | DONE |
 | F15 | Polish, audits, demo handover | TODO |
 | B0 | Backend plan (new plan session) | TODO |
 
@@ -1401,13 +1401,77 @@ Manual QA (F13). `pnpm dev`. No reference shots: compare with `design/Sadhana-Co
 20. The nav "Sadhana Courses" / "Rituals" links and the Home course cards / "Enquire" links now reach real pages (`/sadhana-courses#enquire` lands on the form).
 21. Any error or type error → Fix-list.
 
-### F14 — About + Videos + 404 · TODO
+### F14 — About + Videos + 404 · DONE
 Read: INV §A.18, §A.19, §E.3. Design: `About.dc.html` 28–255 · `Videos.dc.html` 28–238 · `mka-home.js` 185–259, 273–300 · `mka-astro.js` 158–170, 218–225, 249–258 (details: INV §H F14).
 Tasks:
-- [ ] `/about`: hero portrait, sticky 6-chapter story, pillars, books, discourses, contact band.
-- [ ] `/videos?c=&v=`: featured facade player, category tabs, grid, Shorts row + viewer, subscribe band.
-- [ ] `not-found.tsx`: branded 404 with the rotating chakra ("यह मार्ग यहाँ समाप्त होता है — This path ends here").
-Manual QA: sticky story scroll, video switching, Shorts viewer keyboard, 404.
+- [x] `/about`: hero portrait, sticky 6-chapter story, pillars, books, discourses, contact band.
+- [x] `/videos?c=&v=`: featured facade player, category tabs, grid, Shorts row + viewer, subscribe band.
+- [x] `not-found.tsx`: branded 404 with the rotating chakra ("यह मार्ग यहाँ समाप्त होता है — This path ends here").
+
+Built in one session by the main agent (no sub-agent).
+
+Done-notes:
+- **Data seam** (`src/lib/api/content.ts`): `getAbout()` (timeline, pillars, books) and `getVideos()` (cats, videos, shorts, subs). Types `Chapter`, `Book`, `Video`, `Short`. All art was already extracted in F2 (`lib/art/chapters.ts`, `books.ts`, `thumbs.ts`, `portrait.ts`, `public/svg/portrait/fg.svg`, chakra rings).
+- **Routes**:
+  - `src/app/[locale]/about/page.tsx` (static). Discourses = videos[0], [2], [4] (design 251) → `/videos?v=<id>`.
+  - `src/app/[locale]/videos/page.tsx` (static). `?c=` / `?v=` are read on the client once on mount (no `useSearchParams`, so no Suspense needed). Tabs write `?c=`; a pick writes `?c=&v=` (`history.replaceState`).
+  - `src/app/[locale]/not-found.tsx` + `src/app/[locale]/[...rest]/page.tsx` (catch-all → `notFound()`), so every unknown URL shows the branded 404 inside the site chrome. `notFound()` from product/course/rashi pages lands here too.
+  - chrome-config already had `/about` and `/videos`.
+- **About** (`src/components/sections/about/`):
+  - `AboutSections.tsx` (server): `AboutHero` (ink mandala, credential pills, sheen "Book a consultation" → `/consultations`, "Watch his discourses" → `/videos`, arch portrait with chakra 120/−90/60 s, caption), `AboutStory`, `AboutPillars` (heading sticky ≥1024), `AboutBooks` (WhatsApp "Ask about a copy" with the book title), `AboutMedia`, `AboutCta` (Book → `/book/kundali`, because the bare `Booking.dc.html` link has no service; WhatsApp).
+  - `StoryChapters.tsx` (client): active chapter = last one whose top < .55·vh.
+    - ≥1024: sticky dots + rail fill (ch/5, 500 ms) + the arch window with the 6 arts cross-fading (700 ms) + year pill; chapters are 72vh, inactive ones .38.
+    - <1024: per-chapter dot + 180px arch art, and the gold line fill (.6·vh).
+    - On change the window redraws `[data-cd]` (1400 ms, +90 ms) + the yantra (drawYantra 1600). The "today" chakra spins 90 s/turn once started, paused offscreen/hidden.
+    - Desktop and mobile arts are both in the DOM (CSS switch at lg) with separate uids (`abw*` / `abm*`).
+  - Breakpoints: hero 2 cols at ≥980 (`min-[980px]`), books/media 2 cols ≥600 (`min-[600px]`) and 3 cols ≥900, CTA row ≥900.
+- **Videos** (`src/components/sections/videos/`):
+  - `VideosLibrary.tsx` (client): hero header + player + library + Shorts in one island (grid picks drive the player). The player logic mirrors Home `VideoPlayer` (facade, YT_IDS → nocookie iframe, preview bar/clock, pauses offscreen/hidden). A pick scrolls to #player (−60) and auto-starts; the info fades 350 ms; a category change staggers the cards (y14, 480 ms, +50 ms). "Now playing" badge on the current card while playing.
+  - Shorts: stories row (<768, sand ring gap) + 9:16 rail (46% / 30% / six across ≥1024); both open the existing `ShortsViewer` (uid `vsv`).
+  - `SubscribeBand.tsx` (server) uses the exported `SubButton` (YouTube URL from `SOCIAL` once confirmed, else the info toast).
+  - All 12 video + 6 short thumbnail strings go to the client (the grid shows all of them). This is the heaviest page payload on the site; revisit in F15 if it feels slow (e.g. server-rendered thumbs passed as children).
+- **i18n**: new namespaces `about`, `videos`, `notFound` in both files. /hi: Fraunces display text and chapter/pillar/book/video data stay English (F9 rule); Manrope UI text is Hindi (`[HI review]`).
+- Nothing was run (no dev / build / tsc / lint).
+
+Manual QA (F14). `pnpm dev`. No reference shots: compare with `design/About.dc.html` and `design/Videos.dc.html` opened in the browser.
+1. **`/about` at 1440px, hero**
+   - Faint ink mandala top-left. Breadcrumb Home / About Sadhak Ji. Eyebrow "॥ THE FOUNDER ॥ · साधक पवन पाण्डेय", h1 "Welcome to a space… *modern clarity.*", Devanagari line, intro.
+   - 4 credential pills with gold icons.
+   - "Book a consultation" (emerald; gold sheen sweeps on hover) → /consultations. "Watch his discourses" → /videos.
+   - Right: arch portrait (430px) with twinkling stars, three chakra rings turning, the silhouette on top, brass outline, soft shadow below, and the name caption card at the bottom-left.
+2. **Story (night band)**
+   - Eyebrow "01 — HIS STORY · जीवन यात्रा", h2 "Six chapters, *one practice.*".
+   - The left column sticks (top 110): dots १–६ on a rail, the arch window and the year pill.
+   - Scroll: the active chapter is opaque (others faded), dots fill gold, the rail fill steps down, the art cross-fades and draws itself (lines ~1.4 s; chapter ३ yantra draws with a glow; chapter ६ chakra ring slowly turns).
+   - Year pill: 2001–2008 → 2008 → 2008–2016 → 2012 onwards → 2019 → Today.
+3. **Pillars**: the left heading sticks; 3 rows "i. ii. iii." with round icons and text.
+4. **Books (sand)**: 3 covers; hover lifts 6px and tilts −1°. "Ask about a copy" opens WhatsApp with "I would like a copy of <title>".
+5. **Discourses**: 3 cards (v1, v3, v5) with play disc + duration; hover lifts 3px; click → `/videos?v=v3` etc. "All discourses and Shorts" → /videos.
+6. **Contact band (emerald)**: gold mandala right; gold "Book a consultation" → /book/kundali; "WhatsApp his office".
+7. **`/about` at 390px**
+   - Hero stacks, arch 300px.
+   - Story: no sticky column; each chapter has its dot and a small arch art, and the gold line fills down as you scroll.
+   - Pillars 1 column; books/media 1 column (2 at ≥600). No horizontal scroll.
+8. **`/videos` at 1440px, player**
+   - Night band, stars, mandala top-right. Breadcrumb Home / Videos, eyebrow, h1 "Discourses from the *sadhana* path.", Devanagari line.
+   - Right of the header: "1.2 lakh subscribers · a new discourse every Sunday" + gold "Subscribe on YouTube" (info toast).
+   - Player (8/12) with the thumbnail, 92px play disc and duration. Info column: category pill, title, Devanagari, description, Published / Length, Share (WhatsApp text) and "Ask Sadhak Ji directly" → /consultations.
+   - Play → thumb dims, the gold bar fills slowly, the clock ticks; pause / resume works. Scroll away or switch tab → it pauses.
+9. **Library**
+   - Tabs: All 12 / Pravachan 3 / Sadhana 3 / Remedies 3 / Q&A 3 with Devanagari names; the active one has the brass underline. Switching re-staggers the cards and the URL becomes `?c=…`.
+   - Click a card → smooth scroll to the player (60px offset), the info fades in, it starts playing, the card shows "NOW PLAYING", URL `?c=…&v=…`.
+10. **Deep links**: `/videos?v=v7` opens with v7 featured (idle); `/videos?c=qa` opens on Q&A; bad values fall back to All / v1.
+11. **Shorts (sand)**
+    - 6 tall cards across at 1440 (30% at tablet, 46% on mobile, with snap).
+    - Click → full-screen viewer: segments fill per short and auto-advance; left/right tap zones; ←/→ keys; Esc closes; focus starts on Close; the page doesn't scroll behind.
+12. **Subscribe band (emerald)**: YouTube disc, "New discourses every Sunday…", "@SadhakPawanPandey · 1.2 lakh subscribers", Subscribe + "Get new videos on WhatsApp".
+13. **`/videos` at 390px**: header stacks; player full width with the info below; tabs scroll sideways; grid 1 column (2 at ≥640); round gold story rings above the rail. No horizontal page scroll.
+14. **404**
+    - Open `/xyz`, `/hi/abc`, `/shop/xyz`, `/sadhana-courses/kali`. Header/footer stay.
+    - Turning chakra around an italic "404", "॥ PAGE NOT FOUND ॥", "यह मार्ग यहाँ समाप्त होता है", h1 "This path ends *here.*", lotus rule, 4 buttons (Home, Shop, Book, WhatsApp). Tab title "Page not found".
+15. **`/hi/about`, `/hi/videos`, `/hi/xyz`**: eyebrows, paragraphs, pills, buttons and labels are Hindi; h1/h2 and chapter/book/video data stay English.
+16. **Reduced motion ON**: no chakra spin, no chapter draw/spin, the mobile story line is full, the player bar steps each second, the Shorts segment shows full with no auto-advance, reveals just show.
+17. Any error or type error → Fix-list.
 
 ### F15 — Polish & handover · TODO
 Read: PROGRESS Fix-list, `docs/CODING-RULES.md`.
@@ -1532,3 +1596,10 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
   - Fee terms: ₹50,000 all-inclusive, pay only after the eligibility conversation, UPI/netbanking/bank transfer, instalments 3 × ₹16,667 (marked [confirm] in the design), refund in full until diksha.
   - Rituals: the six ritual examples (design pill "Placeholder examples · to confirm with client"), the "What you receive" inclusions (photo/video updates, prasad and raksha sutra by post, 40 days of guidance), and the FAQ answers (durations 1 to 21 days, attending in person).
   - Enrollment policy line "A sadhana is not bought…" is attributed to "Maa Kali Astuti · enrollment policy".
+- About & Videos (F14):
+  - [HI review] all the `about`, `videos` and `notFound` Hindi in `messages/hi.json` is ours; story, pillars, books and video data stay English.
+  - Biography from the prototype: MBA + MNC years (2001–2008), turning point 2008, sadhana 2008–2016, paranormal research from 2012, founding 2019, "18 years of sadhana". Needs Sadhak Ji's confirmation.
+  - Portrait is a drawn placeholder; a real photo is needed (hero arch + chapter arts are illustrations).
+  - The 3 books (titles, years, page counts, lines) are placeholders; "Ask about a copy" goes to the placeholder WhatsApp.
+  - Videos: the 12 titles, dates, durations and 6 Shorts, "1.2 lakh subscribers", "@SadhakPawanPandey" and "a new discourse every Sunday" come from the prototype. Real YouTube ids (`YT_IDS` in `src/lib/site.ts`) and the channel URL (`SOCIAL`) are needed; until then the player runs the preview and Subscribe shows a toast.
+  - 404 has no design file: built from the chakra + brand tokens; copy "This path ends here" is ours.

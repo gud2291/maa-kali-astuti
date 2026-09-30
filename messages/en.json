@@ -1833,5 +1833,122 @@
       "title": "Tell us what is <em>happening.</em>",
       "body": "Everything you write is read only by Sadhak Ji and his office. You will hear back within two working days, whether or not a ritual is advised."
     }
+  },
+  "about": {
+    "meta": {
+      "title": "About Sadhak Pawan Pandey",
+      "description": "From an MBA and multinational companies to eighteen years of sadhana and paranormal research: the story of Sadhak Pawan Pandey, founder of Maa Kali Astuti."
+    },
+    "crumbs": {
+      "label": "Breadcrumb",
+      "home": "Home",
+      "here": "About Sadhak Ji"
+    },
+    "hero": {
+      "eyebrow": "॥ The founder ॥ · <hi>साधक पवन पाण्डेय</hi>",
+      "title": "Welcome to a space where ancient spiritual wisdom meets <em>modern clarity.</em>",
+      "deva": "साधना से स्पष्टता तक",
+      "intro": "Sadhak Pawan Pandey holds an MBA and spent years in multinational companies before giving his life to sadhana, mantra and paranormal research under enlightened mentors. He founded Maa Kali Astuti to bring that practice to seekers honestly: as a science, without superstition or fear.",
+      "creds": [
+        "MBA · former MNC professional",
+        "18 years of sadhana",
+        "Paranormal researcher",
+        "Published author"
+      ],
+      "book": "Book a consultation",
+      "watch": "Watch his discourses",
+      "capName": "Sadhak Pawan Pandey",
+      "capRole": "Founder, Maa Kali Astuti · 18 years of sadhana",
+      "portraitAlt": "Portrait placeholder for Sadhak Pawan Pandey"
+    },
+    "story": {
+      "eyebrow": "01 — His story · <hi>जीवन यात्रा</hi>",
+      "title": "Six chapters, <em>one practice.</em>"
+    },
+    "approach": {
+      "eyebrow": "02 — The approach",
+      "title": "Science, <em>not</em> superstition.",
+      "deva": "अंधविश्वास नहीं, विज्ञान",
+      "intro": "Superstition is rejected here. Spirituality is treated as a time-tested science: under proper guidance, the conscious practice of mantra and inner energy changes how a life is lived and how its difficulties are carried."
+    },
+    "books": {
+      "eyebrow": "03 — Published works",
+      "title": "Written from <em>practice.</em>",
+      "deva": "प्रकाशित कृतियाँ",
+      "intro": "Books drawn from his own sadhana and case notes. Copies are available through Sadhak Ji’s office.",
+      "ask": "Ask about a copy",
+      "askText": "I would like a copy of {title}"
+    },
+    "media": {
+      "eyebrow": "04 — Hear him speak",
+      "title": "Discourses on <em>YouTube.</em>",
+      "all": "All discourses and Shorts"
+    },
+    "cta": {
+      "label": "Speak with Sadhak Ji",
+      "title": "Speak with Sadhak Ji, <em>one to one.</em>",
+      "sub": "Every consultation is read personally, in Hindi or English, with guidance that continues until your doubts are resolved.",
+      "book": "Book a consultation",
+      "wa": "WhatsApp his office"
+    }
+  },
+  "videos": {
+    "meta": {
+      "title": "Discourses & Shorts",
+      "description": "Discourses from the sadhana path by Sadhak Pawan Pandey: pravachan, sadhana, remedies and seekers’ questions, plus one-minute Shorts."
+    },
+    "crumbs": {
+      "label": "Breadcrumb",
+      "home": "Home",
+      "here": "Videos"
+    },
+    "hero": {
+      "eyebrow": "॥ Discourses ॥ · <hi>प्रवचन एवं शॉर्ट्स</hi>",
+      "title": "Discourses from the <em>sadhana</em> path.",
+      "deva": "साधना पथ के प्रवचन, सरल भाषा में",
+      "subs": "{subs} · a new discourse every Sunday"
+    },
+    "player": {
+      "play": "Play: {title}, {dur}",
+      "published": "Published",
+      "length": "Length",
+      "share": "Share",
+      "shareText": "{title} — Sadhak Pawan Pandey, Maa Kali Astuti",
+      "ask": "Ask Sadhak Ji directly",
+      "pauseL": "Pause",
+      "playL": "Play",
+      "preview": "Preview playback · the YouTube player loads here in the live site",
+      "frame": "YouTube video player: {title}"
+    },
+    "library": {
+      "eyebrow": "01 — The library",
+      "title": "Every discourse, <em>by theme.</em>",
+      "tabs": "Video categories",
+      "play": "Play {title}, {dur}",
+      "now": "Now playing"
+    },
+    "shorts": {
+      "eyebrow": "02 — Shorts",
+      "title": "One answer, <em>one minute.</em>",
+      "hint": "Tap a Short to watch; tap the right edge for the next one."
+    },
+    "sub": {
+      "label": "Subscribe",
+      "title": "New discourses every Sunday, answered questions every month.",
+      "handle": "@SadhakPawanPandey · {subs}",
+      "wa": "Get new videos on WhatsApp",
+      "waText": "Send me new discourses"
+    }
+  },
+  "notFound": {
+    "meta": "Page not found",
+    "eyebrow": "॥ Page not found ॥",
+    "deva": "यह मार्ग यहाँ समाप्त होता है",
+    "title": "This path ends <em>here.</em>",
+    "body": "The page you were looking for has moved or never existed. Return to the path from here.",
+    "home": "Back to Home",
+    "shop": "Explore the shop",
+    "consult": "Book a consultation",
+    "wa": "Ask on WhatsApp"
   }
 }

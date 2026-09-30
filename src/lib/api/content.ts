@@ -1,4 +1,4 @@
-/* THE BACKEND SEAM for editorial content (courses, rituals; about and videos join in F14).
+/* THE BACKEND SEAM for editorial content (courses, rituals, about, videos).
    Components call these async getters and never import the JSON themselves. Phase B: CMS reads. */
 import coursesData from "@/lib/data/courses.json";
 import ritualsData from "@/lib/data/rituals.json";
@@ -50,4 +50,37 @@ export type Review = { q: string; n: string; c: string };
 /** Kundali ₹99 reader reviews (A.K99REV, mka-astro.js 334–339). */
 export async function getKundaliReviews(): Promise<Review[]> {
   return (await import("@/lib/data/kundali99.json")).default.reviews;
+}
+
+/* ---------------- About (F14) ---------------- */
+
+export type Chapter = { k: string; yr: string; dev: string; t: string; hi: string; d: string; note: string };
+export type Book = { key: string; hi: string[]; en: string; sub: string; year: string; pages: string; line: string };
+
+/** About page data (mka-home.js 242–246, 275–287): the six story chapters, the three pillars
+ *  [icon, title, description] and the three published books. */
+export async function getAbout() {
+  const [about, books] = await Promise.all([import("@/lib/data/about.json"), import("@/lib/data/books.json")]);
+  return {
+    timeline: about.default.timeline as Chapter[],
+    pillars: about.default.pillars as IconRow[],
+    books: books.default as Book[],
+  };
+}
+
+/* ---------------- Videos (F14) ---------------- */
+
+export type Video = { id: string; cat: string; en: string; hi: string[]; dur: string; date: string; desc: string };
+export type Short = { id: string; en: string; hi: string[]; dur: string };
+
+/** Video library (mka-home.js 187–211): categories [key, en, hi], the twelve discourses, six
+ *  Shorts and the subscriber line. [client-confirm] Real titles / ids come from the channel. */
+export async function getVideos() {
+  const v = (await import("@/lib/data/videos.json")).default;
+  return {
+    cats: v.cats as [string, string, string][],
+    videos: v.videos as Video[],
+    shorts: v.shorts as Short[],
+    subs: v.subs,
+  };
 }
