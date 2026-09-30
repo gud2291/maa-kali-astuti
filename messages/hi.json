@@ -399,6 +399,127 @@
       "note2": "big blessings.",
       "photos": "Product photos",
       "photoAria": "Show photo {n} of 4"
+    },
+    "rashi": {
+      "eyebrow": "04 — <d>आज का राशिफल</d> · Daily Rashifal",
+      "l1": "Your rashi,",
+      "l2": "<em>read for today.</em>",
+      "intro": "Read by Chandra rashi, the sign your Moon was in at birth. The wheel moves to the next rashi every few seconds; tap any rashi to read it.",
+      "wheelAria": "Rashi wheel. Select a rashi, or use the arrows below.",
+      "prev": "Previous rashi",
+      "next": "Next rashi",
+      "pause": "Pause the wheel",
+      "resume": "Resume the wheel",
+      "periodAria": "Forecast period",
+      "tabs": {
+        "today": "Today",
+        "week": "Week",
+        "month": "Month"
+      },
+      "tabsDeva": {
+        "today": "आज",
+        "week": "सप्ताह",
+        "month": "माह"
+      },
+      "meta": "{west} · {dates} · Lord {lordHi} ({lord})",
+      "areas": {
+        "love": "Love",
+        "career": "Career",
+        "health": "Health",
+        "finance": "Finance"
+      },
+      "meterAria": "{area}: {n} of 5",
+      "lucky": "Lucky number",
+      "colour": "Colour",
+      "gemstone": "Gemstone",
+      "seeGems": "See gemstones",
+      "remedy": "Remedy of the day",
+      "full": "Read full Rashifal",
+      "kundali": "Get personal Kundali ₹99",
+      "railAria": "Rashi cards. Swipe to turn the dial.",
+      "readFull": "Read in full",
+      "overall": "Overall {n} of 5"
+    },
+    "tools": {
+      "eyebrow": "05 — Free astro tools",
+      "title": "Begin with your <em>own chart.</em>",
+      "deva": "अपनी कुंडली से शुरुआत करें",
+      "intro": "The Kundali preview is free. You pay ₹99 only to download the full report. The Love Calculator is a light reading for fun.",
+      "k": {
+        "eyebrow": "Janam Kundali · <d>जन्म कुंडली</d>",
+        "title": "Download your complete Janam Kundali — <em>₹99</em>",
+        "mrp": "MRP ₹499",
+        "off": "80% OFF",
+        "tax": "incl. all taxes",
+        "name": "Name",
+        "dob": "Date of birth",
+        "tob": "Time of birth",
+        "unknown": "I don’t know my exact time",
+        "place": "Place of birth",
+        "placeHint": "Town or city",
+        "btn": "Generate My Kundali",
+        "btnBusy": "Calculating…",
+        "btnAgain": "Update my chart",
+        "privacy": "Your details are used only to prepare this report.",
+        "chartAria": "North Indian Lagna chart",
+        "gen": "Calculating planetary positions…",
+        "lagna": "Lagna",
+        "moon": "Moon sign",
+        "nak": "Nakshatra",
+        "noon": "Calculated for 12:00 noon. Planet signs are reliable; the Lagna may differ.",
+        "report": "Get the 28-page report · ₹99",
+        "idle": "A 28-page report: Lagna chart, Navamsa, Dasha periods, Manglik check, gemstones and remedies. The chart itself is drawn free from your details.",
+        "err": {
+          "nameShort": "Enter the name for the report",
+          "dobEmpty": "Enter your date of birth",
+          "dobBad": "Check the date of birth",
+          "tobEmpty": "Enter the time of birth, or tick “I don’t know”",
+          "placeEmpty": "Enter your place of birth",
+          "placePick": "Choose a town from the list"
+        }
+      },
+      "l": {
+        "eyebrow": "Free tool · <d>प्रेम मिलान</d>",
+        "title": "Love Calculator <em>by Name.</em>",
+        "a": "Your name",
+        "b": "Partner’s name",
+        "err": "Please enter both names, at least two letters each.",
+        "btn": "Calculate",
+        "btnBusy": "Reading the numbers…",
+        "sr": "{pct} percent, {label}. {line}",
+        "book": "Book a Kundali Milan consultation",
+        "again": "Try another pair",
+        "note": "For fun — for true compatibility, get Kundali Milan by Sadhak Ji."
+      }
+    },
+    "bento": {
+      "eyebrow": "06 — Consultations",
+      "l1": "Personal guidance,",
+      "l2": "<em>one seeker</em> at a time.",
+      "deva": "एक समय में, एक साधक",
+      "intro": "Sadhak Ji studies your chart, palms or question before the session, never on the spot. Hindi or English, by call, video, WhatsApp or a written report.",
+      "compare": "Compare all four",
+      "most": "Most booked · with satisfaction guarantee",
+      "from": "from {price}",
+      "book": "Book now",
+      "how": "How a consultation works"
+    },
+    "intent": {
+      "eyebrow": "07 — Shop by intention",
+      "l1": "What are you",
+      "l2": "<em>seeking</em> today?",
+      "deva": "आप क्या चाहते हैं?",
+      "tablist": "Intentions",
+      "lines": {
+        "wealth": "For steady income, savings that stay and a business that grows.",
+        "protection": "For a home and family shielded from negativity, evil eye and hidden opposition.",
+        "love": "For warmth at home, harmony in marriage and relationships that last.",
+        "peace": "For a quieter mind, deeper sleep and a steadier daily practice.",
+        "health": "For vitality, balance and recovery, alongside the care of your doctor.",
+        "courage": "For the confidence to act, speak up and face what you have been avoiding.",
+        "clarity": "For focus in study and work, and clear decisions when paths divide."
+      },
+      "all": "Shop everything for {name}"
     }
   }
 }

@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti
 
-**Phase:** F — Frontend (client demo) · **Next step:** F6
+**Phase:** F — Frontend (client demo) · **Next step:** F7
 Resume in a fresh session with: `/next`
 
 | Step | Title | Status |
@@ -11,7 +11,7 @@ Resume in a fresh session with: `/next`
 | F3 | Data layer + stores + ProductCard | DONE |
 | F4 | Global chrome (header, menus, cart drawer, footer) | DONE |
 | F5 | Home A — hero → 12 Nag spotlight | DONE |
-| F6 | Home B — rashifal wheel → floating stones | TODO |
+| F6 | Home B — rashifal wheel → floating stones | DONE |
 | F7 | Home C — courses → newsletter | TODO |
 | F8 | Shop + category template | TODO |
 | F9 | Consultations + consultation detail + InquiryForm | TODO |
@@ -531,16 +531,100 @@ Manual QA (F5). `pnpm dev` → `/`, compare with `design/shots/h1.jpg`–`h4.jpg
 10. Switch to another tab for a while, then come back: the slider and animations resume without jumping several slides.
 11. Any error or type error → put it in the Fix-list.
 
-### F6 — Home B · TODO
+### F6 — Home B · DONE
 Read: INV §A.1 (§6–9), §E.1 S8 S9 S12 S13. Design: `Home.dc.html` 346–645 + script 1081–1247 · `mka-astro.js` 9–151, 154–200, 260–280, 298–318, 342–386 · `mka-home.js` 262–265 · `mka-core.js` 528–533 (details: INV §H F6).
 Tasks:
-- [ ] `src/lib/astro/*`: port RASHI, predict, sunRashi, kundali (approx), chart, love, nameNum.
-- [ ] RashiWheel (S8: 4s spring step, click-to-spin, pause 12s, pause button, keyboard) + detail panel (tabs, meters, lucky trio, gemstone cross-sell).
-- [ ] Mobile half-dial synced to the swipe rail.
-- [ ] Astro tools pair: Kundali mini form + self-drawing chart (S12), and Love Calculator with converging medallions and the ring fill (S13).
-- [ ] Consultations bento + how-it-works strip.
-- [ ] Intentions: 10 floating stones (S9, mouse depth), intention pills revealing 4 products.
-Manual QA: wheel auto-cycle and click, mobile dial swipe, love result, chart draw.
+- [x] `src/lib/astro/*`: port RASHI, predict, sunRashi, kundali (approx), chart, love, nameNum.
+- [x] RashiWheel (S8: 4s spring step, click-to-spin, pause 12s, pause button, keyboard) + detail panel (tabs, meters, lucky trio, gemstone cross-sell).
+- [x] Mobile half-dial synced to the swipe rail.
+- [x] Astro tools pair: Kundali mini form + self-drawing chart (S12), and Love Calculator with converging medallions and the ring fill (S13).
+- [x] Consultations bento + how-it-works strip.
+- [x] Intentions: 10 floating stones (S9, mouse depth), intention pills revealing 4 products.
+Done-notes:
+- **Page:** `src/app/[locale]/page.tsx` now renders `… NagSpotlight → RashifalSection → AstroTools → ConsultBento → Intentions`. **F7 appends §10–17 after `<Intentions />`.** `BUILD_NOW` goes to the date-dependent sections.
+- **Astro logic** (`src/lib/astro/`, pure, works on server and client):
+  - `rashi.ts`: `RASHI`, `rashiByKey`, `sunRashi`, `todayRashi(now)`, `compatible` (for F12).
+  - `predict.ts`: `PERIODS`, `AREAS`, `periodDate(p, now)`, `predict(r, p, now)`. The OPEN/AREA templates are closure constants in the prototype, so they live in this file (the extractor cannot read them). **Always pass `now`.**
+  - `kundali.ts`: `GRAHA`, `NAK`, `CITIES`, `DEMO_K` (precomputed JSON), `placeSearch`, `kundali({dob, tob, unknown, city})` — a 1:1 port of the approximate maths (IST for every city).
+  - `chart.ts`: `CHART_LINES` + `chartLayout(K, hi)` (sign numbers and planet label positions).
+  - `love.ts`: `nameNum`, `love(a, b)`, `initial`, `NUMP`, `KOOTA`, `hasTwoLetters`.
+  - `src/lib/validation/astro.ts`: zod checks that return error codes (`checkKundali(draft, todayIso)`, `checkLove(a, b)`); the components map codes to `home.tools.k.err.*`.
+- **Signature pieces** (`src/components/signature/`), reusable for F9–F12:
+  - `KundaliChart.tsx`: JSX North-Indian chart (`K, col, ink, sub, fs, sw, hi, label`); lines carry `data-cl`, labels `data-pl`.
+  - `RashiGlyph.tsx`: one of the 12 glyphs (`k, col, sw`).
+  - `RashiWheel.tsx`: `WheelLayers` (nak img spin 240 s · graha ring spin −320 s · rashi ring `[data-rot]` · ॐ centre · pointer img) + `wheelActive(root, i)`.
+  - `useRashiCycle(start, mobile)`: the S8 engine → `{idx, playing, toggle, hold, prev, next, onWheelClick, onRail, refs: {wheelEl, wheelRing, dialEl, dialRing, railEl}}`.
+    - The 4 s tick runs only when playing, not held (12 s), ≥25% in view, the tab is visible and motion is allowed.
+    - Desktop turns the ring the shortest way (forward when auto-stepping), 900 ms with a ±1.8° overshoot; mobile smooth-scrolls the rail and the dial follows the scroll.
+    - **F12 Rashifal should reuse it** (same S8).
+  - `components/motion/draw.ts`: `prime(root)`, `drawChart(root, {dur, delay})`, `onView(el, fn, threshold)` (S12; also for palm / Lo Shu / yantra strokes later).
+- **Sections** (`src/components/sections/home/`):
+  - `RashifalSection.tsx` (server: 30/16 seeded stars `hm-rsky`, mandala, gemstone map per rashi) → `RashifalWheel.tsx` (client).
+    - Both layouts are rendered; CSS shows the wheel + panel ≥768 and the half-dial + rail <768 (`w900`: 2 columns and a 560px wheel).
+    - The start rashi is today's sun sign: the build date in the HTML, the viewer's date after hydration.
+    - Panel: Today/Week/Month tabs (roving ←/→), meters, lucky number / colour / gemstone (→ bracelet PDP), remedy, "Read full Rashifal" → `/rashifal/<key>?p=` (`routes.rashiHref`, 404 until F12).
+    - ←/→ on the wheel controls step; focus, hover and touch hold the cycle.
+  - `AstroTools.tsx` (server header + grid 7fr/5fr ≥1100) → `KundaliMini.tsx` and `LoveMini.tsx` (clients).
+    - Kundali: the demo chart is primed and drawn at 35% in view. Generate → validation, dim to .18 (400 ms), "Calculating…" for 1.3 s, then the new chart draws and the facts stagger in. The place combobox also takes ↑/↓/Enter/Esc (the prototype was mouse-only). The date `max` is the viewer's today.
+    - Love: medallion offset = `var(--lw) × g`, where `--lw` is the prototype's stage-width estimate written in CSS (`max(260px, …)`, plus the lg formula), so the server HTML already matches. Converge 700 ms → +650 ms ring 1400 ms EASE + count-up → +1450 ms result stagger. "Book a Kundali Milan consultation" → `/book/kundali-reading?tier=premium`.
+  - `ConsultBento.tsx` (server): Kundali tile (static demo chart at 20%, seal `spin:80`), Palmistry (brass palm, no labels), Tarot (`glow:5`), Numerology (Lo Shu), then "How a consultation works" (१–४). The art is static, as in the prototype (gotcha 10).
+  - `Intentions.tsx` (server; picks the 4 products per intention with `INTENT_RX`) → `IntentPicker.tsx` (client).
+    - Stones: 10 desktop / 5 mobile (`STONES_DESK/MOB` in `home-data.ts`), mouse depth pull ≥768.
+    - Pills use roving ←/→; the cards rise in (520 ms, 70 ms stagger).
+    - **Mobile product row:** the prototype's `width:100%` + `margin:0 -16px` inside a centred flex column cancels out, so the rail does *not* bleed to the screen edge. We match that rendered result.
+- **Extractor:** `scripts/extract-design.mjs` now tokenises the rashi-segment ids (`rashi-<key>-__U__`), because the wheel and the dial are both in the DOM. Re-ran it; only `src/lib/art/wheel.ts` changed.
+- **Routes / utils:** new `rashiHref(key, p?)` in `src/lib/routes.ts`; `src/lib/utils/roving.ts` (`rovingTarget`) for tablists.
+- **i18n:** new `home.rashi`, `home.tools` (`k`, `l`), `home.bento`, `home.intent`.
+  - As in the design, §6–9 stay **English on `/hi`**: each section has `lang="en"`, and the Devanagari subtitles keep `lang="hi"`. The `hi.json` values are English copies (added to Client-confirm).
+  - Rashi, prediction, service and step copy stays in the data files (English content, as designed).
+- Nothing was run except Prettier and `node scripts/extract-design.mjs` (no dev / build / tsc / lint).
+
+Manual QA (F6). `pnpm dev` → `/`, scroll past the 12 Nag spotlight. No reference shot covers §6–9 (`h1–h4` are §1–5), so compare with `design/Home.dc.html` opened in the browser.
+1. **Rashifal, desktop 1440px**
+   - Night band with twinkling gold stars and a faint mandala bottom-right.
+   - Header: "04 — आज का राशिफल · DAILY RASHIFAL" and "Your rashi, / *read for today.*" (the lines mask up). On the right: today's date (e.g. "Wednesday, 30 Sep 2026") and the intro line.
+   - Wheel on the left (560px): outer ring with 12 glyphs and Devanagari names; the nakshatra ring turns slowly one way and the graha ring (सू चं मं …) the other way; ॐ centre; gold pointer at the top. Today's rashi sits under the pointer, highlighted (pale-gold glyph + name, soft fill).
+   - Every ~4 s the ring springs to the next rashi (small overshoot) and the panel fades in the new reading.
+   - Hover the wheel → the cycle waits ~12 s. Click any rashi → it turns the short way to the pointer.
+   - Prev / next step. Pause → play icon, and the cycle stops; resume starts it again. Tab to a control and press ← / →.
+   - Panel:
+     - Today / Week / Month tabs (gold when active; ← / → move);
+     - glyph circle, name + Devanagari, "Aries · 14 Apr – 14 May · Lord Mangal (Mars)";
+     - reading text and 4 meters with 5 dots;
+     - lucky number, colour swatch, gemstone link (→ bracelet page, coming soon);
+     - remedy with a diya icon;
+     - "Read full Rashifal" (→ `/rashifal/<rashi>?p=…`, 404 until F12) and "Get personal Kundali ₹99".
+   - The same day always gives the same text; the Week and Month texts differ from Today.
+2. **Rashifal, tablet 820px:** one column (a 460px wheel above the panel).
+3. **Rashifal, mobile 390px**
+   - The top half of a big dial peeks out and fades into the night at the bottom.
+   - Card rail below; the active card has a gold ring. Swipe → the dial turns with your finger and the dots follow.
+   - Every ~4 s (hands off for 12 s after a touch) the rail glides to the next card; after Meena it glides back to Mesha.
+   - "Read in full →" on each card; the outlined "Get personal Kundali ₹99" below.
+4. **Astro tools, desktop:** sand band; the emerald Kundali card (gold corners, faint mandala) on the left, the ivory Love card (rose top bar) on the right.
+   - Kundali, on scroll: the chart lines draw one by one, then the planet labels pop in.
+   - Submit empty → "Enter the name for the report", "Enter your date of birth", "Enter your place of birth" in rose, with pink rings. Tick "I don’t know my exact time" → the time field greys out.
+   - Type "var" → the list shows Varanasi; ↓ + Enter or a click picks "Varanasi, Uttar Pradesh". Type "xyz" and submit → "Choose a town from the list".
+   - Valid submit → "Calculating…", the chart dims, "Calculating planetary positions…", then the new chart draws and the Lagna / Moon sign / Nakshatra boxes rise in, plus "Get the 28-page report · ₹99". With the unknown-time tick the noon note shows. The button now reads "Update my chart".
+   - Love: two medallions (rose + emerald) showing "·". Typing names shows the initials and pulls them slightly closer.
+   - Calculate with one empty name → red rings + "Please enter both names…".
+   - Valid → "Reading the numbers…", the medallions overlap, the gold ring fills while the % counts up, then e.g. "84% · Harmonious Bond / मधुर बंधन" + a line. The same pair always gives the same %.
+   - Editing a name resets. "Try another pair" clears both. "Book a Kundali Milan consultation" → `/book/kundali-reading?tier=premium` (404 until F10).
+5. **Astro tools, other widths:** 1024px → the two cards stack at full width. 700px → chart and form side by side inside the Kundali card. 390px → chart on top, form below; the love name fields stack below 480px.
+6. **Consultations bento, desktop**
+   - Big dark Kundali tile (2×2) with a faint chart and a slowly turning "SATISFACTION GUARANTEE" seal.
+   - Palmistry (wide, palm drawing on the right), Tarot (sand, glowing cards), Numerology (dark, Lo Shu grid). Mode icons show a tooltip on hover.
+   - "Book now" → `/book/<service>`; names → `/consultations/<service>`; "Compare all four" → `/consultations` (404 until F9/F10).
+   - Below: a dashed rule, "HOW A CONSULTATION WORKS" and steps १ २ ३ ४ in 4 columns (2 on tablet, 1 on mobile).
+7. **Shop by intention, desktop**
+   - 10 gemstones float around the heading; move the mouse → they drift toward it by depth, smoothly.
+   - 7 pills, Wealth active (dark). Click Love → the line changes and 4 new cards rise in one by one. ← / → move between pills.
+   - "Shop everything for love →" → `/shop?intent=love` (404 until F8).
+8. **Shop by intention, mobile 390px:** 5 small stones along the top, big top padding, wrapping pills; the cards are a swipe row (64% wide) inside the content width.
+9. **`/hi`:** §6–9 stay English with their Devanagari subtitles (as in the design); no layout breaks.
+10. **Reduced motion ON:** the wheel never auto-steps (buttons and clicks jump instantly); no star, ring or stone motion; charts show complete; the love ring and number jump straight to the result; no card or panel fades.
+11. Switch to another tab for a while and come back: the wheel resumes without skipping several rashis.
+12. Any error or type error → Fix-list.
 
 ### F7 — Home C · TODO
 Read: INV §A.1 (§10–17), §A.6, §E.1 S11, §E.3. Design: `Home.dc.html` 647–933 + script 1248–1365 · `FaqList.dc.html` 15–59 · `mka-home.js` 185–300 · `mka-astro.js` 203–258, 327–333, 389–407, 410–420 · `mka-core.js` 534–541 (details: INV §H F7).
@@ -676,4 +760,8 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
 - Newsletter (footer) is a mock subscribe; needs the mailing-list provider in phase B.
 - Demo seed also pre-fills "Recent searches" (5 mukhi, pyrite bracelet) — part of `DEMO_SEED`.
 - [HI review] F4 chrome Hindi written by us: drawer, search, mega menu labels, footer columns/newsletter, coming-soon copy.
+- Home §6–9 on `/hi` (F6): the design keeps the Rashifal wheel section, the Kundali / Love tools, the consultations bento and "Shop by intention" in English (with Devanagari subtitles). Our `hi.json` values are English copies — translate?
+- Kundali mini (F6) uses the prototype's approximate maths (IST for every city, low-precision planets): fine for the demo, Swiss Ephemeris in phase B. Confirm the ₹99 / MRP ₹499 / "80% OFF" / "28-page report" copy.
+- Rashifal texts (F6) are generated from template sentences (8 openers + 6 per area), seeded per rashi and day. Who writes the real daily predictions, and how often, is a phase-B content question.
+- Rashi → gemstone mapping, lucky colours/numbers and remedies (F6, from the design data) need Sadhak Ji's review.
 - Design gap: the Booking page shows no order summary between 768 and 1023px. It is built 1:1 for now; confirm whether one should be added.

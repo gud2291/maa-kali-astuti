@@ -241,7 +241,8 @@ artModule("kalash", "Kalash with diya (mka-core.js 268) — cart drawer empty st
 {
   const w = A.wheel();
   artModule("wheel", "Rashi wheel layers (mka-astro.js 175–191). nak + pointer are static files in public/svg/wheel.", [
-    ["WHEEL_RASHI_SVG", str(w.rashi, "g#rashi-<key>[data-seg] with [data-hl] [data-gl] [data-tx].")],
+    // Segment ids get the instance token: the wheel and the mobile dial share a page.
+    ["WHEEL_RASHI_SVG", str(w.rashi.replace(/ id="rashi-([a-z]+)"/g, ` id="rashi-$1-${U}"`), "g#rashi-<key>-<uid>[data-seg] with [data-hl] [data-gl] [data-tx].")],
     ["WHEEL_GRAHA_SVG", str(w.graha)],
     ["WHEEL_CENTER_SVG", str(w.center)],
   ]);

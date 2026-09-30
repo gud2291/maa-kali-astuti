@@ -47,6 +47,10 @@ export const serviceHref = (key: string) => `/consultations/${SERVICE_SLUG.get(k
 export const bookHref = (key: string, tier?: "essential" | "detailed" | "premium") =>
   `/book/${SERVICE_SLUG.get(key) ?? key}${tier ? `?tier=${tier}` : ""}`;
 
+/** `/rashifal/mesha?p=week` (design: `Rashi-Detail.dc.html#r=<key>&p=<period>`). */
+export const rashiHref = (key: string, p?: "today" | "tomorrow" | "week" | "month" | "year") =>
+  `/rashifal/${key}${p ? `?p=${p}` : ""}`;
+
 /** `/search?q=…` (design: `Search.dc.html#q=`). */
 export const searchHref = (q: string) => `/search?q=${encodeURIComponent(q.trim())}`;
 
