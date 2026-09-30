@@ -1252,5 +1252,239 @@
       "locVideo": "Video link on WhatsApp",
       "locCall": "Phone / WhatsApp call"
     }
+  },
+  "k99": {
+    "meta": {
+      "title": "Janam Kundali ₹99",
+      "description": "Your complete Janam Kundali, ready in minutes: see the Lagna chart, planetary positions and nakshatra free, and download the 28-page report for ₹99."
+    },
+    "crumbs": {
+      "aria": "Breadcrumb",
+      "home": "Home",
+      "here": "Kundali ₹99"
+    },
+    "hero": {
+      "eyebrow": "Janam Kundali · <hi>जन्म कुंडली</hi>",
+      "title": "Your complete Kundali, <em>ready in minutes.</em>",
+      "off": "{n}% OFF",
+      "tax": "incl. all taxes",
+      "lead": "See your Lagna chart, planetary positions and nakshatra free, right here. Pay ₹99 only if you want the full 28-page report as a PDF, in English or Hindi.",
+      "facts": [
+        "28 pages: Lagna, Navamsa, dasha, doshas, remedies",
+        "Instant PDF on WhatsApp and email",
+        "Sidereal (Lahiri) positions, North-Indian chart style"
+      ],
+      "rating": "4.8 from 3,400+ reports"
+    },
+    "form": {
+      "title": "Enter your birth details",
+      "sub": "Free chart preview. You pay only to download.",
+      "name": "Name for the report",
+      "dob": "Date of birth",
+      "tob": "Time of birth",
+      "unknown": "I don’t know my exact time",
+      "noon": "We calculate for 12:00 noon. Planet signs stay accurate; the Lagna may differ, and the report says so.",
+      "place": "Place of birth",
+      "placeHint": "Town or city",
+      "lang": "Report language",
+      "phone": "WhatsApp number",
+      "email": "Email",
+      "optional": "(optional)",
+      "submit": "Generate my Kundali",
+      "privacy": "Your details are used only to prepare this report.",
+      "err": {
+        "name": "Please enter the name for the report.",
+        "dobEmpty": "Date of birth is needed.",
+        "dobFuture": "This date is in the future.",
+        "dobYear": "Please check the year.",
+        "tob": "Add the time, or tick “I don’t know”.",
+        "place": "Choose your place of birth.",
+        "phone": "Enter a 10-digit WhatsApp number.",
+        "email": "This email address looks incomplete."
+      }
+    },
+    "tool": {
+      "genTitle": "Preparing {name}’s chart",
+      "genTitleAnon": "Preparing your chart",
+      "msgs": [
+        "Reading your birth details",
+        "Calculating planetary positions",
+        "Casting the Lagna chart",
+        "Placing the nine grahas in their houses",
+        "Working out Vimshottari dasha periods",
+        "Checking Manglik, Kaal Sarp and Sade Sati",
+        "Laying out your 28-page report"
+      ],
+      "readyT": "Your chart is ready",
+      "readyD": "See it below: the chart, the nine grahas and your nakshatra.",
+      "doneT": "Report unlocked",
+      "doneD": "Download it below. A copy is on its way to WhatsApp.",
+      "doneDEmail": "Download it below. A copy is on its way to WhatsApp and email.",
+      "rows": {
+        "name": "Name",
+        "born": "Born",
+        "place": "Place",
+        "report": "Report"
+      },
+      "noonTime": "time unknown (noon)",
+      "cta": "View my chart",
+      "ctaDone": "Go to download",
+      "edit": "Edit details"
+    },
+    "preview": {
+      "eyebrow": "Free preview · <hi>निःशुल्क झलक</hi>",
+      "title": "{name}, here is your chart.",
+      "titleAnon": "Here is your chart.",
+      "noon": "Calculated for 12:00 noon because the birth time is unknown. Planet signs are reliable; the Lagna and house placements may shift.",
+      "chartAria": "North Indian Lagna chart",
+      "cap1": "Lagna chart · North-Indian style",
+      "cap2": "Numbers mark the rashi in each house",
+      "lagna": "Lagna",
+      "rashi": "Rashi · Moon sign",
+      "nak": "Nakshatra",
+      "rising": "{deg} rising",
+      "lord": "Lord: {lord}",
+      "pada": "Pada {n}",
+      "tableAria": "Planetary positions",
+      "th": {
+        "graha": "Graha",
+        "sign": "Sign",
+        "house": "House",
+        "degree": "Degree",
+        "nak": "Nakshatra"
+      },
+      "retro": "Retrograde",
+      "insideTitle": "Inside the full report",
+      "insideNote": "28 pages · six shown here",
+      "locked": "locked until you pay",
+      "unlock": {
+        "eyebrow": "Unlock the full report",
+        "title": "All 28 pages, <em>yours to keep.</em>",
+        "pdf": "All 28 pages as a PDF, in {lang}",
+        "english": "English",
+        "hindi": "Hindi",
+        "items": [
+          "Navamsa (D9) and Chandra charts",
+          "Dasha periods to 2046 with dates",
+          "Gemstone, rudraksha and mantra remedies"
+        ],
+        "save": "SAVE {n}%",
+        "cta": "Pay ₹99 & download",
+        "note": "UPI, cards and netbanking · secured by Razorpay"
+      },
+      "done": {
+        "eyebrow": "Payment received · ₹99",
+        "title": "Your Kundali is <em>ready.</em>",
+        "line": "The PDF is on its way to WhatsApp {phone}, and stays in your account.",
+        "download": "Download your report",
+        "reading": "Have Sadhak Ji read this chart with you",
+        "toast": "Chart page saved. The full 28-page PDF is on its way to WhatsApp."
+      }
+    },
+    "sheet": {
+      "title": "Janam Kundali report",
+      "sub": "{name} · 28-page PDF",
+      "close": "Close payment",
+      "amount": "Amount",
+      "payWith": "Pay with",
+      "apps": {
+        "gpay": "Google Pay",
+        "phonepe": "PhonePe",
+        "paytm": "Paytm",
+        "card": "Card"
+      },
+      "to": "Report and receipt go to WhatsApp {phone}.",
+      "pay": "Pay ₹99",
+      "procT": "Waiting for your bank",
+      "procD": "Approve the request in your UPI app. Please keep this page open.",
+      "failT": "The payment did not go through",
+      "failD": "No money was taken. If your bank shows a debit, it is refunded automatically within 5–7 working days. Your chart is saved, so you can try again.",
+      "retry": "Try again",
+      "help": "Get help",
+      "secured": "Secured by Razorpay · 256-bit encryption"
+    },
+    "bar": {
+      "sub": "Full report · 28 pages",
+      "pay": "Pay ₹99"
+    },
+    "toc": {
+      "eyebrow": "01 — What’s inside",
+      "title": "Twenty-eight pages, <em>in order.</em>",
+      "lead": "Charts, degrees and dashas are calculated by software for your birth moment and place. The interpretations are written under Sadhak Ji’s guidance."
+    },
+    "samples": {
+      "eyebrow": "02 — Sample pages",
+      "title": "Printed as carefully as a <em>family record.</em>",
+      "lead": "A4 pages with gold-ruled margins, designed to be printed and kept with your family papers."
+    },
+    "reviews": {
+      "eyebrow": "03 — From readers",
+      "stars": "Rated 5 out of 5",
+      "link": "Prefer a personal reading? Book a Kundali consultation"
+    },
+    "faq": {
+      "eyebrow": "04 — Questions",
+      "title": "Before you <em>generate.</em>",
+      "askWa": "Ask on WhatsApp"
+    }
+  },
+  "love": {
+    "meta": {
+      "title": "Love Calculator by name",
+      "description": "A light Ank Jyotish reading: every name reduces to a number with a ruling graha. Enter two names to see how those grahas sit together."
+    },
+    "hero": {
+      "crumbsAria": "Breadcrumb",
+      "home": "Home",
+      "here": "Love Calculator",
+      "eyebrow": "Free tool · <hi>प्रेम मिलान</hi>",
+      "title": "Love Calculator, <em>by name.</em>",
+      "lead": "In Ank Jyotish every name reduces to a single number, and every number has a ruling graha. Enter two names to see how those grahas sit together.",
+      "note": "For fun — for true compatibility, get Kundali Milan by Sadhak Ji."
+    },
+    "tool": {
+      "a": "Your name",
+      "b": "Partner’s name",
+      "err": "Please enter both names, at least two letters each.",
+      "btn": "Calculate",
+      "btnBusy": "Reading the numbers…",
+      "sr": "{pct} percent, {label}. {line}",
+      "shareBtn": "Share on WhatsApp",
+      "share": "{a} & {b}: {pct}% · {label}, on the Maa Kali Astuti Love Calculator. sadhakpawanpandey.com/love-calculator",
+      "again": "Try another pair",
+      "book": "Book a Kundali Milan consultation"
+    },
+    "how": {
+      "eyebrow": "01 — How it works",
+      "title": "Letters become numbers, <em>numbers become grahas.</em>",
+      "lead": "Worked through with {pair}. Type your own names above and this breakdown follows them.",
+      "pair": "{a} and {b}",
+      "s1": "Each letter carries a number",
+      "s2": "The name reduces to one digit",
+      "s3": "The two ruling grahas are compared",
+      "tilesAria": "Letter numbers for {name}",
+      "rel": {
+        "same": "Both names share one graha, so the two of you often think alike.",
+        "friend": "{a} and {b} are natural friends in Jyotish, which reads as warmth and ease.",
+        "neutral": "{a} and {b} are neutral to each other: steady, with room to grow.",
+        "opp": "{a} and {b} pull in different directions, which asks for patience."
+      }
+    },
+    "milan": {
+      "eyebrow": "02 — A note of honesty",
+      "title": "A name number is a <em>light</em> reading.",
+      "p1": "It looks at two vibrations for fun and is not a basis for a marriage decision. For that, Jyotish compares both birth charts through Ashtakoot Milan: eight kootas worth thirty-six gunas, read together with Manglik dosha and the charts as a whole.",
+      "p2": "Sadhak Ji also tells families plainly when a low guna score matters less than it seems, and when a high one hides a real concern.",
+      "gunas": "8 kootas · 36 gunas",
+      "gunasUnit": "gunas",
+      "incl": "Included in the Premium Kundali reading",
+      "inclSub": "{price} · 90 min · both charts read",
+      "cta": "Book Kundali Milan"
+    },
+    "products": {
+      "eyebrow": "03 — For love & relationships",
+      "title": "Worn for <em>harmony</em> at home.",
+      "all": "Shop all bracelets"
+    }
   }
 }

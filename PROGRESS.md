@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti
 
-**Phase:** F — Frontend (client demo) · **Next step:** F11
+**Phase:** F — Frontend (client demo) · **Next step:** F12
 Resume in a fresh session with: `/next`
 
 | Step | Title | Status |
@@ -16,7 +16,7 @@ Resume in a fresh session with: `/next`
 | F8 | Shop + category template | DONE |
 | F9 | Consultations + consultation detail + InquiryForm | DONE |
 | F10 | Booking stepper | DONE |
-| F11 | Kundali ₹99 + Love Calculator | TODO |
+| F11 | Kundali ₹99 + Love Calculator | DONE |
 | F12 | Rashifal + Rashi detail | TODO |
 | F13 | Sadhana Courses + Course detail + Rituals | TODO |
 | F14 | About + Videos + 404 | TODO |
@@ -1165,10 +1165,10 @@ Manual QA (F10). `pnpm dev`. No reference shot covers Booking, so compare with `
 13. **Reduced motion ON:** no sheen sweep, and the step line jumps. The chakra overlay is still, the check appears drawn at once, and the "What happens next" items show without fading. Scrolls are instant.
 14. Any error or type error → Fix-list.
 
-### F11 — Kundali ₹99 + Love Calculator · TODO
+### F11 — Kundali ₹99 + Love Calculator · DONE
 Read: INV §A.11, §A.12, §E.1 S7 S12 S13. Design: `Kundali-99.dc.html` 28–500 · `Love-Calculator.dc.html` 27–254 · `mka-astro.js` 9–151, 158–170, 283–295, 334–339, 372–386, 413 (details: INV §H F11).
 Tasks:
-- [ ] `/kundali-99` state machine:
+- [x] `/kundali-99` state machine:
   - form (place autocomplete, unknown-time checkbox);
   - generating (chakra ramp 0.12 → 2.6);
   - preview (chart draw, planet table, lagna / rashi / nakshatra, blurred locked pages);
@@ -1176,8 +1176,75 @@ Tasks:
   - success + download (SVG chart for now).
 
   Plus what's-inside, samples, FAQ and reviews.
-- [ ] `/love-calculator`: large tool, how it works, disclaimer, Kundali Milan CTA, related products.
-Manual QA: every Kundali state, including the pay-fail recovery; the love result animation.
+- [x] `/love-calculator`: large tool, how it works, disclaimer, Kundali Milan CTA, related products.
+
+Done-notes:
+- **Routes** (both static):
+  - `src/app/[locale]/kundali-99/page.tsx`: KundaliTool (hero + preview + pay sheet + mobile bar), then What's inside, Sample pages, Reviews, FAQ (`getFaq("kundali99")`). `generateMetadata` from `k99.meta`.
+  - `src/app/[locale]/love-calculator/page.tsx`: `LoveNamesProvider` wraps the hero tool and "How it works" (the breakdown follows the typed names); then the Milan note + card and 4 related products (design filter: `b-rose` first, then `ik === "love"` or intent love/relation/marri → b-rose, r2, r13, b-garnet).
+- **Kundali ₹99** (`src/components/sections/kundali/`):
+  - `KundaliTool.tsx` (client): phases `form → gen → preview → done`; pay `idle | processing | failed`.
+    - Submit validates (`checkKundali99`); on error the fields turn red, errors update live, focus jumps to the first invalid field.
+    - gen: 7 messages every 820 ms, gold bar 800 ms linear, result after 5.3 s, then a smooth scroll to `#preview` (60px offset). The city is the picked town, else the first match, else Varanasi (design rule).
+    - "Edit details" drops the chart and returns to the form (values kept).
+    - Pay: 1.8 s → done (scroll to preview) or failed ("Try again" goes back to idle; the chart stays).
+    - Mobile (<768) fixed "Pay ₹99" bar only in preview and while the sheet is closed. The FAQ section has 88px+ bottom room for it on mobile.
+    - **QA-only URL params** (INV §C, read once on mount): `?demo=generating` (loops forever, like the design), `?demo=preview`, `?demo=success` (Ravi Sharma demo data), and `?pay=fail` (every payment fails). They can be combined: `/kundali-99?demo=preview&pay=fail`.
+  - `KundaliForm.tsx`: the form. Place combobox with ↑ ↓ Enter Esc + `aria-activedescendant`, phone digits only (10), report language segmented control.
+  - `KundaliPreview.tsx`: chart (S12 draw at 25% visible, redraws on a new chart / language), trio cards, planet table (Nakshatra column ≥1024, sub-line below), 6 report pages (pages 2–6 blurred + lock until paid, 800 ms filter), unlock band / paid band (ring 900 ms +100, tick 480 ms +820).
+  - `PaySheet.tsx`: bottom sheet <768 / centred dialog ≥768, 380 ms rise, Esc/scrim/✕ close (not while processing), Tab trapped, focus returns to the opener.
+  - `K99Sections.tsx` (server): hero intro + facts (passed into KundaliTool as slots), contents, samples, reviews, FAQ. `k99-data.ts`: page captions, contents, samples, price constants (₹99 / MRP 499 / 80%).
+- **New signature** `src/components/signature/Chakra.tsx` (S7): `mode="spin"` (data-amb rings) and `mode="ramp"` (WAAPI 9/7/5 s, middle reversed, playbackRate .12 → 2.6 by +.1 every 100 ms; paused offscreen / tab hidden; still under reduced motion). Used by the generating panel and the pay sheet. Booking/InquiryForm still use their own inline copies (can switch in F15).
+- **Report pages**: `scripts/extract-design.mjs` now also emits `REPORT_PAGE_K99_SVG` (lk0…lk5 preview, sm0…sm3 samples) in `src/lib/art/report-pages.ts`. The preview cover (lk0) is generated **without** the name line; the page renders the visitor's name as a JSX `<text>` over the same 300×400 viewBox, so no user text ever goes into `dangerouslySetInnerHTML`. Re-running the extractor left every other file unchanged.
+- **Download**: `src/lib/astro/kundali-download.ts` builds the prototype's one-page 800×1060 SVG (chart in emerald, Lagna / Rashi / Nakshatra, planet table), XML-escapes the name, saves `Janam-Kundali-<Name>.svg`, then a success toast. The file text is English on both locales. Full PDF = phase B.
+- **Love Calculator** (`src/components/sections/love/`):
+  - `LoveTool.tsx` (client, S13): 1:1 with the Home mini but with the page sizes (stage 236/280, ring 220/264, medallions 78/96, number 64/80). Converge factor via CSS vars (`--gc` .118 / .112 from 768, `--lw` = min(520, 100vw − 72 / 104px)). Share on WhatsApp (`wa.me/?text=`), Try another pair (clears + focuses the first name), Book a Kundali Milan consultation → `/book/kundali-reading?tier=premium`.
+  - `LoveHow.tsx` (client): letter tiles, digit-sum chain, the two grahas + relation line; falls back to Priya / Arjun.
+  - `LoveSections.tsx` (server): hero (mandala, intro, note), Milan (8 koota bars, premium price from `services.json`), products.
+- **Validation**: `checkKundali99` in `src/lib/validation/astro.ts` (zod, one code per field, 1:1 with the design's `errs()`).
+- **API**: `getKundaliReviews()` in `src/lib/api/content.ts`.
+- **i18n**: new namespaces `k99` and `love` in both message files. On /hi (F9/F10 rules): h1/h2 display headings, report contents, page captions, reviews, love result labels/lines and koota names stay English; UI text, the form/dialog titles (`font-title`) and the generating messages are Hindi (ours, `[HI review]`).
+- **Design notes kept 1:1**: "Shop all bracelets" links to `/shop` (design: `Shop.dc.html`, no category); the Kundali mobile pay bar sits over the tab bar (z 58 vs 50), as in the design.
+- Nothing was run (no dev / build / tsc / lint). Only `node scripts/extract-design.mjs`.
+
+Manual QA (F11). `pnpm dev`. No reference shots for these two pages: compare with `design/Kundali-99.dc.html` and `design/Love-Calculator.dc.html` opened in the browser.
+1. **`/kundali-99` desktop 1440px, form**
+   - Night hero with stars and a faint mandala top-right. Left: breadcrumb, "JANAM KUNDALI · जन्म कुंडली", the big h1, Devanagari line, ₹99 / ~~₹499~~ / red "80% OFF" / "incl. all taxes". Below: the lead, 3 icon rows, gold stars "4.8 from 3,400+ reports".
+   - Right: the ivory card with 4 brass corners, "Enter your birth details".
+   - Empty submit → red rings + messages under name, date, time, place, WhatsApp; the cursor jumps to the name. Errors clear live as you fix them.
+   - Future date → "This date is in the future." Phone `5123456789` → error. Email `a@b` → "looks incomplete". Email empty is fine.
+   - Tick "I don't know my exact time" → time field greys out + the noon note.
+   - Place: type `va` → list (Varanasi…); click or ↓ + Enter → "Varanasi, Uttar Pradesh".
+   - English / हिंदी toggle works. "Generate my Kundali" shows the gold sheen on hover.
+2. **Generating**: the chakra starts slow and speeds up over ~2.6 s; "Preparing Ravi's chart" + Devanagari line; 7 steps tick one by one (current bold with a gold ring, done ones emerald with ✓); the thin gold bar fills. After ~5.3 s the page scrolls to the preview.
+3. **Ready card + preview**
+   - Card: "Your chart is ready", Name / Born / Place / Report rows, "View my chart ↓" (scrolls) and "Edit details" (back to the form, values kept, preview gone).
+   - Preview: "FREE PREVIEW · निःशुल्क झलक", "Ravi, here is your chart.", the birth line. The night chart draws its lines, then planets pop.
+   - 3 cards (Lagna with rising degree, Rashi with "Lord: …", Nakshatra with "Pada n") with gold glyphs.
+   - Planet table (9 rows, zebra), "R" chips on retrograde grahas; Nakshatra column on desktop.
+   - Report language हिंदी → the chart shows Devanagari labels (लग्न, सू…), Report row "हिंदी · PDF", unlock line "…in Hindi".
+   - Unknown time → the sand noon note above the chart.
+   - "Inside the full report": 6 pages in one row; page 1 (cover with your name in capitals) sharp, pages 2–6 blurred with a lock.
+   - Emerald unlock band: 4 ✓ lines, ₹99 / ~~₹499~~ / SAVE 80%, gold "Pay ₹99 & download".
+4. **Pay — success**: the dialog rises in (centred). Google Pay selected; click other tiles. "Pay ₹99" → the spinning chakra "Waiting for your bank" (~1.8 s) → the dialog closes, the page scrolls to the preview: the pages unblur, the sand band draws its ring + tick, "Your Kundali is ready.", the masked phone (+91 98•••••210). Card title becomes "Report unlocked".
+   - "Download your report" → `Janam-Kundali-Ravi-Sharma.svg` downloads (chart + table) + a green toast.
+   - "Have Sadhak Ji read this chart with you" → `/consultations/kundali-reading`.
+5. **Pay — fail**: open `/kundali-99?demo=preview&pay=fail` → Pay → "The payment did not go through" + "Try again" (back to the tiles, chart kept) and "Get help" (WhatsApp). Esc / scrim / ✕ close the dialog (not while processing). Tab stays inside the dialog.
+6. **Demo states**: `?demo=generating` (loops), `?demo=preview`, `?demo=success`.
+7. **Lower sections**: What's inside (sand, 10 rows with dotted leaders and page numbers, fading in); Sample pages (night, 4 fanned pages, lift on hover); Reviews (big italic quote + 3 more + link to the Kundali consultation); FAQ (sand, "Ask on WhatsApp", accordion).
+8. **Mobile 390px**: intro → card → facts order; date/time stack below 420px; in preview a fixed bottom bar "₹99 ~~₹499~~ · Full report · 28 pages" + "Pay ₹99" (hidden while the sheet is open and after paying); the sheet comes up from the bottom; pages 2 per row; trio stacks below 560; the sample pages scroll sideways (snap). No horizontal page scroll.
+9. **`/love-calculator` desktop 1440px**
+   - Ivory hero: breadcrumb, "FREE TOOL · प्रेम मिलान", "Love Calculator, *by name.*", Devanagari line, lead, italic note with a heart. Card on the right with a rose top strip.
+   - Type names → initials appear in the medallions, which drift closer as you type. The "How it works" section below updates live (tiles, digit chain, grahas, relation line).
+   - Calculate with one name → red rings + "Please enter both names…".
+   - Calculate: medallions converge (700 ms), the ring fills to the score while the big number counts up, then the label + Devanagari label, the line and two chips (number · graha) stagger in.
+   - Share on WhatsApp opens wa.me with the text; "Try another pair" clears both names and focuses "Your name"; editing a name after a result resets to idle (names kept). "Book a Kundali Milan consultation" → `/book/kundali-reading?tier=premium`.
+   - Milan section: 8 koota bars, "₹5,100 · 90 min · both charts read" (premium price) and "Book Kundali Milan".
+   - 4 product cards (Rose Quartz bracelet first); add to cart / wishlist work; "Shop all bracelets" → `/shop`.
+10. **Love mobile 390px**: stage 236px, medallions 78px, number 64px; inputs stack below 480; products 2 per row; How it works stacks.
+11. **`/hi/kundali-99`, `/hi/love-calculator`**: UI text, labels, errors, generating messages, sheet and buttons in Hindi; the big headings stay English.
+12. **Reduced motion ON**: no chakra spin/ramp, the chart shows complete, the ring/tick appear drawn, the love ring and number jump to the result, reveals just show.
+13. Any error or type error → Fix-list.
 
 ### F12 — Rashifal · TODO
 Read: INV §A.13, §A.14, §E.1 S8. Design: `Rashifal.dc.html` 28–299 · `Rashi-Detail.dc.html` 27–221 · `mka-astro.js` 9–74, 90–151, 173–200, 342–369 · `mka-core.js` 267 (details: INV §H F12).
@@ -1234,6 +1301,8 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
 - 2026-09-30 (F10): on /hi, form-group titles set in the 22px display serif (Booking "Which consultation?", "Package", "Birth details", "Pay with", calendar month…) are translated and use `font-title` (Fraunces + Tiro fallback), because they label form controls. Page h1/h2 display headings still stay English (F9 rule).
 - 2026-09-30 (F10): pages can hide the site footer until a flow finishes (`flowFooter` in chrome-config + `useUi.flowDone`). Booking uses it: footer only on the confirmation, as in the design.
 - 2026-09-30 (F8): the shop category and filters are view state. Switching rewrites the URL in place (`replaceState`: the path for the category, the query for filters) instead of navigating. The view, the open groups and the mobile sheet keep their state, and no page transition runs (same as the design's hash). Deep links and reloads restore everything.
+- 2026-09-30 (F11): QA-only query params on `/kundali-99` (`?demo=generating|preview|success`, `?pay=fail`) replace the design's Tweaks props; they are read once on mount and never written.
+- 2026-09-30 (F11): generated SVG strings never carry visitor text. When a design string embeds user input (the Kundali cover name), the extractor cuts that `<text>` out and the component renders it as JSX over the same viewBox.
 
 ## Client-confirm list (placeholders from the design)
 - Prices beyond 12 Nag ₹1,250, Kundali ₹99 and courses ₹50,000. Kundali MRP ₹499.
@@ -1302,3 +1371,13 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
   - Palm photos: "seen only by Sadhak Ji and deleted 30 days after your report", 15 MB limit, photos are not uploaded in the demo.
   - Payment options shown: UPI (Google Pay, PhonePe, Paytm, UPI ID), cards (Visa, Mastercard, RuPay), netbanking chips (SBI, HDFC, ICICI, Axis, Kotak, Bank of Baroda).
   - Copy promises: "video link on WhatsApp an hour before", "report within 48 hours", "confirmation on WhatsApp (and email)".
+- Kundali ₹99 (F11):
+  - [HI review] all the `k99` Hindi in `messages/hi.json` is ours.
+  - Copy/claims from the prototype: "4.8 from 3,400+ reports", "Instant PDF on WhatsApp and email", "Sidereal (Lahiri) positions", "28 pages" and the table of contents, "Dasha periods to 2046", "stays in your account", the refund line "5–7 working days", the 4 reader reviews (Kavita Soni, Rohit Verma, Sushma Devi, Aditya Kulkarni).
+  - Payment is a mock (1.8 s "Waiting for your bank"); the report is not sent anywhere. Phase B: Razorpay + real PDF generation + WhatsApp/email delivery.
+  - The download is a one-page SVG chart for the demo, not the 28-page PDF.
+  - An unknown town silently falls back to the best match or Varanasi for the maths (design rule); IST is assumed for every place (phase B: real geocoding + time zones).
+- Love Calculator (F11):
+  - [HI review] all the `love` Hindi is ours; result labels and lines stay English.
+  - The 4 related products come from the prototype's filter (Rose Quartz bracelet, 2 Mukhi, 13 Mukhi, Garnet bracelet). "Shop all bracelets" goes to `/shop` as in the design — should it open the bracelets category?
+  - The WhatsApp share text mentions `sadhakpawanpandey.com/love-calculator`.

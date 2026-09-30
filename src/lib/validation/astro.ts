@@ -58,3 +58,58 @@ export const checkLove = (a: string, b: string) => ({
   a: !loveName.safeParse(a).success,
   b: !loveName.safeParse(b).success,
 });
+
+/* ---------------- Kundali ₹99 page (Kundali-99.dc.html errs 414–423) ---------------- */
+
+export type K99Field = "name" | "dob" | "tob" | "place" | "phone" | "email";
+export type K99ErrCode = "name" | "dobEmpty" | "dobFuture" | "dobYear" | "tob" | "place" | "phone" | "email";
+export type K99Errors = Partial<Record<K99Field, K99ErrCode>>;
+
+export type K99Draft = {
+  name: string;
+  dob: string;
+  tob: string;
+  unknown: boolean;
+  place: string;
+  /** Report language. */
+  lang: "en" | "hi";
+  /** 10 digits, no +91. */
+  phone: string;
+  email: string;
+};
+
+/** `today` = yyyy-mm-dd. One code per field, 1:1 with the design's rules. */
+const k99Schema = (today: string) =>
+  z
+    .object({
+      name: z.string(),
+      dob: z.string(),
+      tob: z.string(),
+      unknown: z.boolean(),
+      place: z.string(),
+      lang: z.enum(["en", "hi"]),
+      phone: z.string(),
+      email: z.string(),
+    })
+    .superRefine((f, ctx) => {
+      const add = (path: K99Field, message: K99ErrCode) => ctx.addIssue({ code: "custom", path: [path], message });
+      if (f.name.trim().length < 2) add("name", "name");
+      if (!f.dob) add("dob", "dobEmpty");
+      else if (f.dob > today) add("dob", "dobFuture");
+      else if (f.dob < "1900-01-01") add("dob", "dobYear");
+      if (!f.unknown && !f.tob) add("tob", "tob");
+      if (f.place.trim().length < 2) add("place", "place");
+      if (!/^[6-9]\d{9}$/.test(f.phone)) add("phone", "phone");
+      if (f.email && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(f.email)) add("email", "email");
+    });
+
+export function checkKundali99(f: K99Draft, today: string): K99Errors {
+  const r = k99Schema(today).safeParse(f);
+  const out: K99Errors = {};
+  if (r.success) return out;
+  for (const i of r.error.issues) {
+    const k = i.path[0] as K99Field;
+    if (!out[k]) out[k] = i.message as K99ErrCode;
+  }
+  return out;
+}

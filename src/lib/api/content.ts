@@ -7,3 +7,10 @@ import type { CourseOption } from "@/components/forms/InquiryForm";
 export async function getCourseOptions(): Promise<CourseOption[]> {
   return coursesData.courses.map((c) => ({ key: c.key, en: c.en, hi: c.hi }));
 }
+
+export type Review = { q: string; n: string; c: string };
+
+/** Kundali ₹99 reader reviews (A.K99REV, mka-astro.js 334–339). */
+export async function getKundaliReviews(): Promise<Review[]> {
+  return (await import("@/lib/data/kundali99.json")).default.reviews;
+}

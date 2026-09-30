@@ -271,8 +271,26 @@ artModule("service-art", "Service illustrations (mka-astro.js 260–280): palm l
 {
   const pages = {};
   for (const s of M.SERVICES) A.SVC[s.key].samples.forEach(([kind, t], i) => (pages[s.key + i] = A.page(kind, t, s.key + i)));
-  artModule("report-pages", "Sample report pages 300×400 (mka-astro.js 283–295). Consultation-Detail call sites: key = <service key><index>, u = the same key.", [
+  // Kundali-99 (renderVals 464–465, 494): 6 preview pages u = lk0…lk5 and 4 samples u = sm0…sm3.
+  // The preview cover carries the visitor's name (sub): it is built with a token and the <text>
+  // holding it is cut out, so the page renders the name itself as JSX over the same viewBox.
+  const K99_LOCKED = [["cover", "Janam Kundali"], ["chart", "Lagna chart & positions"], ["dasha", "Vimshottari dasha"], ["lines", "Manglik & Kaal Sarp"], ["lines", "Career & marriage"], ["remedy", "Remedies to follow"]];
+  const K99_SAMPLES = [["cover", "Janam Kundali"], ["chart", "Lagna chart & positions"], ["dasha", "Vimshottari dasha"], ["remedy", "Remedies to follow"]];
+  const NAME = "@@NAME@@";
+  const k99 = {};
+  K99_LOCKED.forEach(([kind, t], i) => {
+    let s = A.page(kind, t, "lk" + i, i === 0 ? NAME : undefined);
+    if (i === 0) {
+      const cut = s.replace(/<text[^>]*>@@NAME@@<\/text>/, "");
+      if (cut === s) throw new Error("k99 cover: name <text> not found");
+      s = cut;
+    }
+    k99["lk" + i] = s;
+  });
+  K99_SAMPLES.forEach(([kind, t], i) => (k99["sm" + i] = A.page(kind, t, "sm" + i)));
+  artModule("report-pages", "Sample report pages 300×400 (mka-astro.js 283–295). Consultation-Detail call sites: key = <service key><index>, u = the same key. Kundali-99: lk0…lk5 (preview) and sm0…sm3 (samples).", [
     ["REPORT_PAGE_CONSULT_SVG", rec(pages, "kundali0…numerology2, in the order of services.json `samples`.")],
+    ["REPORT_PAGE_K99_SVG", rec(k99, "Kundali-99 preview pages lk0…lk5 (lk0 = cover without the name line: render it at x 150, y 262, Manrope 700 11px, tracking 1.6, #1F2A24) and samples sm0…sm3.")],
   ]);
 }
 // portrait: bg has seeded twinkle stars
