@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti
 
-**Phase:** F — Frontend (client demo) · **Next step:** F4
+**Phase:** F — Frontend (client demo) · **Next step:** F5
 Resume in a fresh session with: `/next`
 
 | Step | Title | Status |
@@ -9,7 +9,7 @@ Resume in a fresh session with: `/next`
 | F1 | Design inventory (line-range map) | DONE |
 | F2 | Scaffold + design system + extraction pipeline | DONE |
 | F3 | Data layer + stores + ProductCard | DONE |
-| F4 | Global chrome (header, menus, cart drawer, footer) | TODO |
+| F4 | Global chrome (header, menus, cart drawer, footer) | DONE |
 | F5 | Home A — hero → 12 Nag spotlight | TODO |
 | F6 | Home B — rashifal wheel → floating stones | TODO |
 | F7 | Home C — courses → newsletter | TODO |
@@ -305,20 +305,103 @@ Manual QA (F3). Run `pnpm dev`, open `/` and scroll below the logo block to "F3 
 6. Reduced motion ON: no fly, burst or slide animations, and everything still works.
 7. Any error or type error → put it in the Fix-list.
 
-### F4 — Global chrome · TODO
+### F4 — Global chrome · DONE
 Read: INV §A.2, §A.3, §C, §G, §E.3 (chrome row). Design: `SiteChrome.dc.html` 14–388 + 390–564, block by block with its bindings (INV §A.2 table) · `SiteFooter.dc.html` 14–116 · `mka-core.js` 139–173, 267–268, 452–454, 490–518, 528–552 (details: INV §H F4).
 Tasks:
-- [ ] AnnouncementBar (3 rotating messages, WhatsApp, EN|हिं toggle).
-- [ ] Header (76 → 64px on scroll, blur + gold hairline when stuck), nav with active states, and the Shop mega menu (5 columns, intention chips, featured 12 Nag, staggered open).
-- [ ] Mobile compact bar, full-screen night menu (rotating mandala, staggered links), BottomTabBar (hides on scroll-down, raised Consult chakra, cart badge).
-- [ ] CartDrawer (Radix Dialog; 440px / full-screen on mobile): free-shipping progress, line items, qty, remove + undo, upsell rail, coupon, subtotal, CTAs, empty state (kalash + diya).
-- [ ] Search overlay, if SiteChrome has it.
-- [ ] WhatsApp FAB (pulse every 8s, lifts above the tab bar, honours the `fab-lift` prop), back-to-top progress ring.
-- [ ] SiteFooter (night cosmos: twinkle, constellation draw, 180s mandala, shooting star every ~12s; columns, newsletter prop, payment icons, shloka line).
-- [ ] Page transition (fade + 12px lift) and a gold top progress line on route change. Lenis provider (desktop, fine pointer, no reduced motion).
-- [ ] Wire everything into `app/[locale]/layout.tsx`; header props `active`, `tabbar`, `fabLift` per page.
-- [ ] Coming-soon pages for the deferred routes: `/cart`, `/checkout`, `/product/[slug]`, `/wishlist`, `/search`, `/order/success`, plus `/account`, `/track-order`, `/blog`, `/contact`, `/faq`, `/policies/[slug]` (INV §G). Branded, with a chakra, "being prepared" copy and links back.
-Manual QA: header, menus, tab bar, cart drawer (add from anywhere once cards exist), footer animation, language toggle, mobile at 390px.
+- [x] AnnouncementBar (3 rotating messages, WhatsApp, EN|हिं toggle).
+- [x] Header (76 → 64px on scroll, blur + gold hairline when stuck), nav with active states, and the Shop mega menu (5 columns, intention chips, featured 12 Nag, staggered open).
+- [x] Mobile compact bar, full-screen night menu (rotating mandala, staggered links), BottomTabBar (hides on scroll-down, raised Consult chakra, cart badge).
+- [x] CartDrawer (Radix Dialog; 440px / full-screen on mobile): free-shipping progress, line items, qty, remove + undo, upsell rail, coupon, subtotal, CTAs, empty state (kalash + diya).
+- [x] Search overlay, if SiteChrome has it.
+- [x] WhatsApp FAB (pulse every 8s, lifts above the tab bar, honours the `fab-lift` prop), back-to-top progress ring.
+- [x] SiteFooter (night cosmos: twinkle, constellation draw, 180s mandala, shooting star every ~12s; columns, newsletter prop, payment icons, shloka line).
+- [x] Page transition (fade + 12px lift) and a gold top progress line on route change. Lenis provider (desktop, fine pointer, no reduced motion).
+- [x] Wire everything into `app/[locale]/layout.tsx`; header props `active`, `tabbar`, `fabLift` per page.
+- [x] Coming-soon pages for the deferred routes: `/cart`, `/checkout`, `/product/[slug]`, `/wishlist`, `/search`, `/order/success`, plus `/account`, `/track-order`, `/blog`, `/contact`, `/faq`, `/policies/[slug]` (INV §G). Branded, with a chakra, "being prepared" copy and links back.
+Done-notes:
+- **Where things live:** everything is in `src/components/layout/`. `layout.tsx` mounts `<SiteChrome/>` → `<main id="main">` → `<SiteFooter/>`, plus `<PageTransition/>` and `<SmoothScroll/>`.
+- **Per-page chrome props come from the route, not from page props.** `chrome-config.ts` → `chromeFor(pathname)` returns `{active, mode, tabbar, fabLift, backHref, backLabel, secureLabel, newsletter}`. It copies the design's `<dc-import>` props:
+  - `/` → active home, footer newsletter **off**;
+  - `/book/*` → `mode: "checkout"` (64px secure bar, no announcement, no tab bar), back → `/consultations`, "Secure booking", FAB lift 104px;
+  - `/consultations/[service]` and `/sadhana-courses/[slug]` → tab bar off, FAB lift 92px (their sticky CTA bars come in F9/F13);
+  - shop/cart/consult/kundali/rashifal/courses/rituals/videos/about → `active`; everything else (love calculator, coming-soon, 404) → `active: ""`.
+  - **New pages need no chrome wiring.** Only add a line to `chromeFor` if a page needs different flags.
+- **SiteChrome.tsx** (client): spacer (88px, 108px ≥1180, 64px checkout) + fixed wrapper (z-40) that slides up 32px once `y > 28` (380 ms). Holds AnnouncementBar, HeaderFull (≥1180, `nav:`), HeaderCompact (<1180), HeaderCheckout, the two mega menus (hover open, 160 ms leave delay, Esc, closes on blur/route change), BottomTabBar (<768), WhatsAppFab, BackToTop, MobileMenu, SearchOverlay, CartDrawer. It also syncs `useUi.chrome` (toast offset) and calls `closeAll()` on every route change.
+- **Scroll:** `src/lib/hooks/useScrollDir.ts` → `{stuck (y>28), hidden (tab bar: y>160 & dy>4, back on dy<−4), far (y>700)}`, one rAF per frame, re-render only on flag flips. BackToTop writes the ring offset directly to the SVG.
+- **Overlays are Radix Dialogs** (focus trap, Esc, scroll lock):
+  - menu: fade 260 ms + `[data-mi]` stagger;
+  - search: y−10 300 ms, input focused after 60 ms;
+  - drawer: CSS keyframes `mka-drawer-in/out` + `mka-fade-in/out` in globals.css, so Radix waits for the exit.
+  - The drawer ignores clicks on toasts (`onInteractOutside`), so "Removed · Undo" works while it is open.
+- **Z-index** follows CODING-RULES: header 40 · tab bar / FAB / back-to-top 50 · dialogs 60 · toasts 70.
+- **Language toggle** = `useSwitchLocale()`: `router.replace(samePath + location.search + hash, {locale})`, no scroll jump. It is used in the announcement bar (≥768), the night menu chips and the footer.
+- **Links** are centralised in `src/lib/routes.ts`: `routes.*`, `categoryHref`, `intentHref`, `productHref`, `serviceHref`, `searchHref`, `policyHref`, `POLICIES`. **Use these in every later step.** Contact/social/payment constants are in `src/lib/site.ts` (social URLs are `null` = toast "link is coming soon").
+- **New persisted store** `src/stores/history.ts` (`mka.store.v2.history`): `searches` (overlay "Recent searches", max 5, shows 4) and `recent` (recently viewed, max 10; `view(id)` is for the PDP later). Demo seed: searches "5 mukhi", "pyrite bracelet"; recent b-pyrite, m5, a-bagla. Hydrated by StoreHydrator.
+- **Search overlay** runs `lib/core/search` client-side over `PRODUCTS` + services/articles JSON. Enter or "See all" → `/search?q=` (coming soon; it echoes the query).
+- **Cart drawer:**
+  - Lines use the Hindi product name in `/hi`; the intent meta stays English, as on the cards.
+  - Upsell "+" flies to the cart; sized items open the quick sheet.
+  - Coupon Apply → toast; Enter applies without a toast, as in the design.
+  - `data-cart-target` / `data-cart-badge` are on the full-header cart, the compact-header cart and the tab-bar cart. The fly goes to the first visible one.
+- **Footer** (`SiteFooter.tsx`) is a server component. Its client islands (`FooterClient.tsx`): `FooterRoot` (72px mobile padding when there is a tab bar), `FooterNewsletter` (mock subscribe; hidden on Home), `FooterSocial`, `FooterLang`. The sky is 70 seeded stars (`rng("foot")`); stars 34+ are hidden below 768, which is exactly the design's mobile set.
+- **PageTransition:**
+  - On every route change `#main` fades up 12px (520 ms) and the gold top line sweeps (900 ms).
+  - **On first load only the line runs.** Fading server-rendered content out after hydration would flash it.
+- **SmoothScroll** (Lenis) runs only at ≥1024 with a fine pointer and without reduced motion. It stops while any overlay is open and never handles wheel events inside `role="dialog"`. Use `scrollToTop()` from `layout/scroll.ts` (Lenis-aware) for programmatic scroll-to-top.
+- **Coming-soon pages** use `ComingSoon.tsx`: turning chakra rings around the emblem, "Being prepared", the title, lotus rule, Home / Shop / WhatsApp buttons, `robots: noindex`.
+  - `/product/[slug]` is statically generated for all products (`dynamicParams = false`). It shows the name, price and category.
+  - `/policies/[slug]` covers shipping, refund-returns, privacy, terms and astrology-disclaimer.
+- **Messages:** new namespaces `chrome`, `search`, `drawer`, `footer`, `soon` in en/hi. The design only had Hindi for nav, the announcement and the tab bar; the rest of the HI text is ours → `[HI review]`.
+  - Kept English in `/hi`, as in the design: mega-menu category names (they already carry Devanagari subtitles) and mega-menu product links.
+  - The service cards in the consult mega use the service's English name.
+- **Temporary:** the F3 card preview is still on `/` (F5 replaces the page). Nav links to not-yet-built pages (`/shop`, `/consultations`, `/rashifal` …) 404 until their steps; the 404 page itself comes in F14.
+- Nothing was run except Prettier on the new files (no dev / build / tsc / lint).
+
+Manual QA (F4). `pnpm dev`, then:
+1. **Desktop 1440px, `/`**
+   - The top shows a 32px emerald strip. Its message changes every ~4 s with a slide, and after the 3rd it loops back to the 1st without a jump. On the right: "+91 90000 12345" and EN | हिं, with EN underlined.
+   - Header 76px: emblem, "Maa Kali Astuti" / "SADHAK PAWAN PANDEY" (one line), nav, and the icons search, heart (badge 3 from the demo seed), user and bag (badge 2).
+   - Scroll down a little: the strip slides away, the header shrinks to 64px with a frosted background and a gold hairline, and the logo shrinks. Scroll back to the top → it resets.
+   - Hover **Shop**: the mega menu drops in, columns stagger, the chevron flips and the underline stays. Check it against `design/shots/01-chrome.png`–`03-chrome.png`:
+     - 13 mukhi tiles; bracelet and amulet lists;
+     - the 12 Nag card with its photo and ₹1,250 / ₹1,599;
+     - "Shop by intention" chips.
+   - Moving the mouse out closes it after a short delay. Hover **Consultations** → 4 service cards + the dark guarantee card.
+   - Tab through the nav: focusing Shop opens its menu, Esc closes it.
+   - The Kundali ₹99 pill has a gold outline and darkens on hover.
+2. **Search** (magnifier)
+   - A full-screen ivory overlay; the cursor is in the big input.
+   - "Trending" chips and "Recent searches" (5 mukhi, pyrite bracelet) show.
+   - Type "pyrite": Products / Consultations / Articles tabs with counts, rows with images and prices.
+   - Try "kundali" → the Consultations tab has a result. Try "xyz" → the "Nothing matches…" text.
+   - Enter → `/search?q=…` coming-soon page echoing the query, and the query now shows under Recent. Esc closes the overlay.
+3. **Cart drawer** (bag icon)
+   - It slides in from the right (440px) over a dark backdrop.
+   - Free-shipping text and gold bar; 2 demo lines (the 5 Mukhi line has the "Energized for Ravi Sharma · Kashyap gotra (+₹251)" note).
+   - Qty + / −: the number rolls. At 10 → toast "Maximum 10 per order line".
+   - **Remove** → toast with Undo; Undo restores the line and the drawer stays open.
+   - "Complete your ritual" rail: "+" flies the item to the cart and bumps the badge. Rose Quartz opens the size sheet.
+   - "Have a coupon code?": `SADHANA10` → green chip "SADHANA10 · −₹…" plus a toast. `ABC` → red error. `FIRST100` on a small cart → the "needs ₹999" error.
+   - Subtotal, the "You save …" line, and "Checkout securely" (gold sheen on hover) → `/checkout` coming-soon; the drawer closes on navigation.
+   - Remove everything → empty state with the kalash and "Explore bestsellers".
+4. **Footer**
+   - Dark sky with twinkling gold stars and faint constellation lines that draw and fade.
+   - A big mandala turning slowly top-right; a shooting star every ~12 s.
+   - On `/` there is **no newsletter**. Open `/cart` → the newsletter shows there: a bad email gives a red error, a good one gives "Subscribed…".
+   - Link underlines grow on hover. Social icons → "…link is coming soon" toast. English | हिंदी toggle.
+5. **Language:** click हिं (header) → `/hi`, nav in Hindi (शॉप, परामर्श, कुंडली ₹99 …), strip messages in Hindi. Open `/hi/cart` and toggle back → `/cart` (same page).
+6. **Back-to-top:** scroll far down on a long page (`/` with the card preview + footer, or use a short browser height) → a round button with a gold progress ring bottom-right; click → smooth scroll up.
+7. **Lenis:** mouse-wheel scrolling on desktop feels smooth. With the drawer or search open, the page behind doesn't scroll, but the drawer list does.
+8. **Mobile 390px**
+   - Compact 56px bar: menu · centred logo + name · search · bag.
+   - Bottom tab bar: Home (active green), Shop, raised green Consult circle with a turning gold chakra, Cart with badge, Account. Scroll down → the bar hides, the WhatsApp button drops to ~20px from the bottom; scroll up → both return.
+   - Menu: dark full-screen menu, big serif links with Devanagari on the right (EN only) sliding in one by one, a faint turning mandala bottom-right, English/हिंदी chips, Wishlist/Account/Track order, WhatsApp + Call buttons.
+   - Drawer is full-width. Adding from a card flies to the **header** bag.
+   - Toasts sit above the tab bar. No horizontal scroll anywhere; the footer has space for the tab bar at the bottom.
+9. **Route transitions:** click from `/` to `/wishlist`: the content fades up and a thin gold line runs across the top. A hard reload shows only the line.
+10. **Coming-soon pages** (all branded, noindex): `/cart /checkout /wishlist /search?q=test /order/success /account /track-order /blog /contact /faq /policies/privacy /product/copper-12-nag /product/5-mukhi-rudraksha`. `/product/abc` → 404.
+11. **Reduced motion ON:** no strip slide (instant swap), no mandala/chakra spin, no star twinkle, no drawer slide (it just appears), no page fade, and Lenis is off. Everything still works.
+12. Any error → Fix-list.
 
 ### F5 — Home A · TODO
 Read: INV §A.1 (§1–5), §E.1 S1–S4 S7 S9, §E.3. Design: `Home.dc.html` 29–344 + script 941–1079 and 1366–1479 · `mka-home.js` 12–184 · `mka-astro.js` 158–170, 422 (details: INV §H F5).
@@ -476,4 +559,8 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
 - Favicon / app icon: currently the full emblem SVG (`src/app/icon.svg`); its wordmark is unreadable at 16px. Need a simplified mark (e.g. the ॐ + lotus core) with the original logo file.
 - Video/Shorts thumbnails are generated placeholder art (same art on every page); real YouTube thumbnails + IDs replace them.
 - Demo seed: the first visit starts with 2 cart items and 3 wishlist items (prototype behaviour, `DEMO_SEED` in `src/lib/core/commerce.ts`). Turn off before launch.
+- Social profile links: footer icons currently show a "link is coming soon" toast (`SOCIAL` in `src/lib/site.ts`, url `null`). Need YouTube / Instagram / Facebook / WhatsApp channel URLs.
+- Newsletter (footer) is a mock subscribe; needs the mailing-list provider in phase B.
+- Demo seed also pre-fills "Recent searches" (5 mukhi, pyrite bracelet) — part of `DEMO_SEED`.
+- [HI review] F4 chrome Hindi written by us: drawer, search, mega menu labels, footer columns/newsletter, coming-soon copy.
 - Design gap: the Booking page shows no order summary between 768 and 1023px. It is built 1:1 for now; confirm whether one should be added.

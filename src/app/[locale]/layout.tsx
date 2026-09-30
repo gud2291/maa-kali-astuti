@@ -9,6 +9,10 @@ import { AmbientRoot } from "@/components/motion/AmbientRoot";
 import { StoreHydrator } from "@/components/commerce/StoreHydrator";
 import { QuickAdd } from "@/components/commerce/QuickAdd";
 import { Toaster } from "@/components/ui/Toaster";
+import { SiteChrome } from "@/components/layout/SiteChrome";
+import { SiteFooter } from "@/components/layout/SiteFooter";
+import { PageTransition } from "@/components/layout/PageTransition";
+import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import "../globals.css";
 
 export function generateStaticParams() {
@@ -53,8 +57,14 @@ export default async function LocaleLayout({
           {t("skipToContent")}
         </a>
         <NextIntlClientProvider>
-          {/* F4 mounts SiteChrome, SiteFooter, PageTransition and the Lenis provider here. */}
-          <main id="main">{children}</main>
+          {/* Global chrome (F4): fixed header + spacer, menus, search, cart drawer, tab bar, FAB. */}
+          <SiteChrome />
+          <main id="main" tabIndex={-1} className="outline-none">
+            {children}
+          </main>
+          <SiteFooter />
+          <PageTransition />
+          <SmoothScroll />
           <AmbientRoot />
           {/* Global commerce layer (F3): persisted-store hydration, quick-add sheet, toasts. */}
           <StoreHydrator />

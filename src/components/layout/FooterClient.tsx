@@ -1,0 +1,174 @@
+"use client";
+import { useState, type ReactNode } from "react";
+import { useTranslations } from "next-intl";
+import { usePathname } from "@/i18n/navigation";
+import { Icon } from "@/components/icons/Icon";
+import { SOCIAL } from "@/lib/site";
+import { useUi } from "@/stores/ui";
+import { cn } from "@/lib/utils/cn";
+import { chromeFor } from "./chrome-config";
+import { useSwitchLocale } from "./useSwitchLocale";
+
+/* Client islands of the server-rendered footer (SiteFooter.dc.html). */
+
+/** `<footer>` with 72px bottom padding on mobile when the page has the tab bar (SiteFooter 96). */
+export function FooterRoot({ children }: { children: ReactNode }) {
+  const cfg = chromeFor(usePathname());
+  const tabbar = cfg.tabbar && cfg.mode !== "checkout";
+  return (
+    <footer className={cn("relative overflow-hidden bg-n9 text-em1", tabbar && "pb-[72px] md:pb-0")}>{children}</footer>
+  );
+}
+
+/** Newsletter (SiteFooter 27–37, 86): idle → error on a bad email → "Subscribed". Off on Home. */
+export function FooterNewsletter() {
+  const t = useTranslations("footer");
+  const show = chromeFor(usePathname()).newsletter;
+  const [email, setEmail] = useState("");
+  const [done, setDone] = useState(false);
+  const [err, setErr] = useState(false);
+  if (!show) return null;
+
+  const sub = () => {
+    // Mock submit (phase B wires the mailing list).
+    if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) {
+      setDone(true);
+      setErr(false);
+    } else setErr(true);
+  };
+
+  return (
+    <div className="flex flex-col gap-3">
+      <label
+        htmlFor="nl-email"
+        className="font-sans text-[11px] leading-[1.3] font-semibold tracking-[.16em] text-g3 uppercase hi:tracking-normal"
+      >
+        {t("nlLabel")}
+      </label>
+      {done ? (
+        <span
+          role="status"
+          className="flex h-12 items-center gap-2.5 font-sans text-[15px] leading-[1.3] font-medium text-iv"
+        >
+          <span className="block size-5 flex-none text-g3">
+            <Icon name="checkc" />
+          </span>
+          {t("nlDone")}
+        </span>
+      ) : (
+        <>
+          <div className="flex gap-2">
+            <input
+              id="nl-email"
+              type="email"
+              value={email}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setErr(false);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") sub();
+              }}
+              placeholder={t("nlPh")}
+              autoComplete="email"
+              aria-invalid={err || undefined}
+              aria-describedby={err ? "nl-err" : undefined}
+              className={cn(
+                "h-12 min-w-0 flex-1 rounded-field border bg-[rgba(251,247,238,.04)] px-3.5 font-sans text-[15px] leading-none font-medium text-iv outline-none focus:border-g3",
+                err ? "border-rose" : "border-[rgba(217,185,106,.45)]",
+              )}
+            />
+            <button
+              type="button"
+              onClick={sub}
+              className="h-12 cursor-pointer rounded-btn border-0 bg-transparent px-5 font-sans text-[14px] leading-none font-semibold tracking-[.03em] text-g3 shadow-ring-g3 transition-colors duration-150 hover:bg-[rgba(217,185,106,.12)] hi:tracking-normal"
+            >
+              {t("subscribe")}
+            </button>
+          </div>
+          {err && (
+            <span
+              id="nl-err"
+              role="alert"
+              className="flex items-center gap-1.5 font-sans text-[13px] leading-[1.3] font-medium text-rose"
+            >
+              <span className="block size-3.5">
+                <Icon name="alert" />
+              </span>
+              {t("nlErr")}
+            </span>
+          )}
+        </>
+      )}
+    </div>
+  );
+}
+
+/** Social circles (SiteFooter 59–61). Unconfirmed profiles show a toast instead of navigating. */
+export function FooterSocial() {
+  const t = useTranslations("footer");
+  const cls =
+    "grid size-10 place-items-center rounded-pill text-g3 shadow-[inset_0_0_0_1px_rgba(217,185,106,.4)] transition-colors duration-150 hover:bg-[rgba(217,185,106,.12)]";
+  return (
+    <div className="flex gap-2">
+      {SOCIAL.map((s) =>
+        s.url ? (
+          <a key={s.key} href={s.url} target="_blank" rel="noopener" aria-label={s.name} className={cls}>
+            <span className="block size-[18px]">
+              <Icon name={s.key} />
+            </span>
+          </a>
+        ) : (
+          <button
+            key={s.key}
+            type="button"
+            aria-label={s.name}
+            onClick={() => useUi.getState().toast({ msg: t("socialSoon", { name: s.name }), tone: "info" })}
+            className={cn(cls, "cursor-pointer border-0 bg-transparent")}
+          >
+            <span className="block size-[18px]">
+              <Icon name={s.key} />
+            </span>
+          </button>
+        ),
+      )}
+    </div>
+  );
+}
+
+/** English | हिंदी toggle (SiteFooter 65–69). */
+export function FooterLang() {
+  const t = useTranslations("chrome");
+  const { hi, setLocale } = useSwitchLocale();
+  return (
+    <div role="group" aria-label={t("language")} className="flex items-center gap-3.5">
+      <span className="block size-4 text-g3">
+        <Icon name="globe" />
+      </span>
+      <button
+        type="button"
+        lang="en"
+        aria-pressed={!hi}
+        onClick={() => setLocale("en")}
+        className={cn(
+          "cursor-pointer border-0 bg-transparent px-0 py-1 font-sans text-[13px] leading-none font-semibold text-iv",
+          !hi && "shadow-[inset_0_-1px_0_#D9B96A]",
+        )}
+      >
+        English
+      </button>
+      <button
+        type="button"
+        lang="hi"
+        aria-pressed={hi}
+        onClick={() => setLocale("hi")}
+        className={cn(
+          "cursor-pointer border-0 bg-transparent px-0 py-1 font-hi text-[15px] leading-none font-medium text-iv",
+          hi && "shadow-[inset_0_-1px_0_#D9B96A]",
+        )}
+      >
+        हिंदी
+      </button>
+    </div>
+  );
+}

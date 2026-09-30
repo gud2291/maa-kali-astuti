@@ -373,6 +373,29 @@ html[data-tab-hidden] [data-loop] {
   }
 }
 
+/* Cart drawer + backdrop (SiteChrome 244–245, 511): Radix data-state animations, so the dialog
+   waits for the exit before unmounting. Reduced motion kills them via the block below. */
+@keyframes mka-drawer-in {
+  from {
+    transform: translateX(100%);
+  }
+}
+@keyframes mka-drawer-out {
+  to {
+    transform: translateX(100%);
+  }
+}
+@keyframes mka-fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes mka-fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
 /* Gold sheen CTA (Home hero primary): hover sweeps the gradient across */
 @utility sheen {
   background-image: linear-gradient(
