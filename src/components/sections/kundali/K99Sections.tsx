@@ -263,7 +263,7 @@ export async function K99Faq({ items }: { items: [string, string][] }) {
           <a
             href={waLink()}
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
             className="mt-2 inline-flex items-center gap-2 self-start font-sans text-[14px] leading-none font-semibold text-em7 no-underline"
           >
             <span className="block size-[17px]">

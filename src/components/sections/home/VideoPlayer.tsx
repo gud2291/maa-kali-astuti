@@ -41,7 +41,7 @@ export function YtSubscribe() {
     </>
   );
   return url ? (
-    <a href={url} target="_blank" rel="noopener" className={cls}>
+    <a href={url} target="_blank" rel="noopener noreferrer" className={cls}>
       {inner}
     </a>
   ) : (

@@ -85,7 +85,7 @@ export function NewsletterBand() {
                 <a
                   href={waLink(t("waText"))}
                   target="_blank"
-                  rel="noopener"
+                  rel="noopener noreferrer"
                   className="inline-flex h-[50px] items-center gap-2 rounded-btn px-[18px] font-sans text-[14px] leading-none font-semibold text-g1 no-underline shadow-ring-g3 hover:bg-[rgba(217,185,106,.12)] hover:text-iv"
                 >
                   <Icon name="whatsapp" className="size-[17px]" />

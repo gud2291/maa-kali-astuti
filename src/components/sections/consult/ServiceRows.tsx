@@ -149,7 +149,7 @@ export async function ServiceRows({ services, modes }: { services: Service[]; mo
           <a
             href={waLink()}
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
             className="inline-flex items-center gap-[7px] font-semibold text-em7 no-underline"
           >
             <Icon name="whatsapp" className="size-4" />

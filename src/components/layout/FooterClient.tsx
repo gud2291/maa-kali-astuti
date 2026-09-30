@@ -116,7 +116,7 @@ export function FooterSocial() {
     <div className="flex gap-2">
       {SOCIAL.map((s) =>
         s.url ? (
-          <a key={s.key} href={s.url} target="_blank" rel="noopener" aria-label={s.name} className={cls}>
+          <a key={s.key} href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.name} className={cls}>
             <span className="block size-[18px]">
               <Icon name={s.key} />
             </span>

@@ -196,7 +196,7 @@ export async function SiteFooter() {
           ))}
           <div className="flex flex-col gap-[11px]">
             <span className={headCls}>{t("h.contact")}</span>
-            <a href={waLink()} target="_blank" rel="noopener" className={contactCls}>
+            <a href={waLink()} target="_blank" rel="noopener noreferrer" className={contactCls}>
               <span className="block size-4 flex-none text-g3">
                 <Icon name="whatsapp" />
               </span>

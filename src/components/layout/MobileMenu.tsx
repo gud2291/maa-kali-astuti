@@ -144,7 +144,7 @@ function MenuPanel() {
       </div>
 
       <div className="relative mt-auto grid grid-cols-2 gap-2.5 px-5 pt-4 pb-[calc(20px+env(safe-area-inset-bottom))]">
-        <a href={waLink()} target="_blank" rel="noopener" className={cta}>
+        <a href={waLink()} target="_blank" rel="noopener noreferrer" className={cta}>
           <span className="block size-[18px]">
             <Icon name="whatsapp" />
           </span>

@@ -2,6 +2,9 @@
    129, 193–194; SiteFooter.dc.html 50–53). All are [client-confirm] placeholders. */
 export { WHATSAPP_DISPLAY, waLink } from "@/lib/core/commerce";
 
+/** Production origin for absolute metadata URLs (Vercel previews also resolve against it). */
+export const SITE_URL = "https://sadhakpawanpandey.com";
+
 export const PHONE_TEL = "tel:+919000012345";
 export const EMAIL = "care@sadhakpawanpandey.com";
 

@@ -13,6 +13,7 @@ import { SiteChrome } from "@/components/layout/SiteChrome";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
+import { SITE_URL } from "@/lib/site";
 import "../globals.css";
 
 export function generateStaticParams() {
@@ -26,6 +27,12 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     title: { default: t("title"), template: `%s · ${t("siteName")}` },
     description: t("description"),
     applicationName: t("siteName"),
+    metadataBase: new URL(SITE_URL),
+    openGraph: {
+      type: "website",
+      siteName: t("siteName"),
+      locale: locale === "hi" ? "hi_IN" : "en_IN",
+    },
   };
 }
 

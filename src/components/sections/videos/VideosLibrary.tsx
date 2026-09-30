@@ -51,7 +51,7 @@ export function SubButton({ className }: { className: string }) {
     </>
   );
   return url ? (
-    <a href={url} target="_blank" rel="noopener" className={cls}>
+    <a href={url} target="_blank" rel="noopener noreferrer" className={cls}>
       {inner}
     </a>
   ) : (
@@ -346,7 +346,7 @@ export function VideosLibrary({
                 <a
                   href={shareHref}
                   target="_blank"
-                  rel="noopener"
+                  rel="noopener noreferrer"
                   className="inline-flex h-[46px] items-center gap-2 rounded-btn px-4 font-sans text-[13.5px] leading-none font-semibold text-g1 no-underline shadow-ring-gold hover:bg-[rgba(217,185,106,.1)] hover:text-iv"
                 >
                   <Icon name="whatsapp" className="size-4" />

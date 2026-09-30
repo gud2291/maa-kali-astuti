@@ -38,7 +38,7 @@ export async function SubscribeBand({ subs }: { subs: string }) {
           <a
             href={waLink(t("waText"))}
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
             className="inline-flex h-[52px] items-center gap-[9px] rounded-btn px-5 font-sans text-[14.5px] leading-none font-semibold text-g1 no-underline shadow-ring-g3 hover:bg-[rgba(217,185,106,.12)] hover:text-iv"
           >
             <Icon name="whatsapp" className="size-[18px]" />

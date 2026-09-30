@@ -4,12 +4,14 @@ import { useTranslations } from "next-intl";
 import { Icon } from "@/components/icons/Icon";
 import { WHATSAPP_DISPLAY, waLink } from "@/lib/site";
 import { cn } from "@/lib/utils/cn";
+import { useReducedMotion } from "@/lib/hooks/useReducedMotion";
 import { useSwitchLocale } from "./useSwitchLocale";
 
 /**
  * 32px emerald strip (SiteChrome.dc.html 18–40, 406, 446–448, 466–470): three messages rotate
  * every 4.2 s (520 ms slide); a copy of the first closes the loop and snaps back after 560 ms.
- * Pauses while the tab is hidden or the bar is scrolled away (`paused`).
+ * Pauses while the tab is hidden or the bar is scrolled away (`paused`); reduced motion shows the
+ * first message only (no auto-advance).
  * ≥768: WhatsApp number + EN | हिं toggle on the right.
  */
 export function AnnouncementBar({ paused }: { paused: boolean }) {
@@ -18,9 +20,10 @@ export function AnnouncementBar({ paused }: { paused: boolean }) {
   const { hi, setLocale } = useSwitchLocale();
   const [{ i, tr }, setRot] = useState({ i: 0, tr: true });
   const iRef = useRef(0);
+  const reduced = useReducedMotion();
 
   useEffect(() => {
-    if (paused) return;
+    if (paused || reduced) return;
     const n = msgs.length;
     let reset: ReturnType<typeof setTimeout> | undefined;
     const home = () => {
@@ -38,7 +41,7 @@ export function AnnouncementBar({ paused }: { paused: boolean }) {
       clearTimeout(reset);
       if (iRef.current === n) home(); // paused on the looping copy: snap back to the real first
     };
-  }, [paused, msgs.length]);
+  }, [paused, reduced, msgs.length]);
 
   const loop = [...msgs, msgs[0]];
 
@@ -71,7 +74,7 @@ export function AnnouncementBar({ paused }: { paused: boolean }) {
           <a
             href={waLink()}
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
             className="flex items-center gap-[7px] text-iv no-underline"
           >
             <span className="block size-3.5 text-g3">

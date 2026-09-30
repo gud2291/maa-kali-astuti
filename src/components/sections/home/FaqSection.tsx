@@ -40,7 +40,7 @@ export async function FaqSection() {
             <a
               href={waLink()}
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               className="inline-flex h-[46px] items-center gap-2 self-start rounded-btn bg-g3 px-[18px] font-sans text-[14px] leading-none font-bold text-n9 no-underline hover:bg-g4 hover:text-n9"
             >
               {t("waCta")}

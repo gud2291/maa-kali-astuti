@@ -31,7 +31,7 @@ export async function ConsultFaq({ items }: { items: [string, string][] }) {
             <a
               href={waLink()}
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               className="mt-1 inline-flex h-11 items-center gap-2 self-start rounded-btn px-4 font-sans text-[14px] leading-none font-semibold text-g3 no-underline shadow-ring-g3 hover:bg-[rgba(217,185,106,.12)] hover:text-g3"
             >
               {WHATSAPP_DISPLAY}

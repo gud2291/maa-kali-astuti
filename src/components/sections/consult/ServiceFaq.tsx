@@ -25,7 +25,7 @@ export async function ServiceFaq({ s, items }: { s: Service; items: [string, str
           <a
             href={waLink()}
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
             className="mt-2 inline-flex items-center gap-2 self-start font-sans text-[14px] leading-none font-semibold text-em7 no-underline"
           >
             <Icon name="whatsapp" className="size-[17px]" />

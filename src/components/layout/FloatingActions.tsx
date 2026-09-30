@@ -17,7 +17,7 @@ export function WhatsAppFab({ bottom }: { bottom: string }) {
     <a
       href={waLink()}
       target="_blank"
-      rel="noopener"
+      rel="noopener noreferrer"
       aria-label={t("fab")}
       style={{ "--fab-b": bottom } as CSSProperties}
       className="fixed right-[18px] bottom-[var(--fab-b)] z-50 grid size-14 place-items-center rounded-pill bg-em7 text-iv shadow-[inset_0_0_0_1px_rgba(217,185,106,.55),0_14px_30px_-12px_rgba(14,59,48,.55)] transition-[bottom] duration-[320ms] ease-mka md:bottom-6"

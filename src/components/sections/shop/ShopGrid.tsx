@@ -122,7 +122,7 @@ function EditorialBanner({ cat, art }: { cat: ShopCat; art: Product | undefined 
           <a
             href={waLink()}
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
             className="flex h-[46px] items-center gap-2 rounded-btn bg-g3 px-[18px] font-sans text-[14px] leading-none font-bold text-n9 no-underline hover:text-n9"
           >
             <span className="block size-[17px]">
@@ -185,7 +185,7 @@ export function EmptyState({ onClear }: { onClear: () => void }) {
         <a
           href={waLink()}
           target="_blank"
-          rel="noopener"
+          rel="noopener noreferrer"
           className="flex h-12 items-center gap-2 rounded-btn px-5 font-sans text-[14px] leading-none font-semibold text-em7 no-underline shadow-ring-em hover:text-em7"
         >
           <span className="block size-[17px]">

@@ -210,7 +210,7 @@ export function PaySheet({ name, phoneMask, pay, app, onApp, onPay, onRetry, onC
               <a
                 href={waLink()}
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
                 className="inline-flex h-[50px] items-center gap-2 rounded-btn px-[18px] font-sans text-[14.5px] leading-none font-semibold text-em7 no-underline shadow-[inset_0_0_0_1px_#164E3F]"
               >
                 <span className="block size-4">

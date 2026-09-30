@@ -8,6 +8,7 @@ import {
   type FormEvent,
   type ReactNode,
 } from "react";
+import dynamic from "next/dynamic";
 import { useLocale, useTranslations } from "next-intl";
 import { Icon } from "@/components/icons/Icon";
 import { scrollToId } from "@/components/layout/scroll";
@@ -37,6 +38,13 @@ import { PaySheet, type PayApp, type PayState } from "./PaySheet";
    QA-only demo states (INV §C): ?demo=generating|preview|success and ?pay=fail. */
 
 type Phase = "form" | "gen" | "preview" | "done";
+
+/* The preview carries ~80 KB of report-page SVG, so it loads on demand: the chunk is requested when
+   generation starts (5.3 s ahead). The fallback keeps #preview in the DOM for the scroll. */
+const loadPreview = () => import("./KundaliPreview");
+const KundaliPreview = dynamic(() => loadPreview().then((m) => m.KundaliPreview), {
+  loading: () => <section id="preview" className="min-h-[100svh] scroll-mt-[60px] bg-iv" />,
+});
 
 const EMPTY: K99Draft = { name: "", dob: "", tob: "", unknown: false, place: "", lang: "en", phone: "", email: "" };
 const DEMO: K99Draft = {
@@ -108,6 +116,7 @@ export function KundaliTool({ buildNow, intro, facts }: Props) {
     const q = draft.place.split(",")[0].trim();
     const c = picked && picked[0] === q ? picked : (placeSearch(q)[0] ?? CITIES[0]);
     stopGen();
+    void loadPreview();
     setCity(c);
     setMsg(0);
     setPhase("gen");

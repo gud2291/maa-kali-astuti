@@ -327,7 +327,7 @@ export function LoveTool() {
               <a
                 href={shareHref}
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
                 className="flex h-[50px] items-center justify-center gap-[9px] rounded-btn bg-em7 font-sans text-[14.5px] leading-none font-semibold text-iv no-underline shadow-[inset_0_0_0_1px_rgba(217,185,106,.55)] hover:bg-em5 hover:text-iv"
               >
                 <span className="block size-[17px]">

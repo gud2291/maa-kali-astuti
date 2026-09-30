@@ -283,7 +283,7 @@ export async function AboutBooks({ books }: { books: Book[] }) {
                 <a
                   href={waLink(t("askText", { title: b.en }))}
                   target="_blank"
-                  rel="noopener"
+                  rel="noopener noreferrer"
                   className="mt-1 inline-flex min-h-10 items-center gap-[7px] font-sans text-[13.5px] leading-none font-semibold text-em7 no-underline hover:text-em7"
                 >
                   <Icon name="whatsapp" className="size-4" />
@@ -376,7 +376,7 @@ export async function AboutCta() {
           <a
             href={waLink()}
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
             className="inline-flex h-[52px] items-center gap-[9px] rounded-btn px-5 font-sans text-[14.5px] leading-none font-semibold whitespace-nowrap text-g1 no-underline shadow-ring-g3 hover:bg-[rgba(217,185,106,.12)] hover:text-iv"
           >
             <Icon name="whatsapp" className="size-[18px]" />

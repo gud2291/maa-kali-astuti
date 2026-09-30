@@ -106,9 +106,7 @@
         "remedy",
         "Remedies to follow"
       ]
-    ],
-    "href": "Consultation-Detail.dc.html#s=kundali",
-    "book": "Booking.dc.html#s=kundali"
+    ]
   },
   {
     "key": "palm",
@@ -212,9 +210,7 @@
         "remedy",
         "Guidance summary"
       ]
-    ],
-    "href": "Consultation-Detail.dc.html#s=palm",
-    "book": "Booking.dc.html#s=palm"
+    ]
   },
   {
     "key": "tarot",
@@ -314,9 +310,7 @@
         "remedy",
         "Next steps"
       ]
-    ],
-    "href": "Consultation-Detail.dc.html#s=tarot",
-    "book": "Booking.dc.html#s=tarot"
+    ]
   },
   {
     "key": "numerology",
@@ -416,8 +410,6 @@
         "remedy",
         "Name options"
       ]
-    ],
-    "href": "Consultation-Detail.dc.html#s=numerology",
-    "book": "Booking.dc.html#s=numerology"
+    ]
   }
 ]

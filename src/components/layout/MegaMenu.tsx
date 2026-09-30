@@ -152,7 +152,7 @@ export function MegaShop({ close, keep }: { close: () => void; keep: () => void 
           <a
             href={waLink()}
             target="_blank"
-            rel="noopener"
+            rel="noopener noreferrer"
             className="mt-1 flex items-center gap-2 font-sans text-[13px] leading-none font-semibold text-em7 no-underline"
           >
             <span className="block size-4">

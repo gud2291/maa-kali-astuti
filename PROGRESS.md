@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti
 
-**Phase:** F — Frontend (client demo) · **Next step:** F15
+**Phase:** F — Frontend (client demo) · **Next step:** Fix-list carry-over, then B0
 Resume in a fresh session with: `/next`
 
 | Step | Title | Status |
@@ -20,13 +20,13 @@ Resume in a fresh session with: `/next`
 | F12 | Rashifal + Rashi detail | DONE |
 | F13 | Sadhana Courses + Course detail + Rituals | DONE |
 | F14 | About + Videos + 404 | DONE |
-| F15 | Polish, audits, demo handover | TODO |
+| F15 | Polish, audits, demo handover | DONE |
 | B0 | Backend plan (new plan session) | TODO |
 
 ---
 
 ## Fix-list (from the user's manual QA; fix these first in the next session)
-_(empty)_
+- [ ] F15 carry-over: run the full-codebase skill reviews (**ui-ux-pro-max** review, **/code-review**, **simplify**) and apply the fixes. They were not run in the F15 session; only the F15 diff was reviewed by hand.
 
 ---
 
@@ -1473,17 +1473,35 @@ Manual QA (F14). `pnpm dev`. No reference shots: compare with `design/About.dc.h
 16. **Reduced motion ON**: no chakra spin, no chapter draw/spin, the mobile story line is full, the player bar steps each second, the Shorts segment shows full with no auto-advance, reveals just show.
 17. Any error or type error → Fix-list.
 
-### F15 — Polish & handover · TODO
+### F15 — Polish & handover · DONE
 Read: PROGRESS Fix-list, `docs/CODING-RULES.md`.
 Tasks:
-- [ ] Cross-link audit (every CTA / nav / footer link goes to a real route or WhatsApp).
-- [ ] Hindi pass (`[HI review]` flags).
-- [ ] Reduced-motion + focus audit.
-- [ ] Performance pass: dynamic imports below the fold, external SVG, DOM size, `use client` minimised, image sizes.
-- [ ] Basic per-page `generateMetadata`. Full SEO comes in phase B.
-- [ ] Run skills: **ui-ux-pro-max** (review), **/code-review**, **simplify**. Apply the fixes.
-- [ ] `docs/CLIENT-DEMO.md`: how to run locally, how to deploy a Vercel preview, and the client-confirm list.
-Manual QA: full site pass; `pnpm build`; deploy the Vercel preview; Lighthouse mobile ≥ 90.
+- [x] Cross-link audit (every CTA / nav / footer link goes to a real route or WhatsApp).
+- [x] Hindi pass (`[HI review]` flags).
+- [x] Reduced-motion + focus audit.
+- [x] Performance pass: dynamic imports below the fold, external SVG, DOM size, `use client` minimised, image sizes.
+- [x] Basic per-page `generateMetadata`. Full SEO comes in phase B.
+- [ ] Run skills: **ui-ux-pro-max** (review), **/code-review**, **simplify**. Apply the fixes. → moved to the Fix-list.
+- [x] `docs/CLIENT-DEMO.md`: how to run locally, how to deploy a Vercel preview, and the client-confirm list.
+
+Done-notes:
+- **Links**: every internal href goes through the `src/lib/routes.ts` builders, and every target has a route (a real page or a coming-soon page). Removed the unused `href` / `book` fields (`*.dc.html#…`) from `src/lib/data/services.json`.
+- **External links**: `rel="noopener"` → `rel="noopener noreferrer"` everywhere (CODING-RULES Security), 23 files.
+- **Reduced motion**: `AnnouncementBar` no longer auto-rotates under reduced motion (first message only). The other interval / rAF users were already guarded, and the global CSS rule stops CSS animations. Focus: the global 2px gold `:focus-visible` ring and the skip link already exist in `globals.css`.
+- **Performance**: `KundaliPreview` (~80 KB of report-page SVG strings) is now `next/dynamic` in `KundaliTool.tsx`. Its chunk is requested when generation starts, and the fallback keeps `<section id="preview">` in the DOM for the scroll. ShortsViewer is small, so it stays static. `/videos` still sends every thumbnail string (F14 note); acceptable for the demo.
+- **Metadata**: every page already had `generateMetadata` (Home uses the layout default). The layout now sets `metadataBase` (`SITE_URL` in `src/lib/site.ts`) and basic Open Graph (site name, `en_IN` / `hi_IN`).
+- **Hindi**: normalised पांडेय → पाण्डेय and ब्रेडक्रंब → ब्रेडक्रम्ब in `hi.json`. The Shorts viewer labels are translated (`shorts` namespace); the "Shorts" label stays as the brand term. The rest stays on the `[HI review]` client-confirm item.
+- **Docs**: `docs/CLIENT-DEMO.md` (run, Vercel preview, demo routes, client-confirm summary).
+- Nothing was run (no dev / build / tsc / lint).
+
+Manual QA (F15):
+1. `pnpm dev`, then a full pass of every route listed in `docs/CLIENT-DEMO.md` at 390px and 1440px, EN and `/hi`.
+2. `/kundali-99`: fill the form → generating → the preview appears and the page scrolls to it (no blank gap). Also try `?demo=preview` and `?demo=success`.
+3. Reduced motion ON: the announcement bar stays on its first message.
+4. `/hi/videos`: open a Short; the prev / next / close labels are Hindi.
+5. WhatsApp and other external links open in a new tab.
+6. `pnpm build` passes; deploy the Vercel preview (steps in CLIENT-DEMO.md); Lighthouse mobile ≥ 90 on `/`, `/shop`, `/videos`.
+7. Any error or type error → Fix-list.
 
 ### B0 — Backend plan · TODO
 Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
@@ -1507,6 +1525,7 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
 - 2026-09-30 (F11): generated SVG strings never carry visitor text. When a design string embeds user input (the Kundali cover name), the extractor cuts that `<text>` out and the component renders it as JSX over the same viewBox.
 
 ## Client-confirm list (placeholders from the design)
+- Production origin `https://sadhakpawanpandey.com` (`SITE_URL`, used for metadata URLs).
 - Prices beyond 12 Nag ₹1,250, Kundali ₹99 and courses ₹50,000. Kundali MRP ₹499.
 - Consultation prices, durations, tiers; slot times; reschedule rule.
 - Stats (18+ yrs, 12,000+ seekers, 3,500+ rituals), "4.9 · 2,000+ reviews", testimonials.

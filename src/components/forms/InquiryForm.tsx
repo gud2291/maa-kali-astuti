@@ -342,7 +342,7 @@ export function InquiryForm({
             <a
               href={waLink()}
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               className="flex items-center gap-2 font-sans text-[14px] leading-none font-semibold text-em7 no-underline"
             >
               <Icon name="whatsapp" className="size-[17px]" />
@@ -393,7 +393,7 @@ export function InquiryForm({
             <a
               href={waLink()}
               target="_blank"
-              rel="noopener"
+              rel="noopener noreferrer"
               className="flex h-12 items-center gap-[9px] rounded-btn bg-em7 px-5 font-sans text-[14px] leading-none font-semibold text-iv no-underline shadow-ring-gold hover:text-iv"
             >
               <Icon name="whatsapp" className="size-[17px]" />

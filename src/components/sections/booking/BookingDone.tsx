@@ -112,7 +112,7 @@ export function BookingDone({
                   <a
                     href={gcal(evt)}
                     target="_blank"
-                    rel="noopener"
+                    rel="noopener noreferrer"
                     className="inline-flex h-[50px] items-center gap-[9px] rounded-btn bg-g3 px-5 font-sans text-[14.5px] leading-none font-bold text-n9 no-underline transition-transform duration-200 hover:-translate-y-px hover:text-n9"
                   >
                     <Icon name="calendar" className="size-[17px]" />
@@ -131,7 +131,7 @@ export function BookingDone({
               <a
                 href={waLink()}
                 target="_blank"
-                rel="noopener"
+                rel="noopener noreferrer"
                 className="inline-flex h-[50px] items-center gap-[9px] rounded-btn px-5 font-sans text-[14.5px] leading-none font-semibold text-em1 no-underline shadow-ring-gold-45 hover:bg-[rgba(217,185,106,.08)] hover:text-iv"
               >
                 <Icon name="whatsapp" className="size-[17px]" />
