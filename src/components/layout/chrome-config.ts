@@ -19,6 +19,9 @@ export type ChromeConfig = {
   secureLabel?: "booking" | "checkout";
   /** Footer newsletter block (off on Home, which has its own newsletter band). */
   newsletter: boolean;
+  /** The footer only renders once the page's flow is done (`useUi.flowDone`): Booking shows
+   *  SiteFooter inside its confirmation only (Booking.dc.html 446). */
+  flowFooter?: boolean;
 };
 
 const BASE: ChromeConfig = { active: "", mode: "full", tabbar: true, fabLift: "88px", newsletter: true };
@@ -38,6 +41,7 @@ export function chromeFor(path: string): ChromeConfig {
       backHref: "/consultations",
       backLabel: "consultations",
       secureLabel: "booking",
+      flowFooter: true,
     };
   // Consultation-Detail: tabbar off (sticky Book bar), FAB lifted to 92px.
   if (path.startsWith("/consultations/")) return { ...BASE, active: "consult", tabbar: false, fabLift: "92px" };

@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti
 
-**Phase:** F — Frontend (client demo) · **Next step:** F10
+**Phase:** F — Frontend (client demo) · **Next step:** F11
 Resume in a fresh session with: `/next`
 
 | Step | Title | Status |
@@ -15,7 +15,7 @@ Resume in a fresh session with: `/next`
 | F7 | Home C — courses → newsletter | DONE |
 | F8 | Shop + category template | DONE |
 | F9 | Consultations + consultation detail + InquiryForm | DONE |
-| F10 | Booking stepper | TODO |
+| F10 | Booking stepper | DONE |
 | F11 | Kundali ₹99 + Love Calculator | TODO |
 | F12 | Rashifal + Rashi detail | TODO |
 | F13 | Sadhana Courses + Course detail + Rituals | TODO |
@@ -1036,16 +1036,134 @@ Manual QA (F9). `pnpm dev`. No reference shot covers these pages, so compare wit
     - Anchor jumps are instant; the sticky bar appears without sliding.
 14. Any error or type error → Fix-list.
 
-### F10 — Booking · TODO
+### F10 — Booking · DONE
 Read: INV §A.10, §C (booking row). Design: `Booking.dc.html` 28–603 · `mka-astro.js` 10–12, 73–74, 158–170, 260–269, 298–325 · `mka-core.js` 20–24, 509–510 (details: INV §H F10).
 Tasks:
-- [ ] `/book/[service]?tier=`: the 4-step stepper with a progress line.
+- [x] `/book/[service]?tier=`: the 4-step stepper with a progress line.
   1. Service & mode.
   2. Details, which vary per service (palm photo upload preview + guide).
   3. Date & slot (IST, Sunday closed, 30-day window).
   4. Pay (mock overlay with chakra).
-- [ ] Confirmation page with .ics download and Google Calendar.
-Manual QA: full flow on mobile + desktop, back/forward between steps.
+- [x] Confirmation page with .ics download and Google Calendar.
+
+Done-notes:
+- **Route:** `src/app/[locale]/book/[service]/page.tsx`.
+  - The 4 service slugs via `generateStaticParams`, `dynamicParams = false` (unknown → 404). Static.
+  - `generateMetadata`: "Book {service}" + description (`booking.meta`).
+  - It renders `<BookingFlow key={service}>` with the services, modes and the process-step icons.
+- **Client state** (`src/components/sections/booking/BookingFlow.tsx`): step 1–4 + confirmation, service, mode, tier, details, palm photos, calendar month, date, time, payment.
+  - `?tier=` is read once on mount (an unknown tier keeps the recommended one, like the design's `fromHash`).
+  - Changing the service or tier on step 1 rewrites the URL in place (`replaceState`, locale prefix kept): `/book/<slug>?tier=<t>`. A service change resets the mode (first mode), tier (recommended), date, time and errors.
+  - Steps are **not** in the URL (INV §C). The browser Back button leaves the page; the in-page Back / the ✓ step circles go back.
+  - Continue validates the step (`checkBookingStep`, below). On failure it marks the step as tried (errors then update live), focuses the first `[aria-invalid="true"]` inside `#main` and scrolls it 140px under the top (`scrollToY`, Lenis-aware).
+  - Step change: smooth scroll to top (`scrollToTop`) and focus moves to the h1 (a11y addition, no visual change).
+  - Pay: overlay (chakra spin 8 / −6 / 4 s, "Confirming your payment") → `submitBooking` → confirmation, instant jump to top (`jumpToTop`).
+- **Step components** (same folder):
+  - `StepService`: service radio cards (2 cols), mode pills + note, tier rows ("Most chosen"). Palmistry as a report shows "Written report" for tiers without the video walkthrough.
+  - `StepDetails`: name, WhatsApp (+91, digits only), email; per service:
+    - kundali: date, time + "I don't know" (disables the time), place combobox (`placeSearch`, 32 towns; picks "Town, State");
+    - numerology: date, mobile to analyse, business name;
+    - palmistry: 3 guide tiles (`PALM_LIGHT_SVG`) + left/right uploads (object-URL preview, Remove, toast for non-images and files over 15 MB; URLs are revoked on replace/remove/unmount);
+    - tarot: the question becomes required.
+    Then the question textarea and the हिंदी / English segmented control.
+  - `StepSlot`: Mon-first calendar (tomorrow → +30 days, Sundays closed, gold dot under today, ‹ › limited to the window) + times grouped Morning / Afternoon / Evening (`slotsFor`, seeded; booked = struck through, disabled). Non-IST visitors get the green "That is … where you are (tz)" note. Written reports get the 3-step delivery timeline instead.
+  - `StepPay`: the sand summary card (<768 only), UPI (4 app tiles; "UPI ID" reveals the field) / card / netbanking (6 bank chips), Razorpay line.
+  - `BookingSummary`: the night aside (≥1024, sticky 88px): stars `bk-sum` + mandala, rows, gold total, 3 trust lines (the 3rd is the guarantee on Kundali, else follow-ups).
+  - `BookingDone`: night confirmation (check ring 1000 ms +150, tick 520 ms +950 via `drawIn`; stars `bk-done` 28 / 16 on mobile + mandala), Google Calendar link + `.ics` download (live sessions only), "Message the office", the details card; then "What happens next" (reveal-staggered, texts reused from `consult.how.steps`) + "Back to consultations" / "Browse energized products".
+  - `ui.tsx`: booking field classes (52px cream fields, 13px labels), `ErrorRow`, `RadioDot`, `GROUP_TITLE`.
+  - Mobile (<768): the fixed bottom bar (price + short summary + Back square + Continue / "Pay ₹…"), hidden while processing; the section reserves 132px for it. The desktop nav row shows from 768.
+- **Lib:**
+  - `src/lib/astro/slots.ts`: `slotsFor`, `t12`, `istDate`, `isoDay` (slot lists stay in `consult.json`).
+  - `src/lib/astro/calendar.ts`: `ics(o, now)`, `gcal(o)`, `downloadIcs(o, filename)`.
+  - `src/lib/validation/booking.ts`: zod `superRefine` per step, 1:1 with the design's `errs()`. It returns one error code per field; the messages live in `booking.err`. Also the pay/bank/UPI-app constants and `bookingDefaults()`.
+  - `src/lib/api/booking.ts`: mock `submitBooking` (2000 ms, id `MKA-B` + 5 base-36 chars, newest 20 kept in localStorage `mka.store.v2.bookings`; photos are not stored, only the count). Phase B: Razorpay order + signature check + POST.
+  - `src/lib/core/services.ts`: `isReport` / `recTier` moved here (no JSON imports) so client islands can use them. `@/lib/api/consult` re-exports them, so existing imports still work.
+  - `src/lib/core/dates.ts`: `dlong(d, hi?)` gained a Hindi form; new `monthTitle(d, hi?)`, `MON_LONG`, `DAYH_LONG`, `MONH_LONG`.
+  - `src/components/layout/scroll.ts`: new `scrollToY(top)` and `jumpToTop()`.
+- **Footer only on the confirmation (Booking 446):**
+  - `chrome-config` sets `flowFooter: true` for `/book/*`.
+  - `FooterRoot` renders nothing on such routes until `useUi.flowDone` is true.
+  - `BookingFlow` sets `flowDone` when it reaches step 5 and resets it on unmount.
+  - Reusable for any future multi-step page.
+- **i18n:** new namespace `booking` in `messages/en.json` + `hi.json` (Hindi is ours, `[HI review]`).
+  - Following the F9 rule, the display h1s ("Choose your consultation.", "Your session is booked.", "Sadhak Ji reads before he speaks."), service / tier names and step titles of "What happens next" stay English on /hi.
+  - **New (Decisions log):** the 22px Fraunces form-group titles ("Which consultation?", "Package", "Birth details", "Pay with", the calendar month …) *are* translated on /hi. They are form labels, so they use `font-title` (Fraunces + Tiro fallback), like the InquiryForm title.
+  - Dates on /hi use the Hindi day/month names.
+- **Small a11y additions (no visual change):**
+  - The calendar grid is a labelled `group` (the design's `role=grid` had no rows/cells); blank lead cells are plain spans.
+  - The place combobox supports ↑ / ↓ / Enter / Esc with `aria-activedescendant`.
+  - `aria-describedby` links the inputs to their errors; focus rings on the numerology mobile field and on the (invisible) palm file inputs.
+- **Deviation:** none visual. The 768–1023 summary gap is built 1:1 (already on the Client-confirm list).
+- Nothing was run (no dev / build / tsc / lint).
+
+Manual QA (F10). `pnpm dev`. No reference shot covers Booking, so compare with `design/Booking.dc.html#s=kundali&tier=detailed` (and `#s=palm`, `#s=tarot`, `#s=numerology`) opened in the browser.
+1. **Entry points:**
+   - `/consultations` → "Book a consultation" opens `/book/kundali-reading`.
+   - A row "Book" → `/book/<slug>`.
+   - `/consultations/palmistry` → a package card or the sticky "Book now" → `/book/palmistry?tier=…` with that package selected.
+   - `/book/xyz` → 404.
+2. **Chrome:** 64px secure bar with "← Consultations" and "Secure booking"; no announcement, no tab bar, **no footer** during the steps.
+3. **Step 1, desktop 1440px (`/book/kundali-reading?tier=premium`)**
+   - Eyebrow, "Choose your *consultation.*"; 4 step circles with a hairline (1 is dark with a gold halo).
+   - 4 service cards (2 × 2): the chosen card is ivory with an emerald ring and a dot, its icon circle dark/gold.
+   - Mode pills (Phone / Video / WhatsApp / Written report) + the note under them.
+   - Packages: **Premium** selected (from the URL), "MOST CHOSEN" on Detailed.
+   - Right: the night summary (stars, mandala, "कुंडली विश्लेषण / Kundali Reading", Package / Mode / When "Not chosen yet" in grey / Language Hindi, total ₹5,100, 3 lines incl. the satisfaction guarantee).
+   - Click Tarot → the URL becomes `/book/tarot-reading?tier=detailed`, modes change (no report), the summary updates, and the last trust line becomes "Follow-up questions…".
+   - Click a package → the URL's `?tier=` changes. Nothing reloads.
+   - Bottom row: "Not sure? Ask on WhatsApp" + "Continue to your details →" (a gold sheen on hover).
+4. **Step 2**
+   - The line fills to the 2nd circle; circle 1 turns into a ✓ (clickable, goes back).
+   - Empty Continue → red rings and messages under the name, WhatsApp, date, time and place. The cursor jumps to "Full name" and the page scrolls to it.
+   - Fix the fields: each error clears as you type. Phone accepts digits only (10). "I don't know my exact time" greys out the time field.
+   - Place: type "va" → a list (Varanasi…); click one → "Varanasi, Uttar Pradesh". Keyboard: ↓ / Enter also pick it.
+   - Session language toggle हिंदी / English → the summary's Language row changes.
+5. **Step 3 (Kundali, Phone call)**
+   - The calendar starts at this month: today has a gold dot, past days and Sundays are pale/disabled, and dates after +30 days are disabled. ‹ is disabled on the first month; › moves to next month only if the window reaches it.
+   - Before a date: "Open times" + the sand "Pick a date…" box.
+   - Pick a date → the title becomes the long date; Morning / Afternoon / Evening times appear (some struck through and disabled). The same date always shows the same booked times.
+   - Pick a time → the summary "When" turns white: "Thu, 8 Oct · 2:30 pm IST".
+   - Change the computer's timezone (or test from outside India) → the green "That is … where you are" note appears.
+   - Continue with no date → "Choose a date and a time." With a date but no time → "Choose a time for your session."
+6. **Step 4**
+   - "Review and *pay.*"; UPI is selected with "FASTEST"; Google Pay tile selected.
+   - "UPI ID" tile → the field appears; `abc` + Pay → "Enter a UPI ID such as name@okhdfc."
+   - Netbanking → 6 bank chips; Pay without a bank → "Choose your bank."
+   - The button reads "🔒 Pay ₹3,100 securely".
+   - Pay → the dark overlay with 3 counter-rotating chakra rings, "Confirming your payment" for ~2 s.
+7. **Confirmation**
+   - Night band: the gold ring draws, then the tick. "BOOKING MKA-B·····", "Your session is *booked.*", the Devanagari line, "Confirmation sent to WhatsApp on +91 98765 43210 …" (+ email if given) "Please be free five minutes…".
+   - "Add to Google Calendar" opens Google Calendar with the title, the right IST time and duration. ".ics" downloads `maa-kali-astuti-MKA-B….ics`, which opens in Apple/Outlook calendar at the right time.
+   - The details card shows Consultation, Package, Mode, When (long date · time IST), Paid (₹ · UPI · Google Pay).
+   - "What happens next" fades in (4 steps, the first "DONE" with a gold top rule). The two buttons go to `/consultations` and `/shop`.
+   - The **footer now appears** below. Navigating away and coming back to `/book/...` starts at step 1 again, without the footer.
+8. **Other services**
+   - Palmistry (`/book/palmistry`):
+     - Written report mode by default. Step 3 is called "Delivery" and shows the 3-step timeline (Today → tomorrow → +2 days).
+     - Step 2 has the photo guide (the 3rd tile is shaded with a red ✕) and the two dashed upload tiles.
+     - Upload a photo → it fills the tile, then "✓ Left palm added · Remove". A PDF/other file → an error toast.
+     - Continue without photos → red dashed tiles + messages.
+     - The confirmation has no calendar buttons and says "Your report arrives by …".
+   - Tarot: the question is required (under 8 characters → "Write the question you want the cards to answer.").
+   - Numerology: "Name & numbers" with the mobile to analyse (optional; 5123456789 → error) and business name.
+9. **Mobile 390px**
+   - One column, no summary aside, no desktop nav row.
+   - The fixed bottom bar shows the price, "Detailed · 90 min · Phone call", a Back square (from step 2) and "Continue →" / "Pay ₹3,100". The WhatsApp FAB sits above it; the last content isn't hidden behind the bar.
+   - Step 4 starts with the sand summary card.
+   - Slots / UPI tiles wrap (UPI 2 × 2). The calendar fits without horizontal scroll.
+   - The bar disappears during processing and on the confirmation.
+   - No horizontal page scroll anywhere.
+10. **Tablet 768–1023:** nav row visible, no summary at all (known design gap). The calendar and slots sit side by side from 700px and stack again at 1024–1179.
+11. **`/hi/book/kundali-reading`**
+    - Step labels, form labels and titles, errors, buttons, calendar day/month names and summary rows are in Hindi.
+    - The h1 headings and the service/tier names stay English.
+    - Switching the language mid-flow reloads at step 1 (expected: the steps are client state).
+12. **Keyboard**
+    - Tab through service cards, modes, tiers (Enter / Space picks), fields, calendar days, times, pay methods.
+    - The focus ring is visible on the palm upload tiles.
+    - After Continue, the focus goes to the heading.
+13. **Reduced motion ON:** no sheen sweep, and the step line jumps. The chakra overlay is still, the check appears drawn at once, and the "What happens next" items show without fading. Scrolls are instant.
+14. Any error or type error → Fix-list.
 
 ### F11 — Kundali ₹99 + Love Calculator · TODO
 Read: INV §A.11, §A.12, §E.1 S7 S12 S13. Design: `Kundali-99.dc.html` 28–500 · `Love-Calculator.dc.html` 27–254 · `mka-astro.js` 9–151, 158–170, 283–295, 334–339, 372–386, 413 (details: INV §H F11).
@@ -1113,6 +1231,8 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
   - Fraunces display text (headings, service and tier names, quotes) stays English, because the display face has no Devanagari.
   - Manrope UI text is translated.
   - Data content (service details, tier inclusions, testimonials, FAQ) stays English until the phase-B CMS has Hindi fields.
+- 2026-09-30 (F10): on /hi, form-group titles set in the 22px display serif (Booking "Which consultation?", "Package", "Birth details", "Pay with", calendar month…) are translated and use `font-title` (Fraunces + Tiro fallback), because they label form controls. Page h1/h2 display headings still stay English (F9 rule).
+- 2026-09-30 (F10): pages can hide the site footer until a flow finishes (`flowFooter` in chrome-config + `useUi.flowDone`). Booking uses it: footer only on the confirmation, as in the design.
 - 2026-09-30 (F8): the shop category and filters are view state. Switching rewrites the URL in place (`replaceState`: the path for the category, the query for filters) instead of navigating. The view, the open groups and the mobile sheet keep their state, and no page transition runs (same as the design's hash). Deep links and reloads restore everything.
 
 ## Client-confirm list (placeholders from the design)
@@ -1174,3 +1294,11 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
     - the promise "a WhatsApp call … within two working days";
     - the reference formats MKA-S- / MKA-R-;
     - inquiries are only stored in the browser (demo) until phase B.
+- Booking (F10):
+  - [HI review] all the `booking` Hindi in `messages/hi.json` is ours.
+  - Payment is a mock: a 2 s "Confirming your payment" overlay, no Razorpay. Phase B needs the Razorpay keys, order creation and signature verification.
+  - Slot availability is demo data (seeded per date). Confirm the real session times per length (30 / 45 / 60 / 90 min lists from the prototype), Sundays closed, the 30-day booking window and IST-only times.
+  - Booking reference format `MKA-B` + 5 characters. Bookings are only stored in the browser (demo).
+  - Palm photos: "seen only by Sadhak Ji and deleted 30 days after your report", 15 MB limit, photos are not uploaded in the demo.
+  - Payment options shown: UPI (Google Pay, PhonePe, Paytm, UPI ID), cards (Visa, Mastercard, RuPay), netbanking chips (SBI, HDFC, ICICI, Axis, Kotak, Bank of Baroda).
+  - Copy promises: "video link on WhatsApp an hour before", "report within 48 hours", "confirmation on WhatsApp (and email)".

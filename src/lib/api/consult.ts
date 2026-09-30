@@ -69,11 +69,5 @@ export async function getFaq(set: FaqSet): Promise<[string, string][]> {
   return faqData[set] as [string, string][];
 }
 
-/* ---------- display helpers shared by the listing, the detail page and (F10) booking ---------- */
-
-/** Palmistry is a written report: its duration reads "Report in 48 hrs" instead of minutes
- *  (Consultations 280, Consultation-Detail 211, 216, 223). */
-export const isReport = (s: Pick<Service, "key">) => s.key === "palm";
-
-/** The recommended ("Most chosen") tier. */
-export const recTier = (s: Service): Tier => s.tiers.find((t) => t.rec) ?? s.tiers[1];
+/* ---------- display helpers shared by the listing, the detail page and booking ---------- */
+export { isReport, recTier } from "@/lib/core/services";

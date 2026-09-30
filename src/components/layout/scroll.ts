@@ -31,3 +31,19 @@ export function scrollToId(id: string, offset = 60) {
   }
   window.scrollTo({ top, behavior: isReduced() ? "auto" : "smooth" });
 }
+
+/** Scroll to an absolute page offset: smooth unless reduced motion (Booking error focus 518). */
+export function scrollToY(top: number) {
+  const y = Math.max(0, top);
+  if (lenis && !isReduced()) {
+    lenis.scrollTo(y);
+    return;
+  }
+  window.scrollTo({ top: y, behavior: isReduced() ? "auto" : "smooth" });
+}
+
+/** Instant jump to the top (Booking confirmation 521: `window.scrollTo(0, 0)`). */
+export function jumpToTop() {
+  if (lenis) lenis.scrollTo(0, { immediate: true });
+  else window.scrollTo(0, 0);
+}

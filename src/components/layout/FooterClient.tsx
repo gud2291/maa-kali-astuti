@@ -11,10 +11,13 @@ import { useSwitchLocale } from "./useSwitchLocale";
 
 /* Client islands of the server-rendered footer (SiteFooter.dc.html). */
 
-/** `<footer>` with 72px bottom padding on mobile when the page has the tab bar (SiteFooter 96). */
+/** `<footer>` with 72px bottom padding on mobile when the page has the tab bar (SiteFooter 96).
+ *  On `flowFooter` routes (Booking) it renders only once the flow is done. */
 export function FooterRoot({ children }: { children: ReactNode }) {
   const cfg = chromeFor(usePathname());
+  const flowDone = useUi((s) => s.flowDone);
   const tabbar = cfg.tabbar && cfg.mode !== "checkout";
+  if (cfg.flowFooter && !flowDone) return null;
   return (
     <footer className={cn("relative overflow-hidden bg-n9 text-em1", tabbar && "pb-[72px] md:pb-0")}>{children}</footer>
   );

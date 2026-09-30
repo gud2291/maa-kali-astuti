@@ -985,5 +985,272 @@
     "reference": "Reference {ref}",
     "continueWa": "Continue on WhatsApp",
     "another": "Send another inquiry"
+  },
+  "booking": {
+    "meta": {
+      "title": "Book {name}",
+      "description": "Book a {name} consultation with Sadhak Pawan Pandey: choose your package, share your details, pick a time and pay securely."
+    },
+    "eyebrow": "Book a consultation · <hi>परामर्श</hi>",
+    "head": {
+      "1": "Choose your <em>consultation.</em>",
+      "2": "A few details <em>about you.</em>",
+      "3": "Pick a <em>date and time.</em>",
+      "4": "Review and <em>pay.</em>",
+      "3r": "Your report <em>timeline.</em>"
+    },
+    "stepsAria": "Booking steps",
+    "steps": {
+      "service": "Service",
+      "details": "Your details",
+      "slot": "Date & time",
+      "delivery": "Delivery",
+      "pay": "Payment"
+    },
+    "stepAria": "Step {n}: {t}{state, select, done { (completed, go back)} cur { (current)} other {}}",
+    "s1": {
+      "svc": "Which consultation?",
+      "fromDur": "from {price} · {dur}",
+      "mode": "How would you like to meet?",
+      "modeNote": {
+        "call": "Sadhak Ji calls you on your WhatsApp number at the booked time.",
+        "video": "A video link reaches you on WhatsApp an hour before the session.",
+        "wa": "Sadhak Ji calls you on WhatsApp at the booked time.",
+        "report": "A written report arrives on WhatsApp and email within 48 hours."
+      },
+      "tier": "Package",
+      "rec": "Most chosen"
+    },
+    "written": "Written report",
+    "s2": {
+      "name": "Full name",
+      "phone": "WhatsApp number",
+      "email": "Email",
+      "emailOpt": "(optional, for a copy of the confirmation)",
+      "birth": {
+        "kundali": "Birth details",
+        "numerology": "Name & numbers"
+      },
+      "dob": "Date of birth",
+      "tob": "Time of birth",
+      "unknown": "I don’t know my exact time",
+      "mob": "Mobile number to analyse",
+      "mobPh": "Same as WhatsApp",
+      "place": "Place of birth",
+      "placePh": "Town or city",
+      "biz": "Business or brand name",
+      "optional": "(optional)",
+      "palms": {
+        "title": "Photos of both palms",
+        "body": "The left hand shows what you were born with, the right what you are making of it. Clear photos give a more precise reading.",
+        "guide": [
+          "Daylight, palm open and flat",
+          "Fingers together, whole hand in frame",
+          "No flash, filters or heavy shadow"
+        ],
+        "left": "Left palm",
+        "right": "Right palm",
+        "tap": "Tap to take or upload",
+        "added": "{label} added",
+        "remove": "Remove",
+        "upload": "Upload {side, select, left {left palm} other {right palm}} photo",
+        "alt": "{label} photo",
+        "private": "Photos are seen only by Sadhak Ji and deleted 30 days after your report.",
+        "notImage": "Please choose a photo (JPG or PNG).",
+        "tooBig": "That photo is over 15 MB. Please choose a smaller one."
+      },
+      "q": {
+        "kundali": {
+          "title": "Your question or concern",
+          "hint": "Optional. Sadhak Ji reads it before the session.",
+          "ph": "For example: when is a good time to change jobs?"
+        },
+        "palm": {
+          "title": "Your question or concern",
+          "hint": "Optional. The report will answer it directly.",
+          "ph": "For example: what does my fate line say about a career change?"
+        },
+        "tarot": {
+          "title": "Your question for the cards",
+          "hint": "Required. One clear, present-tense question works best.",
+          "ph": "For example: what should I focus on in this relationship?"
+        },
+        "numerology": {
+          "title": "Your question or concern",
+          "hint": "Optional. Mention a launch or a name change you are planning.",
+          "ph": "For example: is my shop name right for the business?"
+        }
+      },
+      "lang": "Session language"
+    },
+    "s3": {
+      "prev": "Previous month",
+      "next": "Next month",
+      "grid": "Choose a date",
+      "dows": [
+        "Mo",
+        "Tu",
+        "We",
+        "Th",
+        "Fr",
+        "Sa",
+        "Su"
+      ],
+      "closed": "{date}, closed",
+      "unavailable": "{date}, unavailable",
+      "open": "Open",
+      "selected": "Selected",
+      "rule": "Closed on Sundays · up to 30 days ahead",
+      "openTimes": "Open times",
+      "ist": "All times in IST (UTC+5:30) · {n}-minute session",
+      "pick": "Pick a date on the calendar to see the open times.",
+      "groups": {
+        "morning": "Morning",
+        "afternoon": "Afternoon",
+        "evening": "Evening"
+      },
+      "booked": "{time}, booked",
+      "local": "That is {time} where you are ({tz}).",
+      "localTz": "local time",
+      "report": "No slot is needed for a written report. Here is when each part happens:",
+      "today": "Today",
+      "tl": {
+        "palm": [
+          "Your photos and question reach Sadhak Ji.",
+          "He studies both palms, line by line.",
+          "Your report arrives on WhatsApp and email."
+        ],
+        "other": [
+          "Your details and question reach Sadhak Ji.",
+          "He studies your details before writing.",
+          "Your report arrives on WhatsApp and email."
+        ]
+      }
+    },
+    "s4": {
+      "pay": "Pay with",
+      "methods": {
+        "upi": {
+          "t": "UPI",
+          "sub": "Google Pay, PhonePe, Paytm, BHIM or any UPI app",
+          "tag": "Fastest"
+        },
+        "card": {
+          "t": "Debit or credit card",
+          "sub": "Visa, Mastercard, RuPay · entered in Razorpay’s secure window"
+        },
+        "nb": {
+          "t": "Netbanking",
+          "sub": "All major Indian banks"
+        }
+      },
+      "apps": {
+        "gpay": "Google Pay",
+        "phonepe": "PhonePe",
+        "paytm": "Paytm",
+        "id": "UPI ID"
+      },
+      "upiLabel": "UPI ID",
+      "upiPh": "yourname@okhdfc",
+      "note": "Payments are processed by Razorpay. Rescheduling is allowed once, up to 12 hours before your slot."
+    },
+    "nav": {
+      "back": "Back",
+      "backAria": "Previous step",
+      "wa": "Not sure? Ask on WhatsApp",
+      "cta": {
+        "1": "Continue to your details",
+        "2": "Continue to date & time",
+        "3": "Continue to payment",
+        "4": "Pay {price} securely",
+        "2r": "Continue to delivery"
+      },
+      "continue": "Continue",
+      "payShort": "Pay {price}"
+    },
+    "sum": {
+      "aria": "Booking summary",
+      "package": "Package",
+      "mode": "Mode",
+      "when": "When",
+      "delivery": "Delivery",
+      "language": "Language",
+      "notChosen": "Not chosen yet",
+      "reportBy": "Report by {date}",
+      "at": "{date} · {time} IST",
+      "total": "Total",
+      "taxes": "incl. all taxes",
+      "langName": {
+        "hi": "Hindi",
+        "en": "English"
+      },
+      "trust": {
+        "reschedule": "Reschedule once, up to 12 hours before your slot",
+        "private": "Your details are seen only by Sadhak Ji and his office",
+        "guarantee": "Satisfaction guarantee: guidance continues until your questions are answered",
+        "followup": "Follow-up questions answered on WhatsApp"
+      }
+    },
+    "err": {
+      "name": "Please enter your full name.",
+      "phone": "Enter a 10-digit mobile number.",
+      "email": "This email address looks incomplete.",
+      "dobEmpty": "Your date of birth is needed.",
+      "dobFuture": "Date of birth cannot be in the future.",
+      "tob": "Add your birth time, or tick “I don’t know”.",
+      "place": "Choose your place of birth.",
+      "mobile": "Enter a 10-digit mobile number.",
+      "q": "Write the question you want the cards to answer.",
+      "left": "Add a photo of your left palm.",
+      "right": "Add a photo of your right palm.",
+      "slotTime": "Choose a time for your session.",
+      "slotBoth": "Choose a date and a time.",
+      "upi": "Enter a UPI ID such as name@okhdfc.",
+      "bank": "Choose your bank."
+    },
+    "proc": {
+      "title": "Confirming your payment",
+      "body": "Please keep this page open. It takes a few seconds."
+    },
+    "done": {
+      "eyebrow": "Booking {id}",
+      "title": "Your session is <em>booked.</em>",
+      "deva": "आपका परामर्श निश्चित हो गया है",
+      "sent": "Confirmation sent to WhatsApp on +91 {phone}.",
+      "sentEmail": "Confirmation sent to WhatsApp on +91 {phone} and to {email}.",
+      "slotNote": "Please be free five minutes before the session.",
+      "reportNote": "Your report arrives by {date}.",
+      "gcal": "Add to Google Calendar",
+      "ics": "Apple or Outlook (.ics)",
+      "wa": "Message the office",
+      "consult": "Consultation",
+      "paid": "Paid",
+      "by": "By {date}",
+      "paidV": "{price} · {method}",
+      "payT": {
+        "upi": "UPI · {app}",
+        "card": "Card",
+        "nb": "Netbanking · {bank}"
+      },
+      "change": "Need to change the time? Use the link in your WhatsApp confirmation, up to 12 hours before the session.",
+      "next": {
+        "eyebrow": "What happens next",
+        "title": "Sadhak Ji reads <em>before</em> he speaks.",
+        "body": "Your details reach his desk today. You will hear from the office on WhatsApp if anything needs checking.",
+        "st": {
+          "done": "Done",
+          "next": "Next",
+          "then": "Then"
+        }
+      },
+      "backConsult": "Back to consultations",
+      "shop": "Browse energized products"
+    },
+    "ev": {
+      "title": "{name} with Sadhak Pawan Pandey",
+      "desc": "{tier} package, {mode}. Booking {id}. Maa Kali Astuti will message you on WhatsApp before the session.",
+      "locVideo": "Video link on WhatsApp",
+      "locCall": "Phone / WhatsApp call"
+    }
   }
 }

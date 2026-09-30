@@ -29,6 +29,8 @@ type UiState = {
   quick: QuickAdd | null;
   toasts: Toast[];
   chrome: ChromeFlags;
+  /** A multi-step page (Booking) reached its done screen: pages with `flowFooter` show the footer. */
+  flowDone: boolean;
   openCart: () => void;
   setCartOpen: (open: boolean) => void;
   openSearch: (q?: string) => void;
@@ -41,6 +43,7 @@ type UiState = {
   /** Starts the 220 ms exit, then removes. */
   dismiss: (id: string) => void;
   setChrome: (c: Partial<ChromeFlags>) => void;
+  setFlowDone: (done: boolean) => void;
   /** Esc from the chrome: closes every overlay. */
   closeAll: () => void;
 };
@@ -57,6 +60,7 @@ export const useUi = create<UiState>()((set, get) => ({
   quick: null,
   toasts: [],
   chrome: { tabbar: true, checkout: false },
+  flowDone: false,
 
   openCart: () => set({ cartOpen: true, menuOpen: false, searchOpen: false }),
   setCartOpen: (cartOpen) => set({ cartOpen }),
@@ -96,5 +100,6 @@ export const useUi = create<UiState>()((set, get) => ({
     );
   },
   setChrome: (c) => set({ chrome: { ...get().chrome, ...c } }),
+  setFlowDone: (flowDone) => set({ flowDone }),
   closeAll: () => set({ cartOpen: false, searchOpen: false, menuOpen: false, quick: null }),
 }));
