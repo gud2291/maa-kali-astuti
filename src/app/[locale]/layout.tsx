@@ -6,6 +6,9 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { routing } from "@/i18n/routing";
 import { fontVariables } from "../fonts";
 import { AmbientRoot } from "@/components/motion/AmbientRoot";
+import { StoreHydrator } from "@/components/commerce/StoreHydrator";
+import { QuickAdd } from "@/components/commerce/QuickAdd";
+import { Toaster } from "@/components/ui/Toaster";
 import "../globals.css";
 
 export function generateStaticParams() {
@@ -50,9 +53,13 @@ export default async function LocaleLayout({
           {t("skipToContent")}
         </a>
         <NextIntlClientProvider>
-          {/* F4 mounts SiteChrome, SiteFooter, Toaster, PageTransition and the Lenis provider here. */}
+          {/* F4 mounts SiteChrome, SiteFooter, PageTransition and the Lenis provider here. */}
           <main id="main">{children}</main>
           <AmbientRoot />
+          {/* Global commerce layer (F3): persisted-store hydration, quick-add sheet, toasts. */}
+          <StoreHydrator />
+          <QuickAdd />
+          <Toaster />
         </NextIntlClientProvider>
       </body>
     </html>

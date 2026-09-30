@@ -155,6 +155,10 @@
 @utility section-y {
   padding-block: clamp(56px, 8vw, 112px);
 }
+/* Product titles: Fraunces with the Devanagari serif as fallback (ProductCard.dc.html 19/59). */
+@utility font-title {
+  font-family: var(--font-fraunces), "Fraunces", var(--font-tiro), "Tiro Devanagari Hindi", serif;
+}
 @utility font-soft {
   font-variation-settings: "SOFT" 40;
 }

@@ -16,6 +16,52 @@
   "placeholder": {
     "eyebrow": "Phase F2 · design system ready",
     "heading": "Maa Kali Astuti",
-    "body": "The storefront is being built section by section. The Home page arrives in F5."
+    "body": "The storefront is being built section by section. The Home page arrives in F5.",
+    "cards": "F3 preview · product cards (temporary)"
+  },
+  "product": {
+    "wristSize": "Wrist size",
+    "add": "Add to cart",
+    "adding": "Adding…",
+    "added": "Added",
+    "notify": "Notify me",
+    "move": "Move to cart",
+    "addAria": "Add {name} to cart",
+    "wishSave": "Save to wishlist",
+    "wishRemove": "Remove from wishlist",
+    "soldOut": "Sold out"
+  },
+  "toast": {
+    "added": "{name} added to cart",
+    "addedSize": "{name} · size {size} added to cart",
+    "sheetAdded": "{name} · size {size} added",
+    "moved": "{name} moved to cart",
+    "viewCart": "View cart",
+    "view": "View",
+    "saved": "Saved to wishlist",
+    "removedWish": "Removed from wishlist",
+    "notifyBack": "We'll message you on WhatsApp when it's back",
+    "undo": "Undo",
+    "dismiss": "Dismiss"
+  },
+  "quick": {
+    "title": "Choose options",
+    "close": "Close",
+    "wristSize": "Wrist size",
+    "sizeGuide": "Size guide",
+    "guide": "Wrap a soft tape or a strip of paper just below the wrist bone. Add 1 cm for a comfortable fit. Between sizes? Choose the larger one.",
+    "addSize": "Add size {size} · {price}",
+    "S": "14–15 cm",
+    "M": "15.5–16.5 cm",
+    "L": "17–18 cm"
+  },
+  "cart": {
+    "coupon": {
+      "empty": "Enter a coupon code",
+      "applied10": "10% off applied",
+      "applied100": "₹100 off applied",
+      "minCart": "FIRST100 needs a cart of ₹999 or more",
+      "invalid": "\"{code}\" isn't a valid coupon"
+    }
   }
 }

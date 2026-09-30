@@ -66,12 +66,13 @@ getProducts({ cat, intent, sort, page }) · getProduct(slug) · getCategories() 
 getRashifal(rashi, period) · getService(slug) · getCourse(slug) · getVideos(cat) · getFaq(set)
 ```
 Today these read `lib/data/*.json`. In phase B they switch to DB queries and cached fetches, and components don't change.
+Client exception (F3): `lib/api/products-index.ts` is a synchronous id/slug lookup used by the cart, wishlist and quick-add sheet to resolve product ids in the browser. In phase B the cart hydrates its lines from a cart API instead.
 
 ## Client state
 - `stores/cart.ts`: items `{ pid, variant?, qty, energization?: { name, gotra } }`, derived subtotal, free-shipping progress (threshold ₹999). Persisted.
 - `stores/wishlist.ts`: `pid[]`. Persisted.
 - `stores/ui.ts`: cartOpen, searchOpen, menuOpen, quickAdd pid, toasts[] (tone, action, undo payload).
-- Hydration: persisted stores render neutral values (0 items) until `useHydrated()` is true, so there are no mismatches.
+- Hydration: persisted stores use `skipHydration`, so SSR and the first client render see neutral values (0 items). `components/commerce/StoreHydrator` (in the layout) rehydrates after mount, seeds the demo cart/wishlist on a first visit (`DEMO_SEED`) and syncs tabs via the `storage` event.
 
 ## Routes (design → Next)
 Final table in `docs/DESIGN-INVENTORY.md` §C. Principle: hash params become path segments when they identify a resource (service, rashi, course), and query params when they are view state (period, tier, video, category tab, filters).

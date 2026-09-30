@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti
 
-**Phase:** F — Frontend (client demo) · **Next step:** F3
+**Phase:** F — Frontend (client demo) · **Next step:** F4
 Resume in a fresh session with: `/next`
 
 | Step | Title | Status |
@@ -8,7 +8,7 @@ Resume in a fresh session with: `/next`
 | F0 | Workflow + docs + design import | DONE |
 | F1 | Design inventory (line-range map) | DONE |
 | F2 | Scaffold + design system + extraction pipeline | DONE |
-| F3 | Data layer + stores + ProductCard | TODO |
+| F3 | Data layer + stores + ProductCard | DONE |
 | F4 | Global chrome (header, menus, cart drawer, footer) | TODO |
 | F5 | Home A — hero → 12 Nag spotlight | TODO |
 | F6 | Home B — rashifal wheel → floating stones | TODO |
@@ -204,22 +204,106 @@ Manual QA (F2):
 8. Open `/svg/gems/amethyst.svg` and `/images/p-12-nag.webp` directly — both should load.
 9. Any terminal error or type error → paste it into the Fix-list.
 
-### F3 — Data layer + stores + ProductCard · TODO
+### F3 — Data layer + stores + ProductCard · DONE
 Read: ARCHITECTURE §Data seam + §Client state; INV §A.4, §B.1. Design: `ProductCard.dc.html` 14–139 · `mka-core.js` 176–194, 277–305, 308–381, 396–450, 490–512 · `SiteChrome.dc.html` 350–387, 421–436, 543–559 (details: INV §H F3).
 Tasks:
-- [ ] `src/types/*`: Product, Category, Intent, Variant, LocalizedString `{en,hi}`, etc.
-- [ ] `src/lib/api/catalog.ts`: async getters over the generated JSON (getProducts with filters, getProduct, getCategories, getIntents, search).
-- [ ] `src/stores/`:
+- [x] `src/types/*`: Product, Category, Intent, Variant, LocalizedString `{en,hi}`, etc.
+- [x] `src/lib/api/catalog.ts`: async getters over the generated JSON (getProducts with filters, getProduct, getCategories, getIntents, search).
+- [x] `src/stores/`:
   - `cart` (persist): add / remove / qty / variant / energization, subtotal, free-shipping threshold;
   - `wishlist` (persist);
   - `ui`: cart drawer, quick-add pid, search open, toasts with undo.
 
   Make them hydration-safe.
-- [ ] `src/components/commerce/fx.ts`: fly-to-cart (arc to `[data-cart-target]`, badge bump) and wishlist burst. Port from `M.fx`.
-- [ ] `Toaster` (a port of the M.ui toast: tone, action, undo).
-- [ ] `ProductCard` with all modes (card / compact / row / wish): hover image crossfade, lift, gold ring, quick-add bar, mobile plus, add-to-cart morph (idle → loading → added), OOS notify, stock note, badges, wishlist.
-- [ ] `QuickAdd` size picker (wrist sizes), opened through the ui store.
-Manual QA: none this step. The cards become visible and checkable in F4 (cart drawer upsell) and F5 (Home).
+- [x] `src/components/commerce/fx.ts`: fly-to-cart (arc to `[data-cart-target]`, badge bump) and wishlist burst. Port from `M.fx`.
+- [x] `Toaster` (a port of the M.ui toast: tone, action, undo).
+- [x] `ProductCard` with all modes (card / compact / row / wish): hover image crossfade, lift, gold ring, quick-add bar, mobile plus, add-to-cart morph (idle → loading → added), OOS notify, stock note, badges, wishlist.
+- [x] `QuickAdd` size picker (wrist sizes), opened through the ui store.
+Done-notes:
+- **Types** (`src/types/`):
+  - `localized.ts`: `LocalizedString`, `tr()`.
+  - `product.ts`: Product, CategoryKey, IntentKey, BadgeKey, StoneKey, WristSize, ProductArt, ProductImageSlot.
+  - `catalog.ts`: Category, Intent, Stone, ProductQuery, ProductSort, SearchResults.
+  - `cart.ts`: CartLine, ResolvedLine, Energization, AppliedCoupon, CouponResult, CartTotals, RemovedLine.
+- **Data seam** `src/lib/api/catalog.ts`:
+  - `getProducts(query)` takes the Shop filters and the sorts `popular|newest|low|high|rating` (Shop.dc.html 287–295) plus `offset/limit`, and returns `{items,total}`.
+  - `queryProducts()` is the same filter as a pure function, for client islands.
+  - Also: `getAllProducts`, `getProduct(slug|id)`, `getProductsByIds`, `getCategories`, `getCategory(slug|key)`, `getCategoryByKey`, `getIntents`, `getStones`, `getBadges`, `getRudrakshaInfo`, `getTrending`, `search(q)`.
+  - `src/lib/api/products-index.ts` is the one client-side exception: sync `productById`, `productBySlug`, `categoryShort` for the cart, wishlist and quick-add sheet. It is documented in ARCHITECTURE §Data seam.
+- **Cart maths** `src/lib/core/cart.ts` is pure, so the server can reuse it later: `lineKey`, `clampQty` (1–10), `resolveLines`, `checkCoupon`, and `computeTotals`. `computeTotals` is an exact port of `store.totals`: energization ₹251, coupon, gift, shipping, express, COD, `toFree`, `pct`. The COUPONS shape is verified (note in `commerce.ts`).
+- **Stores** (`src/stores/`, zustand 5):
+  - `cart.ts` is persisted as `mka.store.v2.cart`.
+    - Actions: `add`, `setQty`, `remove` (returns a snapshot), `restore`, `setEnerg`, `applyCoupon` (returns `{ok, msg key}`), `removeCoupon`, `setGift`, `clear`, `seed`.
+    - Hooks: `useCartCount`, `useCartLines`, `useCartTotals({express,cod})`, plus `getCartCount()`.
+  - `wishlist.ts` is persisted as `mka.store.v2.wish`: `toggle` (returns "now saved"), `remove`, `seed`, plus `useIsWished` and `useWishCount`.
+  - `ui.ts` holds the overlays and toasts.
+    - State: `cartOpen`, `searchOpen` + `searchQ`, `menuOpen`, `quick {pid, fromWish}`, `toasts`, and `chrome {tabbar, checkout}` (sets the toast offset).
+    - Actions: `openCart`, `setCartOpen`, `openSearch`, `setSearchOpen`, `setMenuOpen`, `openQuick`, `closeQuick`, `toast`, `dismiss`, `setChrome`, `closeAll`.
+    - Toast actions: `{kind:"cart"}` opens the drawer, `{kind:"href"}` navigates, `{kind:"undo", run}` stays 6 s instead of 4 s. Max 3 on screen.
+  - Hydration: both persisted stores use `skipHydration`. `components/commerce/StoreHydrator.tsx` rehydrates them after mount and syncs tabs through `storage`. On a first visit, when `DEMO_SEED` (`lib/core/commerce.ts`) is true, it seeds the prototype's demo data:
+    - cart: 5 Mukhi with the sankalp "Ravi Sharma/Kashyap", and Bitter Havan;
+    - wishlist: b-rose, a-bagla, m7.
+  - **Not built:** the recent-views and recent-searches history (prototype `store.recent/searches/view`). F4 adds it when it ports the search overlay.
+- **Commerce components** (`src/components/commerce/`):
+  - `fx.ts`: `flyToCart(src)` clones the image and arcs it to the first visible `[data-cart-target]` (620 ms), then bumps `[data-cart-badge]`. Also `bump`, `bumpCart`, `burst`, `cartTarget`.
+    - **F4 must put `data-cart-target` on the header and compact-bar cart buttons, and `data-cart-badge` on the count badges.** Without a target the flight is skipped and only the badge bumps.
+  - `ProductImage.tsx`: slot logic from `M.img`. Photos use next/image `fill`; art is an `<img>` of `/svg/products/<id>-main|detail.svg`; the amulet hover image is the copper tabiz photo. The parent must be positioned.
+  - `useProductActions.ts` holds every card action. Reuse it for the 12 Nag spotlight and the PDP.
+    - Add-to-cart morph: idle → loading (380 ms) → added (1.5 s). The first add opens the drawer.
+    - Sold out → WhatsApp toast. Sized products → quick sheet.
+    - Wishlist: toggle + burst + toast, move to cart, and remove with Undo.
+  - `ProductCard.tsx` takes `product`, `size` (std|compact|row), `mode` (shop|wish), `sizes` and `priority`.
+    - Hover effects are CSS (`md:group-hover`, hover-capable devices only) instead of JS state.
+    - The add bar also shows on keyboard focus, and stays up while adding (`data-busy`).
+    - Mobile gets the round "+".
+  - `QuickAdd.tsx` is a Radix Dialog: a bottom sheet below 768 px, a centred 460 px dialog from 768 px. It has the S/M/L radios and the size guide with the wrist sketch (JSX, so "+1 cm" uses Manrope).
+  - `src/components/ui/Toaster.tsx` is the toast host: 92/96 px from the bottom on mobile, 28 px on desktop, WAAPI enter/exit, reduced-motion aware.
+- **Layout:** `StoreHydrator`, `QuickAdd` and `Toaster` are already mounted in `app/[locale]/layout.tsx`. Z-index follows CODING-RULES (sheets 60, toasts 70); the design used 100/101/120 in the same order.
+- **Messages:** new namespaces `product`, `toast`, `quick` and `cart.coupon` in `messages/en.json` and `hi.json`. The HI product labels come from the design; the rest of the HI text is ours → `[HI review]`. The card eyebrow (category short name) and the intent pill stay English, as in the design.
+- New CSS utility `font-title` (Fraunces → Tiro Devanagari fallback) for product titles.
+- **Temporary:** `app/[locale]/page.tsx` has a `CardPreview` block with 6 cards covering every state, so F3 can be checked now. F5 replaces the page.
+- Nothing was run (no dev / build / tsc / lint). Only Prettier formatted the new files.
+
+Manual QA (F3). Run `pnpm dev`, open `/` and scroll below the logo block to "F3 preview":
+1. Desktop 1440px:
+   - Pyrite card, hover:
+     - the image lifts 4px with a soft shadow and a thin gold ring;
+     - the image crossfades to the close-up art;
+     - a bar slides up with "Wrist size S M L" and "Add to cart".
+   - Pyrite, click **M**: the button shows "Adding…" → "Added" ✓ → back to normal. A toast "Pyrite Bracelet · size M added to cart" appears with "View cart".
+   - Pyrite, click "Add to cart" (not a size): the quick-add dialog opens centred (460px).
+     - S/M/L radios, with M pre-selected (gold ring).
+     - "Size guide" toggles the wrist sketch.
+     - "Add size M · ₹899" adds and closes.
+     - Esc or the backdrop closes it.
+   - 12 Mukhi card (sold out):
+     - a grey "SOLD OUT" badge on top and a greyed image;
+     - a red "Out of stock" note;
+     - the button says "Notify me" with a bell, and gives the toast "We'll message you on WhatsApp when it's back".
+   - Mahavidya card: red "● Only 5 left".
+   - 12 Nag card: real photo; hover shows the second photo.
+   - Heart:
+     - click → it turns red with a small gold burst, plus the toast "Saved to wishlist · View";
+     - "View" goes to `/wishlist`, which is a 404 until F4 adds the coming-soon page;
+     - click again → back to the green outline, no toast.
+   - Row card (Bitter Havan): the round "+" gives a toast; the icon turns to ✓ briefly.
+   - Wish card (7 Mukhi Mala):
+     - "Move to cart" → toast "moved to cart", and the heart state updates;
+     - trash → toast "Removed from wishlist" with **Undo** (6 s); Undo restores it.
+   - Toasts: at most 3, stacked bottom-centre. They fade up in, slide down out after 4 s, and ✕ dismisses one.
+2. Mobile 390px:
+   - no hover bar;
+   - every card has a round green "+" bottom-right, except the sold-out one;
+   - "+" on Pyrite opens a bottom sheet that slides up;
+   - toasts sit about 92px from the bottom.
+3. Keyboard: Tab into a card → the add bar becomes visible while focus is inside it. The quick-add dialog traps focus.
+4. Persistence:
+   - refresh → the wishlist hearts and the cart stay;
+   - first visit (clear site data) → the Mala card's heart is red (demo seed);
+   - change the wishlist in a second tab → the first tab updates.
+5. `/hi`: the labels read "कार्ट में जोड़ें", "कलाई का साइज़" and "% छूट"; titles and badges are in Hindi.
+6. Reduced motion ON: no fly, burst or slide animations, and everything still works.
+7. Any error or type error → put it in the Fix-list.
 
 ### F4 — Global chrome · TODO
 Read: INV §A.2, §A.3, §C, §G, §E.3 (chrome row). Design: `SiteChrome.dc.html` 14–388 + 390–564, block by block with its bindings (INV §A.2 table) · `SiteFooter.dc.html` 14–116 · `mka-core.js` 139–173, 267–268, 452–454, 490–518, 528–552 (details: INV §H F4).
@@ -391,4 +475,5 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
   - categories: rudraksha-malas, crystal-bracelets, bhojpatra-amulets, havan-samagri, energized-copper.
 - Favicon / app icon: currently the full emblem SVG (`src/app/icon.svg`); its wordmark is unreadable at 16px. Need a simplified mark (e.g. the ॐ + lotus core) with the original logo file.
 - Video/Shorts thumbnails are generated placeholder art (same art on every page); real YouTube thumbnails + IDs replace them.
+- Demo seed: the first visit starts with 2 cart items and 3 wishlist items (prototype behaviour, `DEMO_SEED` in `src/lib/core/commerce.ts`). Turn off before launch.
 - Design gap: the Booking page shows no order summary between 768 and 1023px. It is built 1:1 for now; confirm whether one should be added.
