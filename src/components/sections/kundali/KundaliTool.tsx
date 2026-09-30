@@ -26,7 +26,6 @@ import { checkKundali99, type K99Draft, type K99Errors } from "@/lib/validation/
 import { useUi } from "@/stores/ui";
 import { K99_MRP } from "./k99-data";
 import { KundaliForm } from "./KundaliForm";
-import { KundaliPreview } from "./KundaliPreview";
 import { PaySheet, type PayApp, type PayState } from "./PaySheet";
 
 /* Kundali ₹99 tool (Kundali-99.dc.html 32–259 + 331–389, script 392–497). State machine:
