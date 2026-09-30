@@ -43,6 +43,10 @@ export const productHref = (p: Pick<Product, "slug">) => `/product/${p.slug}`;
 /** `/consultations/kundali-reading` … (design: `Consultation-Detail.dc.html#s=<key>`). */
 export const serviceHref = (key: string) => `/consultations/${SERVICE_SLUG.get(key) ?? key}`;
 
+/** `/book/kundali-reading?tier=premium` (design: `Booking.dc.html#s=<key>&tier=<t>`). */
+export const bookHref = (key: string, tier?: "essential" | "detailed" | "premium") =>
+  `/book/${SERVICE_SLUG.get(key) ?? key}${tier ? `?tier=${tier}` : ""}`;
+
 /** `/search?q=…` (design: `Search.dc.html#q=`). */
 export const searchHref = (q: string) => `/search?q=${encodeURIComponent(q.trim())}`;
 

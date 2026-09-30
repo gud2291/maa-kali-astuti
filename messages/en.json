@@ -13,12 +13,6 @@
     "loading": "Loading…",
     "comingSoon": "Being prepared"
   },
-  "placeholder": {
-    "eyebrow": "Phase F2 · design system ready",
-    "heading": "Maa Kali Astuti",
-    "body": "The storefront is being built section by section. The Home page arrives in F5.",
-    "cards": "F3 preview · product cards (temporary)"
-  },
   "product": {
     "wristSize": "Wrist size",
     "add": "Add to cart",
@@ -249,6 +243,162 @@
       "privacy": "Privacy policy",
       "terms": "Terms of use",
       "astrology-disclaimer": "Astrology Disclaimer"
+    }
+  },
+  "home": {
+    "hero": {
+      "slides": {
+        "s1": {
+          "eyebrow": "॥ MAA KALI ASTUTI ॥",
+          "l1": "Energized by ritual.",
+          "l2": "<em>Delivered</em> with devotion.",
+          "sub": "अनुष्ठान से ऊर्जित, श्रद्धा से आप तक",
+          "body": "Original Nepali Rudraksha, crystal bracelets and Bhojpatra kavach, each energized in Mahapuja before it ships.",
+          "cta1": "Shop Energized Products",
+          "cta2": "Book a Consultation"
+        },
+        "s2": {
+          "eyebrow": "॥ SADHAK PAWAN PANDEY ॥",
+          "l1": "Ancient science.",
+          "l2": "<em>Honest</em> guidance.",
+          "sub": "प्राचीन विज्ञान, सच्चा मार्गदर्शन",
+          "body": "Kundali, palmistry, tarot and numerology, read personally by Sadhak Ji, with guidance until your doubts are resolved.",
+          "cta1": "Book a Consultation",
+          "cta2": "Meet Sadhak Ji"
+        },
+        "s3": {
+          "eyebrow": "॥ JANAM KUNDALI ॥",
+          "l1": "Your complete",
+          "l2": "Janam Kundali — <em>₹99</em>.",
+          "sub": "आपकी संपूर्ण जन्म कुंडली — मात्र ₹99",
+          "body": "Lagna chart, Navamsa, dasha periods, Manglik check, gemstones and remedies. A 28-page report in English or Hindi.",
+          "cta1": "Get My Kundali",
+          "cta2": "Try Love Calculator"
+        }
+      },
+      "carousel": "Featured",
+      "prev": "Previous slide",
+      "next": "Next slide",
+      "pause": "Pause slides",
+      "play": "Play slides",
+      "trust": {
+        "a": "4.9 · 2,000+ reviews",
+        "b": "Original Nepali Rudraksha",
+        "c": "Energized in Mahapuja"
+      },
+      "qaLabel": "Quick actions",
+      "qa": {
+        "kundali": "Kundali ₹99",
+        "love": "Love Calculator",
+        "rashi": "Aaj ka Rashifal",
+        "call": "Book a Call"
+      }
+    },
+    "marquee": {
+      "label": "Why seekers trust us",
+      "items": [
+        "100% Original Nepali Rudraksha",
+        "Lab-certified",
+        "Energized in Mahapuja",
+        "Pan-India delivery",
+        "Secure UPI & card payments",
+        "Satisfaction guarantee on Kundali reading",
+        "Guided by Sadhak Pawan Pandey"
+      ]
+    },
+    "cats": {
+      "eyebrow": "01 — Shop by category",
+      "title": "Five sacred <em>offerings</em>",
+      "sub": "पाँच पवित्र अर्पण",
+      "intro": "Every piece is energized during Mahapuja at an auspicious muhurat and ships with a printed vidhi card for wearing or placing it.",
+      "all": "Shop all 39 offerings",
+      "cta": "Shop now"
+    },
+    "best": {
+      "eyebrow": "02 — Bestsellers",
+      "title": "Most loved <em>offerings</em>",
+      "deva": "साधकों के सबसे प्रिय",
+      "tablist": "Product collections",
+      "tabs": {
+        "best": "Bestsellers",
+        "new": "New",
+        "rud": "Rudraksha",
+        "br": "Bracelets",
+        "am": "Amulets"
+      },
+      "all": {
+        "best": "View all 39 offerings",
+        "new": "View all 39 offerings",
+        "rud": "All Rudraksha & Malas",
+        "br": "All 15 bracelets",
+        "am": "All sacred amulets"
+      },
+      "tile": {
+        "eyebrow": "Not sure which one?",
+        "title": "Ask which kavach suits your chart.",
+        "body": "Share your birth details on WhatsApp. Sadhak Ji’s team will suggest one, free of charge.",
+        "cta": "Ask on WhatsApp"
+      }
+    },
+    "spot": {
+      "eyebrow": "03 — Featured · Energized copper",
+      "l1": "Hand-Energized Pure",
+      "l2": "Copper <em>12 Nag</em>",
+      "deva": "ऊर्जित शुद्ध ताम्र 12 नाग · द्वादश नाग",
+      "ratingAria": "Rated {r} out of 5",
+      "reviews": "({n} reviews)",
+      "set": "Twelve Serpents Set",
+      "badges": {
+        "pure": "100% Pure Copper",
+        "set": "Set of 12",
+        "energized": "Hand-energized"
+      },
+      "desc": "Crafted from high-quality copper and personally energized through traditional ritual, the set of twelve small nagas brings protective, prosperous energy into the home temple, tijori or office.",
+      "benefits": {
+        "wealth": {
+          "t": "Wealth & Prosperity",
+          "d": "Invites financial growth and abundance into home and business."
+        },
+        "protection": {
+          "t": "Protection & Victory",
+          "d": "A shield against negativity, evil eye and hidden adversaries."
+        },
+        "legal": {
+          "t": "Success in Legal Matters",
+          "d": "Traditionally kept for favourable outcomes in court cases."
+        },
+        "health": {
+          "t": "Health & Healing",
+          "d": "Associated with relief from chronic illness and overall vitality."
+        }
+      },
+      "mrp": "MRP {price}",
+      "off": "{n}% OFF",
+      "tax": "incl. all taxes",
+      "stock": "In stock · next energization on {date}, ships in 2–4 days",
+      "qty": "Quantity",
+      "dec": "Decrease quantity",
+      "inc": "Increase quantity",
+      "max": "Maximum 10 per order line",
+      "add": "Add to Cart",
+      "adding": "Adding…",
+      "added": "Added",
+      "buy": "Buy Now",
+      "wishSave": "Save to wishlist",
+      "wishRemove": "Remove from wishlist",
+      "toast": "Copper 12 Nag × {q} added to cart",
+      "ideal": "Ideal for",
+      "idealItems": {
+        "temple": "Home temple",
+        "locker": "Tijori",
+        "office": "Office",
+        "home": "Vastu remedy"
+      },
+      "more": "Full details, vidhi and where to place it",
+      "note1": "Small objects,",
+      "note2": "big blessings.",
+      "photos": "Product photos",
+      "photoAria": "Show photo {n} of 4"
     }
   }
 }

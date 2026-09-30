@@ -428,3 +428,34 @@ html[data-tab-hidden] [data-loop] {
     scroll-behavior: auto !important;
   }
 }
+
+/* ==========================================================================
+   Home hero slider entrance (Home.dc.html revealSlide 1011–1015). CSS rather than
+   WAAPI so the first slide animates straight from the server HTML without a flash.
+   Each slide mounts with [data-slide]; `--i` is the element's stagger index.
+   Reduced motion: the block above removes the animation (text simply shows).
+   ========================================================================== */
+@keyframes hero-ln {
+  from {
+    transform: translateY(110%);
+  }
+  to {
+    transform: translateY(0);
+  }
+}
+@keyframes hero-fade {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+[data-slide] [data-ln] {
+  animation: hero-ln 900ms var(--ease-mka) calc(60ms + var(--i, 0) * 60ms) backwards;
+}
+[data-slide] [data-fade] {
+  animation: hero-fade 700ms var(--ease-mka) calc(150ms + var(--i, 0) * 80ms) backwards;
+}

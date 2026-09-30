@@ -13,12 +13,6 @@
     "loading": "लोड हो रहा है…",
     "comingSoon": "तैयार हो रहा है"
   },
-  "placeholder": {
-    "eyebrow": "चरण F2 · डिज़ाइन सिस्टम तैयार",
-    "heading": "माँ काली अस्तुति",
-    "body": "स्टोरफ़्रंट खंड-दर-खंड बन रहा है। होम पेज F5 में आएगा।",
-    "cards": "F3 पूर्वावलोकन · प्रोडक्ट कार्ड (अस्थायी)"
-  },
   "product": {
     "wristSize": "कलाई का साइज़",
     "add": "कार्ट में जोड़ें",
@@ -249,6 +243,162 @@
       "privacy": "गोपनीयता नीति",
       "terms": "उपयोग की शर्तें",
       "astrology-disclaimer": "ज्योतिष अस्वीकरण"
+    }
+  },
+  "home": {
+    "hero": {
+      "slides": {
+        "s1": {
+          "eyebrow": "॥ माँ काली अस्तुति ॥",
+          "l1": "अनुष्ठान से ऊर्जित,",
+          "l2": "<em>श्रद्धा</em> से आप तक",
+          "sub": "Energized by ritual. Delivered with devotion.",
+          "body": "मूल नेपाली रुद्राक्ष, क्रिस्टल ब्रेसलेट और भोजपत्र कवच। हर उत्पाद भेजने से पहले महापूजा में ऊर्जित किया जाता है।",
+          "cta1": "ऊर्जित उत्पाद देखें",
+          "cta2": "परामर्श बुक करें"
+        },
+        "s2": {
+          "eyebrow": "॥ साधक पवन पाण्डेय ॥",
+          "l1": "प्राचीन विज्ञान,",
+          "l2": "<em>सच्चा</em> मार्गदर्शन",
+          "sub": "Ancient science. Honest guidance.",
+          "body": "कुंडली, हस्तरेखा, टैरो और अंक ज्योतिष, जिन्हें साधक जी स्वयं पढ़ते हैं। मार्गदर्शन तब तक चलता है जब तक आपकी शंकाएँ दूर न हों।",
+          "cta1": "परामर्श बुक करें",
+          "cta2": "साधक जी से मिलें"
+        },
+        "s3": {
+          "eyebrow": "॥ जन्म कुंडली ॥",
+          "l1": "आपकी संपूर्ण जन्म कुंडली",
+          "l2": "मात्र <em>₹99</em>",
+          "sub": "Your complete Janam Kundali — ₹99.",
+          "body": "लग्न कुंडली, नवांश, दशा, मांगलिक जाँच, रत्न और उपाय। 28 पृष्ठों की रिपोर्ट, हिंदी या अंग्रेज़ी में।",
+          "cta1": "मेरी कुंडली पाएँ",
+          "cta2": "लव कैलकुलेटर"
+        }
+      },
+      "carousel": "मुख्य आकर्षण",
+      "prev": "पिछली स्लाइड",
+      "next": "अगली स्लाइड",
+      "pause": "स्लाइड रोकें",
+      "play": "स्लाइड चलाएँ",
+      "trust": {
+        "a": "4.9 · 2,000+ समीक्षाएँ",
+        "b": "मूल नेपाली रुद्राक्ष",
+        "c": "महापूजा में ऊर्जित"
+      },
+      "qaLabel": "त्वरित विकल्प",
+      "qa": {
+        "kundali": "कुंडली ₹99",
+        "love": "लव कैलकुलेटर",
+        "rashi": "आज का राशिफल",
+        "call": "कॉल बुक करें"
+      }
+    },
+    "marquee": {
+      "label": "हम पर भरोसा क्यों",
+      "items": [
+        "100% मूल नेपाली रुद्राक्ष",
+        "लैब प्रमाणित",
+        "महापूजा में ऊर्जित",
+        "पूरे भारत में डिलीवरी",
+        "सुरक्षित UPI और कार्ड भुगतान",
+        "कुंडली विश्लेषण पर संतुष्टि की गारंटी",
+        "साधक पवन पाण्डेय का मार्गदर्शन"
+      ]
+    },
+    "cats": {
+      "eyebrow": "01 — श्रेणी से चुनें",
+      "title": "पाँच पवित्र <em>अर्पण</em>",
+      "sub": "Five sacred offerings",
+      "intro": "हर उत्पाद शुभ मुहूर्त में महापूजा में ऊर्जित होता है और उसके साथ धारण विधि का कार्ड आता है।",
+      "all": "सभी 39 उत्पाद देखें",
+      "cta": "देखें"
+    },
+    "best": {
+      "eyebrow": "02 — Bestsellers",
+      "title": "Most loved <em>offerings</em>",
+      "deva": "साधकों के सबसे प्रिय",
+      "tablist": "उत्पाद संग्रह",
+      "tabs": {
+        "best": "बेस्टसेलर",
+        "new": "नए",
+        "rud": "रुद्राक्ष",
+        "br": "ब्रेसलेट",
+        "am": "कवच"
+      },
+      "all": {
+        "best": "सभी उत्पाद देखें",
+        "new": "सभी उत्पाद देखें",
+        "rud": "सभी उत्पाद देखें",
+        "br": "सभी उत्पाद देखें",
+        "am": "सभी उत्पाद देखें"
+      },
+      "tile": {
+        "eyebrow": "Not sure which one?",
+        "title": "Ask which kavach suits your chart.",
+        "body": "Share your birth details on WhatsApp. Sadhak Ji’s team will suggest one, free of charge.",
+        "cta": "Ask on WhatsApp"
+      }
+    },
+    "spot": {
+      "eyebrow": "03 — Featured · Energized copper",
+      "l1": "Hand-Energized Pure",
+      "l2": "Copper <em>12 Nag</em>",
+      "deva": "ऊर्जित शुद्ध ताम्र 12 नाग · द्वादश नाग",
+      "ratingAria": "Rated {r} out of 5",
+      "reviews": "({n} reviews)",
+      "set": "Twelve Serpents Set",
+      "badges": {
+        "pure": "100% Pure Copper",
+        "set": "Set of 12",
+        "energized": "Hand-energized"
+      },
+      "desc": "Crafted from high-quality copper and personally energized through traditional ritual, the set of twelve small nagas brings protective, prosperous energy into the home temple, tijori or office.",
+      "benefits": {
+        "wealth": {
+          "t": "Wealth & Prosperity",
+          "d": "Invites financial growth and abundance into home and business."
+        },
+        "protection": {
+          "t": "Protection & Victory",
+          "d": "A shield against negativity, evil eye and hidden adversaries."
+        },
+        "legal": {
+          "t": "Success in Legal Matters",
+          "d": "Traditionally kept for favourable outcomes in court cases."
+        },
+        "health": {
+          "t": "Health & Healing",
+          "d": "Associated with relief from chronic illness and overall vitality."
+        }
+      },
+      "mrp": "MRP {price}",
+      "off": "{n}% OFF",
+      "tax": "incl. all taxes",
+      "stock": "In stock · next energization on {date}, ships in 2–4 days",
+      "qty": "Quantity",
+      "dec": "Decrease quantity",
+      "inc": "Increase quantity",
+      "max": "Maximum 10 per order line",
+      "add": "Add to Cart",
+      "adding": "Adding…",
+      "added": "Added",
+      "buy": "Buy Now",
+      "wishSave": "Save to wishlist",
+      "wishRemove": "Remove from wishlist",
+      "toast": "Copper 12 Nag × {q} added to cart",
+      "ideal": "Ideal for",
+      "idealItems": {
+        "temple": "Home temple",
+        "locker": "Tijori",
+        "office": "Office",
+        "home": "Vastu remedy"
+      },
+      "more": "Full details, vidhi and where to place it",
+      "note1": "Small objects,",
+      "note2": "big blessings.",
+      "photos": "Product photos",
+      "photoAria": "Show photo {n} of 4"
     }
   }
 }

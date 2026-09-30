@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti
 
-**Phase:** F — Frontend (client demo) · **Next step:** F5
+**Phase:** F — Frontend (client demo) · **Next step:** F6
 Resume in a fresh session with: `/next`
 
 | Step | Title | Status |
@@ -10,7 +10,7 @@ Resume in a fresh session with: `/next`
 | F2 | Scaffold + design system + extraction pipeline | DONE |
 | F3 | Data layer + stores + ProductCard | DONE |
 | F4 | Global chrome (header, menus, cart drawer, footer) | DONE |
-| F5 | Home A — hero → 12 Nag spotlight | TODO |
+| F5 | Home A — hero → 12 Nag spotlight | DONE |
 | F6 | Home B — rashifal wheel → floating stones | TODO |
 | F7 | Home C — courses → newsletter | TODO |
 | F8 | Shop + category template | TODO |
@@ -403,22 +403,133 @@ Manual QA (F4). `pnpm dev`, then:
 11. **Reduced motion ON:** no strip slide (instant swap), no mandala/chakra spin, no star twinkle, no drawer slide (it just appears), no page fade, and Lenis is off. Everything still works.
 12. Any error → Fix-list.
 
-### F5 — Home A · TODO
+### F5 — Home A · DONE
 Read: INV §A.1 (§1–5), §E.1 S1–S4 S7 S9, §E.3. Design: `Home.dc.html` 29–344 + script 941–1079 and 1366–1479 · `mka-home.js` 12–184 · `mka-astro.js` 158–170, 422 (details: INV §H F5).
 Tasks:
-- [ ] Hero:
+- [x] Hero:
   - arch frame;
   - PanditJi inline SVG with S1 blink, S2 japa (`malaAt`), S3 breath + aura, S4 gaze (desktop), S5 diya, S6 smoke;
   - Chakra halo S7;
   - floating gems with scroll/mouse parallax;
   - 3-slide text slider (mask lines, 6s progress, `01 / 03`, pause on hover or offscreen);
   - trust row, magnetic CTAs.
-- [ ] Mobile Quick Actions tiles.
-- [ ] Trust marquee (56s, pauses on hover).
-- [ ] Category arches (crescent rhythm, hover fill, snap rail on mobile).
-- [ ] Bestsellers tabs + grid (crossfade stagger).
-- [ ] 12 Nag spotlight ("12" parallax −0.2, thumbnails, benefits, qty, add to cart / buy now, ideal-for chips).
-Manual QA: compare `/` against `design/shots/h1-h4.jpg` and the Claude Design preview, desktop 1440 + mobile 390; reduced motion on.
+- [x] Mobile Quick Actions tiles.
+- [x] Trust marquee (56s, pauses on hover).
+- [x] Category arches (crescent rhythm, hover fill, snap rail on mobile).
+- [x] Bestsellers tabs + grid (crossfade stagger).
+- [x] 12 Nag spotlight ("12" parallax −0.2, thumbnails, benefits, qty, add to cart / buy now, ideal-for chips).
+Done-notes:
+- **Page:** `src/app/[locale]/page.tsx` now renders `Hero → TrustMarquee → CategoryArches → Bestsellers → NagSpotlight`.
+  - The F2 placeholder, the F3 card preview and the `placeholder` message namespace are gone.
+  - **F6 appends §6–9 and F7 appends §10–17 after `NagSpotlight`.**
+  - `BUILD_NOW` (module scope) is the build date for date-dependent text on this static page.
+- **Files** (`src/components/sections/home/`):
+  - `Hero.tsx` (server) holds the whole hero:
+    - background mandala (`MandalaG`, R 296) and `ArchClip`;
+    - the night arch panel: radial glow, 34 seeded twinkle stars (`rng("hm-sky")`; stars 18+ hidden below 768), 3 chakra `<img>` rings spinning 120 / −90 / 60 s, and `PanditJi`;
+    - `ArchFrame`, and the gems (2 mobile / 4 desktop sets from vHero G, `data-px` + `float` amb);
+    - the 72px ivory fade (<1024) and the trust row.
+    - Layout is CSS only. Below 1024 it stacks: art box `min(58svh, W×1.05+30px, W×1.14)` with W = min(100vw−32px, 520px); art 84% wide on mobile, 440px at 768–1023. From 1024 it has two columns, with art `clamp(400px, (100vh−170px)×.8, 560px)`.
+  - `HeroArt.tsx` (client shell around the server art) runs `usePanditMotion` and the `[data-px]` parallax: −scrollY×px while scrollY < 1.4vh, plus ±px×32 toward the mouse on ≥1024.
+  - `HeroSlides.tsx` (client) is the text column: slides, counter, progress, prev/pause/next. It wraps the trust row and QuickActions as children, so hovering anywhere in the column holds the slider, as in the design.
+    - The entrance is **CSS** (the `[data-slide] [data-ln|data-fade]` keyframes at the end of `globals.css`; the stagger index is `--i`). The first slide therefore animates straight from the server HTML, with no flash.
+    - The exit is WAAPI: 380 ms with EXIT easing; the next slide swaps in at 420 ms.
+    - The progress is a 6 s WAAPI animation. It pauses on hover, via the toggle, when the hero is <5% visible, and while the tab is hidden. ←/→ on the controls step the slides.
+    - Slide copy lives in `messages → home.hero.slides.s1–s3`. `<em>` is gold italic on EN and gold upright on HI. The EN page shows the Devanagari sub-line and the HI page the English italic one, as in the design.
+  - `QuickActions.tsx` (client, `md:hidden`) has 4 tiles:
+    - the kundali icon draws itself (`draw:7:0`), the heart beats (2.4 s), the phone wiggles (4.2 s), and the dotted rings spin;
+    - the loops pause offscreen or on a hidden tab;
+    - today's rashi glyph is resolved on the client (`useSyncExternalStore`; the server renders it empty).
+  - `TrustMarquee.tsx` (server) uses `motion/Marquee`.
+  - `CategoryArches.tsx` (server):
+    - hover/focus states are pure CSS (`group-hover` / `group-focus`);
+    - per-arch aspect and radius come through CSS vars (`--ar-d`, `--rad-d`, `--rad-m`);
+    - the arch art uses `ProductImage` with `object-contain`, because the product SVGs are `meet`.
+  - `Bestsellers.tsx` (server) resolves all 5 tab lists: best = hand-picked ids; new = `date` ascending; rud/br/am = the category sorted by `pop`, 8 max.
+  - `BestsellerTabs.tsx` (client) does the swap:
+    - out 170 ms → swap at 180 ms → in 520 ms with a 55 ms stagger. It runs in `useLayoutEffect`, so there is no flash.
+    - Roving-focus tabs (←/→/Home/End).
+    - The WhatsApp tile (static Baglamukhi yantra, per gotcha 10) shows when a list has fewer than 8 items (Amulets).
+  - `NagSpotlight.tsx` (client):
+    - gallery crossfade and the "12" parallax;
+    - qty 1–10 with the roll and the max toast;
+    - the Add morph flies the photo and toasts "Copper 12 Nag × n added to cart"; the drawer opens when the cart was empty;
+    - Buy Now adds, then goes to `/checkout`;
+    - wishlist burst + toast;
+    - the next-energization date is the build date in the HTML and the viewer's date after hydration.
+  - `home-data.ts`: category arch data (`{en,hi}`), tab keys and bestseller ids.
+- **Shared additions:**
+  - `components/signature/ArchFrame.tsx` (`ArchClip` + `ArchFrame`, inline JSX). `public/svg/ornaments/arch-frame.svg` is **not** usable as an `<img>`: the frame draws outside its viewBox.
+  - `signature/PanditJi.tsx`, and `signature/usePanditMotion.ts` (exports `malaAt` and `malaSet`).
+  - `lib/astro/rashi.ts` (`RASHI`, `sunRashi`, `todayRashi`). **F6: extend this module** rather than starting a new one.
+  - `routes.bookHref(key, tier?)` → `/book/<service-slug>?tier=`.
+- **i18n:** new namespace `home` (`hero`, `marquee`, `cats`, `best`, `spot`).
+  - As in the design, the Bestsellers heading, the WhatsApp tile and the whole 12 Nag spotlight stay **English on `/hi`**. Their `hi.json` values are copies of the English (added to Client-confirm).
+  - The HI aria labels (slider controls, quick actions, tablist) are ours → `[HI review]`.
+- **Links:**
+  - hero CTAs → `/shop`, `/consultations`, `/about`, `/kundali-99`, `/love-calculator`;
+  - quick actions → `/kundali-99`, `/love-calculator`, `/rashifal`, `/book/kundali-reading`;
+  - arches → `/shop/<category-slug>`; "View all" → `/shop` or the category;
+  - spotlight link → `/product/copper-12-nag` (coming soon).
+  - All of these 404 until their steps, except `/product/*`.
+- Nothing was run except Prettier on the changed files (no dev / build / tsc / lint).
+
+Manual QA (F5). `pnpm dev` → `/`, compare with `design/shots/h1.jpg`–`h4.jpg`:
+1. **Desktop 1440px — hero**
+   - Text on the left, art on the right, with a faint mandala behind the art.
+   - The art: a dark arch with twinkling stars, three gold chakra rings turning at different speeds (the middle one reversed) and Pandit Ji seated in front. A gold arch frame has a finial on top and curls on the sides. 4 gems float around it.
+   - Pandit Ji:
+     - the eyes blink every few seconds, sometimes twice;
+     - the mala beads step forward every ~1.2 s with a small thumb nudge;
+     - a slow breathing scale and a pulsing aura;
+     - the diya flickers and smoke rises;
+     - move the mouse around: the pupils follow it slightly.
+   - Move the mouse: the gems and stars shift a little. Scroll down: they drift up at different speeds.
+   - Page load: the heading lines rise out of masks, then the eyebrow, sub-line, paragraph and buttons fade up.
+   - Slider:
+     - the gold bar fills over 6 s, then the lines exit upward and slide 02 comes in (`02 / 03`);
+     - hover over the text column: the bar pauses; leave and it resumes;
+     - the pause button changes to a play icon and stops the slider;
+     - prev/next work; Tab to a control and press ← / →.
+   - CTAs: on hover the primary gets a gold light sweep; both buttons lean slightly toward the cursor (magnetic).
+   - Trust row under the controls: ★ 4.9 · 2,000+ reviews • Original Nepali Rudraksha • Energized in Mahapuja.
+2. **Marquee:** a sand band with gold hairlines; uppercase items with lotus marks scroll left; hover pauses it.
+3. **Categories:**
+   - The heading lines mask up on scroll.
+   - Five arches whose tops sit at different heights (the centre one is tallest).
+   - Hover an arch: emerald fills up from the bottom, the art lifts, a gem floats in at the top right, and "SHOP NOW →" appears. The Tab key gives the same effect.
+4. **Bestsellers:**
+   - 8 cards in 4 columns.
+   - Click New / Rudraksha / Bracelets / Amulets: the cards fade out and the new ones rise in one by one.
+   - Amulets shows 7 cards plus the dark "Not sure which one?" WhatsApp tile.
+   - The "View all" button text and link change per tab. Arrow keys move between tabs.
+5. **12 Nag spotlight:**
+   - A sand band with copper hairlines. A huge outlined "12" drifts as you scroll.
+   - Thumbnails swap the main photo with a crossfade. A tilted "Small objects, big blessings." note sits on the photo.
+   - Qty +/−: the number rolls; − is disabled at 1; at 10, + gives the "Maximum 10" toast.
+   - Add to Cart → "Adding…" → green "Added ✓" → back to normal. The photo flies to the header bag and the toast says "Copper 12 Nag × n added to cart". With an empty cart, the drawer opens.
+   - Buy Now → `/checkout` (coming soon), with the item in the cart.
+   - Heart → red, with a gold burst and a "Saved to wishlist" toast.
+   - Stock line: "In stock · next energization on <Thu, date>…".
+6. **Tablet 820px:** art on top (440px wide, cropped at the bottom with a fade), text below, CTAs in a row. Bestsellers has 3 columns.
+7. **Mobile 390px:**
+   - Art on top (2 gems, 18 stars), then the text with **stacked** full-width CTAs, the controls and the trust row.
+   - Then the 4 quick-action tiles: Kundali ₹99 draws itself, the heart beats, today's rashi glyph shows, the phone wiggles. Each has a turning dotted ring.
+   - Categories become a swipeable snap rail with 62%-wide arches.
+   - Bestsellers has 2 columns.
+   - Spotlight: the thumbnails sit in a row under the photo; the note sits bottom-left.
+   - No horizontal scroll on the page.
+8. **`/hi`:**
+   - Hindi slides: Tiro heading, English italic sub-line, Mukta buttons.
+   - Hindi trust row, marquee, category header and names, and tab labels.
+   - The Bestsellers heading and the 12 Nag block stay English, as in the design.
+9. **Reduced motion ON:**
+   - No slide auto-advance: the bar is full and the buttons still switch instantly.
+   - No blink, mala, breath, gaze, parallax or magnetic pull.
+   - No marquee movement, no heading masks, no chakra/gem/star motion, no quick-action loops.
+   - Everything is still usable.
+10. Switch to another tab for a while, then come back: the slider and animations resume without jumping several slides.
+11. Any error or type error → put it in the Fix-list.
 
 ### F6 — Home B · TODO
 Read: INV §A.1 (§6–9), §E.1 S8 S9 S12 S13. Design: `Home.dc.html` 346–645 + script 1081–1247 · `mka-astro.js` 9–151, 154–200, 260–280, 298–318, 342–386 · `mka-home.js` 262–265 · `mka-core.js` 528–533 (details: INV §H F6).
@@ -558,6 +669,8 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
   - categories: rudraksha-malas, crystal-bracelets, bhojpatra-amulets, havan-samagri, energized-copper.
 - Favicon / app icon: currently the full emblem SVG (`src/app/icon.svg`); its wordmark is unreadable at 16px. Need a simplified mark (e.g. the ॐ + lotus core) with the original logo file.
 - Video/Shorts thumbnails are generated placeholder art (same art on every page); real YouTube thumbnails + IDs replace them.
+- Home on `/hi` (F5): the design keeps the Bestsellers heading, the "Not sure which one?" WhatsApp tile and the whole Copper 12 Nag spotlight in English. Should we translate them? `[HI review]` also covers our Hindi aria labels (slider controls, quick actions, tabs).
+- Next Mahapuja energization date (spotlight stock line) = the next Thursday at least 2 days out. Confirm the real calendar.
 - Demo seed: the first visit starts with 2 cart items and 3 wishlist items (prototype behaviour, `DEMO_SEED` in `src/lib/core/commerce.ts`). Turn off before launch.
 - Social profile links: footer icons currently show a "link is coming soon" toast (`SOCIAL` in `src/lib/site.ts`, url `null`). Need YouTube / Instagram / Facebook / WhatsApp channel URLs.
 - Newsletter (footer) is a mock subscribe; needs the mailing-list provider in phase B.
