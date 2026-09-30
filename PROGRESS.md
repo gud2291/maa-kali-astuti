@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti
 
-**Phase:** F — Frontend (client demo) · **Next step:** F12
+**Phase:** F — Frontend (client demo) · **Next step:** F13
 Resume in a fresh session with: `/next`
 
 | Step | Title | Status |
@@ -17,7 +17,7 @@ Resume in a fresh session with: `/next`
 | F9 | Consultations + consultation detail + InquiryForm | DONE |
 | F10 | Booking stepper | DONE |
 | F11 | Kundali ₹99 + Love Calculator | DONE |
-| F12 | Rashifal + Rashi detail | TODO |
+| F12 | Rashifal + Rashi detail | DONE |
 | F13 | Sadhana Courses + Course detail + Rituals | TODO |
 | F14 | About + Videos + 404 | TODO |
 | F15 | Polish, audits, demo handover | TODO |
@@ -1246,14 +1246,62 @@ Manual QA (F11). `pnpm dev`. No reference shots for these two pages: compare wit
 12. **Reduced motion ON**: no chakra spin/ramp, the chart shows complete, the ring/tick appear drawn, the love ring and number jump to the result, reveals just show.
 13. Any error or type error → Fix-list.
 
-### F12 — Rashifal · TODO
+### F12 — Rashifal · DONE
 Read: INV §A.13, §A.14, §E.1 S8. Design: `Rashifal.dc.html` 28–299 · `Rashi-Detail.dc.html` 27–221 · `mka-astro.js` 9–74, 90–151, 173–200, 342–369 · `mka-core.js` 267 (details: INV §H F12).
 Tasks:
-- [ ] `/rashifal?p=`: hero wheel, period tabs, 12-rashi grid, DOB → rashi helper.
-- [ ] `/rashifal/[rashi]?p=`: area meters, lucky trio, gemstone product, remedy, compatible rashis, recommended products, Kundali CTA.
+- [x] `/rashifal?p=`: hero wheel, period tabs, 12-rashi grid, DOB → rashi helper.
+- [x] `/rashifal/[rashi]?p=`: area meters, lucky trio, gemstone product, remedy, compatible rashis, recommended products, Kundali CTA.
 
 Mobile uses the half-dial.
-Manual QA: all periods, 2–3 rashis, mobile dial.
+
+Done-notes:
+- **Routes**:
+  - `src/app/[locale]/rashifal/page.tsx` (static): `RashifalProvider` wraps `RashifalHero` → `RashifalGrid` (#rashis) → `RashiFinder`. The panel's gemstone link map (stone product, "Bracelet…" trimmed) is built on the server.
+  - `src/app/[locale]/rashifal/[rashi]/page.tsx`: 12 static params (slug = design key), `dynamicParams = false`, unknown slug → 404. Products = `[stone, ...rud, amulet]` (unique, existing, max 4), gem = the stone product. The provider is keyed by rashi, so the state resets when prev/next/compatible links change the rashi (the page transition covers the swap; the design's hashchange text fade is not needed).
+- **Period + day + "my rashi"** (`src/components/sections/rashifal/period.tsx`, client context):
+  - `?p=today|tomorrow|week|month|year` is read once on mount; tab picks rewrite the query with `history.replaceState` (no navigation). Server HTML = "today".
+  - `day`: build date in the HTML, the viewer's today after hydration (`useSyncExternalStore`, same as Home). All predictions use it (INV gotcha 14).
+  - `mine` = `localStorage 'mka-my-rashi'` (design key). Grid "Yours" chip + ring; finder "Remember my rashi".
+  - Also exports `Dots` (5 dots with colour/ring props) and `isPeriod`.
+- **Rashifal page** (`src/components/sections/rashifal/`):
+  - `RashifalHero.tsx`: reuses `useRashiCycle` + `WheelLayers` from F6 (S8: 4 s tick, 12 s hold, 900 ms turn with overshoot, IO .25, pauses when tab hidden / reduced motion). Differences from Home, 1:1 with the design: no radial glow, no period tabs in the panel (the panel follows the grid's period), eyebrow "<Period> · <date>", meters say "Money" for finance, stone name without "bracelet", CTA "Read full <Rashi> rashifal", panel fade 0 → 1 only on a rashi change, rail short text 14.5px, rail links keep the period, no mobile Kundali button under the dots. Controls take ←/→.
+  - `RashifalGrid.tsx`: 5 tabs (roving ←/→/Home/End, `aria-controls="rf-grid"`), grid 2 / 3 (≥768, short line shown) / 4 (≥1180), cards link to `/rashifal/<key>?p=<period>`, `data-reveal` i % 4.
+  - `RashiFinder.tsx`: DOB (max = viewer's today, future/empty → red ring + alert), "Add birth time and place" toggle (aria-expanded), time + place combobox (↑ ↓ Enter Esc, 32 towns). Time + place → approximate Kundali → Chandra rashi + nakshatra; else sun rashi. Result card enters y14 / 450 ms. Save → localStorage + green toast.
+- **Rashi page**:
+  - `RashiDetail.tsx` (client): `RashiHero` (arch with mandala `spin:180`, glyph sw .6; pill tabs; reading fades up 6px / 320 ms on a period change; facts incl. "Overall n of 5"; prev/next rashi links keep the period), `RashiAreas`, `RashiLucky` (gem card = `ProductCard size="row"`), `RashiCompat` (why-line English, as in the design), `RashiChart` (DEMO_K chart, S12 draw at 30% in view).
+  - `RashiSections.tsx` (server): `RashiRemedy` (diya = `DIYA_SVG` via InlineArt, glow + flicker ambient), `RashiRecommend` (compat + 4 products, "Shop all" → `/shop`), `RashiCta` (Kundali ₹99 + "Book a reading" → `/consultations/kundali-reading`).
+  - `ui.tsx`: `NightCrumbs`, `H2`, `brass`.
+- **i18n**: new namespace `rashifal` in both message files. On /hi: h1/h2 display headings, rashi names, predictions, remedy, colour/day values and the compatibility lines stay English (F9 rule); UI text (period tabs, labels, form, errors, toasts, CTAs, aria) is Hindi (ours, `[HI review]`). The period tab sub-labels stay Devanagari as in the design.
+- Nothing was run (no dev / build / tsc / lint).
+
+Manual QA (F12). `pnpm dev`. No reference shots: compare with `design/Rashifal.dc.html` and `design/Rashi-Detail.dc.html` opened in the browser.
+1. **`/rashifal` desktop 1440px, hero**
+   - Night band with twinkling stars. Breadcrumb Home / Rashifal, "आज का राशिफल · DAILY RASHIFAL", h1 "Twelve rashis, *read each day.*"; right: today's long date + the Chandra rashi line.
+   - Wheel starts on today's sun rashi (end of Sep → Kanya), outer rings slowly spinning. Every 4 s it turns to the next rashi (900 ms with a small overshoot); the panel fades in the new rashi.
+   - Hover the wheel or click a segment → it jumps there and stops auto-turning for 12 s. Prev / pause / next buttons work; with focus on them, ← / → also turn.
+   - Panel: "TODAY · <date>", glyph circle, name + Devanagari, "Virgo · dates · Lord Budh (Mercury)", the reading, 4 meters (Love, Career, Health, Money), Lucky number / Colour swatch / Gemstone link (→ product page), gold "Read full Kanya rashifal" (→ `/rashifal/kanya?p=today`) and "Personal Kundali ₹99".
+   - Scroll the wheel out of view or switch tabs → it stops turning.
+2. **Grid (#rashis)**: 4 columns at 1440, short line on each card, dots, brass arrow; hover lifts 3px with a brass ring.
+   - Click Tomorrow / Weekly / Monthly / Yearly: eyebrow "01 — ALL TWELVE · WEEKLY", the date on the right changes (week range, "October 2026", "Samvat 2083 · 2026"), the texts and dots change, the URL becomes `?p=week` without reload. The hero panel follows the period too.
+   - Reload `/rashifal?p=month` → Monthly is selected. ← / → move between tabs.
+3. **Finder**: empty submit → red ring + "Please enter a valid date of birth."; a future date is blocked (picker max = today).
+   - DOB only (e.g. 1990-06-01) → "YOUR SURYA RASHI (SUN SIGN)" card (Vrishabha) with the note; it fades up.
+   - "Add birth time and place" → time + place fields (2 columns ≥480); type `va` → list; pick Varanasi; submit → "YOUR CHANDRA RASHI (MOON SIGN)" + "Moon in … nakshatra".
+   - "Remember my rashi" → green toast, button becomes "Marked on this device"; the grid card gets the "YOURS" chip + brass ring. Reload → still marked.
+   - "Read <Rashi> rashifal" → the detail page with the current period.
+4. **`/rashifal` mobile 390px**: half-dial peeks above a swipe rail (card ~76% wide, centred); swiping turns the dial and moves the gold dot; auto-advance scrolls the rail every 4 s (stops for 12 s after a touch). Grid 2 columns, no short line; tabs scroll sideways. Finder stacks, the glyph grid below the form. No horizontal page scroll.
+5. **`/rashifal/simha?p=week` desktop**: breadcrumb Home / Rashifal / Simha; arch with the big glyph, faint spinning mandala, "सिंह" + "LEO · dates"; eyebrow "SIMHA RASHIFAL · सिंह राशिफल"; h1 "Simha, *this week.*"; Weekly pill selected; "Weekly · <week range>"; reading; facts Lord / Element / Day / Overall; prev "Karka" / next "Kanya" links.
+   - Click other pills → h1 word, date line, text (fades up), overall, meters, lucky number change; URL `?p=` changes in place.
+   - Prev / next → the neighbour rashi, same period.
+6. **Areas**: 2 columns ≥900, each row: icon, "Love / प्रेम", big number "/ 5", 5 bars, text.
+7. **Lucky**: 3 sand cards (number 64px, colour swatch, day + Devanagari) + the emerald "LUCKY GEMSTONE" card with the row product card (add to cart works) on one row at 1440; below 1024 the gem card takes a full row.
+8. **Remedy**: night band, glowing flickering diya, italic remedy, "Best begun on a Sunday (रविवार)…".
+9. **Compatible + recommended**: 4 compatible cards (glyph, names, why-line) → keep the period; "Recommended for Simha" 4 product cards; "Shop all" → `/shop`.
+10. **Kundali CTA**: copy + "Get your Kundali · ₹99" (→ `/kundali-99`) and "Book a reading" (→ `/consultations/kundali-reading`); the night chart draws its lines, then planets pop, when it scrolls in.
+11. **Rashi page mobile 390px**: arch 260px wide on top, tabs scroll sideways, areas 1 column (number column stacks below 560), lucky 2 columns + gem full row, compatible 2 columns, products 2 columns, CTA stacks. Try `/rashifal/xyz` → 404.
+12. **`/hi/rashifal`, `/hi/rashifal/mesha`**: tabs, labels, form, errors, toast, buttons in Hindi; big headings, rashi names and readings stay English.
+13. **Reduced motion ON**: wheel does not auto-turn (buttons still jump without animation), rings still, no panel/text fades, chart shows complete, diya still.
+14. Any error or type error → Fix-list.
 
 ### F13 — Courses + Rituals · TODO
 Read: INV §A.15–§A.17, §E.1 S5 S11, §E.3. Design: `Sadhana-Courses.dc.html` 27–195 · `Course-Detail.dc.html` 27–240 · `Rituals.dc.html` 27–182 · `mka-astro.js` 134–151, 203–248, 389–407, 414, 419 · `mka-core.js` 267 (details: INV §H F13).
@@ -1302,6 +1350,7 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
 - 2026-09-30 (F10): pages can hide the site footer until a flow finishes (`flowFooter` in chrome-config + `useUi.flowDone`). Booking uses it: footer only on the confirmation, as in the design.
 - 2026-09-30 (F8): the shop category and filters are view state. Switching rewrites the URL in place (`replaceState`: the path for the category, the query for filters) instead of navigating. The view, the open groups and the mobile sheet keep their state, and no page transition runs (same as the design's hash). Deep links and reloads restore everything.
 - 2026-09-30 (F11): QA-only query params on `/kundali-99` (`?demo=generating|preview|success`, `?pay=fail`) replace the design's Tweaks props; they are read once on mount and never written.
+- 2026-09-30 (F12): the Rashifal period is view state: `?p=` is read on mount and rewritten in place (replaceState), like the Shop filters. Predictions are seeded by the viewer's date (the HTML carries the build date).
 - 2026-09-30 (F11): generated SVG strings never carry visitor text. When a design string embeds user input (the Kundali cover name), the extractor cuts that `<text>` out and the component renders it as JSX over the same viewBox.
 
 ## Client-confirm list (placeholders from the design)
@@ -1381,3 +1430,10 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
   - [HI review] all the `love` Hindi is ours; result labels and lines stay English.
   - The 4 related products come from the prototype's filter (Rose Quartz bracelet, 2 Mukhi, 13 Mukhi, Garnet bracelet). "Shop all bracelets" goes to `/shop` as in the design — should it open the bracelets category?
   - The WhatsApp share text mentions `sadhakpawanpandey.com/love-calculator`.
+- Rashifal (F12):
+  - [HI review] all the `rashifal` Hindi in `messages/hi.json` is ours; readings, remedies and compatibility lines stay English.
+  - Readings are the prototype's template sentences (seeded per rashi, period and date); meters, lucky numbers and the "Overall" score are generated too. Real daily/weekly/monthly/yearly content is a phase-B CMS question.
+  - Sun-sign dates (sidereal, fixed: e.g. Kanya 17 Sep – 16 Oct), rashi lords, days, colours, remedies, gemstone/rudraksha/amulet mapping and the compatibility rule (same element + one complementary sign) need Sadhak Ji's review.
+  - The finder's Moon sign uses the approximate Kundali maths (IST for every town, 32 towns only).
+  - "My rashi" is stored only in the browser (`mka-my-rashi`), no account yet.
+  - The Kundali CTA chart is the demo chart (1986-11-12 06:40 Varanasi), not the visitor's.

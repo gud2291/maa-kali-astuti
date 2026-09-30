@@ -1486,5 +1486,125 @@
       "title": "Worn for <em>harmony</em> at home.",
       "all": "Shop all bracelets"
     }
+  },
+  "rashifal": {
+    "meta": {
+      "title": "Rashifal: daily horoscope for all 12 rashis",
+      "description": "Daily, weekly, monthly and yearly Rashifal for all twelve Vedic rashis, read by Chandra rashi: love, career, health and money, with lucky numbers, colours and gemstones.",
+      "rashiTitle": "{name} Rashifal ({west})",
+      "rashiDescription": "{name} ({west}) Rashifal for today, tomorrow, this week, month and year: area meters, lucky number, colour and gemstone, and a simple remedy."
+    },
+    "crumbsAria": "Breadcrumb",
+    "home": "Home",
+    "here": "Rashifal",
+    "periods": {
+      "today": "Today",
+      "tomorrow": "Tomorrow",
+      "week": "Weekly",
+      "month": "Monthly",
+      "year": "Yearly"
+    },
+    "panelAreas": {
+      "love": "Love",
+      "career": "Career",
+      "health": "Health",
+      "finance": "Money"
+    },
+    "line": "{west} · {dates} · Lord {lordHi} ({lord})",
+    "meterAria": "{area}: {n} of 5",
+    "lucky": {
+      "eyebrow": "02 — Lucky for {name}",
+      "title": "Small things that <em>help.</em>",
+      "num": "Lucky number",
+      "colour": "Lucky colour",
+      "day": "Lucky day",
+      "gem": "Lucky gemstone"
+    },
+    "colour": "Colour",
+    "gemstone": "Gemstone",
+    "seeGems": "See gemstones",
+    "overall": "Overall {n} of 5",
+    "hero": {
+      "eyebrow": "<hi>आज का राशिफल</hi> · Daily Rashifal",
+      "title": "Twelve rashis, <em>read each day.</em>",
+      "intro": "Read by Chandra rashi, the sign your Moon was in at birth.",
+      "wheelAria": "Rashi wheel. Select a rashi, or use the arrows below.",
+      "prev": "Previous rashi",
+      "next": "Next rashi",
+      "pause": "Pause auto-rotation",
+      "resume": "Resume auto-rotation",
+      "full": "Read full {name} rashifal",
+      "kundali": "Personal Kundali ₹99",
+      "railAria": "Rashi cards, swipe to turn the dial",
+      "readFull": "Read in full"
+    },
+    "grid": {
+      "eyebrow": "01 — All twelve · {period}",
+      "title": "Find your rashi, <em>read ahead.</em>",
+      "tabsAria": "Rashifal period",
+      "yours": "Yours"
+    },
+    "find": {
+      "eyebrow": "02 — Don’t know your rashi?",
+      "title": "Your date of birth is <em>enough</em> to begin.",
+      "dob": "Date of birth",
+      "dobErr": "Please enter a valid date of birth.",
+      "more": "Add birth time and place for your Moon sign",
+      "tob": "Time of birth",
+      "place": "Place of birth",
+      "placeHint": "Town or city",
+      "submit": "Find my rashi",
+      "kindMoon": "Your Chandra rashi (Moon sign)",
+      "kindSun": "Your Surya rashi (Sun sign)",
+      "noteMoon": "Moon in {nak} nakshatra at birth. This is the rashi used for your daily rashifal.",
+      "noteSun": "Found from your date of birth alone. Vedic rashifal is read from the Moon sign, so add your birth time and place for the exact one.",
+      "read": "Read {name} rashifal",
+      "remember": "Remember my rashi",
+      "marked": "Marked on this device",
+      "saved": "{name} is marked as your rashi on this device."
+    },
+    "detail": {
+      "eyebrow": "{name} rashifal · <hi>{hiName} राशिफल</hi>",
+      "span": {
+        "today": "today.",
+        "tomorrow": "tomorrow.",
+        "week": "this week.",
+        "month": "this month.",
+        "year": "this year."
+      },
+      "tabsAria": "Period",
+      "lord": "Lord",
+      "element": "Element",
+      "day": "Day",
+      "overall": "Overall",
+      "ofFive": "{n} of 5",
+      "prevAria": "Previous rashi: {name}",
+      "nextAria": "Next rashi: {name}"
+    },
+    "areas": {
+      "eyebrow": "01 — {period}, area by area",
+      "title": "Where the <em>energy</em> sits.",
+      "note": "Meters run from one to five. They show emphasis for the period, not a verdict on your life.",
+      "aria": "{area}: {n} of 5"
+    },
+    "compat": {
+      "eyebrow": "04 — Compatible rashis"
+    },
+    "remedy": {
+      "eyebrow": "03 — Remedy · <hi>उपाय</hi>",
+      "when": "Best begun on a {day} ({dayHi}), the day of your rashi lord."
+    },
+    "recommend": {
+      "eyebrow": "05 — Recommended for {name}",
+      "title": "Chosen for your <em>rashi lord.</em>",
+      "all": "Shop all"
+    },
+    "cta": {
+      "eyebrow": "Beyond the rashi",
+      "lead": "Rashifal is written for everyone born under {name}. A Kundali places all nine grahas in your own houses, from your exact time and place of birth.",
+      "kundali": "Get your Kundali · ₹99",
+      "book": "Book a reading",
+      "chartAria": "Sample North Indian Lagna chart"
+    }
   }
 }
