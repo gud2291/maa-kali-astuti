@@ -267,6 +267,14 @@ artModule("service-art", "Service illustrations (mka-astro.js 260–280): palm l
   ["TAROT_SVG", str(tok("tarot", (u) => A.tarotArt(u)))],
   ["LOSHU_SVG", str(A.loshuArt())],
 ]);
+// report page mockups (3:4, carry <text>) — Consultation-Detail samples: A.page(kind, title, k + i)
+{
+  const pages = {};
+  for (const s of M.SERVICES) A.SVC[s.key].samples.forEach(([kind, t], i) => (pages[s.key + i] = A.page(kind, t, s.key + i)));
+  artModule("report-pages", "Sample report pages 300×400 (mka-astro.js 283–295). Consultation-Detail call sites: key = <service key><index>, u = the same key.", [
+    ["REPORT_PAGE_CONSULT_SVG", rec(pages, "kundali0…numerology2, in the order of services.json `samples`.")],
+  ]);
+}
 // portrait: bg has seeded twinkle stars
 {
   const bg = tokenized((u) => A.portrait(u, "bg"));

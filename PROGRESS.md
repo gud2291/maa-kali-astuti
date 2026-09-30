@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti
 
-**Phase:** F — Frontend (client demo) · **Next step:** F9
+**Phase:** F — Frontend (client demo) · **Next step:** F10
 Resume in a fresh session with: `/next`
 
 | Step | Title | Status |
@@ -14,7 +14,7 @@ Resume in a fresh session with: `/next`
 | F6 | Home B — rashifal wheel → floating stones | DONE |
 | F7 | Home C — courses → newsletter | DONE |
 | F8 | Shop + category template | DONE |
-| F9 | Consultations + consultation detail + InquiryForm | TODO |
+| F9 | Consultations + consultation detail + InquiryForm | DONE |
 | F10 | Booking stepper | TODO |
 | F11 | Kundali ₹99 + Love Calculator | TODO |
 | F12 | Rashifal + Rashi detail | TODO |
@@ -869,13 +869,172 @@ Manual QA (F8). `pnpm dev`. No reference shot covers the shop, so compare with `
 15. **Reduced motion ON:** no shimmer, no card stagger, no sheet slide; the arch art stays still. Everything else works.
 16. Any error or type error → Fix-list.
 
-### F9 — Consultations · TODO
+### F9 — Consultations · DONE
 Read: INV §A.7–§A.9, §C (consult rows). Design: `Consultations.dc.html` 27–288 · `Consultation-Detail.dc.html` 27–229 · `InquiryForm.dc.html` 15–163 · `mka-astro.js` 134–170, 249–295, 298–318, 327–333, 389–398, 410–422 (details: INV §H F9).
 Tasks:
-- [ ] `/consultations` landing.
-- [ ] `/consultations/[service]` (4 services, tiers, sticky Book CTA).
-- [ ] `InquiryForm` component (kinds: course, ritual; presets; RHF + Zod; mock submit states).
-Manual QA: all 4 service pages; form validation errors.
+- [x] `/consultations` landing.
+- [x] `/consultations/[service]` (4 services, tiers, sticky Book CTA).
+- [x] `InquiryForm` component (kinds: course, ritual; presets; RHF + Zod; mock submit states).
+
+Done-notes:
+- **Routes:**
+  - `src/app/[locale]/consultations/page.tsx`: hero → four services (`#services`) → how it works → credentials → testimonials → FAQ. Static.
+  - `src/app/[locale]/consultations/[service]/page.tsx`: the 4 slugs via `generateStaticParams`, `dynamicParams = false` (unknown → 404). Hero → what's covered → sample pages → packages (`#tiers`) → service FAQ → other services, plus the sticky Book bar. `generateMetadata` = service name + long description.
+  - `src/app/[locale]/preview/inquiry-form/page.tsx`: **QA-only** InquiryForm preview (`?kind=course|ritual&preset=<course key>`). It calls `notFound()` in production builds and is `noindex`. Remove it in F15, once F13 puts the form on real pages.
+- **Data seam:**
+  - `src/lib/api/consult.ts`:
+    - getters `getServices`, `getService(slug|key)`, `getModes`, `getConsultSteps`, `getTestimonials`, `getFaq(set)`;
+    - types `Service`, `Tier`, `ServiceKey`, `TierKey`, `ModeKey`;
+    - helpers `isReport` (palmistry = a report, not minutes) and `recTier` (the "Most chosen" tier).
+
+    F10 should reuse these.
+  - `src/lib/api/content.ts`: `getCourseOptions()` (key/en/hi) for the form's course select. F13 extends this module (courses, rituals).
+  - `src/lib/api/inquiry.ts`: mock `submitInquiry(kind, values)`.
+    - Waits 1100 ms and makes a ref `MKA-S-` / `MKA-R-` + the last 6 digits of the timestamp.
+    - Keeps the newest 20 in localStorage `mka.store.v2.inquiries`.
+    - Phase B: POST.
+- **Components** (`src/components/sections/consult/`):
+  - `ui.tsx`: the `EYEBROW` / `LABEL` / `UNDERLINE` classes, `rich()` tags for messages (`<em>`, `<hi>` Devanagari span, `<b>`), and `Crumbs`.
+  - Landing:
+    - `ConsultHero`: arch portrait + the S7 chakra (120 / −90 / 60 s), name card.
+    - `ServiceRows`: 4-column rows from 1100px.
+    - `HowItWorks` + `StepsReveal` (client): at 25% visible, the gold rail grows (scaleX ≥900, scaleY below; 1400 ms) and the steps stagger in (y 16 / 600 ms / 180 ms apart).
+    - `Credentials`: quote, credentials, `CountGroup` stats.
+    - `ConsultTestimonials`: a mobile snap rail (84% cards), then CSS columns (2, or 3 from 1100). The video card links to `/videos`.
+    - `ConsultFaq`: the WA card (sticky from 980px) + FaqList `consult`.
+  - Detail:
+    - `ServiceHero` (exports `CTA_ID = "svc-cta"`), `Covered`, `SamplePages`, `Tiers`, `ServiceFaq`, `OtherServices`.
+    - `StickyBook` (client): an IntersectionObserver on `#svc-cta`. Bottom bar <768, under the 64px header ≥768. While hidden it is aria-hidden and untabbable.
+  - `src/components/signature/ServiceArt.tsx` (client): primes the art before paint and draws it (S12, 1200 ms) at 30% visible.
+    - Kundali = `KundaliChart` (DEMO_K, fs 15);
+    - palm = `PALM_SVG`;
+    - tarot = `TAROT_SVG`;
+    - numerology = `LOSHU_SVG`.
+  - `src/components/ui/AnchorLink.tsx` + `scrollToId(id, offset = 60)` in `layout/scroll.ts` (Lenis-aware, smooth unless reduced motion), used by "Compare the four" / "Compare packages".
+- **InquiryForm** (`src/components/forms/InquiryForm.tsx`, client). Props:
+  - `kind` (course | ritual);
+  - `preset` (course key; a new prop value re-selects it);
+  - `courses` (options from `getCourseOptions()`).
+
+  Behaviour:
+  - **Validation:** react-hook-form + `zodResolver(inquirySchema(kind))` (`src/lib/validation/inquiry.ts`).
+    - Errors appear only after the first submit, then re-validate on change.
+    - A failed submit focuses name → phone → email → city → message, like the design (chips and the consent box are not focused).
+  - **Input rules:** the phone keeps digits only (max 10); the message has maxLength 600 and a live trimmed count.
+  - **Controls:** chip groups are `role=radiogroup` buttons; consent is a `role=checkbox` button.
+    - Stored values are keys: `exp: new|some|guru`, `area: legal|health|family|career|negative|other`, `lang: hindi|english`.
+    - Labels come from the messages.
+  - **Sending:** a spinning chakra (`data-amb="spin:1.4"`), "Sending…", button disabled.
+  - **Done:**
+    - The block fades up (y 10, 420 ms) while the seal draws (900 ms); focus moves to the status block.
+    - "Send another inquiry" resets the form and keeps the course.
+  - **Not in the design (small a11y additions):** a focus ring on the course select and on the message box (the same em5 ring the text fields use).
+- **Art:** the extractor now writes `src/lib/art/report-pages.ts`: `REPORT_PAGE_CONSULT_SVG`, keys `kundali0…numerology2`, with the design's call-site `u`. It is inline because the pages carry `<text>`. F11 (Kundali-99 pages and samples) can add its own set the same way.
+- **i18n:** new namespaces `consult` and `inquiry` in `messages/en.json` + `hi.json`. The Hindi is ours (`[HI review]`).
+  - Rule used on /hi (see the Decisions log):
+    - Fraunces display text stays English: h1/h2, the per-service titles, service and tier names, quotes, step titles, the WA card title.
+    - Manrope text is translated: eyebrows, body, labels, buttons, mode names, durations.
+  - Service content from the data stays English, marked `lang="en"`: line, delivery, "You get", covered areas, tier inclusions, sample captions, testimonials, FAQ answers.
+  - The form title and the "Pranam, …" line use `font-title` (Fraunces with the Tiro fallback), so Hindi text and Devanagari names render in a serif.
+- **Deviations (deliberate, small):**
+  - The sample-pages rail uses `justify-content: safe center`. The design's plain `center` clips the first page on mobile when the rail overflows.
+  - Booking links point at F10 routes and **404 until F10**:
+    - hero "Book a consultation" → `/book/kundali-reading`;
+    - row "Book" → `/book/<slug>`;
+    - detail "Book …" and sticky "Book now" → `?tier=detailed` (the recommended tier);
+    - tier cards → their own tier.
+- **For F10:** `getService`, `recTier`, `isReport`, and the `consult.modes.*` / `consult.dur.*` messages are ready to reuse. The chrome for `/book/*` was configured in F4.
+- Nothing was run except the extractor and Prettier (no dev / build / tsc / lint).
+
+Manual QA (F9). `pnpm dev`. No reference shot covers these pages, so compare with `design/Consultations.dc.html` and `design/Consultation-Detail.dc.html#s=kundali|palm|tarot|numerology` in the browser.
+1. **`/consultations`, desktop 1440px — hero**
+   - Faint mandala top-left; breadcrumb "Home / Consultations".
+   - Eyebrow "॥ PERSONAL GUIDANCE ॥ · परामर्श", then "Clear answers, *read* from your own chart.", the Devanagari line and the paragraph.
+   - Buttons: "Book a consultation" (a gold sheen sweeps across on hover) and "Compare the four" (outline).
+   - Trust row: ★ 4.9 · seal · globe.
+   - On the right, the arch:
+     - night sky;
+     - the chakra's 3 rings turning slowly at different speeds;
+     - the silhouette;
+     - the name card overlapping bottom-left.
+   - "Compare the four" scrolls smoothly to the services and stops with the heading ~60px below the top.
+2. **Four services (sand)**
+   - 4 ruled rows. Each row has:
+     - 01–04 and an icon circle;
+     - the name + Devanagari and the line (Kundali also has the "SATISFACTION GUARANTEE" pill);
+     - Duration, Mode icons (hover shows a tooltip), Delivery, You get;
+     - "FROM ₹2,100" with Details + Book.
+   - A row turns ivory on hover. Palmistry shows "Report in 48 hrs".
+   - Below 1100px everything stacks, and the price sits in a row with the buttons.
+3. **How it works (night)**
+   - Stars twinkle.
+   - When the steps come into view, the gold line grows left → right (top-down on mobile), and the four steps fade up one after another.
+   - The circles read १ २ ३ ४. The facts row has 3 items.
+4. **Credentials**
+   - Big quote with the lotus rule; the heading "An MBA who chose *sadhana.*"; 4 credentials in a ruled grid.
+   - The stats count up to 18+ / 12,000+ / 3,500+ when scrolled into view.
+   - "Read his story" → `/about` (404 until F14).
+5. **Testimonials**
+   - 4.9 with stars.
+   - A masonry of 5 cards + the dark video card: 2 columns at 768–1099, 3 from 1100. The 1st and 4th quotes are larger.
+   - The video card → `/videos`.
+6. **FAQ:** the emerald "Still unsure?" card stays sticky while the questions scroll (≥980). The first answer is open; the + turns into ×.
+7. **`/consultations/kundali-reading`, desktop**
+   - **Hero**
+     - Breadcrumb with a "Consultations" link; "CONSULTATION · कुंडली विश्लेषण"; "Kundali *Reading*".
+     - The Duration / Delivery / Modes list, with mode chips.
+     - "FROM ₹2,100" + "Book a Kundali reading" + "Compare packages"; the guarantee box.
+     - Night arch with stars and rings. The Lagna chart draws its lines, then the planets pop in. Caption "कुंडली विश्लेषण / YOUR LAGNA CHART".
+   - **What's covered:** the left block sticks while the list scrolls; 7 items in 2 columns.
+   - **Sample pages:** 3 pages fanned (−3° / 0 / +3°) that lift on hover; captions "01 Lagna chart & positions"…
+   - **Packages**
+     - "Detailed" is dark with the gold "MOST CHOSEN" pill; the other two sit 24px lower.
+     - "Choose …" → `/book/kundali-reading?tier=…` (404 until F10).
+   - Service FAQ (4 questions).
+   - "Other ways to consult": 3 cards that lift and get a brass ring on hover.
+8. **Sticky Book bar**
+   - Scroll past the hero's Book button → a bar slides down under the header: icon, name, "from ₹2,100 · 60–90 min", "Book now".
+   - Scroll back up → it slides away. While hidden, Tab can't reach it.
+9. **The other 3 services**
+   - `/consultations/palmistry`: the palm lines draw; "Report in 48 hrs"; the Essential and Detailed packages read "Report"; no guarantee box.
+   - `/consultations/tarot-reading`: three cards (the glow pulses).
+   - `/consultations/numerology`: the Lo Shu grid.
+   - `/consultations/xyz` → 404.
+10. **Mobile 390px**
+    - **Landing**
+      - The arch is 300px wide under the text, with the name card at its left edge.
+      - Service rows are stacked; the steps are vertical with the line on the left.
+      - Testimonials are a sideways snap rail (84% cards). The WA card is not sticky. The tab bar is visible.
+    - **Detail**
+      - No tab bar. The sticky bar sits at the **bottom** (72px, above the safe area) with "Book now". The WhatsApp FAB sits above it (92px).
+      - Sample pages: a sideways snap rail with no tilt; the first page is fully reachable.
+      - Packages are stacked (the dark one without an offset).
+    - No horizontal page scroll anywhere.
+11. **InquiryForm:** open `/preview/inquiry-form` (course) and `/preview/inquiry-form?kind=ritual`. `?preset=kali` should select "Kali Sadhana".
+    - **Empty submit:** press "Send inquiry".
+      - Red errors appear under name, WhatsApp, city, the experience chips and the message, plus "Please confirm…".
+      - The cursor jumps to "Full name".
+    - **Fixing:** fix the fields one by one; each error disappears as you type or pick.
+      - The phone field accepts digits only (max 10); `5123456789` stays invalid (it must start with 6–9).
+      - A bad email shows "Check this email address"; an empty email is fine.
+      - The message counter reads "n / 600" and stops at 600 characters.
+    - **Valid submit**
+      - The chakra spins with "Sending…" for ~1 s.
+      - Then "Pranam, <first name>." with the seal drawing in, the message, and "Reference MKA-S-######".
+      - "Continue on WhatsApp" + "Send another inquiry". The latter goes back to an empty form with the same course.
+    - **Ritual:** area chips (6) + language chips (हिंदी / English). The done text names the chosen language; the reference starts with MKA-R-.
+    - **Keyboard:** Tab through the fields, the chips (Enter/Space picks) and the checkbox.
+12. **`/hi/consultations` and `/hi/consultations/palmistry`**
+    - In Hindi: eyebrows, paragraphs, labels, buttons, durations ("48 घंटे में रिपोर्ट", "60–90 मिनट") and the sticky bar.
+    - Still English: display headings, service and tier names, and the data lists.
+    - `/hi/preview/inquiry-form`: the whole form is in Hindi.
+13. **Reduced motion ON**
+    - The chakra is still.
+    - The steps line is already full, with no stagger.
+    - The chart and palm show complete.
+    - No count-up.
+    - Anchor jumps are instant; the sticky bar appears without sliding.
+14. Any error or type error → Fix-list.
 
 ### F10 — Booking · TODO
 Read: INV §A.10, §C (booking row). Design: `Booking.dc.html` 28–603 · `mka-astro.js` 10–12, 73–74, 158–170, 260–269, 298–325 · `mka-core.js` 20–24, 509–510 (details: INV §H F10).
@@ -950,6 +1109,10 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
 - 2026-09-29: Design source = Claude Design ZIP (cheaper than the MCP). Stack per docs/TECH-STACK.md. Next.js lives in the `KALA-JADU` root (inside OneDrive; pause OneDrive sync during `pnpm install`). pnpm. URL-based i18n (`/` = EN, `/hi` = HI).
 - 2026-09-30 (F2): `localeDetection: false` — `/` never auto-redirects to `/hi` by browser language; Hindi only via the toggle or `/hi` URLs. SVG art with `<text>` is inlined (web fonts), everything else is an external `/svg` file.
 - Commerce pages not in the export (Cart, Checkout, PDP, Wishlist, Search, Order Success) → branded coming-soon routes until they are designed. The cart drawer works fully.
+- 2026-09-30 (F9): copy rule on /hi for pages whose design is English-only.
+  - Fraunces display text (headings, service and tier names, quotes) stays English, because the display face has no Devanagari.
+  - Manrope UI text is translated.
+  - Data content (service details, tier inclusions, testimonials, FAQ) stays English until the phase-B CMS has Hindi fields.
 - 2026-09-30 (F8): the shop category and filters are view state. Switching rewrites the URL in place (`replaceState`: the path for the category, the query for filters) instead of navigating. The view, the open groups and the mobile sheet keep their state, and no page transition runs (same as the design's hash). Deep links and reloads restore everything.
 
 ## Client-confirm list (placeholders from the design)
@@ -998,3 +1161,16 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
   - Buyer's-note claims to confirm: Nepal sourcing, the X-ray test, the lab certificate number and energization date on the packet, 8 mm beads, bracelet sizes S/M/L (cm), dispatch 2–4 days after energization, personal energization with name + gotra.
   - "Most offerings sit between ₹300 and ₹2,500" (price note) and "Sadhak Ji's team replies within a day" (banner).
   - Stock numbers (12 Mukhi sold out; 13/14 Mukhi, lapis and Mahavidya low) and the "Newest" order come from the prototype data.
+- Consultations (F9):
+  - [HI review] all the `consult` and `inquiry` Hindi in `messages/hi.json` is ours.
+  - From the prototype:
+    - service copy, tiers and prices (₹1,100–₹5,100), durations and inclusions;
+    - delivery lines ("Session within 3 days", "Report in 48 hrs");
+    - the sample report pages.
+  - The Sunita Pathak video testimonial ("Why I trust Sadhak Ji", 1:42) is a placeholder card that links to /videos.
+  - Credentials copy: "Paranormal researcher", "Published author", "Shakta tradition".
+  - Office promises: hours "Mon–Sat · 10:00–19:00 IST", "replies within a few hours", "Reschedule once, up to 12 hours before".
+  - InquiryForm:
+    - the promise "a WhatsApp call … within two working days";
+    - the reference formats MKA-S- / MKA-R-;
+    - inquiries are only stored in the browser (demo) until phase B.

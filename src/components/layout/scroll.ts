@@ -18,3 +18,16 @@ export function scrollToTop() {
   }
   window.scrollTo({ top: 0, behavior: isReduced() ? "auto" : "smooth" });
 }
+
+/** In-page anchor jump (Consultations "Compare the four" 45, Consultation-Detail "Compare packages"
+ *  47): the section's top minus `offset` (the design uses 60), smooth unless reduced motion. */
+export function scrollToId(id: string, offset = 60) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  const top = el.getBoundingClientRect().top + window.scrollY - offset;
+  if (lenis && !isReduced()) {
+    lenis.scrollTo(top);
+    return;
+  }
+  window.scrollTo({ top, behavior: isReduced() ? "auto" : "smooth" });
+}

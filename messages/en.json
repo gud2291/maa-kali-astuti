@@ -723,5 +723,267 @@
       "err": "Enter a valid email address",
       "done": "Subscribed. The next Rashifal reaches you on the 1st."
     }
+  },
+  "consult": {
+    "meta": {
+      "title": "Consultations",
+      "description": "Kundali, palmistry, tarot and numerology with Sadhak Pawan Pandey, by call, video, WhatsApp or a written report."
+    },
+    "crumbHome": "Home",
+    "crumbConsult": "Consultations",
+    "breadcrumb": "Breadcrumb",
+    "modes": {
+      "call": "Phone call",
+      "video": "Video call",
+      "wa": "WhatsApp call",
+      "report": "Written report"
+    },
+    "dur": {
+      "report": "Report in 48 hrs",
+      "reportLower": "report in 48 hrs",
+      "range": "{a}–{b} min",
+      "mins": "{n} min"
+    },
+    "hero": {
+      "eyebrow": "॥ Personal guidance ॥ · <hi>परामर्श</hi>",
+      "title": "Clear answers, <em>read</em> from your own chart.",
+      "deva": "आपकी कुंडली से, आपके प्रश्नों के उत्तर",
+      "body": "Kundali, palmistry, tarot and numerology with Sadhak Pawan Pandey. One seeker at a time, by call, video, WhatsApp or a written report, with guidance that continues until your doubts are resolved.",
+      "book": "Book a consultation",
+      "compare": "Compare the four",
+      "rating": "4.9 · 2,000+ seekers",
+      "guarantee": "Satisfaction guarantee on Kundali",
+      "lang": "Hindi or English",
+      "capName": "Sadhak Pawan Pandey",
+      "capLine": "MBA · former MNC professional · 18 years of sadhana",
+      "portraitAlt": "Portrait placeholder for Sadhak Pawan Pandey"
+    },
+    "services": {
+      "eyebrow": "01 — Four ways to consult",
+      "title": "Choose the reading that <em>fits</em> your question.",
+      "deva": "चार विधियाँ, एक उद्देश्य",
+      "intro": "All four begin the same way: Sadhak Ji studies your details before he speaks to you. Prices are per session, inclusive of taxes, with packages on each service page.",
+      "guarantee": "Satisfaction guarantee",
+      "duration": "Duration",
+      "mode": "Mode",
+      "delivery": "Delivery",
+      "get": "You get",
+      "from": "From",
+      "details": "Details",
+      "book": "Book",
+      "detailsAria": "{name} details",
+      "bookAria": "Book {name}",
+      "unsure": "Not sure which one you need?",
+      "wa": "Describe your question on WhatsApp"
+    },
+    "how": {
+      "eyebrow": "02 — How it works · <hi>प्रक्रिया</hi>",
+      "title": "Four steps, and <em>no</em> hurry.",
+      "body": "Your details reach Sadhak Ji before the session does. Nothing is read on the spot, and nothing ends when the call does.",
+      "steps": [
+        {
+          "t": "Share your details",
+          "d": "Birth details, palm photos or your question, through a short form."
+        },
+        {
+          "t": "Sadhak Ji studies them",
+          "d": "Your chart or palms are read before the session, never on the spot."
+        },
+        {
+          "t": "Live session or report",
+          "d": "By call, video, WhatsApp or a written report, in Hindi or English."
+        },
+        {
+          "t": "Guidance continues",
+          "d": "Follow-up questions are answered until your doubts are resolved."
+        }
+      ],
+      "hours": "Mon–Sat · 10:00–19:00 IST",
+      "reschedule": "Reschedule once, up to 12 hours before",
+      "private": "Your details stay private"
+    },
+    "cred": {
+      "quote": "Welcome to a space where ancient spiritual wisdom meets modern clarity.",
+      "caption": "Sadhak Pawan Pandey · Founder, Maa Kali Astuti",
+      "eyebrow": "03 — Who you speak with",
+      "title": "An MBA who chose <em>sadhana.</em>",
+      "deva": "साधक पवन पाण्डेय",
+      "body": "Sadhak Ji left a corporate career in multinational companies to give his life to sadhana, mantra and paranormal research under enlightened mentors. He treats spirituality as a time-tested science and rejects superstition, which is why his readings explain the reasoning behind every answer.",
+      "items": [
+        {
+          "t": "MBA, former MNC professional",
+          "d": "Years in multinational companies before full-time sadhana"
+        },
+        {
+          "t": "18 years of sadhana",
+          "d": "Under enlightened mentors in the Shakta tradition"
+        },
+        {
+          "t": "Paranormal researcher",
+          "d": "Case work on energy disturbances in homes and workplaces"
+        },
+        {
+          "t": "Published author",
+          "d": "Writing on the lived experience of the spiritual path"
+        }
+      ],
+      "stats": [
+        "Years of sadhana",
+        "Seekers guided",
+        "Rituals performed"
+      ],
+      "story": "Read his story"
+    },
+    "testi": {
+      "eyebrow": "04 — Seekers speak",
+      "title": "What seekers say <em>afterwards.</em>",
+      "rated": "Rated 4.9 out of 5",
+      "from": "from 2,000+ seekers",
+      "videoAria": "Play video testimonial from Sunita Pathak, Delhi",
+      "videoKicker": "Video · 1:42",
+      "videoTitle": "“Why I trust Sadhak Ji”",
+      "videoBy": "Sunita Pathak · Delhi · Kundali Reading"
+    },
+    "faq": {
+      "eyebrow": "05 — Before you book",
+      "title": "Questions seekers <em>ask first.</em>",
+      "waTitle": "Still unsure? Ask a person.",
+      "waBody": "Sadhak Ji’s office replies within a few hours, Mon–Sat, in Hindi or English."
+    },
+    "detail": {
+      "eyebrow": "Consultation · <hi>{name}</hi>",
+      "duration": "Duration",
+      "delivery": "Delivery",
+      "modes": "Modes",
+      "from": "From",
+      "book": "Book {short}",
+      "compare": "Compare packages",
+      "guarantee": "<b>Satisfaction guarantee.</b> If your questions are not answered clearly, guidance continues at no extra cost until they are.",
+      "covEyebrow": "01 — What’s covered",
+      "samplesEyebrow": "02 — What you receive",
+      "samplesTitle": "Sample pages from a <em>real</em> report.",
+      "samplesNote": "Names and birth details changed. Every report is written for one seeker and delivered as a PDF on WhatsApp and email.",
+      "tiersEyebrow": "03 — Packages",
+      "tiersTitle": "Choose how <em>deep</em> to go.",
+      "tiersIntro": "Every package includes Sadhak Ji’s preparation before the session and remedies you can follow at home. Prices include taxes.",
+      "mostChosen": "Most chosen",
+      "report": "Report",
+      "choose": "Choose {t}",
+      "faqEyebrow": "04 — About {short}",
+      "faqTitle": "Good to know <em>before</em> you book.",
+      "askWa": "Ask anything on WhatsApp",
+      "others": "Other ways to consult",
+      "fromLine": "from {price} · {dur}",
+      "bookNow": "Book now",
+      "copy": {
+        "kundali": {
+          "title": "Kundali <em>Reading</em>",
+          "short": "a Kundali reading",
+          "long": "A deep reading of your birth chart covering career, marriage, finance, health and hidden obstacles, with guidance that continues until your doubts are resolved.",
+          "cov": "Seven areas, read <em>together.</em>",
+          "covNote": "A chart is read as a whole. Sadhak Ji looks at how the areas affect each other before answering the question you came with.",
+          "artCap": "Your Lagna chart"
+        },
+        "palm": {
+          "title": "Palmistry, <em>Hastrekha</em>",
+          "short": "a palm reading",
+          "long": "Share clear photographs of both palms. Sadhak Ji reads the life, head, heart and fate lines, the mounts and the turning points, using authentic Hastrekha principles.",
+          "cov": "Both hands, read <em>line by line.</em>",
+          "covNote": "Suits seekers without birth details. The left hand shows what you were born with; the right shows what you are making of it.",
+          "artCap": "The four major lines"
+        },
+        "tarot": {
+          "title": "Tarot card <em>reading</em>",
+          "short": "a tarot reading",
+          "long": "An intuitive spread for one clear question, especially relationship dilemmas and career crossroads, explained card by card with practical next steps.",
+          "cov": "One question, <em>laid open.</em>",
+          "covNote": "Tarot is used here as a tool for clarity on present situations, not for long-range prediction.",
+          "artCap": "A three-card spread"
+        },
+        "numerology": {
+          "title": "Numerology, <em>Ank Jyotish</em>",
+          "short": "a numerology session",
+          "long": "Align your name, mobile number and business name with favourable vibrations, using the science of numbers and your date of birth.",
+          "cov": "Your numbers, <em>in order.</em>",
+          "covNote": "Corrections are small and practical: a spelling, a signature, a number pattern, a date.",
+          "artCap": "Your Lo Shu grid"
+        }
+      }
+    }
+  },
+  "inquiry": {
+    "course": {
+      "eyebrow": "Enrollment inquiry · नामांकन",
+      "title": "Enquire about enrollment",
+      "note": "This is not an application or payment. It starts a conversation with Sadhak Ji, who decides with you whether this sadhana suits you now.",
+      "area": "Why this sadhana, and why now?",
+      "areaPh": "What draws you to it, and what you hope the practice will change…",
+      "agree": "I understand enrollment follows a personal conversation and an eligibility check, and that the syllabus is shared after it.",
+      "send": "Send inquiry",
+      "whyErr": "Tell us a little more (20+ characters)",
+      "done": "Your inquiry for {course} is with Sadhak Ji’s office. Expect a WhatsApp call from {wa} within two working days to arrange the first conversation."
+    },
+    "ritual": {
+      "eyebrow": "Ritual inquiry · अनुष्ठान",
+      "title": "Tell us what is happening",
+      "note": "Nothing is booked or charged here. Sadhak Ji studies your case first, and a ritual is suggested only if he is confident it will help.",
+      "area": "Describe the situation",
+      "areaPh": "Since when, what has been tried, and what you hope for…",
+      "agree": "I understand every case is analysed first, and a ritual is accepted only when there is confidence in the path forward.",
+      "send": "Send for analysis",
+      "whyErr": "A few lines help Sadhak Ji understand the situation (20+ characters)",
+      "done": "Your case is with Sadhak Ji’s office. He studies it before anything is suggested; expect a WhatsApp call from {wa} within two working days, in {lang}."
+    },
+    "name": "Full name",
+    "namePh": "As you would like to be addressed",
+    "phone": "WhatsApp number",
+    "phonePh": "98XXXXXXXX",
+    "email": "Email",
+    "optional": "(optional)",
+    "emailPh": "you@example.com",
+    "city": "City",
+    "cityPh": "Varanasi",
+    "whichCourse": "Which sadhana?",
+    "exp": {
+      "label": "Your experience with sadhana",
+      "new": "New to sadhana",
+      "some": "Some regular practice",
+      "guru": "Practising under a guru"
+    },
+    "area": {
+      "label": "Area of concern",
+      "legal": "Legal matter",
+      "health": "Health",
+      "family": "Marriage & family",
+      "career": "Career & business",
+      "negative": "Negative energy",
+      "other": "Something else"
+    },
+    "lang": {
+      "label": "Language for the call",
+      "hindi": "हिंदी",
+      "english": "English"
+    },
+    "langName": {
+      "hindi": "Hindi",
+      "english": "English"
+    },
+    "err": {
+      "name": "Enter your full name",
+      "phone": "Enter a 10-digit mobile number",
+      "email": "Check this email address",
+      "city": "Enter your city",
+      "area": "Choose the area closest to your concern",
+      "exp": "Choose one",
+      "agree": "Please confirm this to send your inquiry"
+    },
+    "count": "{n} / 600",
+    "sending": "Sending…",
+    "orWa": "Or message on WhatsApp",
+    "pranam": "Pranam, <em>{name}.</em>",
+    "seeker": "seeker",
+    "reference": "Reference {ref}",
+    "continueWa": "Continue on WhatsApp",
+    "another": "Send another inquiry"
   }
 }
