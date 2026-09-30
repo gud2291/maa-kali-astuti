@@ -1606,5 +1606,232 @@
       "book": "Book a reading",
       "chartAria": "Sample North Indian Lagna chart"
     }
+  },
+  "sadhana": {
+    "meta": {
+      "title": "Sadhana Courses",
+      "description": "Six traditional sadhanas (Baglamukhi, Hanuman, Kali, Durga, Shiva and Bhairav), each a complete anushthan with personal diksha and weekly guidance from Sadhak Pawan Pandey. ₹50,000 per sadhana.",
+      "detailTitle": "{name}",
+      "detailDescription": "{essence} {days} days, with personal diksha, an energized yantra and mala, and weekly check-ins with Sadhak Pawan Pandey."
+    },
+    "crumbs": {
+      "label": "Breadcrumb",
+      "home": "Home",
+      "courses": "Sadhana Courses"
+    },
+    "hero": {
+      "eyebrow": "॥ Sadhana courses ॥ · <hi>साधना</hi>",
+      "title": "Six sadhanas, <em>guided</em> from diksha to completion.",
+      "deva": "गुरु के मार्गदर्शन में, दीक्षा से पूर्णाहुति तक",
+      "intro": "Each course is a complete anushthan under the personal guidance of Sadhak Pawan Pandey. You practise at home, on a fixed daily sequence, and he reviews your progress every week.",
+      "feeLabel": "Course fee",
+      "feeNote": "per sadhana · yantra, mala and guidance included",
+      "enquire": "Enquire about a sadhana",
+      "six": "See the six",
+      "includes": "What every course includes"
+    },
+    "six": {
+      "eyebrow": "01 — The six sadhanas",
+      "title": "Each begins with <em>its yantra.</em>",
+      "intro": "Not every seeker begins with the same one. After a personal conversation, Sadhak Ji suggests the sadhana that suits your intention and your life right now.",
+      "days": "{n} days",
+      "view": "View course"
+    },
+    "enroll": {
+      "eyebrow": "02 — How enrollment works",
+      "title": "Five steps, and <em>no rush</em> between them.",
+      "intro": "You pay only at step four, after Sadhak Ji has spoken with you and confirmed the sadhana suits you."
+    },
+    "seekers": {
+      "eyebrow": "03 — For serious seekers",
+      "quote": "A sadhana is not bought. It is kept, day after day, and a seeker is accepted only when the practice will help them.",
+      "cite": "Maa Kali Astuti · enrollment policy",
+      "asks": [
+        {
+          "t": "Over 21, and able to commit",
+          "d": "The daily practice runs the full length of the sadhana, without breaks."
+        },
+        {
+          "t": "60 to 90 minutes a day",
+          "d": "At a fixed time and place, usually early morning or after sunset."
+        },
+        {
+          "t": "Honest about your intention",
+          "d": "Sadhak Ji will ask why you want this sadhana, and may suggest another."
+        }
+      ]
+    },
+    "faq": {
+      "eyebrow": "04 — Questions",
+      "title": "Asked by seekers <em>before</em> diksha."
+    },
+    "enquire": {
+      "eyebrow": "05 — Enquire",
+      "title": "Begin with a <em>conversation.</em>",
+      "body": "Tell us which sadhana you are drawn to and why. The office replies within two working days to arrange a call with Sadhak Ji. The syllabus is shared after that first conversation.",
+      "wa": "Or message on WhatsApp"
+    },
+    "detail": {
+      "title": "{name} <em>Sadhana</em>",
+      "facts": {
+        "duration": "Duration",
+        "mode": "Mode",
+        "fee": "Fee",
+        "days": "{n} days",
+        "modeV": "Diksha in person or on video",
+        "feeV": "{price}, all-inclusive"
+      },
+      "enquire": "Enquire about {name}",
+      "syllabus": "Syllabus shared upon inquiry",
+      "yantra": "{name} yantra",
+      "overview": {
+        "eyebrow": "01 — Overview",
+        "deva": "परिचय",
+        "body": "The practice follows a fixed sequence that Sadhak Ji gives you personally at diksha. It is done at home, at the same hour each day, with a weekly review of your japa record and experiences."
+      },
+      "attain": {
+        "eyebrow": "02 — What you attain",
+        "title": "What seekers carry <em>out of it.</em>"
+      },
+      "structure": {
+        "eyebrow": "03 — Structure",
+        "title": "{days} days, <em>five stages.</em>",
+        "duration": "Duration",
+        "durationV": "{days} days, plus 7 of preparation",
+        "daily": "Daily practice",
+        "dailyV": "60–90 minutes at home",
+        "diksha": "Diksha",
+        "dikshaV": "In person or on video",
+        "confirm": "Duration, mode and modules to be confirmed",
+        "when": {
+          "prep": "Days 1–7",
+          "diksha": "Day 8",
+          "practice": "Days 8–{end}",
+          "weekly": "Every week",
+          "close": "Days {a}–{b}"
+        }
+      },
+      "niyam": {
+        "eyebrow": "04 — Discipline & niyam · <hi>नियम</hi>",
+        "title": "The rules are <em>the practice.</em>",
+        "specific": "Specific to {name}"
+      },
+      "support": {
+        "eyebrow": "05 — Guidance & support",
+        "title": "You do not practise <em>alone.</em>",
+        "items": [
+          {
+            "t": "Weekly check-ins",
+            "d": "Your japa record and experiences reviewed every week, by call or video."
+          },
+          {
+            "t": "Questions answered on WhatsApp",
+            "d": "Through the sadhana, from the office and from Sadhak Ji, usually within a day."
+          },
+          {
+            "t": "Guidance after completion",
+            "d": "How to keep the practice alive once the anushthan ends, and what to avoid."
+          }
+        ]
+      },
+      "fee": {
+        "eyebrow": "06 — Fee",
+        "for": "for the complete sadhana",
+        "inc": [
+          "Personal diksha and sankalp",
+          "Energized yantra and mala, posted before diksha",
+          "Written vidhi and niyam, in Hindi or English",
+          "Weekly check-ins for the full duration",
+          "Closing havan and purnahuti guidance"
+        ],
+        "payment": "Payment",
+        "pay": [
+          {
+            "k": "When you pay",
+            "v": "Only after the eligibility conversation"
+          },
+          {
+            "k": "How",
+            "v": "UPI, netbanking or bank transfer"
+          },
+          {
+            "k": "Instalments",
+            "v": "3 × ₹16,667 over three months [confirm]"
+          },
+          {
+            "k": "Refunds",
+            "v": "In full until diksha; not after, as the sankalp is taken"
+          }
+        ]
+      },
+      "enq": {
+        "eyebrow": "07 — Enquire",
+        "title": "Ask about <em>{name}.</em>",
+        "body": "The office replies within two working days to arrange your conversation with Sadhak Ji. The full syllabus, dates and preparation are shared after that call.",
+        "others": "The other sadhanas"
+      },
+      "sticky": {
+        "sub": "{price} · {days} days",
+        "cta": "Enquire"
+      }
+    }
+  },
+  "rituals": {
+    "meta": {
+      "title": "Rituals & Anushthan",
+      "description": "Rituals and anushthan performed by Sadhak Pawan Pandey only when they will help: analysis first, the cost in writing, a sankalp in your name, photo updates and prasad by post."
+    },
+    "crumbs": {
+      "label": "Breadcrumb",
+      "home": "Home",
+      "here": "Rituals & Anushthan"
+    },
+    "hero": {
+      "eyebrow": "Rituals & Anushthan · <hi>अनुष्ठान</hi>",
+      "title": "Rituals performed <em>only</em> when they will help.",
+      "deva": "आवश्यकता हो, तभी अनुष्ठान",
+      "intro": "Share what is happening in your life. Sadhak Ji studies it, with your chart if you have one, before anything is suggested. If a ritual is not the right path, you are told so.",
+      "share": "Share your concern",
+      "how": "How it works",
+      "caption": "Puja thali · diya, kumkum, haldi, akshat"
+    },
+    "ethics": {
+      "eyebrow": "01 — Our ethics",
+      "quote": "We do not sell fear. No ritual is suggested to frighten you, and none is a <em>condition</em> of guidance.",
+      "items": [
+        {
+          "t": "Analysis before any suggestion",
+          "d": "Your situation and chart are studied first. Nothing is recommended on a first call."
+        },
+        {
+          "t": "Accepted only if confident",
+          "d": "A case is taken only when Sadhak Ji believes a ritual will help. Otherwise you are told plainly."
+        },
+        {
+          "t": "Cost shared in writing first",
+          "d": "The ritual, its length, samagri and cost are written down before you decide anything."
+        }
+      ]
+    },
+    "types": {
+      "eyebrow": "02 — Rituals we perform",
+      "title": "Some of what may be <em>advised.</em>",
+      "badge": "Placeholder examples · to confirm with client"
+    },
+    "process": {
+      "eyebrow": "03 — The process",
+      "title": "From your concern to the <em>purnahuti.</em>",
+      "intro": "Five steps, and the third is where many requests end: with honest advice instead of a ritual."
+    },
+    "receive": {
+      "eyebrow": "04 — What you receive",
+      "title": "Performed in <em>your name.</em>",
+      "badge": "Updates and inclusions to confirm"
+    },
+    "inquire": {
+      "eyebrow": "05 — Share your concern",
+      "title": "Tell us what is <em>happening.</em>",
+      "body": "Everything you write is read only by Sadhak Ji and his office. You will hear back within two working days, whether or not a ritual is advised."
+    }
   }
 }

@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti
 
-**Phase:** F — Frontend (client demo) · **Next step:** F13
+**Phase:** F — Frontend (client demo) · **Next step:** F14
 Resume in a fresh session with: `/next`
 
 | Step | Title | Status |
@@ -18,7 +18,7 @@ Resume in a fresh session with: `/next`
 | F10 | Booking stepper | DONE |
 | F11 | Kundali ₹99 + Love Calculator | DONE |
 | F12 | Rashifal + Rashi detail | DONE |
-| F13 | Sadhana Courses + Course detail + Rituals | TODO |
+| F13 | Sadhana Courses + Course detail + Rituals | DONE |
 | F14 | About + Videos + 404 | TODO |
 | F15 | Polish, audits, demo handover | TODO |
 | B0 | Backend plan (new plan session) | TODO |
@@ -1303,15 +1303,103 @@ Manual QA (F12). `pnpm dev`. No reference shots: compare with `design/Rashifal.d
 13. **Reduced motion ON**: wheel does not auto-turn (buttons still jump without animation), rings still, no panel/text fades, chart shows complete, diya still.
 14. Any error or type error → Fix-list.
 
-### F13 — Courses + Rituals · TODO
+### F13 — Courses + Rituals · DONE
 Read: INV §A.15–§A.17, §E.1 S5 S11, §E.3. Design: `Sadhana-Courses.dc.html` 27–195 · `Course-Detail.dc.html` 27–240 · `Rituals.dc.html` 27–182 · `mka-astro.js` 134–151, 203–248, 389–407, 414, 419 · `mka-core.js` 267 (details: INV §H F13).
 Tasks:
-- [ ] `/sadhana-courses`.
-- [ ] `/sadhana-courses/[slug]` (sticky Enquire, InquiryForm preset).
-- [ ] `/rituals` (diya thali, scroll-filled process line, InquiryForm kind `ritual`).
+- [x] `/sadhana-courses`.
+- [x] `/sadhana-courses/[slug]` (sticky Enquire, InquiryForm preset).
+- [x] `/rituals` (diya thali, scroll-filled process line, InquiryForm kind `ritual`).
 
-Option: one general-purpose agent builds Rituals while the main agent builds Courses.
-Manual QA: yantra draw, sticky CTA, process line, forms.
+Built in one session by the main agent (no sub-agent).
+
+Done-notes:
+- **Data seam** (`src/lib/api/content.ts`): `getCourses`, `getCourse(slugOrKey)`, `getCourseKit` (includes, enroll, modules, niyam) and `getRituals` (rituals, process, receive). Types `Course` and `IconRow`. FAQ sets come from `getFaq("courses" | "rituals")` in `lib/api/consult.ts`.
+- **Routes**:
+  - `src/app/[locale]/sadhana-courses/page.tsx` (static).
+  - `src/app/[locale]/sadhana-courses/[slug]/page.tsx`: 6 static params (`<key>-sadhana`), `dynamicParams = false`. A key-only URL (`/sadhana-courses/kali`) or an unknown slug → 404.
+  - `src/app/[locale]/rituals/page.tsx` (static).
+  - chrome-config already had these routes. Course detail: tab bar off, FAB at 92px.
+- **Courses page** (`src/components/sections/courses/CoursesSections.tsx`, server):
+  - `CoursesHero`: stars, the faint kali yantra (`YANTRA_KALI_BG`, opacity .07), fee row, and the "includes" card.
+  - `CourseCards` (#six): 1 / 2 (≥640) / 3 (≥1024) columns, middle column 48px lower at 3 columns, panel 4/3 below 768.
+  - `Enrollment`: `EnrollLine.tsx` (client) grows the gold line on view (IO .4, scaleX 1600 ms, ≥1024 only).
+  - `SeriousSeekers`, `CoursesFaq`, `CoursesEnquire` (#enquire, preset kali).
+  - Shared exports: `COURSE_FEE`, `GOLD_CTA`, `GHOST_CTA`, `H2`, `H2N`, `WaLink`.
+  - The card `data-reveal` uses `i % 3` at every width (the design uses `i % cols`). Only the stagger delay differs on 1–2 columns.
+- **Yantra draw (S11)**: `src/components/signature/YantraDraw.tsx` (client). It primes every `[data-yantra]` and draws it on view. Hovering the closest `[data-yantra-hover]` redraws it, with a throttle.
+  - Courses cards: .35 / 1600 ms / 1800 ms throttle, hover + focus.
+  - Detail arch: .3 / 1800 ms, hover only, 1600 ms redraw, 2000 ms throttle.
+  - Reduced motion: yantras render complete.
+  - The Home CourseRail keeps its own copy.
+- **Course detail** (`src/components/sections/courses/CourseDetail.tsx`, server):
+  - Sections: `CourseHero` (the arch, CTA row `#course-cta`), `CourseOverview`, `CourseAttain`, `CourseStructure` (sticky at 96px from 1024; module "when" labels computed from `days`), `CourseNiyam`, `CourseSupport`, `CourseFee`, `CourseEnquire`.
+  - `CourseEnquire`: the InquiryForm preset is the course. Below it, "The other sadhanas" with static brass yantras.
+  - The sticky Enquire bar reuses `consult/StickyBook.tsx`. It now takes an optional `lead` (the yantra disc, ≥768), an `anchor` (scrolls to #enquire instead of navigating) and a `ctaIcon`. Consultation-Detail keeps working unchanged.
+- **Rituals** (`src/components/sections/rituals/`):
+  - `RitualsSections.tsx`: `RitualsHero` shows the thali (`THALI_RITUALS_SVG`: glow, smoke and diya flicker live inside the art via data-amb) under a `MandalaG` with `spin:200` at opacity .13. Also `RitualsEthics`, `RitualTypes`, `RitualProcess` (#process, sticky side at 110px), `RitualReceive` (first card full width) and `RitualInquire` (#inquire: FaqList closed + InquiryForm kind ritual).
+  - `ProcessSteps.tsx` (client) uses `ScrollLine` with the list as the measured box. Steps light at n = floor(p·5 + .35), and each change eases over 500 ms.
+- **i18n**: new namespaces `sadhana` and `rituals` in both message files. On /hi, display text, course/ritual data and FAQ stay English (F9 rule); Manrope UI text is Hindi (`[HI review]`). Lists use `t.raw`: `seekers.asks`, `detail.support.items`, `detail.fee.inc/pay`, `ethics.items`.
+- **Removed** the QA-only `/preview/inquiry-form` route (planned for F15), because the form now lives on its real pages.
+- Nothing was run (no dev / build / tsc / lint).
+
+Manual QA (F13). `pnpm dev`. No reference shots: compare with `design/Sadhana-Courses.dc.html`, `design/Course-Detail.dc.html` and `design/Rituals.dc.html` opened in the browser.
+1. **`/sadhana-courses` at 1440px, hero**
+   - Night band with twinkling stars and a faint yantra at the top right. Breadcrumb Home / Sadhana Courses.
+   - Eyebrow "॥ SADHANA COURSES ॥ · साधना", then the h1 "Six sadhanas, *guided*…", the Devanagari line and the intro.
+   - Fee row: "COURSE FEE ₹50,000" with the gold "Enquire about a sadhana" and outline "See the six" buttons. Both scroll smoothly (60px offset).
+   - Right: the "What every course includes" card with 5 rows that fade up.
+2. **Six cards (#six)**
+   - 3 columns; the middle column sits 48px lower. Each card has a night panel with a "36 days" pill.
+   - The yantra draws itself (strokes, then a glow) when about a third of it is in view.
+   - Hover: the card lifts 4px, gets a brass ring, and the yantra redraws (at most every 1.8 s). Tab onto a card and it redraws too.
+   - Click → `/sadhana-courses/<deity>-sadhana`.
+3. **Enrollment**: night band with 5 steps in a row. The gold line on top grows left → right (1.6 s) when it scrolls in. Devanagari numbers १–५.
+4. **Serious seekers**: sand frame with 4 brass corners, the italic quote, "Maa Kali Astuti · enrollment policy", the lotus rule and 3 asks in 3 columns.
+5. **FAQ**: heading on the left, the accordion on the right with the first answer open.
+6. **Enquire (#enquire)**
+   - Copy + "Or message on WhatsApp" (opens wa.me). The form's "Which sadhana?" = **Kali Sadhana**.
+   - Submit empty → errors. Fill it in and submit → Sending… → "Pranam…" with an MKA-S- reference.
+7. **`/sadhana-courses` at 390px**: hero stacks (includes card below). Cards are 1 column with 4:3 panels (2 columns at ≥640). Enrollment steps stack with vertical rules and no top line. Asks are 1 column. No horizontal scroll.
+8. **`/sadhana-courses/kali-sadhana` at 1440px, hero**
+   - Breadcrumb Home / Sadhana Courses / Kali Sadhana, the deity eyebrow, then "Kali *Sadhana*", "काली साधना" and the essence.
+   - Facts: Duration 41 days / Mode / Fee ₹50,000, all-inclusive.
+   - Gold "Enquire about Kali Sadhana" + "Syllabus shared upon inquiry".
+   - Right: the arch with stars, a faint circle and the yantra drawing itself (1.8 s). Hover the yantra → it redraws (at most every 2 s). "KALI SADHANA YANTRA" at the bottom.
+9. **Sticky bar**
+   - Scroll past the hero CTA row → a bar slides down under the header: yantra disc, "Kali Sadhana", "₹50,000 · 41 days", "Enquire".
+   - It scrolls to #enquire and hides again when you scroll back up.
+   - At 390px it sits at the bottom (no tab bar on this page, WhatsApp FAB lifted above it) with no yantra disc.
+10. **Detail sections**
+    - Overview: large serif line + note.
+    - Attain: 4 lines with १–४, 2 columns.
+    - Structure: the left side sticks while the 5 modules scroll. Labels: "Days 1–7 / Day 8 / Days 8–39 / Every week / Days 40–41" (for 41 days), plus the "to be confirmed" pill.
+    - Niyam: night band with the "Specific to Kali Sadhana" card and 6 lotus rows.
+    - Support: 3 columns.
+    - Fee: emerald card with 5 checks, beside the Payment rows (instalments "[confirm]").
+    - Enquire: the form preset = Kali Sadhana. "The other sadhanas" shows 5 cards with brass yantras (hover lifts 2px), 3 columns at ≥600 and 2 below.
+11. **Other courses**: open all six slugs (baglamukhi 36 days, durga 27, shiva 40…). `/sadhana-courses/kali` and `/sadhana-courses/xyz` → 404.
+12. **`/rituals` at 1440px**
+    - Hero: breadcrumb, eyebrow, h1 "Rituals performed *only* when they will help.", the thali with a glowing halo, rising smoke and a flickering diya, a faint mandala turning slowly behind, and the caption.
+    - "Share your concern" → #inquire; "How it works" → #process.
+13. **Ethics / types**
+    - The big ethics line and 3 numbered principles.
+    - Sand ritual list in 2 columns with the "Placeholder examples" pill.
+14. **Process (#process)**
+    - The left side sticks.
+    - As you scroll, the gold line fills down the rail and the steps light up one by one: gold disc, dark icon, soft halo, full opacity. Scrolling back up un-lights them.
+15. **Receive**: 5 cards; the first spans both columns with a larger title. "Updates and inclusions to confirm" pill.
+16. **Inquiry (#inquire)**
+    - Copy + FAQ with all answers closed, beside the ritual form (area of concern + call language).
+    - Submit → MKA-R- reference.
+17. **`/rituals` at 390px**: thali max 380px, everything stacks, the process line still fills, no horizontal scroll.
+18. **`/hi/sadhana-courses`, `/hi/sadhana-courses/durga-sadhana`, `/hi/rituals`**
+    - Eyebrows, paragraphs, buttons, labels, facts, payment rows, the sticky bar and the forms are in Hindi.
+    - h1/h2, card titles, course/ritual data and FAQ stay English.
+19. **Reduced motion ON**
+    - Yantras complete (no draw), enrollment line shown, process line full with all steps lit.
+    - Mandala and thali are still; reveals just show; the sticky bar still appears.
+20. The nav "Sadhana Courses" / "Rituals" links and the Home course cards / "Enquire" links now reach real pages (`/sadhana-courses#enquire` lands on the form).
+21. Any error or type error → Fix-list.
 
 ### F14 — About + Videos + 404 · TODO
 Read: INV §A.18, §A.19, §E.3. Design: `About.dc.html` 28–255 · `Videos.dc.html` 28–238 · `mka-home.js` 185–259, 273–300 · `mka-astro.js` 158–170, 218–225, 249–258 (details: INV §H F14).
@@ -1351,6 +1439,7 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
 - 2026-09-30 (F8): the shop category and filters are view state. Switching rewrites the URL in place (`replaceState`: the path for the category, the query for filters) instead of navigating. The view, the open groups and the mobile sheet keep their state, and no page transition runs (same as the design's hash). Deep links and reloads restore everything.
 - 2026-09-30 (F11): QA-only query params on `/kundali-99` (`?demo=generating|preview|success`, `?pay=fail`) replace the design's Tweaks props; they are read once on mount and never written.
 - 2026-09-30 (F12): the Rashifal period is view state: `?p=` is read on mount and rewritten in place (replaceState), like the Shop filters. Predictions are seeded by the viewer's date (the HTML carries the build date).
+- 2026-09-30 (F13): the QA-only /preview/inquiry-form route was removed early (F15 task), since the form now lives on /sadhana-courses, the course pages and /rituals.
 - 2026-09-30 (F11): generated SVG strings never carry visitor text. When a design string embeds user input (the Kundali cover name), the extractor cuts that `<text>` out and the component renders it as JSX over the same viewBox.
 
 ## Client-confirm list (placeholders from the design)
@@ -1437,3 +1526,9 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
   - The finder's Moon sign uses the approximate Kundali maths (IST for every town, 32 towns only).
   - "My rashi" is stored only in the browser (`mka-my-rashi`), no account yet.
   - The Kundali CTA chart is the demo chart (1986-11-12 06:40 Varanasi), not the visitor's.
+- Courses & Rituals (F13):
+  - [HI review] all the `sadhana` and `rituals` Hindi in `messages/hi.json` is ours; course/ritual data, FAQ and display headings stay English.
+  - Course copy from the prototype: durations (27–41 days + 7 of preparation), the five module stages and their day ranges, "60–90 minutes a day", "over 21", diksha in person or on video, the per-course niyam, and "replies within two working days".
+  - Fee terms: ₹50,000 all-inclusive, pay only after the eligibility conversation, UPI/netbanking/bank transfer, instalments 3 × ₹16,667 (marked [confirm] in the design), refund in full until diksha.
+  - Rituals: the six ritual examples (design pill "Placeholder examples · to confirm with client"), the "What you receive" inclusions (photo/video updates, prasad and raksha sutra by post, 40 days of guidance), and the FAQ answers (durations 1 to 21 days, attending in person).
+  - Enrollment policy line "A sadhana is not bought…" is attributed to "Maa Kali Astuti · enrollment policy".
