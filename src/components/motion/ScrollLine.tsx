@@ -1,18 +1,21 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, type RefObject } from "react";
 import { isReduced } from "@/lib/hooks/useReducedMotion";
 import { cn } from "@/lib/utils/cn";
 
 /* Scroll-filled process line (Home.dc.html frame2 1269–1275; Rituals page):
    p = clamp((0.62·vh − top) / height, 0, 1) → fill scaleY(p) (or scaleX).
    Skips work while more than 100px outside the viewport; reduced motion = full line.
-   `onProgress` lets the section light its steps (design: n = min(steps, floor(p·steps + .35))). */
+   `onProgress` lets the section light its steps (design: n = min(steps, floor(p·steps + .35))).
+   `measure` swaps the measured box: the design measures the whole step list (procRef), while the
+   rail itself is inset 24px top and bottom. */
 export function ScrollLine({
   axis = "y",
   className,
   fillClassName,
   onProgress,
+  measure,
 }: {
   axis?: "x" | "y";
   /** Track: position/size it like the design's rail. */
@@ -20,6 +23,8 @@ export function ScrollLine({
   /** Fill colour etc. */
   fillClassName?: string;
   onProgress?: (p: number) => void;
+  /** Element whose rect drives p (defaults to the track). */
+  measure?: RefObject<HTMLElement | null>;
 }) {
   const track = useRef<HTMLDivElement>(null);
   const fill = useRef<HTMLDivElement>(null);
@@ -45,7 +50,7 @@ export function ScrollLine({
     const frame = () => {
       raf = 0;
       const vh = window.innerHeight;
-      const r = el.getBoundingClientRect();
+      const r = (measure?.current ?? el).getBoundingClientRect();
       if (r.bottom < -100 || r.top > vh + 100) return;
       const size = axis === "y" ? r.height : r.width;
       const p = Math.max(0, Math.min(1, (vh * 0.62 - r.top) / Math.max(1, size)));
@@ -65,7 +70,7 @@ export function ScrollLine({
       window.removeEventListener("scroll", onScroll);
       window.removeEventListener("resize", onScroll);
     };
-  }, [axis]);
+  }, [axis, measure]);
 
   return (
     <div ref={track} aria-hidden="true" className={cn("relative overflow-hidden", className)}>

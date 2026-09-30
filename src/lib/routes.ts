@@ -51,6 +51,26 @@ export const bookHref = (key: string, tier?: "essential" | "detailed" | "premium
 export const rashiHref = (key: string, p?: "today" | "tomorrow" | "week" | "month" | "year") =>
   `/rashifal/${key}${p ? `?p=${p}` : ""}`;
 
+/** `/sadhana-courses/kali-sadhana` (design: `Course-Detail.dc.html#c=<key>`, astro 397). Slugs are
+ *  `<deity>-sadhana` for all six (courses.json `slug`, INV §C); not read from the JSON so client
+ *  bundles that import routes stay small. */
+export const courseHref = (key: string) => `${routes.courses}/${key}-sadhana`;
+
+/** Page anchors the design links to (INV §C): the courses / rituals inquiry forms. */
+export const anchors = {
+  coursesEnquire: `${routes.courses}#enquire`,
+  ritualsInquire: `${routes.rituals}#inquire`,
+} as const;
+
+/** `/videos?c=all&v=v3` (design: `Videos.dc.html#c=<cat>&v=<id>`). */
+export const videoHref = (id?: string, c?: string) => {
+  const q = new URLSearchParams();
+  if (c) q.set("c", c);
+  if (id) q.set("v", id);
+  const s = q.toString();
+  return s ? `${routes.videos}?${s}` : routes.videos;
+};
+
 /** `/search?q=…` (design: `Search.dc.html#q=`). */
 export const searchHref = (q: string) => `/search?q=${encodeURIComponent(q.trim())}`;
 

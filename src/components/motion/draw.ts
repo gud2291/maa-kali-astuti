@@ -69,3 +69,40 @@ export function onView(el: Element | null, fn: (el: Element) => void, threshold 
   io.observe(el);
   return () => io.disconnect();
 }
+
+/** S11 (mka-astro.js 218–225): yantra strokes ([data-d]) draw over dur × .5, staggered across the
+ *  first half; the [data-yg] glow blooms 0 → .9 → .45 over 1100 ms at dur × .9. Reduced motion
+ *  shows the finished yantra with the glow at .4. */
+export function drawYantra(root: ParentNode | null, dur = 1600) {
+  if (!root) return;
+  const els = [...root.querySelectorAll<SVGElement>("[data-d]")];
+  const glow = root.querySelector<SVGElement>("[data-yg]");
+  if (isReduced()) {
+    els.forEach((e) => {
+      e.style.strokeDasharray = "";
+      e.style.strokeDashoffset = "";
+    });
+    if (glow) glow.style.opacity = ".4";
+    return;
+  }
+  const step = (dur * 0.5) / Math.max(1, els.length - 1);
+  els.forEach((e, i) => {
+    e.getAnimations().forEach((a) => a.cancel());
+    e.style.strokeDasharray = "1";
+    e.animate([{ strokeDashoffset: 1 }, { strokeDashoffset: 0 }], {
+      duration: dur * 0.5,
+      delay: i * step,
+      easing: EASE,
+      fill: "both",
+    });
+  });
+  if (glow) {
+    glow.getAnimations().forEach((a) => a.cancel());
+    glow.animate([{ opacity: 0 }, { opacity: 0.9, offset: 0.45 }, { opacity: 0.45 }], {
+      duration: 1100,
+      delay: dur * 0.9,
+      easing: "ease-out",
+      fill: "both",
+    });
+  }
+}

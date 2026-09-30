@@ -5,7 +5,8 @@ import { isReduced } from "@/lib/hooks/useReducedMotion";
 
 /* Count-up (Home.dc.html 1263–1268): when 40% of the group is visible, every [data-count]
    inside counts 0 → value over 1600 ms, ease-out cubic, en-IN grouping. Server markup shows
-   the final value (no-JS / SEO); reduced motion leaves it there.
+   the final value (no-JS / SEO); after hydration the numbers drop to 0 until the count starts,
+   as in the design (`v0 = '0'`). Reduced motion leaves the final value.
    Usage: <CountGroup className=…><Counter value={12000} />+ seekers</CountGroup> */
 
 type Props<T extends ElementType> = { as?: T } & Omit<ComponentPropsWithoutRef<T>, "as">;
@@ -18,6 +19,7 @@ export function CountGroup<T extends ElementType = "div">({ as, ...rest }: Props
     const root = ref.current;
     if (!root || isReduced()) return;
     const els = [...root.querySelectorAll<HTMLElement>("[data-count]")];
+    els.forEach((el) => (el.textContent = "0"));
     let raf = 0;
     const io = new IntersectionObserver(
       ([e]) => {

@@ -123,3 +123,62 @@ export const STONES_DESK: IntentStone[] = [
   st("garnet", "86%", "68%", 58, 0.5, "float:9:12:-6:.2", 0.88),
   st("rudraksha", "94%", "86%", 44, 0.25, "float:12:10:4:.8", 0.7),
 ];
+
+/* §10–17 (L3 1249–1260, vAbout 1320–1327, vTesti 1346–1353). */
+
+/** Roman numerals on the course cards (vCourses 1307). */
+export const ROMAN = ["I", "II", "III", "IV", "V", "VI"];
+
+/** Devanagari step numbers (vRituals 1317). */
+export const DEVA_NUM = ["१", "२", "३", "४", "५"];
+
+/** About teaser mini timeline (vAbout 1322). [client-confirm] years. */
+export const ABOUT_MINI: [string, string][] = [
+  ["2001–2008", "MBA, then years in multinational companies"],
+  ["2008–2016", "Sadhana under enlightened mentors in the Shakta tradition"],
+  ["2019", "Founded Maa Kali Astuti"],
+];
+
+/** About teaser stats (vAbout 1323), each followed by a gold "+". [client-confirm] */
+export const ABOUT_STATS: [number, string][] = [
+  [18, "Years of sadhana"],
+  [12000, "Seekers guided"],
+  [3500, "Rituals performed"],
+];
+
+/** Video testimonials (vTesti 1349). Their play button goes to /videos (INV §C, M.soon). */
+export type VideoTesti = { art: "vt0" | "vt1"; title: string; q: string; n: string; c: string; s: string; dur: string };
+export const VIDEO_TESTI: VideoTesti[] = [
+  {
+    art: "vt0",
+    title: "“Why I trust Sadhak Ji”",
+    q: "He explained why my chart pointed where it did, and never asked me to buy anything.",
+    n: "Sunita Pathak",
+    c: "Delhi",
+    s: "Kundali Reading",
+    dur: "1:42",
+  },
+  {
+    art: "vt1",
+    title: "“Our family’s anushthan”",
+    q: "The anushthan was done on the date he gave, with photos sent to us the same evening.",
+    n: "Deepak Srivastava",
+    c: "Prayagraj",
+    s: "Rituals",
+    dur: "2:08",
+  },
+];
+
+/** Card order (vTesti 1350): t = text testimonial, p = photo review, v = video — by index. */
+export const TESTI_ORDER: ["t" | "p" | "v", number][] = [
+  ["t", 0],
+  ["p", 0],
+  ["t", 1],
+  ["v", 0],
+  ["t", 2],
+  ["p", 1],
+  ["t", 3],
+  ["v", 1],
+  ["p", 2],
+  ["t", 4],
+];

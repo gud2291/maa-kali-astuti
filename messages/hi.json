@@ -245,6 +245,14 @@
       "astrology-disclaimer": "ज्योतिष अस्वीकरण"
     }
   },
+  "shorts": {
+    "label": "Shorts",
+    "watch": "Watch short: {title}",
+    "prev": "Previous short",
+    "next": "Next short",
+    "close": "Close",
+    "meta": "Shorts · {dur} · preview"
+  },
   "home": {
     "hero": {
       "slides": {
@@ -520,6 +528,96 @@
         "clarity": "For focus in study and work, and clear decisions when paths divide."
       },
       "all": "Shop everything for {name}"
+    },
+    "courses": {
+      "eyebrow": "08 — Sadhana courses",
+      "l1": "Sadhana is",
+      "l2": "<em>a science.</em>",
+      "deva": "साधना एक विज्ञान है",
+      "intro": "Six traditional sadhanas, each begun with diksha from Sadhak Pawan Pandey and kept with a fixed mantra, vidhi and niyam. Your japa record is reviewed every week, and guidance continues after the anushthan ends.",
+      "per": "per sadhana course",
+      "note": "Enrollment for serious seekers · Syllabus shared on inquiry",
+      "enquire": "Enquire about enrollment",
+      "region": "Six sadhana courses. Drag or scroll sideways.",
+      "badge": "{n} · {days} days",
+      "card": "Enquire",
+      "prev": "Previous courses",
+      "next": "Next courses"
+    },
+    "rituals": {
+      "eyebrow": "09 — Rituals & Anushthan",
+      "eyebrowHi": "विशेष पूजा और अनुष्ठान",
+      "l1": "Accepted only when",
+      "l2": "the path is <em>clear.</em>",
+      "caption": "Brass thali, kumkum, haldi, akshat and marigold",
+      "quote": "“Every case is analysed first. We accept only when there is confidence in the path forward.”",
+      "quoteBy": "Our ethics · Sadhak Pawan Pandey",
+      "cta": "Request a ritual consultation"
+    },
+    "about": {
+      "eyebrow": "10 — Sadhak Pawan Pandey",
+      "l1": "From boardrooms to",
+      "l2": "the <em>sadhana</em> seat.",
+      "deva": "साधक पवन पाण्डेय",
+      "bookEyebrow": "Published author",
+      "bookTitle": "साधना के सत्य · The Truths of Sadhana",
+      "bookLine": "Accounts from eighteen years of practice.",
+      "story": "Read his story",
+      "consult": "Book a consultation",
+      "quoteBy": "Sadhak Pawan Pandey · Founder"
+    },
+    "video": {
+      "eyebrow": "11 — Discourses on YouTube",
+      "eyebrowHi": "प्रवचन",
+      "l1": "Listen before you <em>decide.</em>",
+      "subscribe": "Subscribe on YouTube",
+      "subSoon": "The YouTube channel link will be added here.",
+      "play": "Play: {title}, {dur}",
+      "pauseL": "Pause",
+      "playL": "Play",
+      "preview": "Preview playback · the YouTube player loads here in the live site",
+      "upNext": "Up next",
+      "all": "All discourses and Shorts",
+      "frame": "YouTube video player: {title}"
+    },
+    "testi": {
+      "eyebrow": "12 — Seekers speak",
+      "l1": "What seekers say <em>afterwards.</em>",
+      "outOf": " / 5",
+      "from": "from 2,000+ seekers",
+      "verified": "Verified buyer",
+      "video": "Video · {dur}",
+      "playVideo": "Play video testimonial from {name}",
+      "stars": "Rated 5 out of 5"
+    },
+    "journal": {
+      "eyebrow": "13 — The journal",
+      "l1": "Know before you <em>wear.</em>",
+      "all": "All articles",
+      "read": "Read",
+      "metaLong": "{c} · {m} min read",
+      "metaShort": "{c} · {m} min",
+      "featLine": "Mukhi lines, the X-ray certificate and the one test you can trust. What to check before paying for any bead."
+    },
+    "faq": {
+      "eyebrow": "14 — Questions",
+      "l1": "Asked <em>before</em> ordering.",
+      "deva": "अक्सर पूछे जाने वाले प्रश्न",
+      "waTitle": "Still unsure? Ask a person.",
+      "waBody": "Sadhak Ji’s office answers on WhatsApp, Mon–Sat, 10:00–19:00 IST, usually within the hour.",
+      "waCta": "Chat on WhatsApp"
+    },
+    "news": {
+      "aria": "Newsletter",
+      "title": "Monthly Rashifal & auspicious muhurat dates in your inbox",
+      "deva": "हर माह का राशिफल और शुभ मुहूर्त",
+      "label": "Email address",
+      "ph": "you@example.com",
+      "subscribe": "Subscribe",
+      "wa": "Join WhatsApp updates",
+      "waText": "Join updates",
+      "err": "Enter a valid email address",
+      "done": "Subscribed. The next Rashifal reaches you on the 1st."
     }
   }
 }

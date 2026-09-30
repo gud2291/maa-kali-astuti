@@ -274,6 +274,8 @@ artModule("service-art", "Service illustrations (mka-astro.js 260–280): palm l
   artModule("portrait", "Portrait placeholder (mka-astro.js 249–258). bg = night arch + twinkle stars; fg = static file public/svg/portrait/fg.svg.", [
     ...(bg ? [["PORTRAIT_BG_SVG", str(bg)]] : [["PORTRAIT_BG_CONSULT_SVG", str(A.portrait("cons", "bg"))], ["PORTRAIT_BG_ABOUT_SVG", str(A.portrait("ab", "bg"))]]),
     ...(full ? [["PORTRAIT_SVG", str(full)]] : [["PORTRAIT_HOME_SVG", str(A.portrait("hmp"), "Home about teaser (u = 'hmp').")]]),
+    // Home video testimonials (vTesti 1349): full portrait with u = 'vt0' / 'vt1' (seeded stars).
+    ["PORTRAIT_TESTI_SVG", rec({ vt0: A.portrait("vt0"), vt1: A.portrait("vt1") }, "Home video testimonial cards (u = 'vt0' / 'vt1').")],
   ]);
 }
 // About chapters (draw + twinkle + spin)

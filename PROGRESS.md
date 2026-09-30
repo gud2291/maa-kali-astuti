@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti
 
-**Phase:** F — Frontend (client demo) · **Next step:** F7
+**Phase:** F — Frontend (client demo) · **Next step:** F8
 Resume in a fresh session with: `/next`
 
 | Step | Title | Status |
@@ -12,7 +12,7 @@ Resume in a fresh session with: `/next`
 | F4 | Global chrome (header, menus, cart drawer, footer) | DONE |
 | F5 | Home A — hero → 12 Nag spotlight | DONE |
 | F6 | Home B — rashifal wheel → floating stones | DONE |
-| F7 | Home C — courses → newsletter | TODO |
+| F7 | Home C — courses → newsletter | DONE |
 | F8 | Shop + category template | TODO |
 | F9 | Consultations + consultation detail + InquiryForm | TODO |
 | F10 | Booking stepper | TODO |
@@ -626,17 +626,140 @@ Manual QA (F6). `pnpm dev` → `/`, scroll past the 12 Nag spotlight. No referen
 11. Switch to another tab for a while and come back: the wheel resumes without skipping several rashis.
 12. Any error or type error → Fix-list.
 
-### F7 — Home C · TODO
+### F7 — Home C · DONE
 Read: INV §A.1 (§10–17), §A.6, §E.1 S11, §E.3. Design: `Home.dc.html` 647–933 + script 1248–1365 · `FaqList.dc.html` 15–59 · `mka-home.js` 185–300 · `mka-astro.js` 203–258, 327–333, 389–407, 410–420 · `mka-core.js` 534–541 (details: INV §H F7).
 Tasks:
-- [ ] Sadhana course track (night; yantra draw S11; drag/scroll/swipe).
-- [ ] Rituals process line (fills on scroll).
-- [ ] About teaser (arch portrait, quote card, timeline, count-up stats, book).
-- [ ] YouTube: facade player (youtube-nocookie iframe only on click) + playlist; mobile Shorts stories row + viewer (keyboard, Esc).
-- [ ] Testimonials masonry (text, video, photo reviews; mobile carousel).
-- [ ] Blog cards, FAQ (`FaqList` component, set `home`, openFirst).
-- [ ] Newsletter band. Footer with `newsletter="off"` on Home.
-Manual QA: full Home scroll on both sizes; YouTube loads only on click.
+- [x] Sadhana course track (night; yantra draw S11; drag/scroll/swipe).
+- [x] Rituals process line (fills on scroll).
+- [x] About teaser (arch portrait, quote card, timeline, count-up stats, book).
+- [x] YouTube: facade player (youtube-nocookie iframe only on click) + playlist; mobile Shorts stories row + viewer (keyboard, Esc).
+- [x] Testimonials masonry (text, video, photo reviews; mobile carousel).
+- [x] Blog cards, FAQ (`FaqList` component, set `home`, openFirst).
+- [x] Newsletter band. Footer with `newsletter="off"` on Home.
+Done-notes:
+- **Page:** `src/app/[locale]/page.tsx` now renders all 17 sections: `… Intentions → CourseTrack → RitualsTeaser → AboutTeaser → VideoSection → Testimonials → Journal → FaqSection → NewsletterBand`. Home is complete. The footer newsletter was already off on `/` (`chrome-config`).
+- **Sections** (`src/components/sections/home/`, all `lang="en"` like F6):
+  - `CourseTrack.tsx` (server): night band, `Starfield` (seed `hm-csky`, 26 / 14 mobile), copy + ₹50,000 box + "Enquire about enrollment" → `/sadhana-courses#enquire`; cards → `/sadhana-courses/<key>-sadhana`.
+    - `CourseRail.tsx` (client): mouse drag (5px threshold, snap off, snap back after 60 ms, click suppressed after a drag), prev/next ±306px.
+    - Yantras are primed and drawn at 35% in view (1600 ms), and redraw on card hover/focus (1800 ms throttle).
+    - The track bleeds to the right edge (−16 / −32 / `calc(-1*max(32px,(100vw-1320px)/2+32px))`).
+  - `RitualsTeaser.tsx` (server): thali (`THALI_HOME_SVG`) under a `glow:5` halo, sticky at top 120 on ≥1024; ethics quote; sheen CTA → `/rituals#inquire`.
+    - `RitualSteps.tsx` (client): 1px sand rail + `ScrollLine` gold fill, measured on the whole list. Lit steps: `n = min(5, floor(p·5+.35))`, with 500 ms transitions.
+  - `AboutTeaser.tsx` (server):
+    - mini timeline, `CountGroup` stats (18+, 12,000+, 3,500+), book card (`BOOK_SVG.satya`), CTAs → `/about` and `/consultations`;
+    - arch portrait (`PORTRAIT_HOME_SVG`) with its outline and the overlapping quote card (`about.json` quote);
+    - art comes first below 1024.
+  - `VideoSection.tsx` (server) → `VideoPlayer.tsx` (client; exports `VideoPlayer`, `ShortsRow`, `YtSubscribe`).
+    - Only the 6 videos + 6 Shorts used send their thumbnail strings (from `lib/art/thumbs.ts`) as props. Each renders with its own uid (`hf` / `hp` / `hsr` / `hsv` + id).
+    - **Facade:** nothing loads from YouTube until play.
+      - If `YT_IDS[id]` has an id (new in `src/lib/site.ts`, empty for now), play swaps in the `youtube-nocookie` iframe (`ytEmbed`). The CSP already allows it.
+      - Without ids (the demo) it runs the design's preview playback: the thumb dims to .55, a WAAPI bar runs over the full length, a 1 s clock ticks, and pause/resume work.
+      - The preview auto-pauses offscreen and on a hidden tab. Reduced motion steps the bar once per second.
+    - "Subscribe on YouTube" → the channel if `SOCIAL.youtube.url` is set, else the design's toast. "All discourses and Shorts" → `/videos` (`videoHref`).
+  - `src/components/sections/videos/ShortsViewer.tsx` (client, **reuse in F14**):
+    - Radix Dialog (focus trap, scroll lock, focus return); Close is focused on open.
+    - One segment per short: it fills over the short's duration and auto-advances; the viewer closes after the last one.
+    - Tap zones, ←/→, Esc. The fill pauses on a hidden tab. Reduced motion: full segment, no auto-advance.
+    - Labels are in the new top-level `shorts` namespace.
+  - `Testimonials.tsx` (server):
+    - 10 cards in the design order (`TESTI_ORDER`): masonry with 2 columns ≥768 and 3 columns ≥1100; mobile snap rail at 84% width.
+    - Photo reviews use `ProductImage` + "Verified buyer".
+    - Video cards render **light** (gotcha 9) with `PORTRAIT_TESTI_SVG` (new extractor output, u = vt0 / vt1) and link to `/videos` (INV §C M.soon map).
+  - `Journal.tsx` (server): a featured card + 2 compact cards (articles 0–2). Every link → `/blog` (coming soon, INV §C). Generated product art is `object-contain`; photos cover.
+  - `FaqSection.tsx` (server): heading + sticky WhatsApp card + `FaqList` set `home`, first answer open.
+  - `NewsletterBand.tsx` (client):
+    - emerald band, 2 columns ≥900;
+    - mock subscribe (same regex as the footer): rose ring + alert on error, then the "Subscribed…" status;
+    - "Join WhatsApp updates" → `wa.me/…?text=Join%20updates`.
+- **Shared additions:**
+  - `components/ui/FaqList.tsx` (client) is the design's FaqList, for F9/F11/F13: pass `items` (a `faq.json` set) and `openFirst`.
+    - The icon turns via `transform`, because Tailwind v4 `rotate-*` sets the `rotate` property, which this transition would not animate.
+  - `components/signature/Starfield.tsx`: generic `M.stars` port (`seed, n, nMob, w, h`).
+  - `motion/draw.ts` → `drawYantra(root, dur)` (S11; F13 reuses it).
+  - `ScrollLine` has a new `measure` ref prop.
+  - `CountGroup` now drops the numbers to 0 after hydration (design `v0 = '0'`).
+  - `lib/routes.ts`:
+    - `courseHref(key)` builds `<key>-sadhana` without importing the JSON, to keep client bundles small;
+    - `anchors.coursesEnquire / ritualsInquire`;
+    - `videoHref(id?, c?)`.
+  - `home-data.ts`: `ROMAN`, `DEVA_NUM`, `ABOUT_MINI`, `ABOUT_STATS`, `VIDEO_TESTI`, `TESTI_ORDER`.
+- **Extractor:** added `PORTRAIT_TESTI_SVG` to the portrait module and re-ran `node scripts/extract-design.mjs`. Only `src/lib/art/portrait.ts` changed.
+- **i18n:** new `home.courses`, `home.rituals`, `home.about`, `home.video`, `home.testi`, `home.journal`, `home.faq`, `home.news`, plus the top-level `shorts`.
+  - As in the design, §10–17 are English on `/hi` (with their Devanagari subtitles). The `hi.json` values are English copies (added to Client-confirm).
+- Nothing was run except Prettier and `node scripts/extract-design.mjs` (no dev / build / tsc / lint).
+
+Manual QA (F7). `pnpm dev` → `/`, scroll past "Shop by intention". No reference shot covers §10–17, so compare with `design/Home.dc.html` opened in the browser.
+1. **Sadhana courses, desktop 1440px**
+   - A night band with twinkling stars.
+   - On the left:
+     - "08 — SADHANA COURSES" and "Sadhana is / *a science.*" (the lines mask up), then the Devanagari line and the paragraph;
+     - the ₹50,000 box;
+     - the outlined "Enquire about enrollment" (→ `/sadhana-courses#enquire`, 404 until F13).
+   - On the right: six 290px cards that run off the right edge.
+     - On scroll, each yantra draws itself line by line, then a soft gold glow blooms.
+     - The badges read "I · 36 days" … "VI · 41 days".
+   - Hover a card: it lifts 4px, the gold ring brightens and the yantra redraws (at most once every ~2 s).
+   - Drag the track with the mouse: it scrolls, and on release it snaps to a card. A drag does **not** open the link.
+   - A plain click opens `/sadhana-courses/<deity>-sadhana` (404 until F13). The ‹ › buttons scroll by one card.
+2. **Rituals, desktop**
+   - The thali (flickering diya, smoke, glow) stays sticky while the right column scrolls.
+   - As you scroll, the gold line fills down the 5 steps. Each step in turn becomes an emerald circle with a gold icon, at full opacity.
+   - Then the ethics quote box and "Request a ritual consultation": a gold sheen on hover, → `/rituals#inquire`.
+3. **About teaser, desktop**
+   - Text on the left. On the right, the arch portrait with a thin gold outline and the quote card overlapping it bottom-left.
+   - The stats count up once from 0 to 18+ / 12,000+ / 3,500+ when they come into view.
+   - The book card shows the green "साधना के सत्य" cover.
+   - "Read his story" → `/about`; "Book a consultation" → `/consultations`.
+4. **YouTube, desktop**
+   - A night band with a faint mandala top-right. "1.2 lakh subscribers" + the gold "Subscribe on YouTube" (toast: "The YouTube channel link will be added here.").
+   - The featured 16:9 thumbnail has a gold play circle and "18:42".
+     - Click play: the thumb dims, the bar fills slowly, the clock counts 0:01, 0:02…, and the "Preview playback · …" note shows.
+     - Pause/Play works. Scroll away or switch tab → it pauses.
+   - DevTools → Network: **no request to youtube.com or youtube-nocookie.com** at any point (there are no ids yet).
+   - "Up next" (6 videos, 500px tall, scrollable):
+     - clicking one swaps the featured video and resets it to idle;
+     - the active row has a dark fill and a gold ring.
+5. **Testimonials**
+   - "4.9 / 5" with stars and "from 2,000+ seekers".
+   - 3 masonry columns (2 at 820px), with three kinds of card:
+     - text cards;
+     - photo cards with "Verified buyer";
+     - two light video cards with a portrait and a play circle (→ `/videos`, 404 until F14).
+6. **Journal:** a sand band with the big featured card on the left (rudraksha art) and two compact cards on the right. The compact cards get a gold ring on hover. All links → `/blog` (coming soon).
+7. **FAQ**
+   - The left column (with the emerald WhatsApp card) is sticky. "Chat on WhatsApp" opens wa.me in a new tab.
+   - The first answer is open. Click another question: the previous one closes, the new one fades down and its + turns into ×.
+   - Keyboard: Tab to a question, then Enter/Space toggles it.
+8. **Newsletter**
+   - An emerald band with a mandala on the left.
+   - Subscribe with an empty or invalid email → rose ring + "Enter a valid email address".
+   - A valid email → "Subscribed. The next Rashifal reaches you on the 1st."
+   - "Join WhatsApp updates" → wa.me with "Join updates".
+   - The footer below has **no** newsletter row on Home.
+9. **Mobile 390px**
+   - Courses: one column; the cards are 76% wide in a swipe rail that reaches the screen edge; the yantras draw on view.
+   - Rituals: the thali on top (not sticky), the steps below.
+   - About: the 300px portrait first, the quote card full width under it, then the text.
+   - YouTube:
+     - a row of round Shorts stories (gold/copper ring) sits above the player;
+     - tap one → a full-screen 9:16 viewer. The segments at the top fill and advance to the next short;
+     - tap the right / left side = next / previous; ✕ closes; after the last short it closes by itself; the page behind doesn't scroll;
+     - "Up next" sits under the player, with no height limit.
+   - Testimonials: a swipe rail of 84%-wide cards.
+   - Journal: the compact cards have a 96px image.
+   - Newsletter: stacked.
+   - No horizontal page scroll anywhere.
+10. **Keyboard in the Shorts viewer** (desktop, window narrower than 768px): open a short → the focus is on ✕. ← / → switch shorts. Esc closes, and the focus returns to the story button.
+11. **`/hi`:** §10–17 stay English with their Devanagari lines, as in the design. No layout breaks.
+12. **Reduced motion ON:**
+    - yantras show complete, with the glow;
+    - the ritual line is full and all steps are lit;
+    - the stats show the final numbers;
+    - FAQ answers appear without the fade;
+    - no star twinkle, thali glow or smoke;
+    - the Shorts segment shows full and does not auto-advance;
+    - the video preview bar moves in 1-second steps.
+13. Any error or type error → Fix-list.
 
 ### F8 — Shop + category · TODO
 Read: INV §A.5, §C (shop rows), §D. Design: `Shop.dc.html` 26–384 · `mka-core.js` 176–194, 308–380 (details: INV §H F8).
@@ -765,3 +888,10 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
 - Rashifal texts (F6) are generated from template sentences (8 openers + 6 per area), seeded per rashi and day. Who writes the real daily predictions, and how often, is a phase-B content question.
 - Rashi → gemstone mapping, lucky colours/numbers and remedies (F6, from the design data) need Sadhak Ji's review.
 - Design gap: the Booking page shows no order summary between 768 and 1023px. It is built 1:1 for now; confirm whether one should be added.
+- Home §10–17 on `/hi` (F7): the design keeps courses, rituals, about, YouTube, testimonials, journal, FAQ and newsletter in English (with Devanagari subtitles). Our `hi.json` values are English copies. Translate?
+- YouTube (F7):
+  - the real video and Shorts ids go in `YT_IDS` (`src/lib/site.ts`); until then the player runs the design's preview playback;
+  - the channel URL (`SOCIAL.youtube`) for "Subscribe on YouTube";
+  - the subscriber count ("1.2 lakh").
+- Video testimonials (F7): two placeholder cards (Sunita Pathak, Deepak Srivastava) with portrait art. We need the real videos, or the cards are removed. Photo reviews use product art/photos as the "customer photo".
+- About teaser (F7): the book "साधना के सत्य · The Truths of Sadhana", the founder quote and the mini-timeline years (2001–2008, 2008–2016, 2019).
