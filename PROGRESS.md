@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti
 
-**Phase:** F — Frontend (client demo) · **Next step:** F8
+**Phase:** F — Frontend (client demo) · **Next step:** F9
 Resume in a fresh session with: `/next`
 
 | Step | Title | Status |
@@ -13,7 +13,7 @@ Resume in a fresh session with: `/next`
 | F5 | Home A — hero → 12 Nag spotlight | DONE |
 | F6 | Home B — rashifal wheel → floating stones | DONE |
 | F7 | Home C — courses → newsletter | DONE |
-| F8 | Shop + category template | TODO |
+| F8 | Shop + category template | DONE |
 | F9 | Consultations + consultation detail + InquiryForm | TODO |
 | F10 | Booking stepper | TODO |
 | F11 | Kundali ₹99 + Love Calculator | TODO |
@@ -761,16 +761,113 @@ Manual QA (F7). `pnpm dev` → `/`, scroll past "Shop by intention". No referenc
     - the video preview bar moves in 1-second steps.
 13. Any error or type error → Fix-list.
 
-### F8 — Shop + category · TODO
+### F8 — Shop + category · DONE
 Read: INV §A.5, §C (shop rows), §D. Design: `Shop.dc.html` 26–384 · `mka-core.js` 176–194, 308–380 (details: INV §H F8).
 Tasks: the `/shop` and `/shop/[category]` template, exactly as designed:
-- [ ] header band, sub-chips, sticky filter sidebar, sort, active chips;
-- [ ] mobile Filter · Sort bar + bottom sheet;
-- [ ] editorial banner (design: shown once, at index cols×2 — INV gotcha 4), load more (+12) with progress;
-- [ ] skeleton and empty states, SEO text block.
+- [x] header band, sub-chips, sticky filter sidebar, sort, active chips;
+- [x] mobile Filter · Sort bar + bottom sheet;
+- [x] editorial banner (design: shown once, at index cols×2 — INV gotcha 4), load more (+12) with progress;
+- [x] skeleton and empty states, SEO text block.
 
 Filters are URL-synced (search params).
-Manual QA: filter, sort, load more, mobile sheet, empty state.
+Done-notes:
+- **Routes:** `src/app/[locale]/shop/page.tsx` (all) and `shop/[category]/page.tsx` (5 slugs via `generateStaticParams`, `dynamicParams = false`, unknown → 404). Both are static and render the same client view with `initialCat`. Basic `generateMetadata` (title + description).
+- **View** (`src/components/sections/shop/`):
+  - `ShopView.tsx` (client) is the design's state machine.
+    - SSR = the route's category, no filters, **loading** (skeletons). On mount the URL is parsed; the grid appears after **650 ms** (design didMount).
+    - Every change applies at once, shows skeletons for **380 ms**, resets to 12 shown and closes the sort menu.
+    - **URL sync:** category = path (`/shop/<slug>`), filters = `?sub=&intent=&mukhi=&stone=&min=&max=&stock=1&rating=&sort=` (lists comma-separated; defaults omitted). Written with `history.replaceState(null, …)` (Next syncs its router), so switching category never remounts the page.
+    - `UrlWatch` (in its own `<Suspense>`, `useSearchParams` + `usePathname`) re-parses on outside navigations (mega menu, `/shop?intent=` links). Our own writes are skipped via `lastUrl`.
+    - QA-only `?demo=loading|empty` (design prop `demo`); never written back.
+    - Stagger: cards fade up 10px / 380 ms / 40 ms step whenever the result key (incl. `shown`) changes, as in the design (so "Load more" re-staggers every card).
+    - Tabs use roving focus (←/→/Home/End move focus, Enter/Space selects), so arrow keys don't fire a reload per key.
+  - `ShopHeader.tsx`:
+    - mandala (`/svg/ornaments/mandala-7a5c1c.svg`), breadcrumb (the Shop crumb switches to "all" in place);
+    - eyebrow + display h1, **English on /hi** like other display headings; Devanagari line; description (`deshi` on /hi); count;
+    - arch + floating art (`HEADER_ART`: 1 piece, or 3 on "all"; `data-amb=float`).
+  - `FilterPanel.tsx`: Category (radio) · Intention (checkbox, counts within the category) · Price · Mukhi chips (all/rudraksha) · Crystal type (all/bracelets, first 6 + "Show all 15") · Availability switch · Rating (radio).
+    - Variant `side`: "Refine" + Clear all. Variant `sheet`: title/close + sticky Clear / "Show N results".
+  - `PriceRange.tsx`: two thumbs, √ scale snapped to ₹50, ₹100 minimum gap. A drag previews and commits on release; arrow keys move ±3% and commit at once.
+  - `SortControls.tsx`:
+    - `SortMenu`: the ≥1024 dropdown; closes on pick, outside click or Esc;
+    - `BottomSheet`: Radix Dialog shell, slide-up 380 / 360 ms, z 55 (above the tab bar and FAB);
+    - `SortSheet`.
+  - `ShopGrid.tsx`:
+    - cards / skeletons (fx `shimmer`) / editorial banner (once at `cols×2`; stars + mandala; floating art ≥1024);
+    - `EmptyState`;
+    - `LoadMore`: a 520 ms row of skeletons, +12, gold progress bar.
+  - `BuyersNote.tsx`: 96px clamp with a fade; "Read more / Read less" (600px); copy per category (rudraksha / bracelets / all).
+  - `shop-data.ts`: `Filters`, defaults, `parseShopUrl` (drops unknown values), `shopUrl`, `urlKey`, `toPos/toVal`, header/banner maps.
+- **Shared changes:**
+  - `queryProducts` + `SORTS` moved to `src/lib/core/query.ts` (no JSON imports, safe for client bundles); `lib/api/catalog.ts` re-exports it.
+  - `PageTransition`: no fade and no gold line when the path changes between `/shop` routes (an in-place category switch = the design's `#c=` hash change).
+- **i18n:** new `shop` namespace in `messages/en.json` + `hi.json`. The Hindi is ours (`[HI review]`). The title, eyebrow and bilingual intent labels ("Wealth · धन") stay as in the design.
+- **Breakpoints (INV §D):**
+  - grid: 2 cols <768, 3 cols ≥768, 4 cols ≥1400 (`2xl`);
+  - sidebar + dropdown ≥1024; Filter·Sort bar + sheets <1024;
+  - header art 118×154 <768, 200×260 ≥768.
+- **For later steps:**
+  - `BottomSheet` (SortControls) is a generic mobile sheet; `Chip` already matches the filter chips.
+  - The SSR HTML shows skeletons instead of cards (the design's loading state). Phase B SEO may want server-rendered cards for the no-query case.
+- Nothing was run except Prettier (no dev / build / tsc / lint).
+
+Manual QA (F8). `pnpm dev`. No reference shot covers the shop, so compare with `design/Shop.dc.html` in the browser (`Shop.dc.html#c=rudraksha` etc. for the categories).
+1. **`/shop`, desktop 1440px**
+   - Sand header: a faint mandala on the right; breadcrumb "Home / Shop"; "— THE SHOP · सभी उत्पाद"; "All sacred *offerings*"; the Devanagari line; the paragraph; "43 offerings · 🔥 Energized in Mahapuja before dispatch".
+   - On the right: a gold arch with 3 floating pieces (rudraksha, pyrite bracelet, Baglamukhi amulet), gently bobbing.
+   - Tabs "All 43 · Rudraksha & Malas 15 · …" with a gold underline on the active tab; intent chips below.
+   - For ~0.65 s: shimmering skeletons and "Finding offerings…". Then the cards fade up one after another.
+2. **Sidebar (≥1024)**
+   - It is sticky and scrolls on its own: the mouse wheel over it scrolls the list, not the page.
+   - Each group header collapses/opens, and its chevron turns.
+   - Category radios switch the category: the header, the tabs and the URL path all change, with no page fade.
+   - Check each control:
+     - intention checkboxes;
+     - the price slider: drag both thumbs; values snap to ₹50 and the thumbs can't cross;
+     - mukhi chips (5 per row);
+     - "Show all 15" crystal types;
+     - the "In stock only" switch;
+     - rating radios.
+   - After each change: skeletons for ~0.4 s, then the count updates and chips appear above the grid. "Clear all" (red) shows in the Refine header.
+3. **URL**
+   - Every filter shows in the address bar, e.g. `/shop/crystal-bracelets?intent=love,peace&max=1500&sort=low`.
+   - Reload → the same filters come back. Paste the URL into a new tab → the same view.
+   - `/shop/unknown` → 404.
+4. **Sort:** "Sort Popular ▾" opens a 230px menu with a tick. Pick "Price: low to high" → the order changes. A click outside or Esc closes the menu.
+5. **Active chips:** each chip's × removes just that filter. The price chip reads like "₹0–₹1,500".
+6. **Editorial banner**
+   - After the first 2 rows (8 cards at 1440, 6 at 1024–1399): a night banner "Not sure where *to begin?*" with stars, a faint mandala and floating art.
+   - The Rudraksha / Bracelets / Amulets tabs change its title and art.
+   - "Ask on WhatsApp" → wa.me. "Book a consultation" → `/consultations` (404 until F9).
+7. **Load more**
+   - "Showing 12 of 43" with the gold bar at ~28%.
+   - Click → a row of skeletons for ~0.5 s, then 24 shown and the bar grows.
+   - At the end the button disappears.
+8. **Empty state**
+   - Set the price max to ₹300 and pick "4.8 ★ & above", or open `/shop?demo=empty`: the lotus box "No offerings match these filters" with "Clear filters" + "Ask on WhatsApp".
+   - `/shop?demo=loading` → skeletons forever.
+9. **Categories**
+   - `/shop/rudraksha-malas`: eyebrow "02 — Rudraksha & Malas", title "Rudraksha & *Malas*", one centred bead in the arch, sub-chips "All · 2 Mukhi … 14 Mukhi · Malas".
+   - Havan / Copper: no sub-chips, a photo in the arch.
+   - Mega-menu category links and the Home "Shop by intention" links land on the right view.
+10. **Buyer's note:** the heading changes by category. The text is clipped with a fade; "Read more" opens it smoothly and "Read less" closes it.
+11. **Mobile 390px**
+    - The header art (118×154) sits right of the text. Tabs and chips scroll sideways without a scrollbar.
+    - A sticky "Filter | Popular" bar sits under the header.
+    - Filter → a bottom sheet slides up: up to 88% height, its own scroll, sticky "Clear" + "Show N results".
+      - The badge on "Filter" shows the active count.
+      - The page behind doesn't scroll. Esc, the backdrop and × all close it.
+    - Sort → the "Sort by" sheet with radio rows; picking one applies and closes.
+    - Grid: 2 columns (compact cards with the round + button); the banner after 4 cards, without art.
+    - No horizontal page scroll.
+12. **Tablet 820px:** 3 columns, still the Filter·Sort bar + sheets (no sidebar).
+13. **Keyboard**
+    - Tab to the tabs; ←/→ move the focus, Enter selects.
+    - Price thumbs: the arrow keys move them.
+    - The sheets trap focus and return it on close.
+14. **`/hi/shop`:** the UI (breadcrumb, tabs, filters, sort, buttons, note, banner) is in Hindi; the title and eyebrow stay English like the design. URL writes keep the `/hi` prefix.
+15. **Reduced motion ON:** no shimmer, no card stagger, no sheet slide; the arch art stays still. Everything else works.
+16. Any error or type error → Fix-list.
 
 ### F9 — Consultations · TODO
 Read: INV §A.7–§A.9, §C (consult rows). Design: `Consultations.dc.html` 27–288 · `Consultation-Detail.dc.html` 27–229 · `InquiryForm.dc.html` 15–163 · `mka-astro.js` 134–170, 249–295, 298–318, 327–333, 389–398, 410–422 (details: INV §H F9).
@@ -853,6 +950,7 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
 - 2026-09-29: Design source = Claude Design ZIP (cheaper than the MCP). Stack per docs/TECH-STACK.md. Next.js lives in the `KALA-JADU` root (inside OneDrive; pause OneDrive sync during `pnpm install`). pnpm. URL-based i18n (`/` = EN, `/hi` = HI).
 - 2026-09-30 (F2): `localeDetection: false` — `/` never auto-redirects to `/hi` by browser language; Hindi only via the toggle or `/hi` URLs. SVG art with `<text>` is inlined (web fonts), everything else is an external `/svg` file.
 - Commerce pages not in the export (Cart, Checkout, PDP, Wishlist, Search, Order Success) → branded coming-soon routes until they are designed. The cart drawer works fully.
+- 2026-09-30 (F8): the shop category and filters are view state. Switching rewrites the URL in place (`replaceState`: the path for the category, the query for filters) instead of navigating. The view, the open groups and the mobile sheet keep their state, and no page transition runs (same as the design's hash). Deep links and reloads restore everything.
 
 ## Client-confirm list (placeholders from the design)
 - Prices beyond 12 Nag ₹1,250, Kundali ₹99 and courses ₹50,000. Kundali MRP ₹499.
@@ -895,3 +993,8 @@ Start a new plan in plan mode from `docs/BACKEND-ROADMAP.md`.
   - the subscriber count ("1.2 lakh").
 - Video testimonials (F7): two placeholder cards (Sunita Pathak, Deepak Srivastava) with portrait art. We need the real videos, or the cards are removed. Photo reviews use product art/photos as the "customer photo".
 - About teaser (F7): the book "साधना के सत्य · The Truths of Sadhana", the founder quote and the mini-timeline years (2001–2008, 2008–2016, 2019).
+- Shop (F8):
+  - [HI review] all the shop UI Hindi is ours (`messages/hi.json` → `shop`), including the Buyer's notes and banner titles. The display title and eyebrow stay English on /hi.
+  - Buyer's-note claims to confirm: Nepal sourcing, the X-ray test, the lab certificate number and energization date on the packet, 8 mm beads, bracelet sizes S/M/L (cm), dispatch 2–4 days after energization, personal energization with name + gotra.
+  - "Most offerings sit between ₹300 and ₹2,500" (price note) and "Sadhak Ji's team replies within a day" (banner).
+  - Stock numbers (12 Mukhi sold out; 13/14 Mukhi, lapis and Mahavidya low) and the "Newest" order come from the prototype data.

@@ -10,41 +10,16 @@ import trendingData from "@/lib/data/trending.json";
 import servicesData from "@/lib/data/services.json";
 import articlesData from "@/lib/data/articles.json";
 import { search as searchCore } from "@/lib/core/search";
+import { queryProducts } from "@/lib/core/query";
 import { PRODUCTS, productById, productBySlug } from "./products-index";
-import type { Category, Intent, ProductPage, ProductQuery, ProductSort, SearchResults, Stone } from "@/types/catalog";
+import type { Category, Intent, ProductPage, ProductQuery, SearchResults, Stone } from "@/types/catalog";
 import type { BadgeKey, CategoryKey, Product, StoneKey } from "@/types/product";
 
 const CATEGORIES = categoriesData as unknown as readonly Category[];
 const INTENTS = intentsData as unknown as readonly Intent[];
 
-/* Sort comparators (Shop.dc.html 294). */
-const SORTS: Record<ProductSort, (a: Product, b: Product) => number> = {
-  popular: (a, b) => b.pop - a.pop,
-  newest: (a, b) => a.date - b.date,
-  low: (a, b) => a.price - b.price,
-  high: (a, b) => b.price - a.price,
-  rating: (a, b) => b.rating - a.rating || b.reviews - a.reviews,
-};
-
-/** Pure filter + sort, shared by getProducts and client islands that already hold the list. */
-export function queryProducts(list: readonly Product[], q: ProductQuery = {}): Product[] {
-  const { cat = "all", sub, intents, mukhi, stones, inStock, minRating = 0, price, ids, sort } = q;
-  const idSet = ids ? new Set(ids) : null;
-  const r = list.filter(
-    (p) =>
-      (cat === "all" || p.cat === cat) &&
-      (!sub || (sub === "malas" ? p.sub === "malas" : String(p.mukhi) === sub)) &&
-      (!intents?.length || intents.includes(p.ik)) &&
-      (!mukhi?.length || (p.mukhi != null && mukhi.includes(p.mukhi))) &&
-      (!stones?.length || (p.stone != null && stones.includes(p.stone))) &&
-      (!inStock || p.stock > 0) &&
-      p.rating >= minRating &&
-      (!price || (p.price >= price[0] && p.price <= price[1])) &&
-      (!idSet || idSet.has(p.id)),
-  );
-  if (ids && !sort) return r.sort((a, b) => ids.indexOf(a.id) - ids.indexOf(b.id));
-  return sort ? r.sort(SORTS[sort]) : r;
-}
+/** Pure filter + sort, shared with client islands that already hold the list (the shop). */
+export { queryProducts };
 
 /** Filtered, sorted, paginated products. Without `sort` the design's catalogue order is kept. */
 export async function getProducts(q: ProductQuery = {}): Promise<ProductPage> {

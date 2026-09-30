@@ -245,6 +245,110 @@
       "astrology-disclaimer": "Astrology Disclaimer"
     }
   },
+  "shop": {
+    "crumbHome": "Home",
+    "crumbShop": "Shop",
+    "breadcrumb": "Breadcrumb",
+    "allEyebrow": "— The Shop · सभी उत्पाद",
+    "allA": "All sacred ",
+    "allI": "offerings",
+    "allHi": "अनुष्ठान से ऊर्जित, श्रद्धा से आप तक",
+    "allDesc": "Rudraksha, crystal bracelets, Bhojpatra kavach, havan samagri and copper — every piece energized in Mahapuja on an auspicious muhurat before it ships.",
+    "offerings": "{n, plural, one {# offering} other {# offerings}}",
+    "energized": "Energized in Mahapuja before dispatch",
+    "tabsLabel": "Categories",
+    "all": "All",
+    "allOfferings": "All offerings",
+    "malas": "Malas",
+    "mukhiN": "{n} Mukhi",
+    "filter": "Filter",
+    "filters": "Filters",
+    "closeFilters": "Close filters",
+    "refine": "Refine",
+    "clearAll": "Clear all",
+    "clear": "Clear",
+    "showResults": "Show {n} results",
+    "groups": {
+      "cat": "Category",
+      "intent": "Intention",
+      "price": "Price",
+      "mukhi": "Mukhi (Rudraksha)",
+      "stone": "Crystal type",
+      "avail": "Availability",
+      "rating": "Rating"
+    },
+    "priceMin": "Minimum price",
+    "priceMax": "Maximum price",
+    "priceNote": "Most offerings sit between ₹300 and ₹2,500.",
+    "showAllStones": "Show all 15",
+    "showFewer": "Show fewer",
+    "inStockOnly": "In stock only",
+    "inStock": "In stock",
+    "ratingAbove": "{r} ★ & above",
+    "ratingAny": "Any rating",
+    "ratingChip": "{r}★ & above",
+    "removeFilter": "Remove filter {t}",
+    "finding": "Finding offerings…",
+    "sort": "Sort",
+    "sortBy": "Sort by",
+    "sorts": {
+      "popular": "Popular",
+      "newest": "Newest",
+      "low": "Price: low to high",
+      "high": "Price: high to low",
+      "rating": "Top rated"
+    },
+    "emptyTitle": "No offerings match these filters",
+    "emptyBody": "Remove a filter or two, or tell us what you are seeking on WhatsApp and we will suggest one offering.",
+    "clearFilters": "Clear filters",
+    "askWa": "Ask on WhatsApp",
+    "bannerEyebrow": "Free recommendation",
+    "banner": {
+      "rudraksha": {
+        "a": "Not sure which Rudraksha ",
+        "i": "suits you?"
+      },
+      "bracelets": {
+        "a": "Not sure which stone suits ",
+        "i": "your rashi?"
+      },
+      "amulets": {
+        "a": "Which kavach fits ",
+        "i": "your concern?"
+      },
+      "default": {
+        "a": "Not sure where ",
+        "i": "to begin?"
+      }
+    },
+    "bannerBody": "Share your birth details on WhatsApp. Sadhak Ji's team replies within a day with one recommendation, and the reason for it.",
+    "bookConsult": "Book a consultation",
+    "showing": "Showing {a} of {b}",
+    "loadMore": "Load more",
+    "note": "Buyer's note",
+    "readMore": "Read more",
+    "readLess": "Read less",
+    "seo": {
+      "rudraksha": {
+        "h": "How we source original Nepali Rudraksha",
+        "p1": "Every bead in this collection comes from Nepal, where Rudraksha trees grow at the altitude that gives beads dense wood and deep, naturally formed mukhi lines. We reject beads with filled cracks, carved lines or joined halves, the three most common signs of a fake.",
+        "p2": "Each bead is X-ray tested so the internal seed chambers can be matched to the visible mukhi count, then energized with a sankalp during Mahapuja. Your packet carries the lab certificate number and the date of energization."
+      },
+      "bracelets": {
+        "h": "Choosing a crystal bracelet",
+        "p1": "Pick one intention rather than several. A stone chosen for a single purpose, worn daily and cleansed weekly, is easier to live with than a stack of bracelets. If you know your rashi, our team can match the stone to its ruling planet.",
+        "p2": "All beads are 8 mm natural stone on durable stretch cord. Sizes run S (14–15 cm), M (15.5–16.5 cm) and L (17–18 cm); add 1 cm to your wrist measurement for a comfortable fit."
+      },
+      "all": {
+        "h": "What “energized in Mahapuja” means",
+        "p1": "Every order is included in the sankalp of the next Mahapuja performed by Sadhak Pawan Pandey on an auspicious muhurat. Products are purified with Ganga jal, placed before the yantra during mantra japa and havan, then sealed and dispatched.",
+        "p2": "This is why orders ship two to four days after energization rather than the same day. You can add personal energization with your name and gotra on any product page."
+      }
+    },
+    "meta": {
+      "all": "Shop all sacred offerings"
+    }
+  },
   "shorts": {
     "label": "Shorts",
     "watch": "Watch short: {title}",

@@ -10,13 +10,17 @@ import { EASE } from "@/components/motion/easing";
  * The first load only gets the line — fading server-rendered content out after hydration
  * would flash it. Reduced motion: nothing.
  */
+const inShop = (p: string) => p === "/shop" || p.startsWith("/shop/");
+
 export function PageTransition() {
   const pathname = usePathname();
   const prev = useRef<string | null>(null);
 
   useEffect(() => {
     const initial = prev.current === null;
-    const changed = !initial && prev.current !== pathname;
+    // Shop category switches rewrite the path in place (ShopView): same page, like the design's
+    // `#c=` hash change, so no transition.
+    const changed = !initial && prev.current !== pathname && !(inShop(prev.current!) && inShop(pathname));
     prev.current = pathname;
     // Same path again = React re-running the effect (dev Strict Mode), not a navigation.
     if (isReduced() || (!initial && !changed)) return;
