@@ -10,7 +10,7 @@ import { SEAL_SVG } from "@/lib/art/seal";
 import { LOSHU_SVG, PALM_LIGHT_SVG, TAROT_SVG } from "@/lib/art/service-art";
 import { fmt } from "@/lib/core/format";
 import consult from "@/lib/data/consult.json";
-import services from "@/lib/data/services.json";
+import type { ServiceCard } from "@/lib/api/consult";
 import { bookHref, routes, serviceHref } from "@/lib/routes";
 import { cn } from "@/lib/utils/cn";
 
@@ -19,11 +19,20 @@ import { cn } from "@/lib/utils/cn";
    and Numerology tiles; then the four-step "How a consultation works" strip. The chart, palm and
    Lo Shu art are never drawn on Home (INV gotcha 10), so they render complete. */
 
-type Svc = (typeof services)[number];
 type ModeKey = keyof typeof consult.modes;
-const svc = (k: string) => services.find((s) => s.key === k) as Svc;
-const modes = (s: Svc) =>
-  (s.modes as ModeKey[]).map((m) => ({ t: consult.modes[m].t, icon: consult.modes[m].ic as IconName }));
+
+const SERVICE_MODES: Record<string, ModeKey[]> = {
+  kundali: ["call", "video", "wa", "report"],
+  palm: ["video", "wa"],
+  tarot: ["call", "video", "wa"],
+  numerology: ["call", "video", "wa", "report"],
+};
+
+const modes = (s: ServiceCard) =>
+  ((s as { modes?: ModeKey[] }).modes ?? SERVICE_MODES[s.key] ?? []).map((m) => ({
+    t: consult.modes[m].t,
+    icon: consult.modes[m].ic as IconName,
+  }));
 
 type Palette = {
   bg: string;
@@ -104,9 +113,10 @@ const TILES: Tile[] = [
 
 const DEVA_NUM = ["१", "२", "३", "४"];
 
-export async function ConsultBento() {
+export async function ConsultBento({ services }: { services: ServiceCard[] }) {
   const t = await getTranslations("home.bento");
   const em = (c: ReactNode) => <em className="text-g5 italic">{c}</em>;
+  const svc = (k: string) => services.find((s) => s.key === k) as ServiceCard;
   const kx = svc("kundali");
 
   return (

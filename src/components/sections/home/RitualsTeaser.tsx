@@ -5,7 +5,7 @@ import { Icon } from "@/components/icons/Icon";
 import { MaskLine, MaskText } from "@/components/motion/MaskText";
 import { InlineArt } from "@/components/ui/InlineArt";
 import { THALI_HOME_SVG } from "@/lib/art/thali";
-import rituals from "@/lib/data/rituals.json";
+import type { getRituals } from "@/lib/api/content";
 import { anchors } from "@/lib/routes";
 import { RitualSteps } from "./RitualSteps";
 
@@ -14,7 +14,11 @@ import { RitualSteps } from "./RitualSteps";
    radial halo, sticky at top 120px on ≥1024; beside it the heading, the scroll-filled five-step
    process (RitualSteps), the ethics quote and the sheen CTA. One column below 1024. */
 
-export async function RitualsTeaser() {
+export async function RitualsTeaser({
+  rituals,
+}: {
+  rituals: Awaited<ReturnType<typeof getRituals>>;
+}) {
   const t = await getTranslations("home.rituals");
   const em = (c: ReactNode) => <em className="text-g5 italic">{c}</em>;
 

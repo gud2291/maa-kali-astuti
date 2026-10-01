@@ -3,7 +3,7 @@ import { getTranslations } from "next-intl/server";
 import { MaskLine, MaskText } from "@/components/motion/MaskText";
 import { MandalaG } from "@/components/ui/ornaments/Mandala";
 import { SHORT_THUMB_SVG, VIDEO_THUMB_SVG } from "@/lib/art/thumbs";
-import videos from "@/lib/data/videos.json";
+import type { getVideos } from "@/lib/api/content";
 import { ShortsRow, VideoPlayer, YtSubscribe, type VideoItem } from "./VideoPlayer";
 
 /* §13 "12 YouTube discourses" (Home.dc.html 763–839, vVideo 1328–1345, L3 1255).
@@ -13,12 +13,16 @@ import { ShortsRow, VideoPlayer, YtSubscribe, type VideoItem } from "./VideoPlay
 
 type Vid = keyof typeof VIDEO_THUMB_SVG;
 type Short = keyof typeof SHORT_THUMB_SVG;
-const CAT = Object.fromEntries(videos.cats.map(([k, en]) => [k, en]));
 
-export async function VideoSection() {
+export async function VideoSection({
+  videos,
+}: {
+  videos: Awaited<ReturnType<typeof getVideos>>;
+}) {
   const t = await getTranslations("home.video");
   const em = (c: ReactNode) => <em className="text-g3 italic">{c}</em>;
 
+  const CAT = Object.fromEntries(videos.cats.map(([k, en]) => [k, en]));
   const six = videos.videos.slice(0, 6);
   const items: VideoItem[] = six.map((v) => ({
     id: v.id,

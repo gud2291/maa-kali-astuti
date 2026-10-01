@@ -6,10 +6,9 @@ import { Icon } from "@/components/icons/Icon";
 import { MaskLine, MaskText } from "@/components/motion/MaskText";
 import { InlineArt } from "@/components/ui/InlineArt";
 import { Stars } from "@/components/ui/Rating";
-import { productById } from "@/lib/api/products-index";
+import type { Testimonial } from "@/lib/api/consult";
+import type { HomeReview } from "@/lib/api/content";
 import { PORTRAIT_TESTI_SVG } from "@/lib/art/portrait";
-import reviews from "@/lib/data/reviews.json";
-import testimonials from "@/lib/data/testimonials.json";
 import { videoHref } from "@/lib/routes";
 import { cn } from "@/lib/utils/cn";
 import { TESTI_ORDER, VIDEO_TESTI } from "./home-data";
@@ -31,19 +30,26 @@ type Card = {
   top?: ReactNode;
 };
 
-export async function Testimonials() {
+export async function Testimonials({
+  testimonials,
+  reviews,
+}: {
+  testimonials: Testimonial[];
+  reviews: HomeReview[];
+}) {
   const t = await getTranslations("home.testi");
   const em = (c: ReactNode) => <em className="text-g5 italic">{c}</em>;
 
   const cards: Card[] = TESTI_ORDER.flatMap(([kind, i]): Card[] => {
     if (kind === "t") {
       const x = testimonials[i];
+      if (!x) return [];
       return [{ key: `t${i}`, q: x.q, n: x.n, c: x.c, s: x.s, media: false }];
     }
     if (kind === "p") {
       const r = reviews[i];
-      const p = productById(r.pid);
-      if (!p) return [];
+      if (!r || !r.product) return [];
+      const p = r.product;
       return [
         {
           key: `p${i}`,

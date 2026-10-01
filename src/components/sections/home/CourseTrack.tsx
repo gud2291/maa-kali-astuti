@@ -7,7 +7,7 @@ import { Starfield } from "@/components/signature/Starfield";
 import { InlineArt } from "@/components/ui/InlineArt";
 import { YANTRA_GOLD } from "@/lib/art/yantras";
 import { fmt } from "@/lib/core/format";
-import courses from "@/lib/data/courses.json";
+import type { Course } from "@/lib/api/content";
 import { anchors, courseHref } from "@/lib/routes";
 import { CourseRail } from "./CourseRail";
 import { ROMAN } from "./home-data";
@@ -19,7 +19,7 @@ import { ROMAN } from "./home-data";
 
 type CourseKey = keyof typeof YANTRA_GOLD;
 
-export async function CourseTrack() {
+export async function CourseTrack({ courses }: { courses: Course[] }) {
   const t = await getTranslations("home.courses");
   const em = (c: ReactNode) => <em className="text-g3 italic">{c}</em>;
 
@@ -66,7 +66,7 @@ export async function CourseTrack() {
         </div>
 
         <CourseRail region={t("region")} prev={t("prev")} next={t("next")}>
-          {courses.courses.map((c, i) => (
+          {courses.map((c, i) => (
             <Link
               key={c.key}
               href={courseHref(c.key)}

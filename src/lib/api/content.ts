@@ -9,6 +9,11 @@ import { loc } from "@/lib/domain/loc";
 import { MON } from "@/lib/core/dates";
 import type { CourseOption } from "@/components/forms/InquiryForm";
 import type { IconName } from "@/components/icons/Icon";
+import { getJournalRows } from "@/server/articles/queries";
+import { getHomeReviewRows } from "@/server/reviews/queries";
+import { ARTICLE_CATEGORY_LABELS } from "@/lib/domain/labels";
+import { getProduct } from "@/lib/api/catalog";
+import type { Product } from "@/types/product";
 
 export type Course = {
   key: string;
@@ -203,4 +208,71 @@ export async function getVideos(locale = "en") {
     shorts,
     subs,
   };
+}
+
+/* ---------------- Journal & Home Reviews (B07) ---------------- */
+
+export type JournalItem = {
+  slug: string;
+  t: string;
+  c: string;
+  m: number;
+  product: Product | null;
+};
+
+export async function getJournal(
+  locale = "en",
+  limit = 6,
+): Promise<JournalItem[]> {
+  const rows = await getJournalRows(limit);
+  const products = await Promise.all(
+    rows.map((r) => {
+      const artId = r.legacyArt ?? r.productIds[0];
+      return artId ? getProduct(artId) : Promise.resolve(null);
+    }),
+  );
+
+  return rows.map((r, i) => {
+    const catLoc = ARTICLE_CATEGORY_LABELS[r.category];
+    return {
+      slug: r.slug,
+      t: loc({ en: r.titleEn, hi: r.titleHi }, locale),
+      c: catLoc ? loc(catLoc, locale) : r.category,
+      m: r.readMins,
+      product: products[i] ?? null,
+    };
+  });
+}
+
+export type HomeReview = {
+  n: string;
+  c: string;
+  q: string;
+  r: number;
+  d: string;
+  product: Product | null;
+};
+
+export async function getHomeReviews(locale = "en"): Promise<HomeReview[]> {
+  void locale;
+  const rows = await getHomeReviewRows();
+  const products = await Promise.all(
+    rows.map((r) => getProduct(r.productId)),
+  );
+
+  return rows.map((r, i) => {
+    let d = r.legacyDate;
+    if (!d && r.createdAt) {
+      const dt = new Date(r.createdAt);
+      d = `${dt.getDate()} ${MON[dt.getMonth()]} ${dt.getFullYear()}`;
+    }
+    return {
+      n: r.name,
+      c: r.city ?? "",
+      q: r.body,
+      r: r.rating,
+      d: d ?? "",
+      product: products[i] ?? null,
+    };
+  });
 }

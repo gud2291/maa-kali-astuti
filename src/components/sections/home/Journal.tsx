@@ -4,8 +4,7 @@ import { Link } from "@/i18n/navigation";
 import { ProductImage } from "@/components/commerce/ProductImage";
 import { Icon } from "@/components/icons/Icon";
 import { MaskLine, MaskText } from "@/components/motion/MaskText";
-import { productById } from "@/lib/api/products-index";
-import articles from "@/lib/data/articles.json";
+import type { JournalItem } from "@/lib/api/content";
 import { routes } from "@/lib/routes";
 import type { Product } from "@/types/product";
 
@@ -18,10 +17,10 @@ function ArticleArt({ p, sizes }: { p: Product; sizes: string }) {
   return <ProductImage p={p} alt="" sizes={sizes} className={p.photo ? undefined : "object-contain"} />;
 }
 
-export async function Journal() {
+export async function Journal({ articles }: { articles: JournalItem[] }) {
   const t = await getTranslations("home.journal");
   const em = (c: ReactNode) => <em className="text-g5 italic">{c}</em>;
-  const [a0, ...rest] = articles.slice(0, 3).map((a) => ({ ...a, p: productById(a.pid) }));
+  const [a0, ...rest] = articles.slice(0, 3);
 
   return (
     <section lang="en" data-screen-label="14 Journal" className="bg-s1 shadow-hair-y">
@@ -52,28 +51,28 @@ export async function Journal() {
           >
             <span className="relative block aspect-[16/10] overflow-hidden rounded-btn bg-[#EFE6D2] shadow-[inset_0_0_0_1px_rgba(184,146,58,.35)] lg:aspect-[4/3]">
               <span className="absolute top-[6%] right-[18%] bottom-0 left-[18%] block">
-                {a0.p && <ArticleArt p={a0.p} sizes="(min-width: 1024px) 34vw, 64vw" />}
+                {a0?.product && <ArticleArt p={a0.product} sizes="(min-width: 1024px) 34vw, 64vw" />}
               </span>
             </span>
             <span className="flex flex-col gap-2.5">
               <span className="font-sans text-[11px] leading-[1.2] font-semibold tracking-[.14em] text-g7 uppercase">
-                {t("metaLong", { c: a0.c, m: a0.m })}
+                {t("metaLong", { c: a0?.c, m: a0?.m })}
               </span>
               <span className="font-display text-[clamp(24px,2.6vw,34px)] leading-[1.18] font-normal text-balance text-em9 font-soft">
-                {a0.t}
+                {a0?.t}
               </span>
               <span className="max-w-[560px] font-sans text-[15.5px] leading-[1.65] text-ink6">{t("featLine")}</span>
             </span>
           </Link>
           {rest.map((a, i) => (
             <Link
-              key={a.pid}
+              key={a.slug}
               href={routes.blog}
               data-reveal={i + 1}
               className="grid grid-cols-[96px_minmax(0,1fr)] items-center gap-[18px] rounded-btn bg-iv p-3.5 text-ink no-underline shadow-[inset_0_0_0_1px_rgba(184,146,58,.3)] transition-shadow duration-[250ms] hover:text-ink hover:shadow-ring-g5 md:grid-cols-[120px_minmax(0,1fr)]"
             >
               <span className="relative block aspect-[4/5] overflow-hidden rounded-3 bg-s1">
-                {a.p && <ArticleArt p={a.p} sizes="120px" />}
+                {a.product && <ArticleArt p={a.product} sizes="120px" />}
               </span>
               <span className="flex min-w-0 flex-col gap-2">
                 <span className="font-sans text-[10.5px] leading-[1.2] font-semibold tracking-[.14em] text-g7 uppercase">

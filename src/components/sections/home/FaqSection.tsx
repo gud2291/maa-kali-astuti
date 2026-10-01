@@ -3,13 +3,12 @@ import { getTranslations } from "next-intl/server";
 import { Icon } from "@/components/icons/Icon";
 import { MaskLine, MaskText } from "@/components/motion/MaskText";
 import { FaqList } from "@/components/ui/FaqList";
-import faq from "@/lib/data/faq.json";
 import { waLink } from "@/lib/site";
 
 /* §16 "15 FAQ" (Home.dc.html 894–911, L3 1258). Ivory band: heading + the emerald "Still unsure?"
    WhatsApp card (sticky at top 110px on ≥1024) beside FaqList set "home", first answer open. */
 
-export async function FaqSection() {
+export async function FaqSection({ items }: { items: [string, string][] }) {
   const t = await getTranslations("home.faq");
   const em = (c: ReactNode) => <em className="text-g5 italic">{c}</em>;
 
@@ -48,7 +47,7 @@ export async function FaqSection() {
             </a>
           </div>
         </div>
-        <FaqList items={faq.home as [string, string][]} openFirst />
+        <FaqList items={items} openFirst />
       </div>
     </section>
   );

@@ -17,6 +17,14 @@ import { Testimonials } from "@/components/sections/home/Testimonials";
 import { TrustMarquee } from "@/components/sections/home/TrustMarquee";
 import { VideoSection } from "@/components/sections/home/VideoSection";
 import { getProduct } from "@/lib/api/catalog";
+import { getFaq, getServiceCards, getTestimonials } from "@/lib/api/consult";
+import {
+  getCourses,
+  getHomeReviews,
+  getJournal,
+  getRituals,
+  getVideos,
+} from "@/lib/api/content";
 
 /* Home (design/Home.dc.html). F5 built §1–5 (hero → 12 Nag spotlight), F6 §6–9 (rashifal wheel →
    floating stones), F7 §10–17 (courses → newsletter). The footer's newsletter is off on Home. */
@@ -27,7 +35,28 @@ const BUILD_NOW = Date.now();
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const nag12 = await getProduct("nag12");
+
+  const [
+    nag12,
+    serviceCards,
+    courses,
+    faqItems,
+    journal,
+    rituals,
+    testimonials,
+    reviews,
+    videos,
+  ] = await Promise.all([
+    getProduct("nag12"),
+    getServiceCards(locale),
+    getCourses(locale),
+    getFaq("home", locale),
+    getJournal(locale),
+    getRituals(locale),
+    getTestimonials(locale),
+    getHomeReviews(locale),
+    getVideos(locale),
+  ]);
 
   return (
     <>
@@ -38,15 +67,15 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       {nag12 && <NagSpotlight product={nag12} buildNow={BUILD_NOW} />}
       <RashifalSection buildNow={BUILD_NOW} />
       <AstroTools buildNow={BUILD_NOW} />
-      <ConsultBento />
+      <ConsultBento services={serviceCards} />
       <Intentions />
-      <CourseTrack />
-      <RitualsTeaser />
+      <CourseTrack courses={courses} />
+      <RitualsTeaser rituals={rituals} />
       <AboutTeaser />
-      <VideoSection />
-      <Testimonials />
-      <Journal />
-      <FaqSection />
+      <VideoSection videos={videos} />
+      <Testimonials testimonials={testimonials} reviews={reviews} />
+      <Journal articles={journal} />
+      <FaqSection items={faqItems} />
       <NewsletterBand />
     </>
   );
