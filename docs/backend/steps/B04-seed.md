@@ -19,15 +19,15 @@ None (`tsx` is already a devDependency).
 Create: `scripts/db/client.ts`, `scripts/db/seed-content.ts`, `scripts/db/seed.ts`
 
 ## Tasks
-- [ ] T1. `scripts/db/client.ts`: if `process.env.TURSO_DATABASE_URL` is unset, `process.loadEnvFile(".env.local")` (in try/catch). Throw a clear error when the URL/token are still missing. `createClient` from `@libsql/client/http` + `drizzle({ client, schema })` from `drizzle-orm/libsql/http`; schema imported **relatively** from `../../src/server/db/schema/index`. Export `db`. Never import anything that imports `server-only`.
-- [ ] T2. `scripts/db/seed-content.ts`: `export function productContentFor(p, rudraksha): ProductContent` (all `hi` = `""`):
+- [x] T1. `scripts/db/client.ts`: if `process.env.TURSO_DATABASE_URL` is unset, `process.loadEnvFile(".env.local")` (in try/catch). Throw a clear error when the URL/token are still missing. `createClient` from `@libsql/client/http` + `drizzle({ client, schema })` from `drizzle-orm/libsql/http`; schema imported **relatively** from `../../src/server/db/schema/index`. Export `db`. Never import anything that imports `server-only`. — antigravity
+- [x] T2. `scripts/db/seed-content.ts`: `export function productContentFor(p, rudraksha): ProductContent` (all `hi` = `""`): — antigravity
   - `nag12`: description = the "Product Description" paragraph of client-requirements §5 Category 5 (verbatim); benefits = its 4 "Key Traditional Benefits" (title + sentence); specs = Material / Quantity / Energization / Ideal For (verbatim values); placement = `["Home temple", "Tijori (locker)", "Office"]`.
   - `havan`: description = "Bitter Havan Packet – 100 grams. " + the Purpose sentence (verbatim).
   - `a-*` (amulets): description = the italic Category 3 line + " Encased in a consecrated copper tabiz (amulet capsule)."; benefits = [the amulet's meaning from the Category 3 list].
   - `b-*` (bracelets): description = `"<name> — <meaning>."` with the meaning from the Category 2 list (match by stone); benefits = [meaning].
   - `r2`…`r14`: description `"Original Nepali <n> Mukhi Rudraksha, associated with <deity> and the planet <planet>. Each bead is X-ray tested and energized in Mahapuja before dispatch."`; howToWear `"Wear it on a Monday morning after bathing, after chanting “<mantra>” 108 times."`; benefits = [product intent]. `m5` / `m7` (malas): same with "mala" wording and rudraksha 5 / 7.
   - everything else in `ProductContent` empty (`EMPTY_PRODUCT_CONTENT` values).
-- [ ] T3. `scripts/db/seed.ts` — `main()` runs the sections below in order; every insert uses `.onConflictDoNothing()`; rows without a natural key (rituals, videos, testimonials, faqs, reviews) are inserted only when their table is empty. Writes go through `db.batch` (≤ 50 statements per batch). Each section prints `seed: <table> +<inserted>` with `console.info`. On error: `console.error`, `process.exitCode = 1`. `L(s) = { en: s, hi: "" }`.
+- [x] T3. `scripts/db/seed.ts` — `main()` runs the sections below in order; every insert uses `.onConflictDoNothing()`; rows without a natural key (rituals, videos, testimonials, faqs, reviews) are inserted only when their table is empty. Writes go through `db.batch` (≤ 50 statements per batch). Each section prints `seed: <table> +<inserted>` with `console.info`. On error: `console.error`, `process.exitCode = 1`. `L(s) = { en: s, hi: "" }`. — antigravity
   1. `settings`: every key of `SETTINGS_DEFAULTS`; `notify.adminEmails = [SEED_OWNER_EMAIL]` when set.
   2. owner: when `SEED_OWNER_EMAIL` is set → insert `{ email: lower-case, name: SEED_OWNER_NAME ?? "Owner", role: "owner", status: "active", emailVerifiedAt: now }`, on conflict (email) **update** `role = "owner", status = "active"`.
   3. `categories`: key, slug, `name_en = name`, `name_hi = hi`, `short_en = short`, `desc_en = desc`, `desc_hi = deshi`, `sort` = index.
@@ -42,13 +42,16 @@ Create: `scripts/db/client.ts`, `scripts/db/seed-content.ts`, `scripts/db/seed.t
   12. `reviews`: `product_id = pid, name = n, city = c, body = q, rating = r, legacy_date = d, verified true, status "approved", show_on_home true, approved_at = now`.
   13. `coupons`: `SADHANA10` (percent 10) and `FIRST100` (flat 100, `min_cart_inr` 999) — the phase-F demo rules.
   14. `pages`: the 5 `POLICIES` slugs, `title_en` from that map, empty `body_en` doc.
-- [ ] T4. Finish per AGENTS.md §1 step 8.
+- [x] T4. Finish per AGENTS.md §1 step 8. — antigravity
 
 ## Must not
 - Must not delete or update existing rows (only the owner upsert). Must not run the seed.
 
 ## Done-notes
-_(agent: ≤ 12 lines)_
+- Created `scripts/db/client.ts`: Standalone LibSQL/Drizzle client reading `.env.local` without `server-only`.
+- Created `scripts/db/seed-content.ts`: `productContentFor` with verbatim nag12, havan, amulets, bracelets, and rudraksha bead/mala descriptions, howToWear, and benefits.
+- Created `scripts/db/seed.ts`: 14 seed sections running via `db.batch` (≤ 50 statements), `onConflictDoNothing`, empty-check for tables without natural keys, owner upsert, and `seed: <table> +<inserted>` console logging.
+- Migration added: no.
 
 ## Manual QA (user)
 1. Add `SEED_OWNER_EMAIL` (your email) and `SEED_OWNER_NAME` to `.env.local`.
