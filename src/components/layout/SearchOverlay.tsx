@@ -6,14 +6,12 @@ import { Link, useRouter } from "@/i18n/navigation";
 import { Icon, type IconName } from "@/components/icons/Icon";
 import { ProductImage } from "@/components/commerce/ProductImage";
 import { enter } from "@/components/motion/fx";
-import { PRODUCTS } from "@/lib/api/products-index";
 import { search } from "@/lib/core/search";
-import services from "@/lib/data/services.json";
-import articles from "@/lib/data/articles.json";
-import trending from "@/lib/data/trending.json";
 import { fmt } from "@/lib/core/format";
+import { loc } from "@/lib/domain/loc";
 import { productHref, routes, searchHref, serviceHref } from "@/lib/routes";
 import { useHistory } from "@/stores/history";
+import { useCatalog } from "@/stores/catalog";
 import { useUi } from "@/stores/ui";
 import { cn } from "@/lib/utils/cn";
 
@@ -34,23 +32,10 @@ export function SearchOverlay() {
   );
 }
 
-const DATA = {
-  products: PRODUCTS,
-  services: services as unknown as {
-    key: string;
-    name: string;
-    hi: string;
-    line: string;
-    icon: string;
-    price: number;
-    dur: string;
-  }[],
-  articles: articles as { t: string; c: string; m: number; pid?: string }[],
-};
-
 function SearchPanel() {
   const t = useTranslations("search");
-  const hi = useLocale() === "hi";
+  const locale = useLocale();
+  const hi = locale === "hi";
   const router = useRouter();
   const initialQ = useUi((s) => s.searchQ);
   const [q, setQ] = useState(initialQ);
@@ -59,12 +44,38 @@ function SearchPanel() {
   const panelRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
+  const snap = useCatalog((s) => s.snap);
+
   useEffect(() => {
     enter(panelRef.current, { y: -10, dur: 300 });
   }, []);
 
+  const searchData = useMemo(() => {
+    const products = (snap?.products ?? []).map((p) => ({
+      ...p,
+      pop: (p.reviews ?? 0) * (p.rating ?? 0),
+    }));
+    const services = (snap?.services ?? []).map((s) => ({
+      key: s.key,
+      name: s.name.en,
+      hi: s.name.hi,
+      line: s.line.en + " " + s.line.hi,
+      icon: s.icon,
+      price: s.price,
+      dur: s.dur,
+      rawName: s.name,
+    }));
+    const articles = (snap?.articles ?? []).map((a) => ({
+      t: loc(a.title, locale),
+      c: a.category,
+      m: a.mins,
+      slug: a.slug,
+    }));
+    return { products, services, articles };
+  }, [snap, locale]);
+
   const query = q.trim();
-  const results = useMemo(() => search(query, DATA), [query]);
+  const results = useMemo(() => search(query, searchData), [query, searchData]);
   const close = () => useUi.getState().setSearchOpen(false);
   const saveQ = () => useHistory.getState().saveSearch(query);
   const pick = () => {
@@ -77,7 +88,7 @@ function SearchPanel() {
       ? results.products.slice(0, 6).map((p) => ({
           key: p.id,
           href: productHref(p),
-          img: <ProductImage p={p} slot="main" sizes="56px" alt="" />,
+          img: <ProductImage p={{ ...p, date: 0, pop: 0 }} slot="main" sizes="56px" alt="" />,
           kicker: p.catName,
           title: hi ? p.hi : p.name,
           right: fmt(p.price),
@@ -92,7 +103,7 @@ function SearchPanel() {
               </span>
             ),
             kicker: t("serviceKicker", { dur: s.dur }),
-            title: s.name,
+            title: loc(s.rawName, locale),
             right: t("from", { price: fmt(s.price) }),
           }))
         : results.articles.map((a, i) => ({
@@ -116,6 +127,8 @@ function SearchPanel() {
 
   const label =
     "font-sans text-[11px] leading-none font-semibold tracking-[.16em] text-ink6 uppercase hi:tracking-normal";
+
+  const trending = snap?.trending ?? [];
 
   return (
     <Dialog.Content

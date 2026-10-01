@@ -52,10 +52,11 @@
   "cart": {
     "coupon": {
       "empty": "Enter a coupon code",
-      "applied10": "10% off applied",
-      "applied100": "₹100 off applied",
-      "minCart": "FIRST100 needs a cart of ₹999 or more",
-      "invalid": "\"{code}\" isn't a valid coupon"
+      "applied": "{off} off applied",
+      "minCart": "{code} needs a cart of {min} or more",
+      "invalid": "\"{code}\" isn't a valid coupon",
+      "expired": "This coupon has expired",
+      "used": "This coupon has already been used"
     }
   },
   "chrome": {

@@ -9,7 +9,6 @@ import { Rating } from "@/components/ui/Rating";
 import { stockNote } from "@/lib/core/stock";
 import { useIsWished } from "@/stores/wishlist";
 import { cn } from "@/lib/utils/cn";
-import { categoryShort } from "@/lib/api/products-index";
 import { ProductImage } from "./ProductImage";
 import { useProductActions } from "./useProductActions";
 import type { Product } from "@/types/product";
@@ -38,7 +37,7 @@ export function ProductCard({ product: p, size = "std", mode = "shop", sizes, pr
 
   const href = `/product/${p.slug}`;
   const title = hi ? p.hi : p.name;
-  const catShort = categoryShort(p.cat);
+  const catShort = p.catShort ?? "";
   const addAria = t("addAria", { name: p.name });
   const sn = stockNote(p, hi);
 

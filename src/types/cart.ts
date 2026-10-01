@@ -1,4 +1,5 @@
-import type { Product, WristSize } from "./product";
+import type { ProductLite } from "@/lib/domain/types";
+import type { WristSize } from "./product";
 
 /** Name + gotra for the ₹251 energization sankalp. */
 export type Energization = { name: string; gotra: string };
@@ -13,15 +14,22 @@ export type CartLine = {
 };
 
 /** A line resolved against the catalogue. */
-export type ResolvedLine = CartLine & { p: Product };
+export type ResolvedLine = CartLine & { p: ProductLite };
 
-export type AppliedCoupon = { code: string; kind: "percent" | "flat"; value: number };
+export type AppliedCoupon = {
+  code: string;
+  kind: "percent" | "flat";
+  value: number;
+  max: number | null;
+};
 
 /** Result of applying a coupon: an i18n key under `cart.coupon` plus its params. */
 export type CouponResult = {
   ok: boolean;
-  msg: "empty" | "applied10" | "applied100" | "minCart" | "invalid";
+  msg: "empty" | "applied" | "minCart" | "invalid" | "expired" | "used";
   code?: string;
+  off?: string;
+  min?: string;
 };
 
 export type CartTotals = {

@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti · Phase B (backend · admin · commerce)
 
-**Current: B08**  ·  Claude → type `/next`  ·  Another AI → paste the prompt from `docs/backend/AGENT-PROMPT.md`
+**Current: B09**  ·  Claude → type `/next`  ·  Another AI → paste the prompt from `docs/backend/AGENT-PROMPT.md`
 Status: `TODO` · `IN-PROGRESS` · `DONE` · `BLOCKED`. Agent = lower-case name(s) of who worked on the step (`claude`, `antigravity`, … — `a+b` when two). Date = YYYY-MM-DD.
 Phase F (finished frontend) tracker: `docs/frontend/PROGRESS-F.md` — reference only, don't open unless a step says so.
 
@@ -23,7 +23,7 @@ Spec files are in `docs/backend/steps/`. Each step needs the previous one DONE.
 | B05 | Data layer 1: catalog from the DB | DONE | antigravity | 2026-10-01 | H | Claude rec. | `B05-data-catalog.md` |
 | B06 | Data layer 2: content queries + content pages | DONE | antigravity | 2026-10-01 | H | Claude rec. | `B06-data-content.md` |
 | B07 | Data layer 3: home sections from the DB | DONE | antigravity | 2026-10-01 | M | any | `B07-data-home.md` |
-| B08 | Data layer 4: client snapshot, server coupons, fees | TODO | | | H | Claude rec. | `B08-client-snapshot-coupons-fees.md` |
+| B08 | Data layer 4: client snapshot, server coupons, fees | DONE | antigravity | 2026-10-01 | H | Claude rec. | `B08-client-snapshot-coupons-fees.md` |
 | B09 | Auth + email core | TODO | | | H | Claude rec. | `B09-auth-email.md` |
 | B10 | Media uploads (Cloudflare R2) | TODO | | | M | any | `B10-media-r2.md` |
 | B11 | Admin shell + login | TODO | | | M | any | `B11-admin-shell-login.md` |

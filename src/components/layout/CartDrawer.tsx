@@ -9,16 +9,15 @@ import { ProductImage } from "@/components/commerce/ProductImage";
 import { flyToCart } from "@/components/commerce/fx";
 import { roll } from "@/components/motion/fx";
 import { KALASH_SVG } from "@/lib/art/kalash";
-import { productById } from "@/lib/api/products-index";
-import { ENERGIZATION, MAX_LINE_QTY } from "@/lib/core/commerce";
 import { fmt } from "@/lib/core/format";
 import { productHref, routes } from "@/lib/routes";
 import { PAY_DRAWER } from "@/lib/site";
 import { useCart, useCartLines, useCartTotals } from "@/stores/cart";
+import { useCatalog, useFees } from "@/stores/catalog";
 import { useUi } from "@/stores/ui";
 import { cn } from "@/lib/utils/cn";
 import type { CouponResult, ResolvedLine } from "@/types/cart";
-import type { Product } from "@/types/product";
+import type { ProductLite } from "@/lib/domain/types";
 
 /* "Complete your ritual" rail (SiteChrome 527): first four not already in the cart. */
 const UPSELL = ["havan", "r5", "b-rose", "a-child", "b-tourmaline"];
@@ -170,6 +169,7 @@ function DrawerBody() {
 function Line({ l }: { l: ResolvedLine }) {
   const t = useTranslations("drawer");
   const hi = useLocale() === "hi";
+  const fees = useFees();
   const numRef = useRef<HTMLSpanElement>(null);
   const name = hi ? l.p.hi : l.p.name;
   const href = productHref(l.p);
@@ -184,7 +184,7 @@ function Line({ l }: { l: ResolvedLine }) {
     setQty(l.qty - 1, -1);
   };
   const inc = () => {
-    if (l.qty >= MAX_LINE_QTY) {
+    if (l.qty >= fees.maxLineQty) {
       useUi.getState().toast({ msg: t("max"), tone: "info" });
       return;
     }
@@ -204,7 +204,7 @@ function Line({ l }: { l: ResolvedLine }) {
   return (
     <div className="grid grid-cols-[72px_minmax(0,1fr)_auto] gap-3.5 border-b border-s2 py-4">
       <Link href={href} className="relative block h-[90px] w-[72px] overflow-hidden rounded-3 bg-s1" tabIndex={-1}>
-        <ProductImage p={l.p} sizes="72px" alt="" />
+        <ProductImage p={{ ...l.p, date: 0, pop: 0 }} sizes="72px" alt="" />
       </Link>
       <div className="flex min-w-0 flex-col gap-[5px]">
         <Link href={href} className="font-title text-[16px] leading-[1.25] font-normal text-em9 no-underline">
@@ -216,7 +216,7 @@ function Line({ l }: { l: ResolvedLine }) {
             <span className="mt-px block size-[13px] flex-none">
               <Icon name="flame" />
             </span>
-            {t("energ", { name: l.energ.name, gotra: l.energ.gotra, fee: fmt(ENERGIZATION) })}
+            {t("energ", { name: l.energ.name, gotra: l.energ.gotra, fee: fmt(fees.energizationInr) })}
           </span>
         )}
         <div className="mt-1.5 flex items-center gap-3">
@@ -255,7 +255,7 @@ function Line({ l }: { l: ResolvedLine }) {
       </div>
       <div className="flex flex-col items-end gap-1 tabular">
         <span className="font-sans text-[15px] leading-none font-bold text-ink">
-          {fmt((l.p.price + (l.energ ? ENERGIZATION : 0)) * l.qty)}
+          {fmt((l.p.price + (l.energ ? fees.energizationInr : 0)) * l.qty)}
         </span>
         <span className="font-sans text-[12px] leading-none font-medium text-ink6 line-through">
           {fmt(l.p.mrp * l.qty)}
@@ -269,13 +269,14 @@ function Upsell({ inCart }: { inCart: string[] }) {
   const t = useTranslations("drawer");
   const hi = useLocale() === "hi";
   const imgs = useRef<Record<string, HTMLSpanElement | null>>({});
+  const byId = useCatalog((s) => s.byId);
   const items = UPSELL.filter((id) => !inCart.includes(id))
     .slice(0, 4)
-    .map((id) => productById(id))
-    .filter((p): p is Product => !!p);
+    .map((id) => byId.get(id))
+    .filter((p): p is ProductLite => !!p);
   if (!items.length) return null;
 
-  const add = (p: Product) => {
+  const add = (p: ProductLite) => {
     if (p.sizes) {
       useUi.getState().openQuick(p.id);
       return;
@@ -308,7 +309,7 @@ function Upsell({ inCart }: { inCart: string[] }) {
                   }}
                   className="absolute inset-0 block"
                 >
-                  <ProductImage p={p} sizes="52px" alt="" />
+                  <ProductImage p={{ ...p, date: 0, pop: 0 }} sizes="52px" alt="" />
                 </span>
               </Link>
               <span className="flex min-w-0 flex-col gap-1">
@@ -340,13 +341,29 @@ function Coupon({ disc }: { disc: number }) {
   const [open, setOpen] = useState(false);
   const [code, setCode] = useState("");
   const [err, setErr] = useState<CouponResult | null>(null);
+  const [pending, setPending] = useState(false);
 
-  const msg = (r: CouponResult) => tc(r.msg, { code: r.code ?? code.trim().toUpperCase() });
-  const apply = (withToast: boolean) => {
-    const r = useCart.getState().applyCoupon(code);
-    setErr(r.ok ? null : r);
-    setOpen(!r.ok);
-    if (r.ok && withToast) useUi.getState().toast({ msg: msg(r), tone: "ok" });
+  const msg = (r: CouponResult): string => {
+    return tc(r.msg, {
+      code: r.code ?? code.trim().toUpperCase(),
+      off: r.off ?? "",
+      min: r.min ?? "",
+    });
+  };
+
+  const apply = async (withToast: boolean): Promise<void> => {
+    if (pending) return;
+    setPending(true);
+    try {
+      const r = await useCart.getState().applyCoupon(code);
+      setErr(r.ok ? null : r);
+      setOpen(!r.ok);
+      if (r.ok && withToast) {
+        useUi.getState().toast({ msg: msg(r), tone: "ok" });
+      }
+    } finally {
+      setPending(false);
+    }
   };
 
   return (
@@ -377,8 +394,9 @@ function Coupon({ disc }: { disc: number }) {
                 setErr(null);
               }}
               onKeyDown={(e) => {
-                if (e.key === "Enter") apply(false);
+                if (e.key === "Enter" && !pending) void apply(false);
               }}
+              disabled={pending}
               aria-label={t("couponAria")}
               aria-invalid={err ? true : undefined}
               aria-describedby={err ? "coupon-err" : undefined}
@@ -388,14 +406,16 @@ function Coupon({ disc }: { disc: number }) {
               className={cn(
                 "h-11 min-w-0 flex-1 rounded-field border bg-cream px-3 font-sans text-[14px] leading-none font-semibold tracking-[.06em] text-ink uppercase outline-none focus:border-em5",
                 err ? "border-sin" : "border-s2",
+                pending && "opacity-60",
               )}
             />
             <button
               type="button"
-              onClick={() => apply(true)}
-              className="h-11 cursor-pointer rounded-btn border border-em7 bg-iv px-4 font-sans text-[13px] leading-none font-semibold text-em7 hover:bg-em1"
+              onClick={() => void apply(true)}
+              disabled={pending}
+              className="h-11 cursor-pointer rounded-btn border border-em7 bg-iv px-4 font-sans text-[13px] leading-none font-semibold text-em7 hover:bg-em1 disabled:cursor-not-allowed disabled:opacity-60"
             >
-              {t("apply")}
+              {pending ? "…" : t("apply")}
             </button>
           </div>
           {err && (

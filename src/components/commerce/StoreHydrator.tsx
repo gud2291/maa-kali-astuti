@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { CART_STORAGE_KEY, useCart } from "@/stores/cart";
 import { WISH_STORAGE_KEY, useWishlist } from "@/stores/wishlist";
 import { HISTORY_STORAGE_KEY, useHistory } from "@/stores/history";
+import { useCatalog } from "@/stores/catalog";
 import { DEMO_SEED } from "@/lib/core/commerce";
 
 const has = (key: string) => {
@@ -25,6 +26,7 @@ export function StoreHydrator() {
     const firstHistory = !has(HISTORY_STORAGE_KEY);
     void Promise.resolve(useCart.persist.rehydrate()).then(() => {
       if (DEMO_SEED && firstCart) useCart.getState().seed();
+      void useCatalog.getState().load();
     });
     void Promise.resolve(useWishlist.persist.rehydrate()).then(() => {
       if (DEMO_SEED && firstWish) useWishlist.getState().seed();

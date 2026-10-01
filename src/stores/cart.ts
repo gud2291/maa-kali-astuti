@@ -5,9 +5,18 @@ import { useMemo } from "react";
 import { create } from "zustand";
 import { createJSONStorage, persist } from "zustand/middleware";
 import { STORE_KEY } from "@/lib/core/commerce";
-import { cartCount, checkCoupon, clampQty, computeTotals, lineKey, resolveLines } from "@/lib/core/cart";
-import { productById } from "@/lib/api/products-index";
-import type { AppliedCoupon, CartLine, CouponResult, Energization, RemovedLine } from "@/types/cart";
+import { cartCount, clampQty, computeTotals, lineKey, resolveLines } from "@/lib/core/cart";
+import { getFees, useCatalog, useFees } from "@/stores/catalog";
+import { checkCouponAction } from "@/server/cart/actions";
+import type {
+  AppliedCoupon,
+  CartLine,
+  CartTotals,
+  CouponResult,
+  Energization,
+  RemovedLine,
+  ResolvedLine,
+} from "@/types/cart";
 import type { WristSize } from "@/types/product";
 
 export const CART_STORAGE_KEY = `${STORE_KEY}.cart`;
@@ -25,7 +34,7 @@ type CartState = {
   remove: (key: string) => RemovedLine | null;
   restore: (snap: RemovedLine | null) => void;
   setEnerg: (key: string, energ: Energization | null) => void;
-  applyCoupon: (code: string) => CouponResult;
+  applyCoupon: (code: string) => Promise<CouponResult>;
   removeCoupon: () => void;
   setGift: (on: boolean) => void;
   clear: () => void;
@@ -51,17 +60,32 @@ export const useCart = create<CartState>()(
       coupon: null,
       gift: false,
       add: (pid, o = {}) => {
+        const max = getFees().maxLineQty;
         const key = lineKey(pid, o.variant, o.energ);
         const lines = get().lines;
         const ex = lines.find((l) => l.key === key);
         set({
           lines: ex
-            ? lines.map((l) => (l === ex ? { ...l, qty: clampQty(l.qty + (o.qty || 1)) } : l))
-            : [{ key, pid, variant: o.variant || null, qty: clampQty(o.qty || 1), energ: o.energ || null }, ...lines],
+            ? lines.map((l) => (l === ex ? { ...l, qty: clampQty(l.qty + (o.qty || 1), max) } : l))
+            : [
+                {
+                  key,
+                  pid,
+                  variant: o.variant || null,
+                  qty: clampQty(o.qty || 1, max),
+                  energ: o.energ || null,
+                },
+                ...lines,
+              ],
         });
         return key;
       },
-      setQty: (key, qty) => set({ lines: get().lines.map((l) => (l.key === key ? { ...l, qty: clampQty(qty) } : l)) }),
+      setQty: (key, qty) => {
+        const max = getFees().maxLineQty;
+        set({
+          lines: get().lines.map((l) => (l.key === key ? { ...l, qty: clampQty(qty, max) } : l)),
+        });
+      },
       remove: (key) => {
         const lines = get().lines;
         const i = lines.findIndex((l) => l.key === key);
@@ -77,13 +101,28 @@ export const useCart = create<CartState>()(
       },
       setEnerg: (key, energ) =>
         set({
-          lines: get().lines.map((l) => (l.key === key ? { ...l, energ, key: lineKey(l.pid, l.variant, energ) } : l)),
+          lines: get().lines.map((l) =>
+            l.key === key ? { ...l, energ, key: lineKey(l.pid, l.variant, energ) } : l,
+          ),
         }),
-      applyCoupon: (code) => {
-        const sub = computeTotals(resolveLines(get().lines, productById), null, false, { noCoupon: true }).sub;
-        const { result, coupon } = checkCoupon(code, sub);
-        if (coupon) set({ coupon });
-        return result;
+      applyCoupon: async (code) => {
+        const trimmed = code.trim();
+        if (!trimmed) {
+          return { ok: false, msg: "empty" };
+        }
+        const lines = get().lines.map((l) => ({
+          pid: l.pid,
+          variant: l.variant,
+          qty: l.qty,
+          energ: l.energ,
+        }));
+        const res = await checkCouponAction({ code: trimmed, lines });
+        if (res.ok) {
+          const { result, coupon } = res.data;
+          if (coupon) set({ coupon });
+          return result;
+        }
+        return { ok: false, msg: "invalid", code: trimmed };
       },
       removeCoupon: () => set({ coupon: null }),
       setGift: (gift) => set({ gift }),
@@ -92,9 +131,20 @@ export const useCart = create<CartState>()(
     }),
     {
       name: CART_STORAGE_KEY,
-      version: 1,
+      version: 2,
       storage: createJSONStorage(() => localStorage),
       skipHydration: true,
+      migrate: (persistedState: unknown, version: number) => {
+        if (version < 2) {
+          const old = persistedState as { lines?: CartLine[]; gift?: boolean } | undefined;
+          return {
+            lines: old?.lines ?? [],
+            coupon: null,
+            gift: !!old?.gift,
+          };
+        }
+        return persistedState as CartState;
+      },
       partialize: (s) => ({ lines: s.lines, coupon: s.coupon, gift: s.gift }),
     },
   ),
@@ -103,22 +153,27 @@ export const useCart = create<CartState>()(
 /* ---------- selectors ---------- */
 
 /** Total quantity (header / tab-bar badge). 0 until hydrated. */
-export const useCartCount = () => useCart((s) => cartCount(s.lines));
+export const useCartCount = (): number => useCart((s) => cartCount(s.lines));
 
 /** Lines with their products attached (memoised on the lines array). */
-export function useCartLines() {
+export function useCartLines(): ResolvedLine[] {
   const lines = useCart((s) => s.lines);
-  return useMemo(() => resolveLines(lines, productById), [lines]);
+  const byId = useCatalog((s) => s.byId);
+  return useMemo(() => resolveLines(lines, (id) => byId.get(id)), [lines, byId]);
 }
 
 /** Totals for the drawer / checkout; `express` and `cod` add their fees. */
-export function useCartTotals(o: { express?: boolean; cod?: boolean } = {}) {
+export function useCartTotals(o: { express?: boolean; cod?: boolean } = {}): CartTotals {
   const lines = useCartLines();
   const coupon = useCart((s) => s.coupon);
   const gift = useCart((s) => s.gift);
+  const fees = useFees();
   const { express, cod } = o;
-  return useMemo(() => computeTotals(lines, coupon, gift, { express, cod }), [lines, coupon, gift, express, cod]);
+  return useMemo(
+    () => computeTotals(lines, fees, { coupon, gift, express, cod }),
+    [lines, fees, coupon, gift, express, cod],
+  );
 }
 
 /** Non-reactive count for event handlers (e.g. "first add opens the drawer"). */
-export const getCartCount = () => cartCount(useCart.getState().lines);
+export const getCartCount = (): number => cartCount(useCart.getState().lines);

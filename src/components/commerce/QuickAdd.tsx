@@ -6,14 +6,15 @@ import { Icon } from "@/components/icons/Icon";
 import { fmt } from "@/lib/core/format";
 import { isReduced } from "@/lib/hooks/useReducedMotion";
 import { EASE } from "@/components/motion/easing";
-import { productById } from "@/lib/api/products-index";
+import { useProductLite, useCatalog, useFees } from "@/stores/catalog";
 import { useCart } from "@/stores/cart";
 import { useWishlist } from "@/stores/wishlist";
 import { useUi } from "@/stores/ui";
 import { cn } from "@/lib/utils/cn";
 import { flyToCart } from "./fx";
 import { ProductImage } from "./ProductImage";
-import type { Product, WristSize } from "@/types/product";
+import type { ProductLite } from "@/lib/domain/types";
+import type { WristSize } from "@/types/product";
 
 const SIZES: WristSize[] = ["S", "M", "L"];
 
@@ -24,20 +25,82 @@ const SIZES: WristSize[] = ["S", "M", "L"];
  */
 export function QuickAdd() {
   const quick = useUi((s) => s.quick);
-  const p = quick ? productById(quick.pid) : undefined;
+  const pid = quick?.pid ?? "";
+  const p = useProductLite(pid);
+  const status = useCatalog((s) => s.status);
+
+  useEffect(() => {
+    if (quick && status === "idle") {
+      void useCatalog.getState().load();
+    }
+  }, [quick, status]);
+
+  useEffect(() => {
+    if (quick && status === "error") {
+      useUi.getState().closeQuick();
+      useUi.getState().toast({ msg: "Failed to load product", tone: "err" });
+    }
+  }, [quick, status]);
+
+  const open = !!quick && status !== "error";
+
   return (
-    <Dialog.Root open={!!p} onOpenChange={(open) => !open && useUi.getState().closeQuick()}>
+    <Dialog.Root open={open} onOpenChange={(isOpen) => !isOpen && useUi.getState().closeQuick()}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-60 bg-[rgba(10,31,26,.45)]" />
-        {p && <QuickSheet key={p.id} p={p} fromWish={!!quick?.fromWish} />}
+        {p ? <QuickSheet key={p.id} p={p} fromWish={!!quick?.fromWish} /> : <QuickSkeleton />}
       </Dialog.Portal>
     </Dialog.Root>
   );
 }
 
-function QuickSheet({ p, fromWish }: { p: Product; fromWish: boolean }) {
+function QuickSkeleton() {
+  const t = useTranslations("quick");
+  return (
+    <Dialog.Content
+      aria-describedby={undefined}
+      className={cn(
+        "fixed z-60 max-w-full bg-iv px-5 pt-2.5 pb-[calc(20px+env(safe-area-inset-bottom))] shadow-[0_-20px_50px_-20px_rgba(10,31,26,.5)] outline-none animate-pulse",
+        "inset-x-0 bottom-0 w-full rounded-t-[8px]",
+        "md:inset-auto md:top-1/2 md:left-1/2 md:w-[460px] md:[transform:translate(-50%,-50%)] md:rounded-[6px]",
+      )}
+    >
+      <Dialog.Title className="sr-only">{t("title")}</Dialog.Title>
+      <div aria-hidden className="mx-auto mb-3.5 h-1 w-10 rounded-pill bg-s2" />
+
+      <div className="grid grid-cols-[72px_minmax(0,1fr)_40px] items-center gap-3.5">
+        <span className="block h-[90px] w-[72px] rounded-3 bg-s2" />
+        <span className="flex flex-col gap-2">
+          <span className="h-5 w-3/4 rounded bg-s2" />
+          <span className="h-4 w-1/3 rounded bg-s2" />
+        </span>
+        <Dialog.Close
+          aria-label={t("close")}
+          className="grid size-10 cursor-pointer place-items-center self-start border-0 bg-transparent text-em7"
+        >
+          <span className="block size-5">
+            <Icon name="close" />
+          </span>
+        </Dialog.Close>
+      </div>
+
+      <div className="mt-5 h-3.5 w-24 rounded bg-s2" />
+
+      <div className="mt-2.5 grid grid-cols-3 gap-2">
+        <span className="h-14 rounded-btn bg-cream shadow-ring-sand" />
+        <span className="h-14 rounded-btn bg-cream shadow-ring-sand" />
+        <span className="h-14 rounded-btn bg-cream shadow-ring-sand" />
+      </div>
+
+      <div className="mt-[18px] h-[52px] w-full rounded-btn bg-s2" />
+    </Dialog.Content>
+  );
+}
+
+function QuickSheet({ p, fromWish }: { p: ProductLite; fromWish: boolean }) {
   const t = useTranslations("quick");
   const tt = useTranslations("toast");
+  const fees = useFees();
   const hi = useLocale() === "hi";
   const [size, setSize] = useState<WristSize>("M");
   const [guide, setGuide] = useState(false);
@@ -85,7 +148,7 @@ function QuickSheet({ p, fromWish }: { p: Product; fromWish: boolean }) {
       <div className="grid grid-cols-[72px_minmax(0,1fr)_40px] items-center gap-3.5">
         <span className="relative block h-[90px] w-[72px] overflow-hidden rounded-3 bg-s1">
           <span ref={imgRef} className="absolute inset-0 block">
-            <ProductImage p={p} sizes="72px" />
+            <ProductImage p={{ ...p, date: 0, pop: 0 }} sizes="72px" />
           </span>
         </span>
         <span className="flex flex-col gap-1.5">
