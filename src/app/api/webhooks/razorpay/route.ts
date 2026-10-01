@@ -3,6 +3,7 @@ import { webhookEvents } from "@/server/db/schema/core";
 import { eq } from "drizzle-orm";
 import { verifyWebhookSignature } from "@/server/payments/razorpay";
 import { dispatchPaid, dispatchFailed } from "@/server/payments/dispatch";
+import { applyRefundWebhook } from "@/server/orders/refunds";
 import { log } from "@/server/log";
 
 export async function POST(request: Request): Promise<Response> {
@@ -129,6 +130,21 @@ export async function POST(request: Request): Promise<Response> {
           rzpPaymentId,
           error,
         });
+      }
+    } else if (
+      eventType === "refund.processed" ||
+      eventType === "refund.failed"
+    ) {
+      const refundEntity = payload?.refund?.entity;
+      const rzpRefundId =
+        typeof refundEntity?.id === "string" ? refundEntity.id : "";
+      const status =
+        eventType === "refund.processed" ? "processed" : "failed";
+
+      if (rzpRefundId) {
+        await applyRefundWebhook(rzpRefundId, status);
+      } else {
+        log.warn("webhook.missing_refund_id", { eventType });
       }
     }
 

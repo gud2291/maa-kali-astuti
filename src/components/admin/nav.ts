@@ -30,6 +30,13 @@ export const NAV: NavItem[] = [
     group: "Overview",
   },
   {
+    href: "/admin/orders",
+    label: "Orders",
+    icon: "package",
+    perm: "orders.view",
+    group: "Sales",
+  },
+  {
     href: "/admin/coupons",
     label: "Coupons",
     icon: "gift",

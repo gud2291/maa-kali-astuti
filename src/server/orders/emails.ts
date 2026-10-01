@@ -12,6 +12,10 @@ import {
   orderPlacedSubject,
 } from "@/server/email/templates/OrderPlacedEmail";
 import { AdminOrderAlertEmail } from "@/server/email/templates/AdminOrderAlertEmail";
+import {
+  OrderStatusEmail,
+  orderStatusSubject,
+} from "@/server/email/templates/OrderStatusEmail";
 import type { Locale, PaymentMethod, PaymentStatus } from "@/lib/domain/enums";
 
 export async function sendOrderPlacedEmails(orderId: number): Promise<void> {
@@ -131,3 +135,72 @@ export async function sendOrderPlacedEmails(orderId: number): Promise<void> {
     });
   }
 }
+
+export async function sendOrderStatusEmail(
+  orderId: number,
+  status: string,
+  extra?: { refundAmountInr?: number },
+): Promise<void> {
+  try {
+    const [order] = await db
+      .select()
+      .from(orders)
+      .where(eq(orders.id, orderId))
+      .limit(1);
+
+    if (!order) {
+      log.warn("order.email_status_order_not_found", { orderId, status });
+      return;
+    }
+
+    const contact = await getSetting("contact");
+    const accessKey = accessKeyFor("order", order.number);
+    const isHi = order.locale === "hi";
+    const successPath = isHi
+      ? `/hi/order/success?no=${encodeURIComponent(order.number)}&k=${encodeURIComponent(accessKey)}`
+      : `/order/success?no=${encodeURIComponent(order.number)}&k=${encodeURIComponent(accessKey)}`;
+    const orderUrl = absoluteUrl(successPath);
+
+    const subject = orderStatusSubject(
+      order.locale as Locale,
+      order.number,
+      status,
+      {
+        energizationOn: order.energizationOn,
+        courier: order.courier,
+        awb: order.awb,
+        refundAmountInr: extra?.refundAmountInr,
+      },
+    );
+
+    await sendEmail({
+      to: order.email,
+      subject,
+      react: (
+        <OrderStatusEmail
+          locale={order.locale as Locale}
+          number={order.number}
+          customerName={order.name}
+          status={status}
+          orderUrl={orderUrl}
+          energizationOn={order.energizationOn}
+          courier={order.courier}
+          awb={order.awb}
+          trackingUrl={order.trackingUrl}
+          refundAmountInr={extra?.refundAmountInr}
+          contact={{
+            phoneDisplay: contact?.phoneDisplay,
+            email: contact?.email,
+          }}
+        />
+      ),
+    });
+  } catch (err) {
+    log.error("order.sendOrderStatusEmail_failed", {
+      orderId,
+      status,
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
+}
+
