@@ -29,6 +29,20 @@ export const NAV: NavItem[] = [
     perm: "dashboard.view",
     group: "Overview",
   },
+  {
+    href: "/admin/products",
+    label: "Products",
+    icon: "tag",
+    perm: "products.view",
+    group: "Catalog",
+  },
+  {
+    href: "/admin/categories",
+    label: "Categories",
+    icon: "grid",
+    perm: "products.view",
+    group: "Catalog",
+  },
 ];
 
 export function navFor(role: Role): NavItem[] {
