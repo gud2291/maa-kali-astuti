@@ -27,24 +27,30 @@ Create:
 Modify: `src/components/admin/nav.ts` (+ Coupons `gift` Sales `coupons.edit` · Settings `gear` System `settings.edit` · Staff `user` System `staff.manage`)
 
 ## Tasks
-- [ ] T1. `settings/admin.ts`: `getSettingsForAdmin(): Promise<SettingsMap>` and `updateSetting<K>(key: K, value: unknown, actor): Promise<void>` (`requireAdmin("settings.edit")`; parse with `SETTINGS_SCHEMAS[key]`; upsert row with `updated_by`; `audit("settings.update", diff of top-level fields)`). Allowed keys here: `store, contact, social, seo, notify, kundali, courses, invoice`.
-- [ ] T2. `settings/admin-actions.ts`: `updateSettingAction({ key, value })` → `invalidate(TAG.settings)`.
-- [ ] T3. `settings/page.tsx`: `requireAdminPage("settings.edit")`; `LinkTabs` `?tab=` store · contact · seo · notify · offers · invoice; each tab renders its form with current values.
-- [ ] T4. Forms (`useActionForm` + the key's schema): **StoreForm** (free-shipping threshold, shipping, express, COD on/off + fee + max order value, gift wrap, energization fee, max qty per line, standard/express day ranges, online payments on/off, next Mahapuja date — empty = automatic); **ContactForm** (contact + social keys, two saves); **SeoForm** (title/description EN/HI with counters, OG image via single `ImageManager`, purpose `setting`); **NotifyForm** (admin emails list 1–5, alert toggles); **OffersForm** (Kundali enabled/price/MRP; course fee + instalments on/off/count/amount); **InvoiceForm** (legal name, GSTIN `^[0-9A-Z]{15}$` or empty, address, state code, prefix).
-- [ ] T5. `coupon.ts` schema: code `^[A-Z0-9_-]{3,30}$` (input upper-cased), kind, value (percent 1–90 / flat 1–100000), min cart ≥ 0, max discount (percent only) or null, start/end (end after start), usage limit, per-customer limit, first-order-only, active, note ≤ 200.
-- [ ] T6. `coupons/admin.ts` (`coupons.edit`): `listCoupons({ status?: "active" | "inactive" | "expired", search?, page })`, `getCoupon(id)`, `createCoupon` (code unique → `CONFLICT` on `code`), `updateCoupon`, `setCouponActive`, `deleteCoupon` (only when `used_count = 0`, else `CONFLICT` — deactivate instead). Audit every write. `admin-actions.ts` wraps them (no cache tags — coupons are read live).
-- [ ] T7. Coupon pages: list (code, rule summary like "10% off · min ₹999", used / limit, dates, status badge) + new/edit with `CouponForm`.
-- [ ] T8. `staff.ts` schema + `staff/admin.ts` (`staff.manage`): `listStaff()` (admin-role users), `addStaff({ email, name, role })` (upsert user with that role; existing customer → upgraded; sends `StaffInviteEmail` in `after()` with the `/admin/login` link), `changeRole(userId, role)`, `setStaffStatus(userId, "active" | "blocked")` (blocked → `revokeUserSessions`), `removeStaff(userId)` (role → customer, revoke sessions). Rules: you can't change your own role/status; at least one active owner must remain (`CONFLICT`). Audit every write. `admin-actions.ts` wraps them.
-- [ ] T9. `staff/page.tsx` + `StaffTable` (name, email, role select, status, last login, actions) + `AddStaffSheet`.
-- [ ] T10. `StaffInviteEmail.tsx` (EN only, `EmailShell`).
-- [ ] T11. `nav.ts`: add the three items.
-- [ ] T12. Finish per AGENTS.md §1 step 8.
+- [x] T1. `settings/admin.ts`: `getSettingsForAdmin(): Promise<SettingsMap>` and `updateSetting<K>(key: K, value: unknown, actor): Promise<void>` (`requireAdmin("settings.edit")`; parse with `SETTINGS_SCHEMAS[key]`; upsert row with `updated_by`; `audit("settings.update", diff of top-level fields)`). Allowed keys here: `store, contact, social, seo, notify, kundali, courses, invoice`. — antigravity
+- [x] T2. `settings/admin-actions.ts`: `updateSettingAction({ key, value })` → `invalidate(TAG.settings)`. — antigravity
+- [x] T3. `settings/page.tsx`: `requireAdminPage("settings.edit")`; `LinkTabs` `?tab=` store · contact · seo · notify · offers · invoice; each tab renders its form with current values. — antigravity
+- [x] T4. Forms (`useActionForm` + the key's schema): **StoreForm** (free-shipping threshold, shipping, express, COD on/off + fee + max order value, gift wrap, energization fee, max qty per line, standard/express day ranges, online payments on/off, next Mahapuja date — empty = automatic); **ContactForm** (contact + social keys, two saves); **SeoForm** (title/description EN/HI with counters, OG image via single `ImageManager`, purpose `setting`); **NotifyForm** (admin emails list 1–5, alert toggles); **OffersForm** (Kundali enabled/price/MRP; course fee + instalments on/off/count/amount); **InvoiceForm** (legal name, GSTIN `^[0-9A-Z]{15}$` or empty, address, state code, prefix). — antigravity
+- [x] T5. `coupon.ts` schema: code `^[A-Z0-9_-]{3,30}$` (input upper-cased), kind, value (percent 1–90 / flat 1–100000), min cart ≥ 0, max discount (percent only) or null, start/end (end after start), usage limit, per-customer limit, first-order-only, active, note ≤ 200. — antigravity
+- [x] T6. `coupons/admin.ts` (`coupons.edit`): `listCoupons({ status?: "active" | "inactive" | "expired", search?, page })`, `getCoupon(id)`, `createCoupon` (code unique → `CONFLICT` on `code`), `updateCoupon`, `setCouponActive`, `deleteCoupon` (only when `used_count = 0`, else `CONFLICT` — deactivate instead). Audit every write. `admin-actions.ts` wraps them (no cache tags — coupons are read live). — antigravity
+- [x] T7. Coupon pages: list (code, rule summary like "10% off · min ₹999", used / limit, dates, status badge) + new/edit with `CouponForm`. — antigravity
+- [x] T8. `staff.ts` schema + `staff/admin.ts` (`staff.manage`): `listStaff()` (admin-role users), `addStaff({ email, name, role })` (upsert user with that role; existing customer → upgraded; sends `StaffInviteEmail` in `after()` with the `/admin/login` link), `changeRole(userId, role)`, `setStaffStatus(userId, "active" | "blocked")` (blocked → `revokeUserSessions`), `removeStaff(userId)` (role → customer, revoke sessions). Rules: you can't change your own role/status; at least one active owner must remain (`CONFLICT`). Audit every write. `admin-actions.ts` wraps them. — antigravity
+- [x] T9. `staff/page.tsx` + `StaffTable` (name, email, role select, status, last login, actions) + `AddStaffSheet`. — antigravity
+- [x] T10. `StaffInviteEmail.tsx` (EN only, `EmailShell`). — antigravity
+- [x] T11. `nav.ts`: add the three items. — antigravity
+- [x] T12. Finish per AGENTS.md §1 step 8. — antigravity
 
 ## Must not
 - Must not edit `consult`, `home`, `announcement`, `videos` settings here (B24, B33, B34). Must not wire contact/social into the storefront (B34).
 
 ## Done-notes
-_(agent: ≤ 12 lines)_
+- Settings: `settings/admin.ts`, `settings/admin-actions.ts`, `(panel)/settings/page.tsx`, and forms `StoreForm`, `ContactForm`, `SeoForm`, `NotifyForm`, `OffersForm`, `InvoiceForm`.
+- Coupons: `lib/validation/coupon.ts`, `coupons/admin.ts`, `coupons/admin-actions.ts`, `(panel)/coupons/page.tsx`, `new/page.tsx`, `[id]/page.tsx`, and `CouponForm`.
+- Staff: `lib/validation/staff.ts`, `staff/admin.ts`, `staff/admin-actions.ts`, `(panel)/staff/page.tsx`, `StaffTable`, `AddStaffSheet`, and `StaffInviteEmail.tsx`.
+- Modified: `src/components/admin/nav.ts` (added Coupons, Staff, and Settings).
+- Decisions: At least one active owner enforced; self-demotion/blocking prevented in UI and server; coupon deletes restricted to unused coupons; staff invites sent asynchronously in `after()`.
+- Migration added: no (schema defined in B02/B03).
+- Next step: B15 implements the Product Details Page (PDP).
 
 ## Manual QA (user)
 1. Settings → Store: shipping ₹79 → ₹89, save → cart drawer shows ₹89 shipping after reload. Restore.

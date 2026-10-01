@@ -30,6 +30,13 @@ export const NAV: NavItem[] = [
     group: "Overview",
   },
   {
+    href: "/admin/coupons",
+    label: "Coupons",
+    icon: "gift",
+    perm: "coupons.edit",
+    group: "Sales",
+  },
+  {
     href: "/admin/products",
     label: "Products",
     icon: "tag",
@@ -42,6 +49,20 @@ export const NAV: NavItem[] = [
     icon: "grid",
     perm: "products.view",
     group: "Catalog",
+  },
+  {
+    href: "/admin/staff",
+    label: "Staff",
+    icon: "user",
+    perm: "staff.manage",
+    group: "System",
+  },
+  {
+    href: "/admin/settings",
+    label: "Settings",
+    icon: "gear",
+    perm: "settings.edit",
+    group: "System",
   },
 ];
 
