@@ -1,6 +1,7 @@
 import Image from "next/image";
 import type { Product, ProductImageSlot } from "@/types/product";
 import { cn } from "@/lib/utils/cn";
+import { MediaImg } from "@/components/media/MediaImg";
 
 const TABIZ = "/images/p-tabiz.webp";
 
@@ -41,6 +42,21 @@ export function ProductImage({
   alt,
   className,
 }: Props) {
+  if (p.images && p.images.length > 0) {
+    const media = slot === "alt" ? (p.images[1] ?? p.images[0]) : p.images[0];
+    const label = alt ?? p.name;
+    return (
+      <MediaImg
+        media={media}
+        sizes={sizes}
+        alt={label}
+        priority={priority}
+        className={className}
+        fill
+      />
+    );
+  }
+
   const { src, raster } = productImageSrc(p, slot);
   const label = alt ?? p.name;
   if (raster)
