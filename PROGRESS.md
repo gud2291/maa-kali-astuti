@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti · Phase B (backend · admin · commerce)
 
-**Current: B03**  ·  Claude → type `/next`  ·  Another AI → paste the prompt from `docs/backend/AGENT-PROMPT.md`
+**Current: B04**  ·  Claude → type `/next`  ·  Another AI → paste the prompt from `docs/backend/AGENT-PROMPT.md`
 Status: `TODO` · `IN-PROGRESS` · `DONE` · `BLOCKED`. Agent = lower-case name(s) of who worked on the step (`claude`, `antigravity`, … — `a+b` when two). Date = YYYY-MM-DD.
 Phase F (finished frontend) tracker: `docs/frontend/PROGRESS-F.md` — reference only, don't open unless a step says so.
 
@@ -18,7 +18,7 @@ Spec files are in `docs/backend/steps/`. Each step needs the previous one DONE.
 | B00 | Backend plan + multi-AI workflow | DONE | claude | 2026-10-01 | — | — | `docs/backend/PLAN.md` |
 | B01 | Foundation: env, helpers, tooling | DONE | antigravity | 2026-10-01 | M | any | `B01-foundation.md` |
 | B02 | Schema 1: domain types + core, catalog, content | DONE | antigravity | 2026-10-01 | H | Claude rec. | `B02-schema-core-catalog-content.md` |
-| B03 | Schema 2: commerce, consult, CRM | TODO | | | H | Claude rec. | `B03-schema-commerce-consult-crm.md` |
+| B03 | Schema 2: commerce, consult, CRM | DONE | antigravity | 2026-10-01 | H | Claude rec. | `B03-schema-commerce-consult-crm.md` |
 | B04 | Seed script | TODO | | | M | any | `B04-seed.md` |
 | B05 | Data layer 1: catalog from the DB | TODO | | | H | Claude rec. | `B05-data-catalog.md` |
 | B06 | Data layer 2: content queries + content pages | TODO | | | H | Claude rec. | `B06-data-content.md` |
