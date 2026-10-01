@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti · Phase B (backend · admin · commerce)
 
-**Current: B12**  ·  Claude → type `/next`  ·  Another AI → paste the prompt from `docs/backend/AGENT-PROMPT.md`
+**Current: B13**  ·  Claude → type `/next`  ·  Another AI → paste the prompt from `docs/backend/AGENT-PROMPT.md`
 Status: `TODO` · `IN-PROGRESS` · `DONE` · `BLOCKED`. Agent = lower-case name(s) of who worked on the step (`claude`, `antigravity`, … — `a+b` when two). Date = YYYY-MM-DD.
 Phase F (finished frontend) tracker: `docs/frontend/PROGRESS-F.md` — reference only, don't open unless a step says so.
 
@@ -27,7 +27,7 @@ Spec files are in `docs/backend/steps/`. Each step needs the previous one DONE.
 | B09 | Auth + email core | DONE | antigravity | 2026-10-01 | H | Claude rec. | `B09-auth-email.md` |
 | B10 | Media uploads (Cloudflare R2) | DONE | antigravity | 2026-10-02 | M | any | `B10-media-r2.md` |
 | B11 | Admin shell + login | DONE | antigravity | 2026-10-02 | M | any | `B11-admin-shell-login.md` |
-| B12 | Admin UI kit | TODO | | | M | any | `B12-admin-ui-kit.md` |
+| B12 | Admin UI kit | DONE | antigravity | 2026-10-02 | M | any | `B12-admin-ui-kit.md` |
 | B13 | Admin: products & categories | TODO | | | M | any | `B13-admin-products.md` |
 | B14 | Admin: settings, coupons, staff | TODO | | | M | any | `B14-admin-settings-coupons-staff.md` |
 | B15 | Product page (PDP) | TODO | | | M | any | `B15-product-page.md` |
