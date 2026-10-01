@@ -3,7 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Icon, type IconName } from "@/components/icons/Icon";
 import { cn } from "@/lib/utils/cn";
-import { BANKS, UPI_APPS, type PayMethod, type UpiApp } from "@/lib/validation/booking";
+import { BANKS, UPI_APPS, type UpiApp } from "@/lib/validation/booking";
 import type { SummaryData } from "./BookingSummary";
 import { ErrorRow, GROUP_TITLE, RadioDot, inputCls, pickRing } from "./ui";
 
@@ -12,7 +12,9 @@ import { ErrorRow, GROUP_TITLE, RadioDot, inputCls, pickRing } from "./ui";
    three methods as radio cards: UPI (app tiles; "UPI ID" reveals the field), card, and
    netbanking (bank chips). The Razorpay line closes the step. */
 
-const METHOD_ICON: Record<PayMethod, IconName> = { upi: "bolt", card: "card", nb: "bank" };
+export type BookingPayPref = "upi" | "card" | "netbanking";
+
+const METHOD_ICON: Record<BookingPayPref, IconName> = { upi: "bolt", card: "card", netbanking: "bank" };
 const APP_ABBR: Record<UpiApp, string> = { gpay: "G", phonepe: "Pe", paytm: "P", id: "@" };
 
 export function StepPay({
@@ -29,13 +31,13 @@ export function StepPay({
   onBank,
 }: {
   sum: SummaryData;
-  pay: PayMethod;
+  pay: BookingPayPref;
   app: UpiApp;
   upiId: string;
   bank: string;
   errUpi?: string;
   errBank?: string;
-  onPay: (p: PayMethod) => void;
+  onPay: (p: BookingPayPref) => void;
   onApp: (a: UpiApp) => void;
   onUpiId: (v: string) => void;
   onBank: (b: string) => void;
@@ -77,8 +79,9 @@ export function StepPay({
         <span id="bk-l-pay" className={cn(GROUP_TITLE, "mb-1")}>
           {t("pay")}
         </span>
-        {(["upi", "card", "nb"] as const).map((m) => {
+        {(["upi", "card", "netbanking"] as const).map((m) => {
           const sel = pay === m;
+          const msgKey = m === "netbanking" ? "nb" : m;
           return (
             <div
               key={m}
@@ -94,9 +97,9 @@ export function StepPay({
                 <RadioDot sel={sel} />
                 <Icon name={METHOD_ICON[m]} className="size-[22px] text-em7" />
                 <span className="flex min-w-0 flex-col gap-[3px]">
-                  <span className="font-sans text-[15px] leading-[1.2] font-bold text-em9">{t(`methods.${m}.t`)}</span>
+                  <span className="font-sans text-[15px] leading-[1.2] font-bold text-em9">{t(`methods.${msgKey}.t`)}</span>
                   <span className="font-sans text-[12.5px] leading-[1.4] font-medium text-ink6">
-                    {t(`methods.${m}.sub`)}
+                    {t(`methods.${msgKey}.sub`)}
                   </span>
                 </span>
                 {m === "upi" && (
@@ -167,7 +170,7 @@ export function StepPay({
                 </div>
               )}
 
-              {sel && m === "nb" && (
+              {sel && m === "netbanking" && (
                 <div className="flex flex-col gap-2.5 px-4 pt-1 pb-[18px]">
                   <div className="flex flex-wrap gap-2">
                     {BANKS.map((b) => {

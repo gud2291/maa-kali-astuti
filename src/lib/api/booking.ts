@@ -1,14 +1,13 @@
-/* THE BACKEND SEAM for consultation bookings (Booking.dc.html next() 513–523).
-   Demo: the "payment" takes 2000 ms like the prototype, then returns the booking id
-   (MKA-B + the last 5 base-36 digits of the timestamp, upper case) and keeps the newest 20
-   bookings in localStorage. Palm photos never leave the browser in the demo (only whether they
-   were attached is stored). Phase B: create a Razorpay order on the server, open Checkout,
-   verify the signature, then POST the booking (with the photos) and hold the slot. Client-only. */
-import { STORE_KEY } from "@/lib/core/commerce";
+/* Consultation bookings API. Real booking engine (B22).
+   Calls createBookingAction on the server, opens Razorpay Checkout,
+   confirms payment, and returns the booking reference. */
+
 import type { ModeKey, ServiceKey, TierKey } from "@/lib/api/consult";
 import type { BookingDetails, PayMethod } from "@/lib/validation/booking";
-
-export const BOOKING_STORAGE_KEY = `${STORE_KEY}.bookings`;
+import type { Locale, PayPref } from "@/lib/domain/enums";
+import { createBookingAction } from "@/server/bookings/actions";
+import { openRazorpay } from "@/lib/payments/razorpay-client";
+import { confirmPaymentAction } from "@/server/payments/actions";
 
 export type BookingRequest = {
   svc: ServiceKey;
@@ -19,21 +18,43 @@ export type BookingRequest = {
   start: string | null;
   price: number;
   pay: PayMethod;
-  palms: number;
+  payPref: PayPref;
+  palms: { mediaId: number; claimKey: string }[];
+  locale?: Locale;
 };
 
-export type BookingRecord = BookingRequest & { id: string; at: number };
-
 export async function submitBooking(req: BookingRequest): Promise<{ id: string }> {
-  await new Promise((r) => setTimeout(r, 2000));
-  const at = Date.now();
-  const id = "MKA-B" + at.toString(36).slice(-5).toUpperCase();
-  const rec: BookingRecord = { ...req, id, at };
-  try {
-    const prev = JSON.parse(localStorage.getItem(BOOKING_STORAGE_KEY) || "[]") as BookingRecord[];
-    localStorage.setItem(BOOKING_STORAGE_KEY, JSON.stringify([rec, ...prev].slice(0, 20)));
-  } catch {
-    /* storage full or blocked: the demo still confirms */
+  const actionRes = await createBookingAction({
+    serviceKey: req.svc,
+    tierKey: req.tier,
+    mode: req.mode,
+    details: req.details,
+    start: req.start,
+    palms: req.palms,
+    payPref: req.payPref,
+    locale: req.locale ?? "en",
+  });
+
+  if (!actionRes.ok) {
+    throw new Error(actionRes.code);
   }
-  return { id };
+
+  const rzpRes = await openRazorpay(actionRes.data.rzp);
+  if (rzpRes.status !== "paid") {
+    throw new Error("PAYMENT_FAILED");
+  }
+
+  const confirmRes = await confirmPaymentAction({
+    entity: "booking",
+    ref: actionRes.data.ref,
+    razorpay_order_id: rzpRes.razorpay_order_id,
+    razorpay_payment_id: rzpRes.razorpay_payment_id,
+    razorpay_signature: rzpRes.razorpay_signature,
+  });
+
+  if (!confirmRes.ok) {
+    throw new Error(confirmRes.code);
+  }
+
+  return { id: actionRes.data.ref };
 }

@@ -29,10 +29,11 @@ import {
 } from "@/lib/validation/booking";
 import { useUi } from "@/stores/ui";
 import { rich } from "@/components/sections/consult/ui";
+import type { ConsultRules } from "@/server/bookings/availability";
 import { BookingDone } from "./BookingDone";
 import { BookingSummary, type SummaryData } from "./BookingSummary";
 import { StepDetails, type PalmFile, type PalmSide } from "./StepDetails";
-import { StepPay } from "./StepPay";
+import { StepPay, type BookingPayPref } from "./StepPay";
 import { StepService } from "./StepService";
 import { StepSlot } from "./StepSlot";
 
@@ -61,7 +62,7 @@ type State = {
   month: number;
   date: Date | null;
   time: string | null;
-  pay: PayMethod;
+  pay: BookingPayPref;
   app: UpiApp;
   upiId: string;
   bank: string;
@@ -81,12 +82,14 @@ export function BookingFlow({
   modes,
   stepIcons,
   initialKey,
+  rules,
 }: {
   services: Service[];
   modes: Record<ModeKey, Mode>;
   /** "What happens next" icons (A.STEPS). */
   stepIcons: IconName[];
   initialKey: ServiceKey;
+  rules: ConsultRules;
 }) {
   const t = useTranslations("booking");
   const tc = useTranslations("consult");
@@ -183,7 +186,10 @@ export function BookingFlow({
     svc: s.svc,
     mode: s.mode,
     f: s.f,
-    palm: { left: !!s.palm.left, right: !!s.palm.right },
+    palm: {
+      left: !!(s.palm.left?.mediaId && s.palm.left?.claimKey),
+      right: !!(s.palm.right?.mediaId && s.palm.right?.claimKey),
+    },
     date: s.date,
     time: s.time,
     pay: s.pay,
@@ -219,19 +225,46 @@ export function BookingFlow({
     }
     patch({ processing: true });
     const start = need && s.date && s.time ? istDate(s.date, s.time).toISOString() : null;
-    const { id } = await submitBooking({
-      svc: s.svc,
-      tier: tier.k,
-      mode: s.mode,
-      details: s.f,
-      start,
-      price: tier.price,
-      pay: s.pay,
-      palms: (s.palm.left ? 1 : 0) + (s.palm.right ? 1 : 0),
-    });
-    if (!alive.current) return;
-    patch({ processing: false, step: 5, bid: id });
-    jumpToTop();
+    const palms: { mediaId: number; claimKey: string }[] = [];
+    if (s.svc === "palm") {
+      if (s.palm.left?.mediaId && s.palm.left?.claimKey) {
+        palms.push({ mediaId: s.palm.left.mediaId, claimKey: s.palm.left.claimKey });
+      }
+      if (s.palm.right?.mediaId && s.palm.right?.claimKey) {
+        palms.push({ mediaId: s.palm.right.mediaId, claimKey: s.palm.right.claimKey });
+      }
+    }
+
+    try {
+      const { id } = await submitBooking({
+        svc: s.svc,
+        tier: tier.k,
+        mode: s.mode,
+        details: s.f,
+        start,
+        price: tier.price,
+        pay: s.pay,
+        payPref: s.pay,
+        palms,
+        locale: (locale as "en" | "hi") ?? "en",
+      });
+      if (!alive.current) return;
+      patch({ processing: false, step: 5, bid: id });
+      jumpToTop();
+    } catch (err: unknown) {
+      if (!alive.current) return;
+      patch({ processing: false });
+      const msg = err instanceof Error ? err.message : String(err);
+      if (msg === "SLOT_TAKEN") {
+        patch({ step: 3, time: null });
+        useUi.getState().toast({ msg: t("err.slotTaken"), tone: "err" });
+        scrollToTop();
+      } else if (msg === "PAYMENT_FAILED") {
+        useUi.getState().toast({ msg: t("err.paymentFailed"), tone: "err" });
+      } else {
+        useUi.getState().toast({ msg: t("err.generic"), tone: "err" });
+      }
+    }
   };
 
   const back = () => {
@@ -253,22 +286,10 @@ export function BookingFlow({
   const setField = <K extends keyof BookingDetails>(key: K, v: BookingDetails[K]) =>
     patch((st) => ({ f: { ...st.f, [key]: v } }));
 
-  const onPalm = (side: PalmSide, file: File | null) => {
-    if (file) {
-      if (!/^image\//.test(file.type)) {
-        useUi.getState().toast({ msg: t("s2.palms.notImage"), tone: "err" });
-        return;
-      }
-      if (file.size > MAX_PHOTO) {
-        useUi.getState().toast({ msg: t("s2.palms.tooBig"), tone: "err" });
-        return;
-      }
-    }
-    // Side effects stay outside the state updater (StrictMode runs updaters twice).
+  const onPalm = (side: PalmSide, file: PalmFile | null) => {
     const old = s.palm[side];
-    if (old) URL.revokeObjectURL(old.url);
-    const nextFile = file ? { url: URL.createObjectURL(file), name: file.name } : null;
-    patch((st) => ({ palm: { ...st.palm, [side]: nextFile } }));
+    if (old && old.url !== file?.url) URL.revokeObjectURL(old.url);
+    patch((st) => ({ palm: { ...st.palm, [side]: file } }));
   };
 
   /* ---------- derived copy ---------- */
@@ -447,8 +468,10 @@ export function BookingFlow({
             {step === 3 && (
               <StepSlot
                 svc={s.svc}
+                tierKey={tier.k}
                 needsSlot={need}
                 mins={tier.mins}
+                rules={rules}
                 month={s.month}
                 date={s.date}
                 time={s.time}

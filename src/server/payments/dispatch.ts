@@ -1,6 +1,7 @@
 import "server-only";
 import { after } from "next/server";
 import { markOrderPaid, recordPaymentFailure } from "@/server/orders/service";
+import { markBookingPaid } from "@/server/bookings/service";
 import { sendOrderPlacedEmails } from "@/server/orders/emails";
 import { invalidateLater, TAG } from "@/server/cache";
 import { db } from "@/server/db/client";
@@ -54,6 +55,14 @@ export async function dispatchPaid(opts: {
         }
       });
     }
+  } else if (opts.entity === "booking") {
+    await markBookingPaid({
+      bookingId: opts.entityId,
+      rzpOrderId: opts.rzpOrderId,
+      rzpPaymentId: opts.rzpPaymentId,
+      amountInr: opts.amountInr,
+      method: opts.method,
+    });
   } else {
     log.warn("payment.unhandledEntity", {
       entity: opts.entity,

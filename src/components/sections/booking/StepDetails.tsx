@@ -9,6 +9,8 @@ import { PALM_LIGHT_SVG } from "@/lib/art/service-art";
 import { placeSearch } from "@/lib/astro/kundali";
 import { cn } from "@/lib/utils/cn";
 import type { BookingDetails, BookingErrors, SessionLang } from "@/lib/validation/booking";
+import { useUpload } from "@/components/media/useUpload";
+import { useUi } from "@/stores/ui";
 import { ErrorRow, FIELD_LABEL, GROUP_TITLE, inputCls } from "./ui";
 
 /* Step 2 · Details (Booking.dc.html 101–233). Name + WhatsApp (+91, digits only, 10) · Email
@@ -21,7 +23,12 @@ import { ErrorRow, FIELD_LABEL, GROUP_TITLE, inputCls } from "./ui";
    Errors show only after a failed Continue (`E` is empty until then). */
 
 export type PalmSide = "left" | "right";
-export type PalmFile = { url: string; name: string };
+export type PalmFile = {
+  url: string;
+  name: string;
+  mediaId?: number;
+  claimKey?: string;
+};
 
 type Setter = <K extends keyof BookingDetails>(key: K, v: BookingDetails[K]) => void;
 
@@ -48,7 +55,7 @@ export function StepDetails({
   set: Setter;
   E: BookingErrors;
   palm: Record<PalmSide, PalmFile | null>;
-  onPalm: (side: PalmSide, file: File | null) => void;
+  onPalm: (side: PalmSide, file: PalmFile | null) => void;
   todayIso: string;
 }) {
   const t = useTranslations("booking");
@@ -450,8 +457,8 @@ function PlaceField({ value, onChange, error }: { value: string; onChange: (v: s
 }
 
 /** One palm upload tile (Booking 197–214, palms 556–557): dashed brass frame (dashed red when
- *  missing after Continue), camera circle + "Tap to take or upload"; once chosen, the photo
- *  fills the 4:5 tile and a "✓ Left palm added · Remove" row appears below. */
+ *  missing after Continue), camera circle + "Tap to take or upload"; once chosen, uploads
+ *  immediately with useUpload("palm"), fills the 4:5 tile and shows progress/retry/remove. */
 function PalmUpload({
   side,
   file,
@@ -461,19 +468,82 @@ function PalmUpload({
   side: PalmSide;
   file: PalmFile | null;
   error?: string;
-  onPick: (side: PalmSide, file: File | null) => void;
+  onPick: (side: PalmSide, file: PalmFile | null) => void;
 }) {
   const t = useTranslations("booking.s2.palms");
   const label = t(side);
+  const { state, upload, reset } = useUpload("palm");
+  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+  const handleFileChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    const picked = e.target.files?.[0] ?? null;
+    e.target.value = "";
+    if (!picked) return;
+    if (!/^image\//.test(picked.type)) {
+      useUi.getState().toast({ msg: t("notImage"), tone: "err" });
+      return;
+    }
+    if (picked.size > 15 * 1024 * 1024) {
+      useUi.getState().toast({ msg: t("tooBig"), tone: "err" });
+      return;
+    }
+
+    setSelectedFile(picked);
+    const previewUrl = URL.createObjectURL(picked);
+    // Mark as uploading in parent state (no mediaId/claimKey yet)
+    onPick(side, { url: previewUrl, name: picked.name });
+
+    const result = await upload(picked);
+    if (result && result.claimKey) {
+      onPick(side, {
+        url: previewUrl,
+        name: picked.name,
+        mediaId: result.mediaId,
+        claimKey: result.claimKey,
+      });
+    } else {
+      onPick(side, null);
+    }
+  };
+
+  const handleRetry = async () => {
+    if (!selectedFile) return;
+    const previewUrl = URL.createObjectURL(selectedFile);
+    onPick(side, { url: previewUrl, name: selectedFile.name });
+    const result = await upload(selectedFile);
+    if (result && result.claimKey) {
+      onPick(side, {
+        url: previewUrl,
+        name: selectedFile.name,
+        mediaId: result.mediaId,
+        claimKey: result.claimKey,
+      });
+    } else {
+      onPick(side, null);
+    }
+  };
+
+  const handleRemove = () => {
+    setSelectedFile(null);
+    reset();
+    onPick(side, null);
+  };
+
+  const isUploading =
+    state.status === "preparing" ||
+    state.status === "uploading" ||
+    state.status === "confirming";
+  const isError = state.status === "error";
+
   return (
     <div className="flex min-w-0 flex-col gap-2">
       <label
         className={cn(
           "relative flex aspect-[4/5] cursor-pointer flex-col items-center justify-center gap-2.5 overflow-hidden rounded-btn bg-cream p-3.5 text-center transition-colors duration-200 hover:bg-s1",
           "has-[:focus-visible]:outline-2 has-[:focus-visible]:outline-offset-2 has-[:focus-visible]:outline-g5 has-[:focus-visible]:outline-solid",
-          file
+          file?.mediaId
             ? "border border-transparent shadow-ring-g5"
-            : error
+            : error || isError
               ? "border border-dashed border-sin"
               : "border border-dashed border-g5",
         )}
@@ -481,13 +551,10 @@ function PalmUpload({
         <input
           type="file"
           accept="image/*"
-          onChange={(e) => {
-            const picked = e.target.files?.[0] ?? null;
-            e.target.value = "";
-            if (picked) onPick(side, picked);
-          }}
+          disabled={isUploading}
+          onChange={handleFileChange}
           aria-label={t("upload", { side })}
-          aria-invalid={!!error}
+          aria-invalid={!!error || isError}
           aria-describedby={error ? `bk-${side}-err` : undefined}
           className="absolute inset-0 size-full cursor-pointer opacity-0"
         />
@@ -510,8 +577,34 @@ function PalmUpload({
             </span>
           </>
         )}
+
+        {isUploading && (
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-[rgba(14,59,48,.8)] p-3 text-iv">
+            <Icon name="clock" className="size-6 animate-spin text-g3" />
+            <span className="font-sans text-[12px] font-semibold text-iv">{t("uploading")}</span>
+            <span className="font-sans text-[11px] font-bold text-g3 tabular">{state.progress}%</span>
+          </div>
+        )}
+
+        {isError && (
+          <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-2 bg-[rgba(168,50,45,.85)] p-3 text-iv">
+            <Icon name="close" className="size-5 text-iv" />
+            <span className="font-sans text-[11px] font-medium text-center text-iv">{t("uploadFailed")}</span>
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                handleRetry();
+              }}
+              className="h-7 rounded-btn bg-iv px-2.5 font-sans text-[11px] font-bold text-em9"
+            >
+              {t("retry")}
+            </button>
+          </div>
+        )}
       </label>
-      {file && (
+      {file && file.mediaId && (
         <div className="flex min-w-0 items-center justify-between gap-2">
           <span className="flex min-w-0 items-center gap-1.5 font-sans text-[12.5px] leading-[1.3] font-semibold text-ok">
             <Icon name="checkc" className="size-[14px] flex-none" />
@@ -519,14 +612,14 @@ function PalmUpload({
           </span>
           <button
             type="button"
-            onClick={() => onPick(side, null)}
+            onClick={handleRemove}
             className="min-h-11 flex-none border-0 bg-transparent px-1 font-sans text-[13px] leading-none font-semibold text-em7 underline underline-offset-[3px]"
           >
             {t("remove")}
           </button>
         </div>
       )}
-      {error && <ErrorRow id={`bk-${side}-err`}>{error}</ErrorRow>}
+      {error && !isError && <ErrorRow id={`bk-${side}-err`}>{error}</ErrorRow>}
     </div>
   );
 }

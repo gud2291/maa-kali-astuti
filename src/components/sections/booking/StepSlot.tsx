@@ -1,18 +1,21 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { useLocale, useTranslations } from "next-intl";
 import { Icon, type IconName } from "@/components/icons/Icon";
 import type { ServiceKey } from "@/lib/api/consult";
-import { istDate, slotsFor, t12 } from "@/lib/astro/slots";
+import type { TierKey } from "@/lib/domain/enums";
+import type { ConsultRules } from "@/server/bookings/availability";
+import { istDate, isoDay, t12 } from "@/lib/astro/slots";
 import { addDays, dfmt, dlong, monthTitle } from "@/lib/core/dates";
 import { cn } from "@/lib/utils/cn";
 import { ErrorRow } from "./ui";
 
 /* Step 3 (Booking.dc.html 235–302).
-   Live sessions: a month calendar (Mon-first; tomorrow → +30 days, Sundays closed; ‹ › between
-   the months in the window; a gold dot under today) next to the open times of the chosen date,
-   grouped Morning / Afternoon / Evening (IST; booked times are struck through). When the
-   visitor's timezone is not IST, a green note converts the chosen time.
+   Live sessions: a month calendar (Mon-first; tomorrow → +window days, closed days & blocked dates disabled;
+   ‹ › between the months in the window; a gold dot under today) next to the open times of the chosen date,
+   fetched from /api/slots, grouped Morning / Afternoon / Evening (IST; booked times are struck through).
+   When the visitor's timezone is not IST, a green note converts the chosen time.
    Written reports: the three-step delivery timeline instead (today → tomorrow → +2 days).
    Columns: side by side at 700–1023 and ≥1180 (L.slot 526), stacked otherwise. */
 
@@ -20,8 +23,10 @@ const TITLE = "font-title text-[21px] leading-[1.2] font-normal text-em9";
 
 export function StepSlot({
   svc,
+  tierKey,
   needsSlot,
   mins,
+  rules,
   month,
   date,
   time,
@@ -31,8 +36,10 @@ export function StepSlot({
   onTime,
 }: {
   svc: ServiceKey;
+  tierKey: TierKey;
   needsSlot: boolean;
   mins: number;
+  rules: ConsultRules;
   month: number;
   date: Date | null;
   time: string | null;
@@ -43,6 +50,46 @@ export function StepSlot({
 }) {
   const t = useTranslations("booking.s3");
   const hi = useLocale() === "hi";
+
+  /* ---- slots fetched from /api/slots ---- */
+  const [loading, setLoading] = useState(false);
+  const [list, setList] = useState<{ t: string; free: boolean }[]>([]);
+
+  useEffect(() => {
+    if (!date || !needsSlot) {
+      setList([]);
+      setLoading(false);
+      return;
+    }
+
+    let active = true;
+    setLoading(true);
+    const dateStr = isoDay(date);
+
+    fetch(
+      `/api/slots?service=${encodeURIComponent(svc)}&tier=${encodeURIComponent(tierKey)}&date=${encodeURIComponent(dateStr)}`,
+    )
+      .then((res) => {
+        if (!res.ok) throw new Error("Failed to load slots");
+        return res.json();
+      })
+      .then((data: { t: string; free: boolean }[]) => {
+        if (active) {
+          setList(data);
+          setLoading(false);
+        }
+      })
+      .catch(() => {
+        if (active) {
+          setList([]);
+          setLoading(false);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [date, svc, tierKey, needsSlot]);
 
   if (!needsSlot) {
     const tl = t.raw(svc === "palm" ? "tl.palm" : "tl.other") as string[];
@@ -92,10 +139,11 @@ export function StepSlot({
     );
   }
 
-  /* ---- calendar (Booking 560–565) ---- */
+  /* ---- calendar using ConsultRules ---- */
   const today = addDays(0);
-  const first = addDays(1);
-  const last = addDays(30);
+  const todayKey = isoDay(today);
+  const last = addDays(rules.bookingWindowDays);
+  const lastKey = isoDay(last);
   const base = new Date(today.getFullYear(), today.getMonth() + month, 1, 12);
   const lead = (base.getDay() + 6) % 7;
   const dim = new Date(base.getFullYear(), base.getMonth() + 1, 0).getDate();
@@ -103,8 +151,7 @@ export function StepSlot({
   const nextDis = new Date(base.getFullYear(), base.getMonth() + 1, 1, 12) > last;
   const dows = t.raw("dows") as string[];
 
-  /* ---- slots (566–570) ---- */
-  const list = date ? slotsFor(date, mins) : [];
+  /* ---- slot groups ---- */
   const groups = (
     [
       ["morning", (h: number) => h < 12],
@@ -178,7 +225,15 @@ export function StepSlot({
             {Array.from({ length: dim }, (_, i) => {
               const n = i + 1;
               const dt = new Date(base.getFullYear(), base.getMonth(), n, 12);
-              const ok = dt >= first && dt <= last && dt.getDay() !== 0;
+              const dtKey = isoDay(dt);
+              const inWindow = dtKey >= todayKey && dtKey <= lastKey;
+              const dow = dt.getDay(); // 0 = Sunday
+              const isOpenDay = rules.openDays.includes(dow);
+              const isBlocked = rules.blocked.some(
+                (b) => dtKey >= b.from && dtKey <= b.to,
+              );
+              const ok = inWindow && isOpenDay && !isBlocked;
+
               const sel = !!date && dt.toDateString() === date.toDateString();
               const isToday = dt.toDateString() === today.toDateString();
               const long = dlong(dt, hi);
@@ -189,7 +244,13 @@ export function StepSlot({
                   onClick={() => onDate(dt)}
                   disabled={!ok}
                   aria-pressed={sel}
-                  aria-label={ok ? long : t(dt.getDay() === 0 ? "closed" : "unavailable", { date: long })}
+                  aria-label={
+                    ok
+                      ? long
+                      : !isOpenDay
+                        ? t("closed", { date: long })
+                        : t("unavailable", { date: long })
+                  }
                   className={cn(
                     "relative h-11 rounded-btn border-0 p-0 font-sans text-[14px] leading-none font-semibold tabular transition-colors duration-200",
                     sel ? "bg-em7 text-iv" : ok ? "bg-s1 text-em9" : "bg-transparent text-[#A9B5AE]",
@@ -235,42 +296,52 @@ export function StepSlot({
               <span className="font-sans text-[14px] leading-[1.5] font-medium text-ink">{t("pick")}</span>
             </div>
           )}
-          {groups.map((g) => (
-            <div key={g.k} role="group" aria-labelledby={`bk-slot-${g.k}`} className="flex flex-col gap-2.5">
-              <span
-                id={`bk-slot-${g.k}`}
-                className="font-sans text-[10.5px] leading-none font-semibold tracking-[.14em] text-g7 uppercase hi:tracking-normal"
-              >
-                {t(`groups.${g.k}`)}
-              </span>
-              <div className="flex flex-wrap gap-2">
-                {g.items.map((x) => {
-                  const sel = time === x.t;
-                  const label = t12(x.t);
-                  return (
-                    <button
-                      key={x.t}
-                      type="button"
-                      onClick={() => onTime(x.t)}
-                      disabled={!x.free}
-                      aria-pressed={sel}
-                      aria-label={x.free ? label : t("booked", { time: label })}
-                      className={cn(
-                        "h-11 min-w-[98px] rounded-pill border-0 px-3.5 font-sans text-[14px] leading-none font-semibold tabular transition-colors duration-200",
-                        sel
-                          ? "bg-em7 text-iv"
-                          : x.free
-                            ? "bg-cream text-em9 shadow-ring-sand"
-                            : "cursor-not-allowed bg-transparent text-[#A9B5AE] line-through shadow-ring-sand",
-                      )}
-                    >
-                      {label}
-                    </button>
-                  );
-                })}
-              </div>
+
+          {loading && (
+            <div className="flex items-center gap-3 rounded-btn bg-s1 p-[18px]">
+              <Icon name="clock" className="size-5 flex-none animate-spin text-g5" />
+              <span className="font-sans text-[14px] leading-[1.5] font-medium text-ink6">{t("loadingSlots")}</span>
             </div>
-          ))}
+          )}
+
+          {!loading &&
+            groups.map((g) => (
+              <div key={g.k} role="group" aria-labelledby={`bk-slot-${g.k}`} className="flex flex-col gap-2.5">
+                <span
+                  id={`bk-slot-${g.k}`}
+                  className="font-sans text-[10.5px] leading-none font-semibold tracking-[.14em] text-g7 uppercase hi:tracking-normal"
+                >
+                  {t(`groups.${g.k}`)}
+                </span>
+                <div className="flex flex-wrap gap-2">
+                  {g.items.map((x) => {
+                    const sel = time === x.t;
+                    const label = t12(x.t);
+                    return (
+                      <button
+                        key={x.t}
+                        type="button"
+                        onClick={() => onTime(x.t)}
+                        disabled={!x.free}
+                        aria-pressed={sel}
+                        aria-label={x.free ? label : t("booked", { time: label })}
+                        className={cn(
+                          "h-11 min-w-[98px] rounded-pill border-0 px-3.5 font-sans text-[14px] leading-none font-semibold tabular transition-colors duration-200",
+                          sel
+                            ? "bg-em7 text-iv"
+                            : x.free
+                              ? "bg-cream text-em9 shadow-ring-sand"
+                              : "cursor-not-allowed bg-transparent text-[#A9B5AE] line-through shadow-ring-sand",
+                        )}
+                      >
+                        {label}
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+            ))}
+
           {local && (
             <span className="flex items-start gap-2 rounded-btn bg-em1 px-3.5 py-3 font-sans text-[13.5px] leading-[1.5] font-medium text-em9">
               <Icon name="globe" className="mt-0.5 size-4 flex-none" />

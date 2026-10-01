@@ -4,6 +4,7 @@ import { z } from "zod";
 import { runAction, type ActionResult, AppError } from "@/server/result";
 import { db } from "@/server/db/client";
 import { orders } from "@/server/db/schema/commerce";
+import { bookings } from "@/server/db/schema/consult";
 import { eq } from "drizzle-orm";
 import { env } from "@/server/env";
 import { safeEqualHex, sha256Hex } from "@/server/ids";
@@ -25,7 +26,7 @@ export type RazorpayCheckoutData = {
 };
 
 const confirmPaymentSchema = z.object({
-  entity: z.literal("order"),
+  entity: z.enum(["order", "booking"]),
   ref: z.string().min(1),
   razorpay_order_id: z.string().min(1),
   razorpay_payment_id: z.string().min(1),
@@ -48,31 +49,59 @@ export async function confirmPaymentAction(
       throw new AppError("PAYMENT_FAILED", "Invalid payment signature");
     }
 
-    const [order] = await db
-      .select()
-      .from(orders)
-      .where(eq(orders.number, data.ref))
-      .limit(1);
+    if (data.entity === "order") {
+      const [order] = await db
+        .select()
+        .from(orders)
+        .where(eq(orders.number, data.ref))
+        .limit(1);
 
-    if (!order) {
-      throw new AppError("NOT_FOUND", "Order not found");
+      if (!order) {
+        throw new AppError("NOT_FOUND", "Order not found");
+      }
+
+      if (order.razorpayOrderId !== data.razorpay_order_id) {
+        throw new AppError("VALIDATION", "Razorpay order ID mismatch");
+      }
+
+      const payment = await fetchPayment(data.razorpay_payment_id);
+      const amountInr = Math.round(payment.amount / 100);
+
+      await dispatchPaid({
+        entity: "order",
+        entityId: order.id,
+        rzpOrderId: data.razorpay_order_id,
+        rzpPaymentId: data.razorpay_payment_id,
+        amountInr,
+        method: payment.method,
+      });
+    } else if (data.entity === "booking") {
+      const [booking] = await db
+        .select()
+        .from(bookings)
+        .where(eq(bookings.ref, data.ref))
+        .limit(1);
+
+      if (!booking) {
+        throw new AppError("NOT_FOUND", "Booking not found");
+      }
+
+      if (booking.razorpayOrderId !== data.razorpay_order_id) {
+        throw new AppError("VALIDATION", "Razorpay order ID mismatch");
+      }
+
+      const payment = await fetchPayment(data.razorpay_payment_id);
+      const amountInr = Math.round(payment.amount / 100);
+
+      await dispatchPaid({
+        entity: "booking",
+        entityId: booking.id,
+        rzpOrderId: data.razorpay_order_id,
+        rzpPaymentId: data.razorpay_payment_id,
+        amountInr,
+        method: payment.method,
+      });
     }
-
-    if (order.razorpayOrderId !== data.razorpay_order_id) {
-      throw new AppError("VALIDATION", "Razorpay order ID mismatch");
-    }
-
-    const payment = await fetchPayment(data.razorpay_payment_id);
-    const amountInr = Math.round(payment.amount / 100);
-
-    await dispatchPaid({
-      entity: "order",
-      entityId: order.id,
-      rzpOrderId: data.razorpay_order_id,
-      rzpPaymentId: data.razorpay_payment_id,
-      amountInr,
-      method: payment.method,
-    });
 
     return { ok: true };
   });

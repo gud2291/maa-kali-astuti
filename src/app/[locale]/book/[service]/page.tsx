@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BookingFlow } from "@/components/sections/booking/BookingFlow";
 import { getConsultSteps, getModes, getService, getServices } from "@/lib/api/consult";
+import { getSetting } from "@/server/settings/queries";
+import type { ConsultRules } from "@/server/bookings/availability";
 
 /* Booking (design/Booking.dc.html#s=<key>&tier=<t>): /book/kundali-reading?tier=detailed …
    (INV §C). Static per service slug; the tier query, the steps and the confirmation are client
@@ -30,13 +32,26 @@ export default async function BookPage({ params }: Props) {
   setRequestLocale(locale);
   const s = await getService(service, locale);
   if (!s || s.slug !== service) notFound();
-  const [services, modes, steps] = await Promise.all([getServices(locale), getModes(), getConsultSteps()]);
+  const [services, modes, steps, consult] = await Promise.all([
+    getServices(locale),
+    getModes(),
+    getConsultSteps(),
+    getSetting("consult"),
+  ]);
+
+  const rules: ConsultRules = {
+    openDays: consult.openDays,
+    bookingWindowDays: consult.bookingWindowDays,
+    minLeadHours: consult.minLeadHours,
+    blocked: consult.blocked,
+  };
 
   return (
     <BookingFlow
       services={services}
       modes={modes}
       stepIcons={steps.map(([icon]) => icon)}
+      rules={rules}
       key={s.key}
       initialKey={s.key}
     />

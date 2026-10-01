@@ -1203,7 +1203,10 @@
         "alt": "{label} photo",
         "private": "Photos are seen only by Sadhak Ji and deleted 30 days after your report.",
         "notImage": "Please choose a photo (JPG or PNG).",
-        "tooBig": "That photo is over 15 MB. Please choose a smaller one."
+        "tooBig": "That photo is over 15 MB. Please choose a smaller one.",
+        "uploading": "Uploading photo…",
+        "uploadFailed": "Upload failed. Tap to retry.",
+        "retry": "Retry"
       },
       "q": {
         "kundali": {
@@ -1248,6 +1251,7 @@
       "selected": "Selected",
       "rule": "Closed on Sundays · up to 30 days ahead",
       "openTimes": "Open times",
+      "loadingSlots": "Loading open times…",
       "ist": "All times in IST (UTC+5:30) · {n}-minute session",
       "pick": "Pick a date on the calendar to see the open times.",
       "groups": {
@@ -1352,7 +1356,10 @@
       "slotTime": "Choose a time for your session.",
       "slotBoth": "Choose a date and a time.",
       "upi": "Enter a UPI ID such as name@okhdfc.",
-      "bank": "Choose your bank."
+      "bank": "Choose your bank.",
+      "slotTaken": "The selected slot is no longer available. Please choose another time.",
+      "paymentFailed": "Payment could not be completed. Please try again.",
+      "generic": "Something went wrong. Please try again."
     },
     "proc": {
       "title": "Confirming your payment",
