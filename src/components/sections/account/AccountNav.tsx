@@ -29,6 +29,12 @@ const TABS: NavTab[] = [
     icon: "bag",
   },
   {
+    href: "/account/bookings",
+    labelEn: "Consultations",
+    labelHi: "मेरे परामर्श",
+    icon: "calendar",
+  },
+  {
     href: "/account/addresses",
     labelEn: "Addresses",
     labelHi: "सहेजे गए पते",

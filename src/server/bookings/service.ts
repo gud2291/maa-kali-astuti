@@ -10,9 +10,10 @@ import { accessKeyFor, refCode, sha256Hex } from "@/server/ids";
 import { claimMedia } from "@/server/media/service";
 import { AppError } from "@/server/result";
 import { log } from "@/server/log";
+import { istDayKey, addDaysKey, weekdayOfKey } from "@/lib/core/ist";
 import type { BookingCreateInput } from "@/lib/validation/booking";
 import type { BookingDetailsRecord } from "@/lib/domain/types";
-import { sendBookingConfirmed } from "./emails";
+import { sendBookingConfirmed, sendBookingRescheduled } from "./emails";
 
 export type CreateBookingContext = {
   userId: number | null;
@@ -296,3 +297,109 @@ export async function markBookingPaid(opts: {
 
   return { first: true, bookingId: booking.id };
 }
+
+export async function rescheduleBooking(opts: {
+  bookingId: number;
+  start: number;
+  by: "customer" | "admin";
+}): Promise<void> {
+  const [booking] = await db
+    .select()
+    .from(bookings)
+    .where(eq(bookings.id, opts.bookingId))
+    .limit(1);
+
+  if (!booking) {
+    throw new AppError("NOT_FOUND", "Booking not found");
+  }
+
+  if (booking.status !== "confirmed") {
+    throw new AppError("VALIDATION", "Only confirmed bookings can be rescheduled");
+  }
+
+  if (booking.mode === "report") {
+    throw new AppError("VALIDATION", "Written reports cannot be rescheduled");
+  }
+
+  const consultSettings = await getSetting("consult");
+  const consultData = await getConsultRows();
+  const tier = consultData.tiers.find(
+    (t) => t.serviceKey === booking.serviceKey && t.tierKey === booking.tierKey,
+  );
+  const mins = tier ? tier.mins : 30;
+
+  const now = Date.now();
+  const newStart = new Date(opts.start);
+  const newEnd = new Date(opts.start + mins * 60_000);
+
+  if (opts.by === "customer") {
+    const maxReschedules = consultSettings.maxReschedules ?? 1;
+    if (booking.rescheduleCount >= maxReschedules) {
+      throw new AppError("VALIDATION", "Maximum reschedules reached");
+    }
+
+    const rescheduleMinHours = consultSettings.rescheduleMinHours ?? 12;
+    if (booking.startAt && booking.startAt.getTime() - now < rescheduleMinHours * 3600_000) {
+      throw new AppError("VALIDATION", "Too close to the session to reschedule");
+    }
+
+    // Validate new day is open and in window
+    const todayKey = istDayKey(now);
+    const newDayKey = istDayKey(opts.start);
+    const maxDayKey = addDaysKey(todayKey, consultSettings.bookingWindowDays);
+    const dow = weekdayOfKey(newDayKey);
+
+    if (!consultSettings.openDays.includes(dow)) {
+      throw new AppError("VALIDATION", "Selected day is not available");
+    }
+    if (newDayKey > maxDayKey) {
+      throw new AppError("VALIDATION", "Selected day is beyond the booking window");
+    }
+    if (newDayKey < todayKey) {
+      throw new AppError("VALIDATION", "Cannot reschedule to a past date");
+    }
+    const isDayBlocked = consultSettings.blocked.some(
+      (b) => newDayKey >= b.from && newDayKey <= b.to,
+    );
+    if (isDayBlocked) {
+      throw new AppError("VALIDATION", "Selected day is blocked");
+    }
+  }
+
+  // Atomic update: reschedule only if no overlapping confirmed/held booking
+  const updated = await db.all<{ id: number }>(sql`
+    UPDATE bookings
+    SET start_at = ${newStart.getTime()},
+        end_at = ${newEnd.getTime()},
+        reschedule_count = reschedule_count + 1,
+        updated_at = ${now}
+    WHERE id = ${opts.bookingId}
+      AND NOT EXISTS (
+        SELECT 1 FROM bookings b2
+        WHERE b2.id != ${opts.bookingId}
+          AND b2.start_at < ${newEnd.getTime()}
+          AND b2.end_at > ${newStart.getTime()}
+          AND (
+            b2.status = 'confirmed'
+            OR (b2.status = 'pending_payment' AND b2.hold_expires_at > ${now})
+          )
+      )
+    RETURNING id
+  `);
+
+  if (updated.length === 0) {
+    throw new AppError("SLOT_TAKEN", "The selected slot is no longer available");
+  }
+
+  after(async () => {
+    try {
+      await sendBookingRescheduled(booking.id);
+    } catch (err) {
+      log.error("booking.reschedule_email_failed", {
+        bookingId: booking.id,
+        error: err instanceof Error ? err.message : String(err),
+      });
+    }
+  });
+}
+

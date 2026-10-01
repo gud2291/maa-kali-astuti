@@ -1,6 +1,7 @@
 "use server";
 
-import { eq } from "drizzle-orm";
+import { eq, and } from "drizzle-orm";
+import { z } from "zod";
 import { db } from "@/server/db/client";
 import { bookings } from "@/server/db/schema/consult";
 import { payments } from "@/server/db/schema/commerce";
@@ -10,8 +11,10 @@ import { rateLimit } from "@/server/rate-limit";
 import { getCustomer } from "@/server/auth/guards";
 import { createRzpOrder } from "@/server/payments/razorpay";
 import { runAction, type ActionResult, AppError } from "@/server/result";
+import { sha256Hex, safeEqualHex, accessKeyFor } from "@/server/ids";
+import { signedPrivateUrl } from "@/server/media/service";
 import { bookingCreateSchema } from "@/lib/validation/booking";
-import { createBooking } from "./service";
+import { createBooking, rescheduleBooking } from "./service";
 
 export type BookingCheckoutData = {
   ref: string;
@@ -91,3 +94,117 @@ export async function createBookingAction(
     };
   });
 }
+
+const rescheduleSchema = z.object({
+  ref: z.string().min(1).max(20),
+  accessKey: z.string().max(64).optional(),
+  start: z.number(),
+});
+
+export async function rescheduleBookingAction(
+  input: unknown,
+): Promise<ActionResult<{ ok: true }>> {
+  return runAction(async () => {
+    const data = rescheduleSchema.parse(input);
+
+    const ip = await clientIp();
+    await rateLimit("reschedule:ip", ip, 10, 3600);
+
+    const [row] = await db
+      .select({
+        id: bookings.id,
+        accessHash: bookings.accessHash,
+        userId: bookings.userId,
+      })
+      .from(bookings)
+      .where(eq(bookings.ref, data.ref))
+      .limit(1);
+
+    if (!row) {
+      throw new AppError("NOT_FOUND");
+    }
+
+    // Auth: owner session or valid access key
+    const customer = await getCustomer();
+    let authorized = false;
+
+    if (customer && row.userId === customer.id) {
+      authorized = true;
+    } else if (data.accessKey) {
+      const keyHash = sha256Hex(data.accessKey);
+      if (safeEqualHex(keyHash, row.accessHash)) {
+        authorized = true;
+      }
+    }
+
+    if (!authorized) {
+      throw new AppError("FORBIDDEN");
+    }
+
+    await rescheduleBooking({
+      bookingId: row.id,
+      start: data.start,
+      by: "customer",
+    });
+
+    return { ok: true as const };
+  });
+}
+
+const reportLinkSchema = z.object({
+  ref: z.string().min(1).max(20),
+  accessKey: z.string().max(64).optional(),
+});
+
+export async function bookingReportLinkAction(
+  input: unknown,
+): Promise<ActionResult<{ url: string }>> {
+  return runAction(async () => {
+    const data = reportLinkSchema.parse(input);
+
+    const [row] = await db
+      .select({
+        id: bookings.id,
+        accessHash: bookings.accessHash,
+        userId: bookings.userId,
+        reportMediaId: bookings.reportMediaId,
+        ref: bookings.ref,
+      })
+      .from(bookings)
+      .where(eq(bookings.ref, data.ref))
+      .limit(1);
+
+    if (!row) {
+      throw new AppError("NOT_FOUND");
+    }
+
+    // Auth: owner session or valid access key
+    const customer = await getCustomer();
+    let authorized = false;
+
+    if (customer && row.userId === customer.id) {
+      authorized = true;
+    } else if (data.accessKey) {
+      const keyHash = sha256Hex(data.accessKey);
+      if (safeEqualHex(keyHash, row.accessHash)) {
+        authorized = true;
+      }
+    }
+
+    if (!authorized) {
+      throw new AppError("FORBIDDEN");
+    }
+
+    if (!row.reportMediaId) {
+      throw new AppError("NOT_FOUND", "Report not available yet");
+    }
+
+    const url = await signedPrivateUrl(
+      row.reportMediaId,
+      `report-${row.ref}.pdf`,
+    );
+
+    return { url };
+  });
+}
+

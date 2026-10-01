@@ -14,6 +14,10 @@ import {
   BookingConfirmedEmail,
   getBookingConfirmedSubject,
 } from "@/server/email/templates/BookingConfirmedEmail";
+import {
+  BookingRescheduledEmail,
+  getBookingRescheduledSubject,
+} from "@/server/email/templates/BookingRescheduledEmail";
 import { AdminBookingAlertEmail } from "@/server/email/templates/AdminBookingAlertEmail";
 import type { Locale } from "@/lib/domain/enums";
 
@@ -207,3 +211,168 @@ export async function sendBookingConfirmed(
     });
   }
 }
+
+export async function sendBookingRescheduled(bookingId: number): Promise<void> {
+  try {
+    const [booking] = await db
+      .select()
+      .from(bookings)
+      .where(eq(bookings.id, bookingId))
+      .limit(1);
+
+    if (!booking) {
+      log.warn("booking.reschedule_email_not_found", { bookingId });
+      return;
+    }
+
+    if (!booking.startAt || booking.mode === "report") {
+      return;
+    }
+
+    const [notify, contact, consultData] = await Promise.all([
+      getSetting("notify"),
+      getSetting("contact"),
+      getConsultRows(),
+    ]);
+
+    const service = consultData.services.find((s) => s.key === booking.serviceKey);
+    const tier = consultData.tiers.find(
+      (t) => t.serviceKey === booking.serviceKey && t.tierKey === booking.tierKey,
+    );
+
+    const isHi = booking.locale === "hi";
+    const serviceName = service
+      ? isHi
+        ? service.nameHi
+        : service.nameEn
+      : booking.serviceKey;
+    const tierTitle = tier
+      ? isHi
+        ? tier.titleHi || tier.titleEn
+        : tier.titleEn
+      : booking.tierKey;
+
+    const modeLabels: Record<string, { en: string; hi: string }> = {
+      video: { en: "Video Call", hi: "वीडियो कॉल" },
+      call: { en: "Phone Call", hi: "फ़ोन कॉल" },
+      report: { en: "Written Report", hi: "लिखित रिपोर्ट" },
+      in_person: { en: "In Person", hi: "व्यक्तिगत" },
+    };
+    const modeLabel = isHi
+      ? modeLabels[booking.mode]?.hi ?? booking.mode
+      : modeLabels[booking.mode]?.en ?? booking.mode;
+
+    const startFormatted = formatIst(booking.startAt, {
+      date: true,
+      time: true,
+      weekday: true,
+      locale: booking.locale as "en" | "hi",
+    });
+
+    const accessKey = accessKeyFor("booking", booking.ref);
+    const managePath = isHi
+      ? `/hi/booking/${encodeURIComponent(booking.ref)}?k=${encodeURIComponent(accessKey)}`
+      : `/booking/${encodeURIComponent(booking.ref)}?k=${encodeURIComponent(accessKey)}`;
+    const manageUrl = absoluteUrl(managePath);
+
+    const calEvent: CalEvent = {
+      id: booking.ref,
+      start: booking.startAt,
+      mins: tier ? tier.mins : 30,
+      title: `${service ? service.nameEn : booking.serviceKey} with Sadhak Pawan Pandey`,
+      desc: `${tier ? tier.titleEn : booking.tierKey} package, ${modeLabels[booking.mode]?.en ?? booking.mode}. Booking ${booking.ref}. Rescheduled session.`,
+      loc:
+        booking.mode === "video"
+          ? "Video link on WhatsApp"
+          : "Phone / WhatsApp call",
+    };
+
+    const icsString = ics(calEvent);
+    const attachments: EmailAttachment[] = [
+      {
+        filename: `maa-kali-astuti-${booking.ref}.ics`,
+        content: icsString,
+      },
+    ];
+
+    // Customer email
+    if (booking.email) {
+      try {
+        const subject = getBookingRescheduledSubject(
+          booking.locale as Locale,
+          booking.ref,
+          serviceName,
+        );
+
+        await sendEmail({
+          to: booking.email,
+          subject,
+          react: (
+            <BookingRescheduledEmail
+              locale={booking.locale as Locale}
+              refCode={booking.ref}
+              customerName={booking.name}
+              serviceName={serviceName}
+              tierTitle={tierTitle}
+              mode={booking.mode}
+              modeLabel={modeLabel}
+              startFormatted={startFormatted}
+              manageUrl={manageUrl}
+              contact={{
+                phoneDisplay: contact.phoneDisplay,
+                email: contact.email,
+              }}
+            />
+          ),
+          attachments,
+        });
+      } catch (err) {
+        log.error("booking.email_reschedule_customer_error", {
+          bookingId,
+          error: err instanceof Error ? err.message : String(err),
+        });
+      }
+    }
+
+    // Admin alert email
+    if (notify.bookingAlerts && notify.adminEmails && notify.adminEmails.length > 0) {
+      try {
+        const adminUrl = absoluteUrl(`/admin/bookings/${booking.id}`);
+        const subject = `[Rescheduled] Booking: ${booking.ref} — ${service?.nameEn ?? booking.serviceKey}`;
+
+        await sendEmail({
+          to: notify.adminEmails,
+          subject,
+          react: (
+            <AdminBookingAlertEmail
+              refCode={booking.ref}
+              bookingId={booking.id}
+              serviceName={service?.nameEn ?? booking.serviceKey}
+              tierTitle={tier?.titleEn ?? booking.tierKey}
+              modeLabel={modeLabels[booking.mode]?.en ?? booking.mode}
+              startFormatted={startFormatted}
+              isReport={false}
+              customerName={booking.name}
+              customerPhone={booking.phone}
+              customerEmail={booking.email}
+              priceInr={booking.priceInr}
+              adminUrl={adminUrl}
+              adminNote={`Rescheduled (Reschedule #${booking.rescheduleCount})`}
+            />
+          ),
+        });
+      } catch (err) {
+        log.error("booking.email_reschedule_admin_alert_error", {
+          bookingId,
+          error: err instanceof Error ? err.message : String(err),
+        });
+      }
+    }
+  } catch (err) {
+    log.error("booking.reschedule_email_fatal_error", {
+      bookingId,
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
+}
+

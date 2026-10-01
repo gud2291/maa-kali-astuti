@@ -2317,6 +2317,14 @@
       "save": "Save Profile",
       "saving": "Saving…",
       "signOut": "Sign Out"
+    },
+    "bookings": {
+      "title": "My Consultations",
+      "viewDetails": "View Details",
+      "noBookings": "No consultations booked yet",
+      "upcoming": "Upcoming Sessions",
+      "past": "Past Sessions",
+      "explore": "Explore Consultations"
     }
   },
   "invoice": {
@@ -2387,6 +2395,70 @@
     "bookConsultation": "Book Consultation",
     "minsRead": "{mins} min read",
     "readArticle": "Read Article"
+  },
+  "bookingManage": {
+    "meta": {
+      "title": "Booking {ref} — Maa Kali Astuti",
+      "desc": "Manage your consultation booking details, reschedule your session, or access session links."
+    },
+    "badge": "Consultation",
+    "title": "Consultation Details",
+    "ref": "Booking Ref",
+    "status": {
+      "pending_payment": "Pending Payment",
+      "confirmed": "Confirmed",
+      "completed": "Completed",
+      "cancelled": "Cancelled",
+      "refunded": "Refunded"
+    },
+    "details": {
+      "service": "Service",
+      "package": "Package",
+      "mode": "Consultation Mode",
+      "modes": {
+        "video": "Video Call",
+        "call": "Phone Call",
+        "report": "Written Report",
+        "in_person": "In Person"
+      },
+      "scheduledTime": "Scheduled Time",
+      "writtenReport": "Written Report",
+      "writtenReportDesc": "Your personalized astrological report is being prepared by Sadhak Ji and will be delivered via WhatsApp and email within 48 hours.",
+      "price": "Amount Paid"
+    },
+    "actions": {
+      "join": "Join Video Consultation",
+      "joinDesc": "Meeting link provided by Sadhak Ji's office.",
+      "downloadReport": "Download Written Report (PDF)",
+      "downloading": "Preparing download…",
+      "addToCalendar": "Add to Calendar",
+      "gcal": "Google Calendar",
+      "ics": "Apple / Outlook (.ics)"
+    },
+    "reschedule": {
+      "title": "Reschedule Session",
+      "subtitle": "Choose an available date and time slot for your session.",
+      "cta": "Confirm Reschedule",
+      "confirmTitle": "Confirm New Slot",
+      "confirmBody": "Are you sure you want to reschedule your session to {time}? You can only reschedule once.",
+      "cancel": "Cancel",
+      "confirm": "Yes, Reschedule",
+      "rescheduling": "Rescheduling…",
+      "success": "Your session has been successfully rescheduled!",
+      "slotSelected": "Selected Slot: {time}",
+      "pickSlot": "Please select a date and time slot above.",
+      "reasons": {
+        "max_reached": "This booking has already been rescheduled once and cannot be changed again.",
+        "too_close": "Sessions starting within 12 hours cannot be rescheduled online.",
+        "not_confirmed": "This booking is not confirmed yet.",
+        "written_report": "Written reports are delivered directly and do not require time scheduling."
+      }
+    },
+    "help": {
+      "title": "Need Assistance?",
+      "body": "If you have questions about your session or need to speak with us, please message Sadhak Ji's office on WhatsApp.",
+      "whatsapp": "Message Office on WhatsApp"
+    }
   }
 }
 
