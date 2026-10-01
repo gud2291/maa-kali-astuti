@@ -22,6 +22,13 @@ export function safeEqualHex(a: string, b: string): boolean {
   return timingSafeEqual(Buffer.from(a, "hex"), Buffer.from(b, "hex"));
 }
 
+export function accessKeyFor(scope: "order" | "booking" | "kundali", ref: string): string {
+  return createHmac("sha256", env.AUTH_SECRET)
+    .update(`${scope}:${ref}`)
+    .digest("base64url")
+    .slice(0, 32);
+}
+
 export function randomDigits(n: number): string {
   let out = "";
   for (let i = 0; i < n; i++) {

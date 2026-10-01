@@ -2057,5 +2057,42 @@
     "viewGallery": "View full image",
     "close": "Close",
     "stickyAdd": "Add to cart"
+  },
+  "order": {
+    "title": "Order Details",
+    "confirmed": "Order confirmed",
+    "pendingPayment": "Payment pending",
+    "orderNumber": "Order number",
+    "energizationNotice": "Your items will be energized on {date} before dispatch.",
+    "timeline": {
+      "placed": "Placed",
+      "energizing": "Energizing",
+      "packed": "Packed",
+      "shipped": "Shipped",
+      "delivered": "Delivered",
+      "cancelled": "Cancelled",
+      "returned": "Returned"
+    },
+    "items": "Items in this order",
+    "qty": "Qty",
+    "summary": "Order summary",
+    "subtotal": "Items Subtotal",
+    "energization": "Energization (Pran Pratishtha)",
+    "discount": "Discount",
+    "shipping": "Shipping",
+    "free": "FREE",
+    "express": "Express delivery",
+    "codFee": "COD handling fee",
+    "total": "Total",
+    "address": "Shipping address",
+    "payment": "Payment method",
+    "cod": "Cash on Delivery (Pending at delivery)",
+    "online": "Online Payment",
+    "whatsapp": "Receive updates on WhatsApp",
+    "whileYouWait": "While you wait for your items",
+    "consultationRecommendation": "Consult Sadhak Pawan Pandey for personal astrological guidance and remedies.",
+    "exploreConsultations": "Explore Consultations",
+    "viewInvoice": "Download Invoice"
   }
 }
+
