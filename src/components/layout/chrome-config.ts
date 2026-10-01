@@ -51,6 +51,18 @@ export function chromeFor(path: string): ChromeConfig {
   // Product page (PDP): tabbar off (sticky Buy bar), FAB 92px.
   if (path.startsWith("/product/")) return { ...BASE, active: "shop", tabbar: false, fabLift: "92px" };
   if (under(path, "/shop")) return { ...BASE, active: "shop" };
+  if (under(path, "/checkout"))
+    return {
+      ...BASE,
+      active: "cart",
+      mode: "checkout",
+      tabbar: false,
+      fabLift: "104px",
+      backHref: "/cart",
+      backLabel: "cart",
+      secureLabel: "checkout",
+      flowFooter: true,
+    };
   if (path === "/cart") return { ...BASE, active: "cart" };
   if (path === "/kundali-99") return { ...BASE, active: "kundali" };
   if (under(path, "/rashifal")) return { ...BASE, active: "rashifal" };

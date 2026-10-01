@@ -1,22 +1,21 @@
 "use client";
-import { useRef, useState } from "react";
+import { useRef } from "react";
 import { Dialog } from "radix-ui";
 import { useLocale, useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Icon } from "@/components/icons/Icon";
-import { InlineArt } from "@/components/ui/InlineArt";
 import { ProductImage } from "@/components/commerce/ProductImage";
+import { CartLine } from "@/components/commerce/CartLine";
+import { CouponField } from "@/components/commerce/CouponField";
+import { CartEmpty } from "@/components/commerce/CartEmpty";
 import { flyToCart } from "@/components/commerce/fx";
-import { roll } from "@/components/motion/fx";
-import { KALASH_SVG } from "@/lib/art/kalash";
 import { fmt } from "@/lib/core/format";
 import { productHref, routes } from "@/lib/routes";
 import { PAY_DRAWER } from "@/lib/site";
 import { useCart, useCartLines, useCartTotals } from "@/stores/cart";
-import { useCatalog, useFees } from "@/stores/catalog";
+import { useCatalog } from "@/stores/catalog";
 import { useUi } from "@/stores/ui";
 import { cn } from "@/lib/utils/cn";
-import type { CouponResult, ResolvedLine } from "@/types/cart";
 import type { ProductLite } from "@/lib/domain/types";
 
 /* "Complete your ritual" rail (SiteChrome 527): first four not already in the cart. */
@@ -96,30 +95,15 @@ function DrawerBody() {
       </div>
 
       {empty ? (
-        <div className="flex flex-1 flex-col items-center justify-center gap-3.5 px-7 py-6 text-center">
-          <InlineArt svg={KALASH_SVG} uid="drawer" className="h-[170px] w-[220px]" />
-          <span className="font-display text-[26px] leading-[1.2] font-normal text-em9">{t("emptyTitle")}</span>
-          <span className="max-w-[300px] font-sans text-[15px] leading-[1.6] font-normal text-ink6">
-            {t("emptyBody")}
-          </span>
-          <Link
-            href={routes.shop}
-            className="mt-1.5 inline-flex h-12 items-center gap-2.5 rounded-btn bg-em7 px-6 font-sans text-[14px] leading-none font-semibold tracking-[.03em] text-iv no-underline shadow-[inset_0_0_0_1px_rgba(217,185,106,.5)] hi:tracking-normal"
-          >
-            {t("emptyCta")}
-            <span className="block size-4">
-              <Icon name="arrowR" />
-            </span>
-          </Link>
-        </div>
+        <CartEmpty uid="drawer" />
       ) : (
         <>
           <div className="flex-1 overflow-x-hidden overflow-y-auto overscroll-contain px-5">
             {lines.map((l) => (
-              <Line key={l.key} l={l} />
+              <CartLine key={l.key} l={l} />
             ))}
             <Upsell inCart={lines.map((l) => l.pid)} />
-            <Coupon disc={tot.disc} />
+            <CouponField disc={tot.disc} />
           </div>
 
           <div className="flex flex-col gap-2.5 border-t border-s2 bg-iv px-5 pt-4 pb-[calc(18px+env(safe-area-inset-bottom))]">
@@ -166,104 +150,6 @@ function DrawerBody() {
   );
 }
 
-function Line({ l }: { l: ResolvedLine }) {
-  const t = useTranslations("drawer");
-  const hi = useLocale() === "hi";
-  const fees = useFees();
-  const numRef = useRef<HTMLSpanElement>(null);
-  const name = hi ? l.p.hi : l.p.name;
-  const href = productHref(l.p);
-  const meta = [l.variant ? t("size", { v: l.variant }) : null, l.p.intent].filter(Boolean).join(" · ");
-
-  const setQty = (q: number, dir: number) => {
-    useCart.getState().setQty(l.key, q);
-    requestAnimationFrame(() => roll(numRef.current, dir));
-  };
-  const dec = () => {
-    if (l.qty <= 1) return;
-    setQty(l.qty - 1, -1);
-  };
-  const inc = () => {
-    if (l.qty >= fees.maxLineQty) {
-      useUi.getState().toast({ msg: t("max"), tone: "info" });
-      return;
-    }
-    setQty(l.qty + 1, 1);
-  };
-  const remove = () => {
-    const snap = useCart.getState().remove(l.key);
-    useUi.getState().toast({
-      msg: t("removed", { name }),
-      tone: "info",
-      action: { kind: "undo", run: () => useCart.getState().restore(snap) },
-    });
-  };
-
-  const stepBtn = "grid h-[34px] w-8 cursor-pointer place-items-center border-0 bg-transparent text-em7";
-
-  return (
-    <div className="grid grid-cols-[72px_minmax(0,1fr)_auto] gap-3.5 border-b border-s2 py-4">
-      <Link href={href} className="relative block h-[90px] w-[72px] overflow-hidden rounded-3 bg-s1" tabIndex={-1}>
-        <ProductImage p={{ ...l.p, date: 0, pop: 0 }} sizes="72px" alt="" />
-      </Link>
-      <div className="flex min-w-0 flex-col gap-[5px]">
-        <Link href={href} className="font-title text-[16px] leading-[1.25] font-normal text-em9 no-underline">
-          {name}
-        </Link>
-        <span className="font-sans text-[12px] leading-[1.3] font-medium text-ink6">{meta}</span>
-        {l.energ && (
-          <span className="flex items-start gap-1.5 font-sans text-[12px] leading-[1.35] font-medium text-g7">
-            <span className="mt-px block size-[13px] flex-none">
-              <Icon name="flame" />
-            </span>
-            {t("energ", { name: l.energ.name, gotra: l.energ.gotra, fee: fmt(fees.energizationInr) })}
-          </span>
-        )}
-        <div className="mt-1.5 flex items-center gap-3">
-          <div className="flex h-[34px] items-center rounded-btn bg-cream shadow-ring-sand">
-            <button type="button" onClick={dec} aria-label={t("dec")} className={stepBtn}>
-              <span className="block size-3.5">
-                <Icon name="minus" />
-              </span>
-            </button>
-            <span className="grid h-[34px] w-[26px] place-items-center overflow-hidden">
-              <span
-                ref={numRef}
-                aria-live="polite"
-                className="block font-sans text-[14px] leading-none font-bold text-ink tabular"
-              >
-                {l.qty}
-              </span>
-            </span>
-            <button type="button" onClick={inc} aria-label={t("inc")} className={stepBtn}>
-              <span className="block size-3.5">
-                <Icon name="plus" />
-              </span>
-            </button>
-          </div>
-          <button
-            type="button"
-            onClick={remove}
-            className="flex cursor-pointer items-center gap-[5px] border-0 bg-transparent px-0 py-1.5 font-sans text-[12px] leading-none font-medium text-ink6 hover:text-sin"
-          >
-            <span className="block size-3.5">
-              <Icon name="trash" />
-            </span>
-            {t("remove")}
-          </button>
-        </div>
-      </div>
-      <div className="flex flex-col items-end gap-1 tabular">
-        <span className="font-sans text-[15px] leading-none font-bold text-ink">
-          {fmt((l.p.price + (l.energ ? fees.energizationInr : 0)) * l.qty)}
-        </span>
-        <span className="font-sans text-[12px] leading-none font-medium text-ink6 line-through">
-          {fmt(l.p.mrp * l.qty)}
-        </span>
-      </div>
-    </div>
-  );
-}
 
 function Upsell({ inCart }: { inCart: string[] }) {
   const t = useTranslations("drawer");
@@ -334,115 +220,3 @@ function Upsell({ inCart }: { inCart: string[] }) {
   );
 }
 
-function Coupon({ disc }: { disc: number }) {
-  const t = useTranslations("drawer");
-  const tc = useTranslations("cart.coupon");
-  const applied = useCart((s) => s.coupon);
-  const [open, setOpen] = useState(false);
-  const [code, setCode] = useState("");
-  const [err, setErr] = useState<CouponResult | null>(null);
-  const [pending, setPending] = useState(false);
-
-  const msg = (r: CouponResult): string => {
-    return tc(r.msg, {
-      code: r.code ?? code.trim().toUpperCase(),
-      off: r.off ?? "",
-      min: r.min ?? "",
-    });
-  };
-
-  const apply = async (withToast: boolean): Promise<void> => {
-    if (pending) return;
-    setPending(true);
-    try {
-      const r = await useCart.getState().applyCoupon(code);
-      setErr(r.ok ? null : r);
-      setOpen(!r.ok);
-      if (r.ok && withToast) {
-        useUi.getState().toast({ msg: msg(r), tone: "ok" });
-      }
-    } finally {
-      setPending(false);
-    }
-  };
-
-  return (
-    <div className="pt-2.5 pb-5">
-      {applied ? (
-        <div className="flex h-11 items-center justify-between gap-2.5 rounded-btn bg-em1 px-3 font-sans text-[13px] leading-none font-semibold text-em7">
-          <span className="flex items-center gap-2">
-            <span className="block size-4">
-              <Icon name="tag" />
-            </span>
-            {applied.code} · −{fmt(disc)}
-          </span>
-          <button
-            type="button"
-            onClick={() => useCart.getState().removeCoupon()}
-            className="cursor-pointer border-0 bg-transparent font-sans text-[12px] leading-none font-semibold text-ink6 underline"
-          >
-            {t("couponRemove")}
-          </button>
-        </div>
-      ) : open ? (
-        <>
-          <div className="flex gap-2">
-            <input
-              value={code}
-              onChange={(e) => {
-                setCode(e.target.value);
-                setErr(null);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" && !pending) void apply(false);
-              }}
-              disabled={pending}
-              aria-label={t("couponAria")}
-              aria-invalid={err ? true : undefined}
-              aria-describedby={err ? "coupon-err" : undefined}
-              placeholder={t("couponPh")}
-              autoComplete="off"
-              autoFocus
-              className={cn(
-                "h-11 min-w-0 flex-1 rounded-field border bg-cream px-3 font-sans text-[14px] leading-none font-semibold tracking-[.06em] text-ink uppercase outline-none focus:border-em5",
-                err ? "border-sin" : "border-s2",
-                pending && "opacity-60",
-              )}
-            />
-            <button
-              type="button"
-              onClick={() => void apply(true)}
-              disabled={pending}
-              className="h-11 cursor-pointer rounded-btn border border-em7 bg-iv px-4 font-sans text-[13px] leading-none font-semibold text-em7 hover:bg-em1 disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {pending ? "…" : t("apply")}
-            </button>
-          </div>
-          {err && (
-            <span
-              id="coupon-err"
-              role="alert"
-              className="mt-2 flex items-center gap-1.5 font-sans text-[12.5px] leading-[1.3] font-medium text-sin"
-            >
-              <span className="block size-3.5">
-                <Icon name="alert" />
-              </span>
-              {msg(err)}
-            </span>
-          )}
-        </>
-      ) : (
-        <button
-          type="button"
-          onClick={() => setOpen(true)}
-          className="flex cursor-pointer items-center gap-2 border-0 bg-transparent px-0 py-1 font-sans text-[13px] leading-none font-semibold text-em7"
-        >
-          <span className="block size-4">
-            <Icon name="tag" />
-          </span>
-          {t("couponLink")}
-        </button>
-      )}
-    </div>
-  );
-}
