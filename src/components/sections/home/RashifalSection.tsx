@@ -1,5 +1,5 @@
 import { MandalaG } from "@/components/ui/ornaments/Mandala";
-import { productById } from "@/lib/api/products-index";
+import { getProductsByIds } from "@/lib/api/catalog";
 import { RASHI } from "@/lib/astro/rashi";
 import { rng } from "@/lib/core/rng";
 import { productHref } from "@/lib/routes";
@@ -33,11 +33,15 @@ function RashiSky() {
   );
 }
 
-export function RashifalSection({ buildNow }: { buildNow: number }) {
+export async function RashifalSection({ buildNow }: { buildNow: number }) {
+  const stoneIds = RASHI.map((r) => r.stone);
+  const products = await getProductsByIds(stoneIds);
+  const productMap = new Map(products.map((p) => [p.id, p]));
+
   // Gemstone cross-sell per rashi: "<Stone> bracelet" → its product page (vRashi 1177).
   const stones: Record<string, RashiStone> = Object.fromEntries(
     RASHI.map((r) => {
-      const p = productById(r.stone);
+      const p = productMap.get(r.stone);
       return [r.key, p ? { name: `${p.name.replace(/ Bracelet.*$/i, "")} bracelet`, href: productHref(p) } : null];
     }),
   );

@@ -5,7 +5,6 @@ import { RashiAreas, RashiHero, RashiLucky } from "@/components/sections/rashifa
 import { RashiCta, RashiRecommend, RashiRemedy } from "@/components/sections/rashifal/RashiSections";
 import { RashifalProvider } from "@/components/sections/rashifal/period";
 import { getProductsByIds } from "@/lib/api/catalog";
-import { productById } from "@/lib/api/products-index";
 import { RASHI } from "@/lib/astro/rashi";
 
 /* Rashi detail (design/Rashi-Detail.dc.html#r=<key>&p=<period>): /rashifal/mesha … /meena
@@ -39,11 +38,16 @@ export default async function RashiPage({ params }: Props) {
   const r = RASHI.find((x) => x.slug === rashi);
   if (!r) notFound();
   // renderVals 197: the stone, the rudrakshas, the amulet — unique, existing, max 4.
-  const ids = [r.stone, ...(r.rud ?? []), r.amulet].filter(
-    (id, i, a): id is string => !!id && !!productById(id) && a.indexOf(id) === i,
+  const candidateIds = [r.stone, ...(r.rud ?? []), r.amulet].filter(
+    (id, i, a): id is string => !!id && a.indexOf(id) === i,
   );
-  const products = await getProductsByIds(ids.slice(0, 4));
-  const gem = productById(r.stone) ?? null;
+  const fetchedProducts = await getProductsByIds(candidateIds);
+  const productMap = new Map(fetchedProducts.map((p) => [p.id, p]));
+  const products = candidateIds
+    .map((id) => productMap.get(id))
+    .filter((p): p is (typeof fetchedProducts)[number] => !!p)
+    .slice(0, 4);
+  const gem = productMap.get(r.stone) ?? null;
 
   return (
     <RashifalProvider key={r.key} buildNow={BUILD_NOW}>

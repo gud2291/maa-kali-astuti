@@ -4,7 +4,7 @@ import { RashiFinder } from "@/components/sections/rashifal/RashiFinder";
 import { RashifalGrid } from "@/components/sections/rashifal/RashifalGrid";
 import { RashifalHero, type RashiStone } from "@/components/sections/rashifal/RashifalHero";
 import { RashifalProvider } from "@/components/sections/rashifal/period";
-import { productById } from "@/lib/api/products-index";
+import { getProductsByIds } from "@/lib/api/catalog";
 import { RASHI } from "@/lib/astro/rashi";
 import { productHref } from "@/lib/routes";
 
@@ -25,10 +25,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function RashifalPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
+  const stoneIds = RASHI.map((r) => r.stone);
+  const products = await getProductsByIds(stoneIds);
+  const productMap = new Map(products.map((p) => [p.id, p]));
+
   // Panel gemstone link: the rashi's stone product, "Bracelet…" trimmed (renderVals 263).
   const stones: Record<string, RashiStone> = Object.fromEntries(
     RASHI.map((r) => {
-      const p = productById(r.stone);
+      const p = productMap.get(r.stone);
       return [r.key, p ? { name: p.name.replace(/ Bracelet.*$/i, ""), href: productHref(p) } : null];
     }),
   );

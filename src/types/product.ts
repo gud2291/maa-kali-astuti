@@ -1,6 +1,7 @@
 /* Product model — the shape of src/lib/data/products.json (mka-core.js 335–379 + extractor slug/photo). */
 import type badges from "@/lib/data/badges.json";
 import type stones from "@/lib/data/stones.json";
+import type { MediaRef } from "@/lib/domain/media";
 
 export type CategoryKey = "rudraksha" | "bracelets" | "amulets" | "havan" | "copper";
 export type IntentKey = "wealth" | "protection" | "love" | "peace" | "health" | "courage" | "clarity";
@@ -18,6 +19,8 @@ export type Product = {
   slug: string;
   cat: CategoryKey;
   catName: string;
+  /** Short category name for eyebrow labels. */
+  catShort?: string;
   /** Rudraksha sub-filter: mukhi number as a string, or "malas". */
   sub?: string;
   mukhi?: number;
@@ -47,6 +50,8 @@ export type Product = {
   date: number;
   /** Popularity = reviews × rating. */
   pop: number;
+  /** Responsive uploaded media images from R2 storage. */
+  images?: MediaRef[];
 };
 
 /** Image slots used by cards and sheets. `alt` is the hover image. */

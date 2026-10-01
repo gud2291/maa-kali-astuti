@@ -9,8 +9,6 @@ import { fmt } from "@/lib/core/format";
    yet. Every card, mega-menu and search link already points here; unknown slugs 404. */
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
-export const dynamicParams = false;
-
 export async function generateStaticParams() {
   return (await getAllProducts()).map((p) => ({ slug: p.slug }));
 }
