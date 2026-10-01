@@ -1,5 +1,5 @@
 import "server-only";
-import { and, eq, gte, lt, sql } from "drizzle-orm";
+import { and, count, eq, gte, lt, ne, sql } from "drizzle-orm";
 import { db } from "@/server/db/client";
 import {
   orders,
@@ -8,6 +8,8 @@ import {
   coupons,
   couponRedemptions,
   checkoutDrafts,
+  payments,
+  addresses,
 } from "@/server/db/schema/commerce";
 import { products } from "@/server/db/schema/catalog";
 import { accessKeyFor, orderNumber, sha256Hex } from "@/server/ids";
@@ -287,6 +289,30 @@ export async function placeOrder(
             .where(eq(checkoutDrafts.token, input.draftToken));
         }
 
+        if (input.saveAddress && ctx.userId) {
+          const [countRow] = await tx
+            .select({ count: count() })
+            .from(addresses)
+            .where(eq(addresses.userId, ctx.userId));
+
+          const totalAddrs = countRow?.count ?? 0;
+          if (totalAddrs < 10) {
+            await tx.insert(addresses).values({
+              userId: ctx.userId,
+              name: input.contact.name,
+              phone: input.contact.phone,
+              line1: input.address.line1,
+              line2: input.address.line2 || "",
+              landmark: input.address.landmark || "",
+              city: input.address.city,
+              state: input.address.state,
+              pincode: input.address.pincode,
+              isDefault: totalAddrs === 0,
+              updatedAt: new Date(),
+            });
+          }
+        }
+
         return { id: ord.id, number: num, accessKey };
       });
 
@@ -311,3 +337,152 @@ export async function placeOrder(
     totalInr: quote.totals.total,
   };
 }
+
+export async function markOrderPaid({
+  orderId,
+  rzpOrderId,
+  rzpPaymentId,
+  amountInr,
+  method,
+}: {
+  orderId: number;
+  rzpOrderId?: string | null;
+  rzpPaymentId: string;
+  amountInr: number;
+  method?: string | null;
+}): Promise<{ first: boolean }> {
+  const now = new Date();
+
+  // Transaction A: Atomic first-time-paid update + payments row + event paid
+  const txAResult = await db.transaction(async (tx) => {
+    const [existing] = await tx
+      .select({
+        id: orders.id,
+        status: orders.status,
+        paymentStatus: orders.paymentStatus,
+        totalInr: orders.totalInr,
+        razorpayOrderId: orders.razorpayOrderId,
+      })
+      .from(orders)
+      .where(eq(orders.id, orderId))
+      .limit(1);
+
+    if (!existing) {
+      return { ok: false as const };
+    }
+
+    const updated = await tx
+      .update(orders)
+      .set({
+        paymentStatus: "paid",
+        paidAt: now,
+        status: sql`CASE WHEN ${orders.status} = 'pending_payment' THEN 'placed' ELSE ${orders.status} END`,
+        placedAt: sql`CASE WHEN ${orders.placedAt} IS NULL THEN ${now.getTime()} ELSE ${orders.placedAt} END`,
+        razorpayOrderId: rzpOrderId ? rzpOrderId : orders.razorpayOrderId,
+      })
+      .where(and(eq(orders.id, orderId), ne(orders.paymentStatus, "paid")))
+      .returning({ id: orders.id, totalInr: orders.totalInr, status: orders.status });
+
+    if (updated.length === 0) {
+      return { ok: false as const };
+    }
+
+    await tx.insert(payments).values({
+      entity: "order",
+      entityId: orderId,
+      provider: "razorpay",
+      rzpOrderId: rzpOrderId ?? existing.razorpayOrderId ?? null,
+      rzpPaymentId,
+      amountInr,
+      status: "captured",
+      method: method ?? null,
+    });
+
+    await tx.insert(orderEvents).values({
+      orderId,
+      type: "paid",
+      fromStatus: existing.status,
+      toStatus: existing.status === "pending_payment" ? "placed" : existing.status,
+      message: `Payment captured: ${rzpPaymentId} (₹${amountInr})`,
+      public: true,
+    });
+
+    if (amountInr !== updated[0].totalInr) {
+      const reason = `Payment amount mismatch: received ₹${amountInr}, expected ₹${updated[0].totalInr}`;
+      await tx
+        .update(orders)
+        .set({
+          needsAttention: true,
+          attentionReason: reason,
+        })
+        .where(eq(orders.id, orderId));
+
+      await tx.insert(orderEvents).values({
+        orderId,
+        type: "attention",
+        message: reason,
+        public: false,
+      });
+
+      return { ok: true as const, skipFinalize: true };
+    }
+
+    return { ok: true as const, skipFinalize: false };
+  });
+
+  if (!txAResult.ok) {
+    return { first: false };
+  }
+
+  if (txAResult.skipFinalize) {
+    return { first: true };
+  }
+
+  // Transaction B: finalize placement with mode "paid"
+  await db.transaction(async (tx) => {
+    await finalizePlacement(tx, orderId, "paid");
+  });
+
+  return { first: true };
+}
+
+export async function recordPaymentFailure({
+  orderId,
+  rzpOrderId,
+  rzpPaymentId,
+  error,
+}: {
+  orderId: number;
+  rzpOrderId?: string | null;
+  rzpPaymentId?: string | null;
+  error?: string | null;
+}): Promise<void> {
+  await db.transaction(async (tx) => {
+    const [order] = await tx
+      .select({ id: orders.id, totalInr: orders.totalInr })
+      .from(orders)
+      .where(eq(orders.id, orderId))
+      .limit(1);
+
+    if (!order) return;
+
+    await tx.insert(payments).values({
+      entity: "order",
+      entityId: orderId,
+      provider: "razorpay",
+      rzpOrderId: rzpOrderId ?? null,
+      rzpPaymentId: rzpPaymentId ?? null,
+      amountInr: order.totalInr,
+      status: "failed",
+      error: error ?? "Payment failed",
+    });
+
+    await tx.insert(orderEvents).values({
+      orderId,
+      type: "status",
+      message: `Payment failed: ${error || "Unknown error"}`,
+      public: false,
+    });
+  });
+}
+

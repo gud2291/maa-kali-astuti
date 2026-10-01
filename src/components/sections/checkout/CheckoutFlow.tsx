@@ -16,8 +16,15 @@ import { StepDelivery } from "./StepDelivery";
 import { StepPayment } from "./StepPayment";
 import { StepReview } from "./StepReview";
 import { CheckoutSummary } from "./CheckoutSummary";
+import type { SavedAddress } from "@/server/account/queries";
 
-export function CheckoutFlow() {
+export type CheckoutPrefill = {
+  contact?: { name: string; email: string; phone: string };
+  addresses: SavedAddress[];
+  isSignedIn: boolean;
+};
+
+export function CheckoutFlow({ prefill }: { prefill?: CheckoutPrefill }) {
   const t = useTranslations("checkout");
   const router = useRouter();
   const hydrated = useHydrated();
@@ -127,10 +134,18 @@ export function CheckoutFlow() {
             {/* Current Step Content */}
             <div className="rounded-btn border border-s2 bg-cream p-5 md:p-8 shadow-sm">
               {step === 1 && (
-                <StepContact quote={quote} onNext={() => goToStep(2)} />
+                <StepContact
+                  quote={quote}
+                  prefill={prefill}
+                  onNext={() => goToStep(2)}
+                />
               )}
               {step === 2 && (
-                <StepAddress onNext={() => goToStep(3)} onBack={() => goToStep(1)} />
+                <StepAddress
+                  prefill={prefill}
+                  onNext={() => goToStep(3)}
+                  onBack={() => goToStep(1)}
+                />
               )}
               {step === 3 && (
                 <StepDelivery

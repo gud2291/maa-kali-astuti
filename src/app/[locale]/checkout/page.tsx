@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { CheckoutFlow } from "@/components/sections/checkout/CheckoutFlow";
+import { getCustomer } from "@/server/auth/guards";
+import { listMyAddresses, type SavedAddress } from "@/server/account/queries";
+import { CheckoutFlow, type CheckoutPrefill } from "@/components/sections/checkout/CheckoutFlow";
 
 type Props = { params: Promise<{ locale: string }> };
 
@@ -16,5 +18,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Page({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <CheckoutFlow />;
+
+  const customer = await getCustomer();
+  let prefill: CheckoutPrefill = {
+    addresses: [],
+    isSignedIn: false,
+  };
+
+  if (customer) {
+    const addresses = await listMyAddresses(customer.id);
+    prefill = {
+      contact: {
+        name: customer.name || "",
+        email: customer.email || "",
+        phone: customer.phone || "",
+      },
+      addresses,
+      isSignedIn: true,
+    };
+  }
+
+  return <CheckoutFlow prefill={prefill} />;
 }

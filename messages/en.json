@@ -129,6 +129,18 @@
     "continueToPayment": "Continue to Payment",
     "paymentTitle": "Payment method",
     "paymentSub": "Pay securely upon receiving your sacred parcel.",
+    "onlineTitle": "Online (UPI, Cards, Netbanking)",
+    "onlineDescription": "UPI, cards, netbanking, wallets · Secured by Razorpay",
+    "recommended": "Recommended",
+    "payPrefs": {
+      "upi": "UPI",
+      "card": "Cards",
+      "netbanking": "Netbanking",
+      "wallet": "Wallets"
+    },
+    "paymentIncomplete": "Payment not completed — try again",
+    "payNow": "Pay now",
+    "retryPayment": "Retry payment",
     "cashOnDelivery": "Cash on Delivery (COD)",
     "codDescription": "Pay in cash or via UPI QR code directly to the delivery person.",
     "codReasonDisabled": "Cash on delivery is currently disabled by the store.",
@@ -2195,6 +2207,11 @@
     "title": "Order Details",
     "confirmed": "Order confirmed",
     "pendingPayment": "Payment pending",
+    "paymentPending": "Payment pending",
+    "paymentPendingDesc": "Your order has been created. Please complete the online payment to confirm your order.",
+    "payNow": "Pay now",
+    "paymentIncomplete": "Payment not completed — try again",
+    "processing": "Processing…",
     "orderNumber": "Order number",
     "energizationNotice": "Your items will be energized on {date} before dispatch.",
     "timeline": {
@@ -2226,6 +2243,144 @@
     "consultationRecommendation": "Consult Sadhak Pawan Pandey for personal astrological guidance and remedies.",
     "exploreConsultations": "Explore Consultations",
     "viewInvoice": "Download Invoice"
+  },
+  "auth": {
+    "title": "Customer Sign In",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "you@example.com",
+    "sendCode": "Send sign-in code",
+    "sending": "Sending code…",
+    "enterCode": "Enter 6-digit code",
+    "codeSentTo": "We sent a 6-digit code to {email}",
+    "verify": "Sign in to Account",
+    "verifying": "Verifying…",
+    "resendCode": "Resend code",
+    "resendIn": "Resend code in {seconds}s",
+    "changeEmail": "Change email",
+    "errors": {
+      "INTERNAL": "Something went wrong. Please try again.",
+      "UNAUTHENTICATED": "Please sign in to continue.",
+      "FORBIDDEN": "Access denied.",
+      "NOT_FOUND": "Item not found.",
+      "CONFLICT": "Record already exists.",
+      "VALIDATION": "Please check your input.",
+      "RATE_LIMITED": "Too many requests. Please wait a few minutes.",
+      "TURNSTILE_FAILED": "Security verification failed. Please try again.",
+      "OTP_EXPIRED": "This verification code has expired. Please request a new one.",
+      "OTP_INVALID": "Invalid verification code. Please check and try again.",
+      "OUT_OF_STOCK": "Item is out of stock.",
+      "SLOT_TAKEN": "This slot was just booked by another devotee.",
+      "PAYMENT_FAILED": "Payment could not be completed.",
+      "PAYMENT_MISMATCH": "Payment verification failed.",
+      "LIMIT_REACHED": "Limit reached.",
+      "FILE_TOO_LARGE": "Uploaded file is too large.",
+      "UNSUPPORTED_MEDIA": "Unsupported file format.",
+      "REFUND_FAILED": "Refund processing failed."
+    }
+  },
+  "account": {
+    "title": "My Account",
+    "overview": {
+      "title": "Dashboard",
+      "welcome": "Namaste",
+      "orders": "My Orders",
+      "addresses": "Saved Addresses",
+      "profile": "Profile & Birth Details",
+      "wishlist": "Sacred Wishlist"
+    },
+    "orders": {
+      "title": "My Orders",
+      "viewDetails": "View Details",
+      "reorder": "Reorder items",
+      "noOrders": "No orders placed yet",
+      "explore": "Explore Sacred Offerings"
+    },
+    "addresses": {
+      "title": "Saved Addresses",
+      "addNew": "Add New Address",
+      "default": "Default",
+      "setAsDefault": "Set as default",
+      "edit": "Edit",
+      "delete": "Delete",
+      "noAddresses": "No addresses saved yet"
+    },
+    "profile": {
+      "title": "Profile & Birth Details",
+      "savedBirth": "Saved Birth Details",
+      "save": "Save Profile",
+      "saving": "Saving…",
+      "signOut": "Sign Out"
+    }
+  },
+  "invoice": {
+    "taxInvoice": "Tax Invoice",
+    "billOfSupply": "Bill of Supply",
+    "invoiceNo": "Invoice No",
+    "orderRef": "Order Ref",
+    "orderDate": "Date",
+    "paymentMethod": "Payment Method",
+    "soldBy": "Sold By",
+    "shipTo": "Shipping & Billing To",
+    "hsnSac": "HSN/SAC",
+    "qty": "Qty",
+    "rate": "Rate",
+    "taxable": "Taxable",
+    "gst": "GST",
+    "cgst": "CGST",
+    "sgst": "SGST",
+    "igst": "IGST",
+    "total": "Total",
+    "subtotal": "Items Subtotal",
+    "grandTotal": "Grand Total",
+    "print": "Print / Download PDF"
+  },
+  "track": {
+    "title": "Track Your Order",
+    "subtitle": "Enter your order number along with your phone number or email to view the current status.",
+    "orderNumberLabel": "Order Number",
+    "orderNumberPlaceholder": "e.g. MKA-2026-XXXX",
+    "contactLabel": "Phone or Email",
+    "contactPlaceholder": "10-digit mobile or email address",
+    "submit": "Track Order",
+    "tracking": "Tracking…",
+    "notFound": "No order found with these details. Please check your order number and contact details.",
+    "orderStatus": "Order Status",
+    "deliveryTo": "Delivery To",
+    "energizationNote": "Your items are being energized on {date} before dispatch.",
+    "courier": "Courier Partner",
+    "awb": "AWB / Tracking No.",
+    "trackCourier": "Track on Courier Website",
+    "items": "Items in this order",
+    "recentUpdates": "Status Updates",
+    "trackAnother": "Track Another Order",
+    "signInFull": "Sign in to see full details"
+  },
+  "wishlistPage": {
+    "title": "Your Sacred Wishlist",
+    "subtitle": "Items you have saved for guidance, blessings, and spiritual practice.",
+    "itemCount": "{count, plural, =1 {1 item} other {# items}}",
+    "emptyTitle": "Your wishlist is empty",
+    "emptySubtitle": "Explore our energized rudrakshas, gemstones, and sacred malas to save them here.",
+    "exploreBestsellers": "Explore Sacred Offerings"
+  },
+  "searchPage": {
+    "title": "Search",
+    "placeholder": "Search rudraksha, gemstones, consultations, articles…",
+    "clearSearch": "Clear search",
+    "trending": "Trending Searches",
+    "recent": "Recent Searches",
+    "tabs": {
+      "products": "Products",
+      "services": "Consultations",
+      "articles": "Articles"
+    },
+    "noResults": "No results found for \"{q}\"",
+    "tryDifferent": "Try checking your spelling or search for another term.",
+    "from": "From {price}",
+    "bookConsultation": "Book Consultation",
+    "minsRead": "{mins} min read",
+    "readArticle": "Read Article"
   }
 }
+
 

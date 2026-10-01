@@ -1,6 +1,7 @@
 "use client";
 import { useState } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { useTranslations } from "next-intl";
 import type { OrderView } from "@/server/orders/queries";
 import type { Locale } from "@/lib/domain/enums";
@@ -8,17 +9,22 @@ import { fmt } from "@/lib/core/format";
 import { waLink } from "@/lib/core/commerce";
 import { formatIst } from "@/lib/core/ist";
 import { OrderTimeline } from "./OrderTimeline";
+import { PayNow } from "./PayNow";
 import { Icon } from "@/components/icons/Icon";
 import { Price } from "@/components/ui/Price";
 
 export function OrderSuccess({
   order,
   locale = "en",
+  accessKey,
 }: {
   order: OrderView;
   locale?: Locale;
+  accessKey?: string;
 }): React.JSX.Element {
   const t = useTranslations("order");
+  const searchParams = useSearchParams();
+  const effectiveKey = accessKey || searchParams?.get("k") || "";
   const [copied, setCopied] = useState(false);
 
   const handleCopy = () => {
@@ -107,6 +113,22 @@ export function OrderSuccess({
             <Icon name={copied ? "check" : "share"} className="size-4" />
           </button>
         </div>
+
+        {/* Payment Pending Banner + Pay Now */}
+        {isPending && effectiveKey && (
+          <div className="mx-auto mt-6 max-w-md rounded-btn border border-g5/40 bg-s1/60 p-5 text-center shadow-sm sm:p-6">
+            <div className="mx-auto mb-3 flex size-12 items-center justify-center rounded-pill bg-em1 text-em9">
+              <Icon name="card" className="size-6 text-em7" />
+            </div>
+            <h2 className="font-sans text-base font-bold text-em9">
+              {t("paymentPending")}
+            </h2>
+            <p className="mt-1 mb-4 font-sans text-xs leading-relaxed text-ink6 sm:text-sm">
+              {t("paymentPendingDesc")}
+            </p>
+            <PayNow number={order.number} accessKey={effectiveKey} />
+          </div>
+        )}
 
         {/* Energization Notice */}
         {formattedEnergDate && (
@@ -289,7 +311,7 @@ export function OrderSuccess({
             {order.invoiceNo && (
               <div className="mt-3 text-center">
                 <Link
-                  href={`/invoice/${order.invoiceNo}`}
+                  href={`/invoice/${order.number}${effectiveKey ? `?k=${encodeURIComponent(effectiveKey)}` : ""}`}
                   className="font-sans text-xs text-em7 underline hover:text-em9"
                 >
                   {t("viewInvoice")} ({order.invoiceNo})

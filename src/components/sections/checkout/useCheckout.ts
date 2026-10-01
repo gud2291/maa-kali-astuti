@@ -12,6 +12,7 @@ export type CheckoutState = {
   step: CheckoutStep;
   contact: ContactInput;
   address: AddressInput;
+  saveAddress: boolean;
   delivery: DeliveryOption;
   method: PaymentMethod;
   payPref: PayPref | null;
@@ -19,10 +20,12 @@ export type CheckoutState = {
   giftMessage: string | null;
   note: string | null;
   draftToken: string | null;
+  pendingOrder: { number: string; accessKey: string } | null;
 
   setStep: (step: CheckoutStep) => void;
   setContact: (contact: Partial<ContactInput>) => void;
   setAddress: (address: Partial<AddressInput>) => void;
+  setSaveAddress: (saveAddress: boolean) => void;
   setDelivery: (delivery: DeliveryOption) => void;
   setMethod: (method: PaymentMethod) => void;
   setPayPref: (payPref: PayPref | null) => void;
@@ -30,6 +33,7 @@ export type CheckoutState = {
   setGiftMessage: (msg: string | null) => void;
   setNote: (note: string | null) => void;
   setDraftToken: (token: string | null) => void;
+  setPendingOrder: (order: { number: string; accessKey: string } | null) => void;
   reset: () => void;
 };
 
@@ -56,6 +60,7 @@ export const useCheckout = create<CheckoutState>()(
       step: 1,
       contact: INITIAL_CONTACT,
       address: INITIAL_ADDRESS,
+      saveAddress: false,
       delivery: "standard",
       method: "cod",
       payPref: null,
@@ -63,10 +68,12 @@ export const useCheckout = create<CheckoutState>()(
       giftMessage: null,
       note: null,
       draftToken: null,
+      pendingOrder: null,
 
       setStep: (step) => set({ step }),
       setContact: (patch) => set((s) => ({ contact: { ...s.contact, ...patch } })),
       setAddress: (patch) => set((s) => ({ address: { ...s.address, ...patch } })),
+      setSaveAddress: (saveAddress) => set({ saveAddress }),
       setDelivery: (delivery) => set({ delivery }),
       setMethod: (method) => set({ method }),
       setPayPref: (payPref) => set({ payPref }),
@@ -74,11 +81,13 @@ export const useCheckout = create<CheckoutState>()(
       setGiftMessage: (giftMessage) => set({ giftMessage }),
       setNote: (note) => set({ note }),
       setDraftToken: (draftToken) => set({ draftToken }),
+      setPendingOrder: (pendingOrder) => set({ pendingOrder }),
       reset: () =>
         set({
           step: 1,
           contact: INITIAL_CONTACT,
           address: INITIAL_ADDRESS,
+          saveAddress: false,
           delivery: "standard",
           method: "cod",
           payPref: null,
@@ -86,6 +95,7 @@ export const useCheckout = create<CheckoutState>()(
           giftMessage: null,
           note: null,
           draftToken: null,
+          pendingOrder: null,
         }),
     }),
     {

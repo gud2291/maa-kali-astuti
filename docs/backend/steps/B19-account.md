@@ -26,27 +26,32 @@ Create:
 Modify: `src/app/[locale]/account/page.tsx`, `src/app/[locale]/checkout/page.tsx` (dynamic prefill), `CheckoutFlow.tsx`, `StepContact.tsx`, `StepAddress.tsx` (saved addresses + "Save this address"), `src/lib/validation/checkout.ts` (`saveAddress: z.boolean()`), `src/server/orders/service.ts` (save address when asked and signed in), `src/server/orders/queries.ts` (owner queries), `OrderSuccess.tsx` (invoice link), `messages/en.json`, `messages/hi.json` (namespaces `account`, `invoice`)
 
 ## Tasks
-- [ ] T1. `account.ts` schemas: `profileSchema` (name 2–80, phone `^[6-9]\d{9}$` or empty, `birth` (`BirthProfile`: name, dob `yyyy-mm-dd` ≤ today, tob `HH:mm` or null, tobUnknown, place ≤ 120, lat/lon/tz nullable) or null, marketingOptIn) and `addressInputSchema` (`addressSchema` + name + phone + isDefault).
-- [ ] T2. `account/queries.ts` (each takes the session user id, never a client id): `getAccountOverview(userId)` (counts + latest order), `listMyOrders(userId, page)` (`orders_user_idx`), `listMyAddresses(userId)`, `getMyProfile(userId)`. `orders/queries.ts`: `getOrderViewForUser(userId, number)`.
-- [ ] T3. `account/actions.ts` (`"use server"`, `requireCustomer()` first): `saveAddressAction` (create/update own rows only; max 10; one default), `deleteAddressAction`, `setDefaultAddressAction`, `updateProfileAction`.
-- [ ] T4. `orders/invoice.ts`: `buildInvoice(order, items, invoiceSettings, contact): InvoiceData` — `gstin` set → "Tax Invoice": per product line `taxable = total / (1 + rate/100)` (rate = item `gst_rate ?? 0`), tax split CGST+SGST when the ship-to state's code equals `invoice.stateCode` (state-code map in this file), else IGST; fee lines (energization, shipping, express, COD, gift wrap) at 18 %; amounts to 2 decimals. No GSTIN → "Bill of Supply", no tax columns. Invoice number = `orders.invoice_no` (null → "Not issued").
-- [ ] T5. `InvoiceDocument.tsx` (server-compatible) + CSS module (print: only the invoice is visible, A4 margins) + `PrintButton` (client, `window.print()`): seller block, buyer/ship-to, number + dates, lines, totals, tax summary, notes, "Computer-generated invoice".
-- [ ] T6. `invoice/[number]/page.tsx` (dynamic): access with `?k=` (access key) **or** the owner's session; else `notFound()`; `robots` noindex.
-- [ ] T7. `account/page.tsx`: no session → `AccountLogin` (OtpForm with `t("auth")` labels, purpose `login`, `next` from `?next=`), success → `router.replace(next)` + `router.refresh()`; session → `AccountOverview` ("Namaste, <name>", tiles Orders / Addresses / Profile / Wishlist, latest order with `OrderTimeline`).
-- [ ] T8. `account/layout.tsx` + `AccountNav` (tabs: Overview, Orders, Addresses, Profile; horizontal scroll on mobile; later steps add Bookings and My Kundali). Sub-pages call `requireCustomerPage(locale, path)` first.
-- [ ] T9. Orders list (cards: number, date, total, status badge, first item thumbs) + order detail (`OrderTimeline`, items, totals, address, payment, courier/AWB/tracking link, invoice link, `ReorderButton` adding the still-available items to the cart).
-- [ ] T10. `AddressBook` + `AddressSheet` (add/edit with pincode autofill via `usePincode`, default star, delete with confirm).
-- [ ] T11. `ProfileForm` (name, phone, birth details, marketing opt-in) + Sign out (`logoutAction("customer")`).
-- [ ] T12. Checkout prefill: `/checkout` page reads `getCustomer()` → passes `prefill` (contact + addresses) to `CheckoutFlow`; `StepContact` uses it; `StepAddress` lists saved addresses as radio cards + "New address" + "Save this address" (signed in only); `placeOrder` saves it to `addresses` when `saveAddress` and a session exist.
-- [ ] T13. `OrderSuccess`: "Download invoice" → `/invoice/<number>?k=…` when `invoice_no` exists.
-- [ ] T14. Messages `account`, `invoice` (EN + HI).
-- [ ] T15. Finish per AGENTS.md §1 step 8.
+- [x] T1. `account.ts` schemas: `profileSchema` (name 2–80, phone `^[6-9]\d{9}$` or empty, `birth` (`BirthProfile`: name, dob `yyyy-mm-dd` ≤ today, tob `HH:mm` or null, tobUnknown, place ≤ 120, lat/lon/tz nullable) or null, marketingOptIn) and `addressInputSchema` (`addressSchema` + name + phone + isDefault). — antigravity
+- [x] T2. `account/queries.ts` (each takes the session user id, never a client id): `getAccountOverview(userId)` (counts + latest order), `listMyOrders(userId, page)` (`orders_user_idx`), `listMyAddresses(userId)`, `getMyProfile(userId)`. `orders/queries.ts`: `getOrderViewForUser(userId, number)`. — antigravity
+- [x] T3. `account/actions.ts` (`"use server"`, `requireCustomer()` first): `saveAddressAction` (create/update own rows only; max 10; one default), `deleteAddressAction`, `setDefaultAddressAction`, `updateProfileAction`. — antigravity
+- [x] T4. `orders/invoice.ts`: `buildInvoice(order, items, invoiceSettings, contact): InvoiceData` — `gstin` set → "Tax Invoice": per product line `taxable = total / (1 + rate/100)` (rate = item `gst_rate ?? 0`), tax split CGST+SGST when the ship-to state's code equals `invoice.stateCode` (state-code map in this file), else IGST; fee lines (energization, shipping, express, COD, gift wrap) at 18 %; amounts to 2 decimals. No GSTIN → "Bill of Supply", no tax columns. Invoice number = `orders.invoice_no` (null → "Not issued"). — antigravity
+- [x] T5. `InvoiceDocument.tsx` (server-compatible) + CSS module (print: only the invoice is visible, A4 margins) + `PrintButton` (client, `window.print()`): seller block, buyer/ship-to, number + dates, lines, totals, tax summary, notes, "Computer-generated invoice". — antigravity
+- [x] T6. `invoice/[number]/page.tsx` (dynamic): access with `?k=` (access key) **or** the owner's session; else `notFound()`; `robots` noindex. — antigravity
+- [x] T7. `account/page.tsx`: no session → `AccountLogin` (OtpForm with `t("auth")` labels, purpose `login`, `next` from `?next=`), success → `router.replace(next)` + `router.refresh()`; session → `AccountOverview` ("Namaste, <name>", tiles Orders / Addresses / Profile / Wishlist, latest order with `OrderTimeline`). — antigravity
+- [x] T8. `account/layout.tsx` + `AccountNav` (tabs: Overview, Orders, Addresses, Profile; horizontal scroll on mobile; later steps add Bookings and My Kundali). Sub-pages call `requireCustomerPage(locale, path)` first. — antigravity
+- [x] T9. Orders list (cards: number, date, total, status badge, first item thumbs) + order detail (`OrderTimeline`, items, totals, address, payment, courier/AWB/tracking link, invoice link, `ReorderButton` adding the still-available items to the cart). — antigravity
+- [x] T10. `AddressBook` + `AddressSheet` (add/edit with pincode autofill via `usePincode`, default star, delete with confirm). — antigravity
+- [x] T11. `ProfileForm` (name, phone, birth details, marketing opt-in) + Sign out (`logoutAction("customer")`). — antigravity
+- [x] T12. Checkout prefill: `/checkout` page reads `getCustomer()` → passes `prefill` (contact + addresses) to `CheckoutFlow`; `StepContact` uses it; `StepAddress` lists saved addresses as radio cards + "New address" + "Save this address" (signed in only); `placeOrder` saves it to `addresses` when `saveAddress` and a session exist. — antigravity
+- [x] T13. `OrderSuccess`: "Download invoice" → `/invoice/<number>?k=…` when `invoice_no` exists. — antigravity
+- [x] T14. Messages `account`, `invoice` (EN + HI). — antigravity
+- [x] T15. Finish per AGENTS.md §1 step 8. — antigravity
 
 ## Must not
 - Never read an order/address by an id without the session user check. No bookings/kundali tabs yet (B23, B30).
 
 ## Done-notes
-_(agent: ≤ 12 lines)_
+- Created: `src/lib/validation/account.ts`, `src/server/account/{queries,actions}.ts`, `src/server/orders/invoice.ts`
+- Created account pages: `layout.tsx`, `orders/page.tsx`, `orders/[number]/page.tsx`, `addresses/page.tsx`, `profile/page.tsx`, and `invoice/[number]/page.tsx`
+- Created account & invoice components: `AccountNav`, `AccountLogin`, `AccountOverview`, `OrderList`, `OrderDetail`, `AddressBook`, `AddressSheet`, `ProfileForm`, `ReorderButton`, `InvoiceDocument` (+ CSS module), `PrintButton`
+- Modified: `account/page.tsx`, `checkout/page.tsx`, `CheckoutFlow`, `StepContact`, `StepAddress`, `StepReview`, `checkout.ts`, `orders/service.ts`, `orders/queries.ts`, `OrderSuccess.tsx`, `messages/en.json`, `messages/hi.json`
+- Decisions: Invoices calculate CGST+SGST vs IGST based on shipping state vs store stateCode, or Bill of Supply when GSTIN is empty; access is protected via HMAC key `?k=` or session ownership.
+- Migration added: no. Next step: B20 (Track order, wishlist page, search page).
 
 ## Manual QA (user)
 1. `/account` → sign in with your email → overview shows your earlier COD/online orders (guest orders with the same email are attached).

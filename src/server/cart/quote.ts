@@ -7,6 +7,7 @@ import { getSetting } from "@/server/settings/queries";
 import { evaluateCoupon } from "@/server/coupons/service";
 import { computeTotals } from "@/lib/core/cart";
 import { fmt } from "@/lib/core/format";
+import { isConfigured } from "@/server/env";
 import type { Loc } from "@/lib/domain/loc";
 import type { WristSize } from "@/lib/domain/enums";
 import type { AppliedCoupon, CartTotals, CouponResult, Energization } from "@/types/cart";
@@ -44,6 +45,7 @@ export type Quote = {
   issues: QuoteIssue[];
   codAllowed: boolean;
   codReason: "disabled" | "limit" | null;
+  onlineAllowed: boolean;
 };
 
 export async function quoteCheckout(input: QuoteInput): Promise<Quote> {
@@ -194,6 +196,8 @@ export async function quoteCheckout(input: QuoteInput): Promise<Quote> {
     codReason = "limit";
   }
 
+  const onlineAllowed = isConfigured("razorpay") && !!store.onlinePayments;
+
   return {
     lines,
     totals,
@@ -202,5 +206,6 @@ export async function quoteCheckout(input: QuoteInput): Promise<Quote> {
     issues,
     codAllowed,
     codReason,
+    onlineAllowed,
   };
 }

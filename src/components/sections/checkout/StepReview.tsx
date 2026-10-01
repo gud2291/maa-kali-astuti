@@ -7,6 +7,8 @@ import { useCart, useCartLines } from "@/stores/cart";
 import { useFees } from "@/stores/catalog";
 import { useCheckout } from "./useCheckout";
 import { placeOrderAction } from "@/server/orders/actions";
+import { openRazorpay } from "@/lib/payments/razorpay-client";
+import { confirmPaymentAction, retryPaymentAction } from "@/server/payments/actions";
 import { TurnstileWidget } from "@/components/auth/TurnstileWidget";
 import { Icon } from "@/components/icons/Icon";
 import { fmt } from "@/lib/core/format";
@@ -37,6 +39,7 @@ export function StepReview({
   const {
     contact,
     address,
+    saveAddress,
     delivery,
     method,
     payPref,
@@ -47,6 +50,8 @@ export function StepReview({
     note,
     setNote,
     draftToken,
+    pendingOrder,
+    setPendingOrder,
   } = useCheckout();
 
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
@@ -54,7 +59,10 @@ export function StepReview({
   const [generalError, setGeneralError] = useState<string | null>(null);
 
   const hasStockIssues = (quote?.issues && quote.issues.length > 0) || false;
-  const isBlocked = hasStockIssues || (quote && !quote.codAllowed);
+  const isBlocked =
+    hasStockIssues ||
+    (method === "cod" && quote && !quote.codAllowed) ||
+    (method === "online" && quote && !quote.onlineAllowed);
 
   const handlePlaceOrder = async () => {
     if (placing || isBlocked) return;
@@ -62,6 +70,114 @@ export function StepReview({
     setGeneralError(null);
 
     try {
+      if (method === "online") {
+        let orderNumberToUse = pendingOrder?.number;
+        let accessKeyToUse = pendingOrder?.accessKey;
+        let rzpData;
+
+        if (pendingOrder) {
+          const retryRes = await retryPaymentAction({
+            entity: "order",
+            ref: pendingOrder.number,
+            accessKey: pendingOrder.accessKey,
+          });
+
+          if (!retryRes.ok) {
+            if (retryRes.error === "ALREADY_PAID") {
+              useCart.getState().clear();
+              useCheckout.getState().reset();
+              router.replace(
+                `${routes.orderSuccess}?no=${encodeURIComponent(pendingOrder.number)}&k=${encodeURIComponent(pendingOrder.accessKey)}`,
+              );
+              return;
+            }
+            setGeneralError(t("paymentIncomplete"));
+            return;
+          }
+          orderNumberToUse = retryRes.data.number;
+          accessKeyToUse = retryRes.data.accessKey;
+          rzpData = retryRes.data.rzp;
+        } else {
+          const input = {
+            locale,
+            lines: lines.map((l) => ({
+              pid: l.pid,
+              qty: l.qty,
+              variant: l.variant ?? null,
+              energ: l.energ ?? null,
+            })),
+            contact,
+            address,
+            saveAddress,
+            delivery,
+            method,
+            payPref,
+            gift,
+            giftMessage: gift && giftMessage ? giftMessage.trim() : null,
+            note: note ? note.trim() : null,
+            couponCode: coupon?.code ?? null,
+            draftToken,
+            turnstileToken: turnstileToken || undefined,
+          };
+
+          const res = await placeOrderAction(input);
+
+          if (!res.ok) {
+            if (res.error === "OUT_OF_STOCK") {
+              await refetchQuote();
+              setGeneralError(t("errors.OUT_OF_STOCK"));
+            } else {
+              const errMap: Record<string, string> = {
+                CART_EMPTY: t("errors.CART_EMPTY"),
+                COUPON_INVALID: t("errors.COUPON_INVALID"),
+                RATE_LIMITED: t("errors.RATE_LIMITED"),
+                TURNSTILE_FAILED: t("errors.TURNSTILE_FAILED"),
+                NOT_CONFIGURED: t("errors.NOT_CONFIGURED"),
+              };
+              setGeneralError(errMap[res.error] ?? res.error);
+            }
+            return;
+          }
+
+          orderNumberToUse = res.data.number;
+          accessKeyToUse = res.data.accessKey;
+          rzpData = res.data.rzp;
+          setPendingOrder({ number: res.data.number, accessKey: res.data.accessKey });
+        }
+
+        if (!rzpData) {
+          setGeneralError(t("paymentIncomplete"));
+          return;
+        }
+
+        const payResult = await openRazorpay(rzpData);
+
+        if (payResult.status === "paid") {
+          const confirmRes = await confirmPaymentAction({
+            entity: "order",
+            ref: orderNumberToUse!,
+            razorpay_order_id: payResult.razorpay_order_id,
+            razorpay_payment_id: payResult.razorpay_payment_id,
+            razorpay_signature: payResult.razorpay_signature,
+          });
+
+          if (confirmRes.ok) {
+            useCart.getState().clear();
+            useCheckout.getState().reset();
+            router.replace(
+              `${routes.orderSuccess}?no=${encodeURIComponent(orderNumberToUse!)}&k=${encodeURIComponent(accessKeyToUse!)}`,
+            );
+          } else {
+            setGeneralError(t("paymentIncomplete"));
+          }
+        } else if (payResult.status === "dismissed") {
+          setGeneralError(t("paymentIncomplete"));
+        } else {
+          setGeneralError(payResult.reason || t("paymentIncomplete"));
+        }
+        return;
+      }
+
       const input = {
         locale,
         lines: lines.map((l) => ({
@@ -72,6 +188,7 @@ export function StepReview({
         })),
         contact,
         address,
+        saveAddress,
         delivery,
         method,
         payPref,

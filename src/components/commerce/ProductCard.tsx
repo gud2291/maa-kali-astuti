@@ -11,10 +11,31 @@ import { useIsWished } from "@/stores/wishlist";
 import { cn } from "@/lib/utils/cn";
 import { ProductImage } from "./ProductImage";
 import { useProductActions } from "./useProductActions";
-import type { Product } from "@/types/product";
+import type { BadgeKey, Product, ProductArt, WristSize } from "@/types/product";
+import type { MediaRef } from "@/lib/domain/media";
+
+export type ProductCardData = {
+  id: string;
+  slug: string;
+  name: string;
+  hi: string;
+  catShort?: string;
+  price: number;
+  mrp: number;
+  rating: number;
+  reviews: number;
+  intent: string;
+  stock: number;
+  sizes?: WristSize[];
+  badges: BadgeKey[];
+  art?: ProductArt;
+  photo?: string;
+  photo2?: string;
+  images?: MediaRef[];
+};
 
 type Props = {
-  product: Product;
+  product: ProductCardData;
   /** std / compact = card layout (title 19 vs 16px) · row = compact horizontal line (upsell rails). */
   size?: "std" | "compact" | "row";
   /** shop = add-to-cart UI · wish = "Move to cart" + remove (wishlist page). */
@@ -28,12 +49,13 @@ type Props = {
 
 /** Port of ProductCard.dc.html (14–139). Mobile (<768) has no hover UI: a round "+" adds instead. */
 export function ProductCard({ product: p, size = "std", mode = "shop", sizes, priority, className }: Props) {
+  const prod = p as unknown as Product;
   const hi = useLocale() === "hi";
   const t = useTranslations("product");
   const imgRef = useRef<HTMLSpanElement>(null);
   const heartRef = useRef<HTMLSpanElement>(null);
   const wished = useIsWished(p.id);
-  const { ph, oos, doAdd, add, addMobile, toggleWish, moveToCart, removeWish } = useProductActions(p, imgRef);
+  const { ph, oos, doAdd, add, addMobile, toggleWish, moveToCart, removeWish } = useProductActions(prod, imgRef);
 
   const href = `/product/${p.slug}`;
   const title = hi ? p.hi : p.name;
@@ -56,7 +78,7 @@ export function ProductCard({ product: p, size = "std", mode = "shop", sizes, pr
           className="relative block aspect-[4/5] w-[88px] overflow-hidden rounded-3 bg-s1"
         >
           <span ref={imgRef} className="absolute inset-0 block">
-            <ProductImage p={p} sizes="88px" priority={priority} />
+            <ProductImage p={prod} sizes="88px" priority={priority} />
           </span>
         </Link>
         <div className="flex min-w-0 flex-col gap-1">
@@ -106,11 +128,11 @@ export function ProductCard({ product: p, size = "std", mode = "shop", sizes, pr
             className="absolute inset-0 block"
             style={oos ? { filter: "grayscale(.5) opacity(.75)" } : undefined}
           >
-            <ProductImage p={p} sizes={sizes} priority={priority} />
+            <ProductImage p={prod} sizes={sizes} priority={priority} />
           </span>
           {/* Hover crossfade to the second image (desktop only) */}
           <span className="absolute inset-0 hidden bg-[#EFE6D2] opacity-0 transition-opacity duration-[450ms] ease-mka md:block md:group-hover:opacity-100">
-            <ProductImage p={p} slot="alt" alt="" sizes={sizes} />
+            <ProductImage p={prod} slot="alt" alt="" sizes={sizes} />
           </span>
           {/* Gold ring */}
           <span className="pointer-events-none absolute inset-0 rounded-btn shadow-[inset_0_0_0_1px_rgba(184,146,58,0)] transition-shadow duration-300 ease-[ease] md:group-hover:shadow-[inset_0_0_0_1px_rgba(184,146,58,.7)]" />

@@ -32,6 +32,7 @@ export const checkoutSchema = z.object({
   lines: z.array(cartLineSchema).min(1).max(30),
   contact: contactSchema,
   address: addressSchema,
+  saveAddress: z.boolean().default(false),
   delivery: z.enum(DELIVERY_OPTIONS),
   method: z.enum(PAYMENT_METHODS),
   payPref: z.enum(PAY_PREFS).nullable(),

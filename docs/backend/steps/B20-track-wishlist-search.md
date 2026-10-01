@@ -19,20 +19,26 @@ Create: `src/components/sections/track/TrackOrderForm.tsx`, `src/components/sect
 Modify: `src/server/orders/queries.ts` (`lookupOrderForTracking`), `src/server/orders/actions.ts` (`trackOrderAction`), `src/components/commerce/ProductCard.tsx` (prop type only), the 3 page files, `messages/en.json`, `messages/hi.json` (namespaces `track`, `wishlistPage`, `searchPage`)
 
 ## Tasks
-- [ ] T1. `lookupOrderForTracking({ number, contact })`: order by `number`; `contact` must equal its phone (10 digits) or email (case-insensitive); returns a reduced view (status, public events, items name + qty, courier/AWB/tracking URL, city + state only) or null.
-- [ ] T2. `trackOrderAction({ number, contact, turnstileToken })` → `verifyTurnstile` → `rateLimit("track:ip", ip, 10, 600)` → lookup → `NOT_FOUND` when null (same message for wrong number or wrong contact).
-- [ ] T3. `/track-order` page (static) → `TrackOrderForm` (order number + phone or email + Turnstile) → `TrackResult` (`OrderTimeline`, items, courier link, "Sign in to see full details" link).
-- [ ] T4. `ProductCard.tsx`: change only the prop type to `ProductCardData` = the fields the card actually reads, exported from the same file, so both `Product` and `ProductLite` fit. No markup change.
-- [ ] T5. `/wishlist` page (static) → `WishlistView` (client): grid of `ProductCard`s from the wishlist store + snapshot, "Move to cart" (bracelets open QuickAdd for the size), remove, skeleton while the snapshot loads, empty state with a link to bestsellers.
-- [ ] T6. `/search` page (static) → `SearchView` (client): reads `?q` after mount, big search input (updates `?q` with `replaceState`), tabs Products · Consultations · Articles with counts, product grid, service cards, article list; empty state with trending chips. Same search core as the overlay.
-- [ ] T7. Messages `track`, `wishlistPage`, `searchPage` (EN + HI); page metadata (search and wishlist `noindex`).
-- [ ] T8. Finish per AGENTS.md §1 step 8.
+- [x] T1. `lookupOrderForTracking({ number, contact })`: order by `number`; `contact` must equal its phone (10 digits) or email (case-insensitive); returns a reduced view (status, public events, items name + qty, courier/AWB/tracking URL, city + state only) or null. — antigravity
+- [x] T2. `trackOrderAction({ number, contact, turnstileToken })` → `verifyTurnstile` → `rateLimit("track:ip", ip, 10, 600)` → lookup → `NOT_FOUND` when null (same message for wrong number or wrong contact). — antigravity
+- [x] T3. `/track-order` page (static) → `TrackOrderForm` (order number + phone or email + Turnstile) → `TrackResult` (`OrderTimeline`, items, courier link, "Sign in to see full details" link). — antigravity
+- [x] T4. `ProductCard.tsx`: change only the prop type to `ProductCardData` = the fields the card actually reads, exported from the same file, so both `Product` and `ProductLite` fit. No markup change. — antigravity
+- [x] T5. `/wishlist` page (static) → `WishlistView` (client): grid of `ProductCard`s from the wishlist store + snapshot, "Move to cart" (bracelets open QuickAdd for the size), remove, skeleton while the snapshot loads, empty state with a link to bestsellers. — antigravity
+- [x] T6. `/search` page (static) → `SearchView` (client): reads `?q` after mount, big search input (updates `?q` with `replaceState`), tabs Products · Consultations · Articles with counts, product grid, service cards, article list; empty state with trending chips. Same search core as the overlay. — antigravity
+- [x] T7. Messages `track`, `wishlistPage`, `searchPage` (EN + HI); page metadata (search and wishlist `noindex`). — antigravity
+- [x] T8. Finish per AGENTS.md §1 step 8. — antigravity
 
 ## Must not
 - No server search endpoint (the snapshot is enough). No changes to the overlay.
 
 ## Done-notes
-_(agent: ≤ 12 lines)_
+- Created: `src/components/sections/track/{TrackOrderForm,TrackResult}.tsx`, `src/components/sections/wishlist/WishlistView.tsx`, `src/components/sections/search/SearchView.tsx`.
+- Modified: `src/server/orders/queries.ts` (`lookupOrderForTracking`), `src/server/orders/actions.ts` (`trackOrderAction`), `src/components/commerce/ProductCard.tsx` (`ProductCardData`), `track-order/page.tsx`, `wishlist/page.tsx`, `search/page.tsx`, `messages/en.json`, `messages/hi.json`.
+- Guest tracking returns reduced view (privacy-safe: city, state, items, courier/AWB, public events) matching by 10-digit phone or email.
+- `ProductCardData` exported from `ProductCard.tsx` so both `Product` and `ProductLite` fit without markup changes.
+- Wishlist page renders responsive grid with move-to-cart, remove, skeletons, and empty state.
+- Search page synchronizes `?q` via `replaceState` and reads on mount; tabbed view with counts for products, consultations, and articles.
+- Migration added: no. Next step: B21 (Admin: orders incl. refunds).
 
 ## Manual QA (user)
 1. `/track-order` with a real order number + its phone → timeline; wrong phone → "not found".

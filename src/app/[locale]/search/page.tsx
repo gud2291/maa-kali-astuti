@@ -1,21 +1,27 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ComingSoon } from "@/components/layout/ComingSoon";
+import { SearchView } from "@/components/sections/search/SearchView";
 
-/* Deferred page (INV §G): full search results. The overlay search in the header works today. */
-type Props = { params: Promise<{ locale: string }>; searchParams: Promise<{ q?: string | string[] }> };
+type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "soon.pages" });
-  return { title: t("search"), robots: { index: false } };
+  const t = await getTranslations({ locale, namespace: "searchPage" });
+  return {
+    title: t("title"),
+    robots: { index: false, follow: false },
+  };
 }
 
-export default async function Page({ params, searchParams }: Props) {
+export default async function Page({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const raw = (await searchParams).q;
-  const q = (Array.isArray(raw) ? raw[0] : raw)?.trim().slice(0, 80);
-  const t = await getTranslations("soon");
-  return <ComingSoon title={t("pages.search")} lead={q ? t("query", { q }) : undefined} />;
+
+  return (
+    <main className="min-h-[75vh] bg-iv py-10 md:py-14">
+      <div className="mx-auto max-w-[1240px] px-4 sm:px-6">
+        <SearchView />
+      </div>
+    </main>
+  );
 }

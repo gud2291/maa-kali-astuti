@@ -8,18 +8,34 @@ import { useCart } from "@/stores/cart";
 import { useCheckout } from "./useCheckout";
 import { FIELD_LABEL, inputCls, ErrorRow } from "@/components/sections/booking/ui";
 import type { Quote } from "@/server/cart/quote";
+import type { CheckoutPrefill } from "./CheckoutFlow";
+import { useEffect } from "react";
 
 export function StepContact({
   quote,
+  prefill,
   onNext,
 }: {
   quote: Quote | null;
+  prefill?: CheckoutPrefill;
   onNext: () => void;
 }) {
   const t = useTranslations("checkout");
   const locale = (useLocale() === "hi" ? "hi" : "en") as "en" | "hi";
   const lines = useCart((s) => s.lines);
   const { contact, setContact, draftToken, setDraftToken } = useCheckout();
+
+  useEffect(() => {
+    if (prefill?.contact) {
+      const updates: Partial<typeof contact> = {};
+      if (!contact.name && prefill.contact.name) updates.name = prefill.contact.name;
+      if (!contact.email && prefill.contact.email) updates.email = prefill.contact.email;
+      if (!contact.phone && prefill.contact.phone) updates.phone = prefill.contact.phone;
+      if (Object.keys(updates).length > 0) {
+        setContact(updates);
+      }
+    }
+  }, [prefill?.contact]);
 
   const [errors, setErrors] = useState<{ name?: string; phone?: string; email?: string }>({});
 
