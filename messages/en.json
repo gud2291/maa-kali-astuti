@@ -1951,5 +1951,43 @@
     "shop": "Explore the shop",
     "consult": "Book a consultation",
     "wa": "Ask on WhatsApp"
+  },
+  "errors": {
+    "VALIDATION": "Please check the information you entered and try again.",
+    "UNAUTHENTICATED": "Please sign in to continue.",
+    "FORBIDDEN": "You do not have permission to perform this action.",
+    "NOT_FOUND": "The requested item was not found.",
+    "RATE_LIMITED": "Too many requests. Please wait a few moments and try again.",
+    "BOT_CHECK_FAILED": "Security verification failed. Please try again.",
+    "OTP_INVALID": "The code you entered is incorrect. Please check and try again.",
+    "OTP_EXPIRED": "This verification code has expired. Please request a new one.",
+    "OUT_OF_STOCK": "One or more items in your cart are no longer available in this quantity.",
+    "PRICE_CHANGED": "Prices have been updated. Please review your cart before continuing.",
+    "COUPON_INVALID": "This coupon code is not valid.",
+    "COUPON_MIN_CART": "Your order total does not meet the minimum amount for this coupon.",
+    "COUPON_EXPIRED": "This coupon has expired.",
+    "COUPON_USED": "This coupon has already been used.",
+    "SLOT_TAKEN": "This time slot is no longer available. Please select another slot.",
+    "PAYMENT_FAILED": "Payment could not be completed. Please try again or choose another method.",
+    "PAYMENT_SIGNATURE": "Payment verification failed. If your money was deducted, it will be refunded.",
+    "UPLOAD_INVALID": "The uploaded file is invalid or exceeds the allowed size.",
+    "NOT_CONFIGURED": "This service is currently unavailable. Please try again later.",
+    "CONFLICT": "A conflict occurred with the current state. Please refresh and try again.",
+    "INTERNAL": "Something went wrong on our end. Please try again shortly."
+  },
+  "auth": {
+    "title": "Sign in to your account",
+    "adminTitle": "Admin sign in",
+    "emailLabel": "Email address",
+    "emailPlaceholder": "you@example.com",
+    "sendCode": "Send verification code",
+    "sending": "Sending code…",
+    "enterCode": "Enter verification code",
+    "codeSentTo": "We sent a 6-digit code to {email}",
+    "verify": "Verify & continue",
+    "verifying": "Verifying…",
+    "resendCode": "Resend code",
+    "resendIn": "Resend code in {seconds}s",
+    "changeEmail": "Change email"
   }
 }
