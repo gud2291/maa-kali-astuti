@@ -4,11 +4,12 @@ import stonesData from "@/lib/data/stones.json";
 import badgesData from "@/lib/data/badges.json";
 import rudrakshaData from "@/lib/data/rudraksha.json";
 import trendingData from "@/lib/data/trending.json";
-import servicesData from "@/lib/data/services.json";
-import articlesData from "@/lib/data/articles.json";
 import { search as searchCore } from "@/lib/core/search";
 import { queryProducts } from "@/lib/core/query";
 import { getCatalog } from "@/server/catalog/queries";
+import { getServiceCards } from "@/lib/api/consult";
+import { getJournalRows } from "@/server/articles/queries";
+import { ARTICLE_CATEGORY_LABELS } from "@/lib/domain/labels";
 import { AppError } from "@/server/result";
 import type {
   Category,
@@ -97,10 +98,22 @@ export async function getTrending(): Promise<string[]> {
 
 /** Site search over products, services and journal articles (mka-core.js 543–552). */
 export async function search(q: string): Promise<SearchResults> {
-  const { products } = await getCatalog();
+  const [{ products }, services, journalRows] = await Promise.all([
+    getCatalog(),
+    getServiceCards("en"),
+    getJournalRows(50),
+  ]);
+
+  const articles = journalRows.map((r) => ({
+    t: r.titleEn,
+    c: ARTICLE_CATEGORY_LABELS[r.category]?.en ?? r.category,
+    m: r.readMins,
+    pid: r.productIds[0] ?? undefined,
+  }));
+
   return searchCore(q, {
     products,
-    services: servicesData as unknown as SearchResults["services"],
-    articles: articlesData as SearchResults["articles"],
+    services,
+    articles,
   });
 }

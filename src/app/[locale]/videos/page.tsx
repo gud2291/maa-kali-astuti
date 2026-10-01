@@ -19,7 +19,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function VideosPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const data = await getVideos();
+  const data = await getVideos(locale);
   const thumbs = Object.fromEntries(
     data.videos.map((v) => [v.id, VIDEO_THUMB_SVG[v.id as keyof typeof VIDEO_THUMB_SVG] ?? ""]),
   );

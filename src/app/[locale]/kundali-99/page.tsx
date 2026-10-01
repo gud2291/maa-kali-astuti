@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function Kundali99Page({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const [faq, reviews] = await Promise.all([getFaq("kundali99"), getKundaliReviews()]);
+  const [faq, reviews] = await Promise.all([getFaq("kundali99", locale), getKundaliReviews()]);
 
   return (
     <>

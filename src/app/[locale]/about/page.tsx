@@ -24,7 +24,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function AboutPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const [about, vids] = await Promise.all([getAbout(), getVideos()]);
+  const [about, vids] = await Promise.all([getAbout(), getVideos(locale)]);
   // Design picks VIDEOS[0], [2], [4] (About 251).
   const media = [vids.videos[0], vids.videos[2], vids.videos[4]];
   const cats = Object.fromEntries(vids.cats.map(([k, en]) => [k, en]));

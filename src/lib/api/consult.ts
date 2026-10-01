@@ -1,16 +1,14 @@
-/* THE BACKEND SEAM for consultations (services, tiers, process steps, testimonials, FAQ sets).
-   Components call these async getters and never import the JSON themselves. Today they read
-   src/lib/data (services.json = mka-core SERVICES ⊕ mka-astro SVC, consult.json = MODES/STEPS);
-   in phase B they become CMS / DB reads with the same signatures. */
-import servicesData from "@/lib/data/services.json";
+import "server-only";
 import consultData from "@/lib/data/consult.json";
-import testimonialsData from "@/lib/data/testimonials.json";
-import faqData from "@/lib/data/faq.json";
 import type { IconName } from "@/components/icons/Icon";
+import { getConsultRows } from "@/server/consult/queries";
+import { toService, toServiceCard, type ServiceCard } from "@/server/consult/mappers";
+import { getTestimonialRows } from "@/server/testimonials/queries";
+import { getFaqRows } from "@/server/faqs/queries";
+import { loc } from "@/lib/domain/loc";
+import type { FAQ_SETS, ServiceKey, TierKey, ModeKey } from "@/lib/domain/enums";
 
-export type ServiceKey = "kundali" | "palm" | "tarot" | "numerology";
-export type TierKey = "essential" | "detailed" | "premium";
-export type ModeKey = keyof typeof consultData.modes;
+export type { ServiceKey, TierKey, ModeKey, ServiceCard };
 
 export type Tier = { k: TierKey; t: string; price: number; mins: number; rec?: number; inc: string[] };
 
@@ -34,17 +32,24 @@ export type Service = {
 
 export type Mode = { t: string; icon: IconName };
 export type Testimonial = { q: string; n: string; c: string; s: string };
-export type FaqSet = keyof typeof faqData;
+export type FaqSet = (typeof FAQ_SETS)[number];
 
-const SERVICES = servicesData as unknown as readonly Service[];
-
-export async function getServices(): Promise<Service[]> {
-  return SERVICES.slice();
+export async function getServices(locale = "en"): Promise<Service[]> {
+  const { services, tiers } = await getConsultRows();
+  return services.map((s) => toService(s, tiers, locale));
 }
 
 /** By route slug (`kundali-reading`) or design key (`kundali`). */
-export async function getService(slugOrKey: string): Promise<Service | null> {
-  return SERVICES.find((s) => s.slug === slugOrKey || s.key === slugOrKey) ?? null;
+export async function getService(slugOrKey: string, locale = "en"): Promise<Service | null> {
+  const { services, tiers } = await getConsultRows();
+  const s = services.find((row) => row.slug === slugOrKey || row.key === slugOrKey);
+  if (!s) return null;
+  return toService(s, tiers, locale);
+}
+
+export async function getServiceCards(locale = "en"): Promise<ServiceCard[]> {
+  const { services, tiers } = await getConsultRows();
+  return services.map((s) => toServiceCard(s, tiers, locale));
 }
 
 /** Consultation modes (call, video, WhatsApp, report) with their icons. */
@@ -60,13 +65,23 @@ export async function getConsultSteps(): Promise<[IconName, string, string][]> {
   return consultData.steps as [IconName, string, string][];
 }
 
-export async function getTestimonials(): Promise<Testimonial[]> {
-  return (testimonialsData as Testimonial[]).slice();
+export async function getTestimonials(locale = "en"): Promise<Testimonial[]> {
+  const rows = await getTestimonialRows();
+  return rows.map((r) => ({
+    q: loc({ en: r.quoteEn, hi: r.quoteHi }, locale),
+    n: r.name,
+    c: r.city ?? "",
+    s: r.tag ?? "",
+  }));
 }
 
 /** One FaqList set: [question, answer] pairs. */
-export async function getFaq(set: FaqSet): Promise<[string, string][]> {
-  return faqData[set] as [string, string][];
+export async function getFaq(set: FaqSet, locale = "en"): Promise<[string, string][]> {
+  const rows = await getFaqRows(set);
+  return rows.map((r) => [
+    loc({ en: r.qEn, hi: r.qHi }, locale),
+    loc({ en: r.aEn, hi: r.aHi }, locale),
+  ]);
 }
 
 /* ---------- display helpers shared by the listing, the detail page and booking ---------- */

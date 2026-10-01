@@ -19,7 +19,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, service } = await params;
-  const s = await getService(service);
+  const s = await getService(service, locale);
   if (!s) return {};
   const t = await getTranslations({ locale, namespace: "booking.meta" });
   return { title: t("title", { name: s.name }), description: t("description", { name: s.name }) };
@@ -28,9 +28,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function BookPage({ params }: Props) {
   const { locale, service } = await params;
   setRequestLocale(locale);
-  const s = await getService(service);
+  const s = await getService(service, locale);
   if (!s || s.slug !== service) notFound();
-  const [services, modes, steps] = await Promise.all([getServices(), getModes(), getConsultSteps()]);
+  const [services, modes, steps] = await Promise.all([getServices(locale), getModes(), getConsultSteps()]);
 
   return (
     <BookingFlow

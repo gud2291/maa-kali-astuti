@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function RitualsPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const [data, faq] = await Promise.all([getRituals(), getFaq("rituals")]);
+  const [data, faq] = await Promise.all([getRituals(locale), getFaq("rituals", locale)]);
 
   return (
     <>

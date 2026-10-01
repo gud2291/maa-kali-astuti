@@ -22,11 +22,11 @@ export default async function ConsultationsPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const [services, modes, steps, testimonials, faq] = await Promise.all([
-    getServices(),
+    getServices(locale),
     getModes(),
     getConsultSteps(),
-    getTestimonials(),
-    getFaq("consult"),
+    getTestimonials(locale),
+    getFaq("consult", locale),
   ]);
 
   return (

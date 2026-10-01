@@ -26,7 +26,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, service } = await params;
-  const s = await getService(service);
+  const s = await getService(service, locale);
   if (!s) return {};
   const t = await getTranslations({ locale, namespace: "consult.detail" });
   return { title: s.name, description: t(`copy.${s.key}.long`) };
@@ -35,12 +35,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function ServicePage({ params }: Props) {
   const { locale, service } = await params;
   setRequestLocale(locale);
-  const s = await getService(service);
+  const s = await getService(service, locale);
   if (!s || s.slug !== service) notFound();
   const [all, modes, faq, t] = await Promise.all([
-    getServices(),
+    getServices(locale),
     getModes(),
-    getFaq(s.key),
+    getFaq(s.key, locale),
     getTranslations("consult"),
   ]);
   const dur = isReport(s) ? t("dur.report") : t("dur.range", { a: s.tiers[0].mins, b: s.tiers[2].mins });

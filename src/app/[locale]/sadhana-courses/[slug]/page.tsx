@@ -34,7 +34,7 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
-  const c = await getCourse(slug);
+  const c = await getCourse(slug, locale);
   if (!c) return {};
   const t = await getTranslations({ locale, namespace: "sadhana.meta" });
   return {
@@ -46,12 +46,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function CoursePage({ params }: Props) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
-  const c = await getCourse(slug);
+  const c = await getCourse(slug, locale);
   if (!c || c.slug !== slug) notFound();
   const [all, kit, options, t] = await Promise.all([
-    getCourses(),
+    getCourses(locale),
     getCourseKit(),
-    getCourseOptions(),
+    getCourseOptions(locale),
     getTranslations("sadhana.detail.sticky"),
   ]);
 

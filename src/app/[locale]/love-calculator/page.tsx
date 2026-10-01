@@ -20,7 +20,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function LoveCalculatorPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const [all, kundaliSvc] = await Promise.all([getAllProducts(), getService("kundali")]);
+  const [all, kundaliSvc] = await Promise.all([getAllProducts(), getService("kundali", locale)]);
   // Design renderVals 238: the rose-quartz bracelet first, then love / relationship / marriage products.
   const byId = new Map(all.map((p) => [p.id, p]));
   const ids = ["b-rose"].concat(

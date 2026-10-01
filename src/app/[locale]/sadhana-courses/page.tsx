@@ -27,10 +27,10 @@ export default async function SadhanaCoursesPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
   const [courses, kit, faq, options] = await Promise.all([
-    getCourses(),
+    getCourses(locale),
     getCourseKit(),
-    getFaq("courses"),
-    getCourseOptions(),
+    getFaq("courses", locale),
+    getCourseOptions(locale),
   ]);
 
   return (
