@@ -122,7 +122,7 @@
   },
   "search": {
     "dialog": "Search",
-    "kicker": "Search the store · दुकान में खोजें",
+    "kicker": "Search the store",
     "close": "Close search",
     "label": "Search products, consultations and articles",
     "placeholder": "Rudraksha, bracelets, kavach…",
@@ -249,7 +249,7 @@
     "crumbHome": "Home",
     "crumbShop": "Shop",
     "breadcrumb": "Breadcrumb",
-    "allEyebrow": "— The Shop · सभी उत्पाद",
+    "allEyebrow": "— The Shop",
     "allA": "All sacred ",
     "allI": "offerings",
     "allHi": "अनुष्ठान से ऊर्जित, श्रद्धा से आप तक",
@@ -513,7 +513,7 @@
       "photoAria": "Show photo {n} of 4"
     },
     "rashi": {
-      "eyebrow": "04 — <d>आज का राशिफल</d> · Daily Rashifal",
+      "eyebrow": "04 — Daily Rashifal",
       "l1": "Your rashi,",
       "l2": "<em>read for today.</em>",
       "intro": "Read by Chandra rashi, the sign your Moon was in at birth. The wheel moves to the next rashi every few seconds; tap any rashi to read it.",
@@ -558,7 +558,7 @@
       "deva": "अपनी कुंडली से शुरुआत करें",
       "intro": "The Kundali preview is free. You pay ₹99 only to download the full report. The Love Calculator is a light reading for fun.",
       "k": {
-        "eyebrow": "Janam Kundali · <d>जन्म कुंडली</d>",
+        "eyebrow": "Janam Kundali",
         "title": "Download your complete Janam Kundali — <em>₹99</em>",
         "mrp": "MRP ₹499",
         "off": "80% OFF",
@@ -591,7 +591,7 @@
         }
       },
       "l": {
-        "eyebrow": "Free tool · <d>प्रेम मिलान</d>",
+        "eyebrow": "Free tool",
         "title": "Love Calculator <em>by Name.</em>",
         "a": "Your name",
         "b": "Partner’s name",
@@ -664,7 +664,7 @@
       "l2": "the <em>sadhana</em> seat.",
       "deva": "साधक पवन पाण्डेय",
       "bookEyebrow": "Published author",
-      "bookTitle": "साधना के सत्य · The Truths of Sadhana",
+      "bookTitle": "The Truths of Sadhana",
       "bookLine": "Accounts from eighteen years of practice.",
       "story": "Read his story",
       "consult": "Book a consultation",
@@ -745,7 +745,7 @@
       "mins": "{n} min"
     },
     "hero": {
-      "eyebrow": "॥ Personal guidance ॥ · <hi>परामर्श</hi>",
+      "eyebrow": "॥ Personal guidance ॥",
       "title": "Clear answers, <em>read</em> from your own chart.",
       "deva": "आपकी कुंडली से, आपके प्रश्नों के उत्तर",
       "body": "Kundali, palmistry, tarot and numerology with Sadhak Pawan Pandey. One seeker at a time, by call, video, WhatsApp or a written report, with guidance that continues until your doubts are resolved.",
@@ -777,7 +777,7 @@
       "wa": "Describe your question on WhatsApp"
     },
     "how": {
-      "eyebrow": "02 — How it works · <hi>प्रक्रिया</hi>",
+      "eyebrow": "02 — How it works",
       "title": "Four steps, and <em>no</em> hurry.",
       "body": "Your details reach Sadhak Ji before the session does. Nothing is read on the spot, and nothing ends when the call does.",
       "steps": [
@@ -913,7 +913,7 @@
   },
   "inquiry": {
     "course": {
-      "eyebrow": "Enrollment inquiry · नामांकन",
+      "eyebrow": "Enrollment inquiry",
       "title": "Enquire about enrollment",
       "note": "This is not an application or payment. It starts a conversation with Sadhak Ji, who decides with you whether this sadhana suits you now.",
       "area": "Why this sadhana, and why now?",
@@ -924,7 +924,7 @@
       "done": "Your inquiry for {course} is with Sadhak Ji’s office. Expect a WhatsApp call from {wa} within two working days to arrange the first conversation."
     },
     "ritual": {
-      "eyebrow": "Ritual inquiry · अनुष्ठान",
+      "eyebrow": "Ritual inquiry",
       "title": "Tell us what is happening",
       "note": "Nothing is booked or charged here. Sadhak Ji studies your case first, and a ritual is suggested only if he is confident it will help.",
       "area": "Describe the situation",
@@ -991,7 +991,7 @@
       "title": "Book {name}",
       "description": "Book a {name} consultation with Sadhak Pawan Pandey: choose your package, share your details, pick a time and pay securely."
     },
-    "eyebrow": "Book a consultation · <hi>परामर्श</hi>",
+    "eyebrow": "Book a consultation",
     "head": {
       "1": "Choose your <em>consultation.</em>",
       "2": "A few details <em>about you.</em>",
@@ -1264,7 +1264,7 @@
       "here": "Kundali ₹99"
     },
     "hero": {
-      "eyebrow": "Janam Kundali · <hi>जन्म कुंडली</hi>",
+      "eyebrow": "Janam Kundali",
       "title": "Your complete Kundali, <em>ready in minutes.</em>",
       "off": "{n}% OFF",
       "tax": "incl. all taxes",
@@ -1332,7 +1332,7 @@
       "edit": "Edit details"
     },
     "preview": {
-      "eyebrow": "Free preview · <hi>निःशुल्क झलक</hi>",
+      "eyebrow": "Free preview",
       "title": "{name}, here is your chart.",
       "titleAnon": "Here is your chart.",
       "noon": "Calculated for 12:00 noon because the birth time is unknown. Planet signs are reliable; the Lagna and house placements may shift.",
@@ -1437,7 +1437,7 @@
       "crumbsAria": "Breadcrumb",
       "home": "Home",
       "here": "Love Calculator",
-      "eyebrow": "Free tool · <hi>प्रेम मिलान</hi>",
+      "eyebrow": "Free tool",
       "title": "Love Calculator, <em>by name.</em>",
       "lead": "In Ank Jyotish every name reduces to a single number, and every number has a ruling graha. Enter two names to see how those grahas sit together.",
       "note": "For fun — for true compatibility, get Kundali Milan by Sadhak Ji."
@@ -1525,7 +1525,7 @@
     "seeGems": "See gemstones",
     "overall": "Overall {n} of 5",
     "hero": {
-      "eyebrow": "<hi>आज का राशिफल</hi> · Daily Rashifal",
+      "eyebrow": "Daily Rashifal",
       "title": "Twelve rashis, <em>read each day.</em>",
       "intro": "Read by Chandra rashi, the sign your Moon was in at birth.",
       "wheelAria": "Rashi wheel. Select a rashi, or use the arrows below.",
@@ -1564,7 +1564,7 @@
       "saved": "{name} is marked as your rashi on this device."
     },
     "detail": {
-      "eyebrow": "{name} rashifal · <hi>{hiName} राशिफल</hi>",
+      "eyebrow": "{name} rashifal",
       "span": {
         "today": "today.",
         "tomorrow": "tomorrow.",
@@ -1591,7 +1591,7 @@
       "eyebrow": "04 — Compatible rashis"
     },
     "remedy": {
-      "eyebrow": "03 — Remedy · <hi>उपाय</hi>",
+      "eyebrow": "03 — Remedy",
       "when": "Best begun on a {day} ({dayHi}), the day of your rashi lord."
     },
     "recommend": {
@@ -1620,7 +1620,7 @@
       "courses": "Sadhana Courses"
     },
     "hero": {
-      "eyebrow": "॥ Sadhana courses ॥ · <hi>साधना</hi>",
+      "eyebrow": "॥ Sadhana courses ॥",
       "title": "Six sadhanas, <em>guided</em> from diksha to completion.",
       "deva": "गुरु के मार्गदर्शन में, दीक्षा से पूर्णाहुति तक",
       "intro": "Each course is a complete anushthan under the personal guidance of Sadhak Pawan Pandey. You practise at home, on a fixed daily sequence, and he reviews your progress every week.",
@@ -1712,7 +1712,7 @@
         }
       },
       "niyam": {
-        "eyebrow": "04 — Discipline & niyam · <hi>नियम</hi>",
+        "eyebrow": "04 — Discipline & niyam",
         "title": "The rules are <em>the practice.</em>",
         "specific": "Specific to {name}"
       },
@@ -1787,7 +1787,7 @@
       "here": "Rituals & Anushthan"
     },
     "hero": {
-      "eyebrow": "Rituals & Anushthan · <hi>अनुष्ठान</hi>",
+      "eyebrow": "Rituals & Anushthan",
       "title": "Rituals performed <em>only</em> when they will help.",
       "deva": "आवश्यकता हो, तभी अनुष्ठान",
       "intro": "Share what is happening in your life. Sadhak Ji studies it, with your chart if you have one, before anything is suggested. If a ritual is not the right path, you are told so.",
@@ -1845,7 +1845,7 @@
       "here": "About Sadhak Ji"
     },
     "hero": {
-      "eyebrow": "॥ The founder ॥ · <hi>साधक पवन पाण्डेय</hi>",
+      "eyebrow": "॥ The founder ॥",
       "title": "Welcome to a space where ancient spiritual wisdom meets <em>modern clarity.</em>",
       "deva": "साधना से स्पष्टता तक",
       "intro": "Sadhak Pawan Pandey holds an MBA and spent years in multinational companies before giving his life to sadhana, mantra and paranormal research under enlightened mentors. He founded Maa Kali Astuti to bring that practice to seekers honestly: as a science, without superstition or fear.",
@@ -1862,7 +1862,7 @@
       "portraitAlt": "Portrait placeholder for Sadhak Pawan Pandey"
     },
     "story": {
-      "eyebrow": "01 — His story · <hi>जीवन यात्रा</hi>",
+      "eyebrow": "01 — His story",
       "title": "Six chapters, <em>one practice.</em>"
     },
     "approach": {
@@ -1903,7 +1903,7 @@
       "here": "Videos"
     },
     "hero": {
-      "eyebrow": "॥ Discourses ॥ · <hi>प्रवचन एवं शॉर्ट्स</hi>",
+      "eyebrow": "॥ Discourses ॥",
       "title": "Discourses from the <em>sadhana</em> path.",
       "deva": "साधना पथ के प्रवचन, सरल भाषा में",
       "subs": "{subs} · a new discourse every Sunday"

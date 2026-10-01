@@ -34,7 +34,7 @@ export async function CourseTrack() {
             <span className="font-sans text-[11px] leading-[1.2] font-semibold tracking-[.16em] text-g3 uppercase">
               {t("eyebrow")}
             </span>
-            <h2 className="m-0 font-display text-[clamp(36px,4.6vw,64px)] leading-[1.04] font-normal tracking-[-.022em] text-iv font-soft">
+            <h2 className="m-0 font-display text-[clamp(28px,3.6vw,46px)] leading-[1.1] font-normal tracking-[-.018em] text-iv font-soft">
               <MaskLine>{t("l1")}</MaskLine>
               <MaskLine>{t.rich("l2", { em })}</MaskLine>
             </h2>

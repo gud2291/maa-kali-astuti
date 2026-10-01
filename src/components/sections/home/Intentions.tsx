@@ -32,9 +32,12 @@ export async function Intentions() {
         <span className="font-sans text-[11px] leading-[1.2] font-semibold tracking-[.16em] text-g7 uppercase">
           {t("eyebrow")}
         </span>
-        <h2 className="m-0 font-display text-[clamp(36px,5vw,68px)] leading-[1.04] font-normal tracking-[-.022em] text-em9 font-soft">
-          <MaskLine>{t("l1")}</MaskLine>
-          <MaskLine>{t.rich("l2", { em })}</MaskLine>
+        <h2 className="m-0 font-display text-[clamp(28px,3.8vw,48px)] leading-[1.1] font-normal tracking-[-.018em] text-em9 font-soft">
+          <MaskLine>
+            <span className="md:whitespace-nowrap">
+              {t("l1")} {t.rich("l2", { em })}
+            </span>
+          </MaskLine>
         </h2>
         <span lang="hi" className="font-deva text-[clamp(20px,2vw,24px)] leading-[1.35] text-g7">
           {t("deva")}

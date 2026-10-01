@@ -244,11 +244,15 @@ export function NagSpotlight({ product: p, buildNow }: { product: Product; build
             <span className="font-sans text-[11px] leading-[1.2] font-semibold tracking-[.16em] text-[#8A4A26] uppercase">
               {t("eyebrow")}
             </span>
-            <h2 className="m-0 font-display text-[clamp(32px,3.6vw,50px)] leading-[1.08] font-normal tracking-[-.018em] text-em9 font-soft">
-              <MaskLine>{t("l1")}</MaskLine>
-              <MaskLine>{t.rich("l2", { em })}</MaskLine>
+            <h2 className="m-0 font-display text-[clamp(26px,3vw,40px)] leading-[1.14] font-normal tracking-[-.018em] text-em9 font-soft">
+              <MaskLine>
+                <span className="block md:whitespace-nowrap">{t("l1")}</span>
+              </MaskLine>
+              <MaskLine>
+                <span className="block md:whitespace-nowrap">{t.rich("l2", { em })}</span>
+              </MaskLine>
             </h2>
-            <span lang="hi" className="font-deva text-[19px] leading-[1.35] text-[#8A4A26]">
+            <span lang="hi" className="font-deva text-[18px] leading-[1.35] text-[#8A4A26]">
               {t("deva")}
             </span>
           </MaskText>

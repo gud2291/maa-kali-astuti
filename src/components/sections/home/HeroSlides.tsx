@@ -123,6 +123,14 @@ export function HeroSlides({ children }: { children?: ReactNode }) {
     syncProg();
   }, [play, syncProg]);
 
+  // Mirror the slide on the hero section: Hero.tsx swaps the art for the banner image on 2–3.
+  useEffect(() => {
+    const sec = colRef.current?.closest("section");
+    if (!sec) return;
+    sec.setAttribute("data-slide", String(slide));
+    sec.toggleAttribute("data-bg", slide !== 0);
+  }, [slide]);
+
   // Pause while the hero is (almost) offscreen or the tab is hidden.
   useEffect(() => {
     const target = colRef.current?.closest("section") ?? colRef.current;
@@ -155,10 +163,14 @@ export function HeroSlides({ children }: { children?: ReactNode }) {
 
   const s = SLIDES[slide];
   const k = `slides.${s.k}` as const;
+  // Slides 2–3 sit on a dark banner image: ivory copy, gold accents.
+  const dark = slide !== 0;
   const em = (c: ReactNode) => <em className={hi ? "text-g5 not-italic" : "text-g5 italic"}>{c}</em>;
   const line = hi ? "-mb-[.1em] block overflow-hidden pb-[.1em]" : "-mb-[.12em] block overflow-hidden pb-[.12em]";
-  const btn =
-    "grid size-11 place-items-center rounded-pill border-0 bg-transparent text-em7 shadow-ring-g5-55 transition-colors duration-150 hover:bg-s1";
+  const btn = cn(
+    "grid size-11 place-items-center rounded-pill border-0 bg-transparent shadow-ring-g5-55 transition-colors duration-150",
+    dark ? "text-iv hover:bg-iv/10" : "text-em7 hover:bg-s1",
+  );
 
   return (
     <div
@@ -171,40 +183,42 @@ export function HeroSlides({ children }: { children?: ReactNode }) {
         hold.current = false;
         syncProg();
       }}
-      className="order-1 flex min-w-0 flex-col gap-[22px] lg:gap-7"
+      className="order-1 flex min-w-0 flex-col gap-[22px] lg:gap-5"
     >
-      <div className="flex flex-col justify-center lg:min-h-[440px]">
+      <div className="flex flex-col justify-center lg:min-h-[372px]">
         <div
           key={`${slide}-${hi ? "hi" : "en"}`}
           ref={slideRef}
           data-slide=""
-          className={cn("flex flex-col", hi ? "gap-4" : "gap-[18px]")}
+          className={cn("flex flex-col", hi ? "gap-4 lg:gap-3" : "gap-[18px] lg:gap-3.5")}
         >
           <span
             data-fade=""
             style={v(0)}
-            className={
+            className={cn(
               hi
-                ? "font-hi text-[15px] leading-[1.35] font-medium text-g7"
-                : "font-sans text-[12px] leading-[1.2] font-semibold tracking-[.2em] text-g7"
-            }
+                ? "font-hi text-[15px] leading-[1.35] font-medium"
+                : "font-sans text-[12px] leading-[1.2] font-semibold tracking-[.2em]",
+              dark ? "text-g5" : "text-g7",
+            )}
           >
             {t(`${k}.eyebrow`)}
           </span>
           <h1
-            className={
+            className={cn(
               hi
-                ? "m-0 font-deva text-[clamp(38px,5.2vw,74px)] leading-[1.35] font-normal text-em9"
-                : "m-0 font-display text-[clamp(44px,6.1vw,88px)] leading-[1.02] font-normal tracking-[-.022em] text-em9 font-soft"
-            }
+                ? "m-0 font-deva text-[clamp(26px,3.8vw,40px)] leading-[1.3] font-normal lg:text-[clamp(30px,2.8vw,44px)]"
+                : "m-0 font-display text-[clamp(25px,4vw,38px)] leading-[1.08] font-normal tracking-[-.018em] font-soft md:text-[clamp(28px,3.5vw,42px)] lg:text-[clamp(34px,3vw,46px)]",
+              dark ? "text-iv" : "text-em9",
+            )}
           >
             <span className={line}>
-              <span data-ln="" style={v(0)} className="block">
+              <span data-ln="" style={v(0)} className="block lg:whitespace-nowrap">
                 {t(`${k}.l1`)}
               </span>
             </span>
             <span className={line}>
-              <span data-ln="" style={v(1)} className="block">
+              <span data-ln="" style={v(1)} className="block lg:whitespace-nowrap">
                 {t.rich(`${k}.l2`, { em })}
               </span>
             </span>
@@ -213,26 +227,28 @@ export function HeroSlides({ children }: { children?: ReactNode }) {
             data-fade=""
             lang={hi ? "en" : "hi"}
             style={v(1)}
-            className={
+            className={cn(
               hi
-                ? "font-display text-[clamp(18px,1.8vw,22px)] leading-[1.35] text-g7 italic"
-                : "font-deva text-[clamp(19px,2vw,24px)] leading-[1.35] text-g7"
-            }
+                ? "font-display text-[clamp(18px,1.8vw,22px)] leading-[1.35] italic"
+                : "font-deva text-[clamp(19px,2vw,24px)] leading-[1.35]",
+              dark ? "text-g5" : "text-g7",
+            )}
           >
             {t(`${k}.sub`)}
           </span>
           <p
             data-fade=""
             style={v(2)}
-            className={
+            className={cn(
               hi
-                ? "m-0 max-w-[520px] font-hi text-[17px] leading-[1.7] text-ink6"
-                : "m-0 max-w-[500px] font-sans text-[clamp(16px,1.3vw,18px)] leading-[1.65] text-pretty text-ink6"
-            }
+                ? "m-0 max-w-[520px] font-hi text-[17px] leading-[1.7] lg:text-[16px] lg:leading-[1.6]"
+                : "m-0 max-w-[500px] font-sans text-[clamp(16px,1.3vw,18px)] leading-[1.65] text-pretty lg:text-[16px] lg:leading-[1.6]",
+              dark ? "text-iv/80" : "text-ink6",
+            )}
           >
             {t(`${k}.body`)}
           </p>
-          <div data-fade="" style={v(3)} className="mt-2 flex flex-col flex-wrap gap-3 md:flex-row">
+          <div data-fade="" style={v(3)} className="mt-2 flex flex-col flex-wrap gap-3 md:flex-row lg:mt-1">
             <Link
               href={s.href1}
               {...magneticHandlers}
@@ -274,13 +290,16 @@ export function HeroSlides({ children }: { children?: ReactNode }) {
       <div role="group" aria-label={t("carousel")} onKeyDown={onKey} className="flex items-center gap-3.5">
         <span
           aria-hidden="true"
-          className="font-sans text-[12px] leading-none font-semibold tracking-[.14em] whitespace-nowrap text-ink tabular"
+          className={cn(
+            "font-sans text-[12px] leading-none font-semibold tracking-[.14em] whitespace-nowrap tabular",
+            dark ? "text-iv" : "text-ink",
+          )}
         >
           0{slide + 1}
           <span className="mx-1.5 text-g5">/</span>
-          <span className="text-ink6">03</span>
+          <span className={dark ? "text-iv/70" : "text-ink6"}>03</span>
         </span>
-        <span aria-hidden="true" className="relative h-px max-w-[220px] flex-1 bg-s2">
+        <span aria-hidden="true" className={cn("relative h-px max-w-[220px] flex-1", dark ? "bg-iv/25" : "bg-s2")}>
           <span
             ref={progRef}
             className="absolute inset-x-0 -top-[.5px] block h-0.5 origin-left bg-g5"

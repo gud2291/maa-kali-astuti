@@ -38,8 +38,8 @@
   --color-sg5: #9fb3aa; /* muted text on night */
 
   /* ---- fonts (next/font variables set on <html>) ---- */
-  --font-display: var(--font-fraunces), "Fraunces", serif;
-  --font-sans: var(--font-manrope), var(--font-mukta), "Manrope", "Mukta", sans-serif;
+  --font-display: var(--font-cormorant), "Cormorant Garamond", serif;
+  --font-sans: var(--font-montserrat), var(--font-mukta), "Montserrat", "Mukta", sans-serif;
   --font-deva: var(--font-tiro), "Tiro Devanagari Hindi", serif;
   --font-hi: var(--font-mukta), "Mukta", sans-serif;
 
@@ -155,9 +155,19 @@
 @utility section-y {
   padding-block: clamp(56px, 8vw, 112px);
 }
-/* Product titles: Fraunces with the Devanagari serif as fallback (ProductCard.dc.html 19/59). */
+/* Headings and display text: luxury classic serif with Devanagari fallback */
+@utility font-display {
+  font-family: var(--font-cormorant), "Cormorant Garamond", Georgia, serif;
+}
+@utility font-deva {
+  font-family: var(--font-tiro), "Tiro Devanagari Hindi", serif;
+}
+@utility font-hi {
+  font-family: var(--font-mukta), "Mukta", sans-serif;
+}
+/* Product titles: the display serif with the Devanagari serif as fallback (ProductCard.dc.html 19/59). */
 @utility font-title {
-  font-family: var(--font-fraunces), "Fraunces", var(--font-tiro), "Tiro Devanagari Hindi", serif;
+  font-family: var(--font-cormorant), "Cormorant Garamond", var(--font-tiro), "Tiro Devanagari Hindi", serif;
 }
 @utility font-soft {
   font-variation-settings: "SOFT" 40;
@@ -458,4 +468,9 @@ html[data-tab-hidden] [data-loop] {
 }
 [data-slide] [data-fade] {
   animation: hero-fade 700ms var(--ease-mka) calc(150ms + var(--i, 0) * 80ms) backwards;
+}
+
+/* English locale: hide every Devanagari sub-line/label (language toggle buttons stay). */
+html[lang="en"] [lang="hi"]:not(button[lang="hi"]) {
+  display: none !important;
 }

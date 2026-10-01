@@ -31,14 +31,14 @@ export async function CategoryArches() {
           {hi ? (
             <MaskText className="flex flex-col gap-2.5">
               <span className="font-hi text-[15px] leading-[1.35] font-medium text-g7">{t("eyebrow")}</span>
-              <h2 className="m-0 font-deva text-[clamp(32px,3.8vw,52px)] leading-[1.35] font-normal text-em9">
+              <h2 className="m-0 font-deva text-[clamp(26px,3.2vw,42px)] leading-[1.35] font-normal text-em9">
                 <span className="-mb-[.1em] block overflow-hidden pb-[.1em]">
                   <span data-ln="" className="block">
                     {t.rich("title", { em })}
                   </span>
                 </span>
               </h2>
-              <span lang="en" className="font-display text-[19px] leading-[1.35] text-g7 italic">
+              <span lang="en" className="font-display text-[18px] leading-[1.35] text-g7 italic">
                 {t("sub")}
               </span>
             </MaskText>
@@ -47,10 +47,10 @@ export async function CategoryArches() {
               <span className="font-sans text-[11px] leading-[1.2] font-semibold tracking-[.16em] text-g7 uppercase">
                 {t("eyebrow")}
               </span>
-              <h2 className="m-0 font-display text-[clamp(34px,4.2vw,56px)] leading-[1.06] font-normal tracking-[-.02em] text-em9 font-soft">
+              <h2 className="m-0 font-display text-[clamp(26px,3.4vw,44px)] leading-[1.12] font-normal tracking-[-.018em] text-em9 font-soft">
                 <MaskLine>{t.rich("title", { em })}</MaskLine>
               </h2>
-              <span lang="hi" className="font-deva text-[19px] leading-[1.35] text-g7">
+              <span lang="hi" className="font-deva text-[18px] leading-[1.35] text-g7">
                 {t("sub")}
               </span>
             </MaskText>

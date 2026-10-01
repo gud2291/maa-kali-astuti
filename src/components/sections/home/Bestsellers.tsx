@@ -48,10 +48,10 @@ export async function Bestsellers() {
             <span className="font-sans text-[11px] leading-[1.2] font-semibold tracking-[.16em] text-g7 uppercase">
               {t("eyebrow")}
             </span>
-            <h2 className="m-0 font-display text-[clamp(34px,4.2vw,56px)] leading-[1.06] font-normal tracking-[-.02em] text-em9 font-soft">
+            <h2 className="m-0 font-display text-[clamp(26px,3.4vw,44px)] leading-[1.12] font-normal tracking-[-.018em] text-em9 font-soft">
               <MaskLine>{t.rich("title", { em })}</MaskLine>
             </h2>
-            <span lang="hi" className="font-deva text-[19px] leading-[1.35] text-g7">
+            <span lang="hi" className="font-deva text-[18px] leading-[1.35] text-g7">
               {t("deva")}
             </span>
           </MaskText>

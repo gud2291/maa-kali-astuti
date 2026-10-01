@@ -31,7 +31,7 @@ export async function Journal() {
             <span className="font-sans text-[11px] leading-[1.2] font-semibold tracking-[.16em] text-g7 uppercase">
               {t("eyebrow")}
             </span>
-            <h2 className="m-0 font-display text-[clamp(34px,4.2vw,56px)] leading-[1.06] font-normal tracking-[-.02em] text-em9 font-soft">
+            <h2 className="m-0 font-display text-[clamp(26px,3.4vw,44px)] leading-[1.12] font-normal tracking-[-.02em] text-em9 font-soft">
               <MaskLine>{t.rich("l1", { em })}</MaskLine>
             </h2>
           </MaskText>

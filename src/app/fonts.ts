@@ -1,21 +1,23 @@
-import { Fraunces, Manrope, Mukta, Tiro_Devanagari_Hindi } from "next/font/google";
+import { Cormorant_Garamond, Montserrat, Mukta, Tiro_Devanagari_Hindi } from "next/font/google";
 
-/* Same families/axes as the design helmet (Home.dc.html 12). Exposed as CSS variables
-   and mapped to Tailwind font tokens in globals.css (font-display, font-sans, font-deva, font-hi). */
+/* Client revision: Fraunces/Manrope replaced by the "Luxury Serif" pairing (Cormorant Garamond +
+   Montserrat). Exposed as CSS variables and mapped to Tailwind font tokens in globals.css
+   (font-display, font-sans, font-deva, font-hi). Cormorant ships no 400 here on purpose: the
+   design's `font-normal` headings resolve to 500, which keeps the thin serif legible at size. */
 
-export const fraunces = Fraunces({
+export const cormorant = Cormorant_Garamond({
   subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
   style: ["normal", "italic"],
-  axes: ["opsz", "SOFT"],
   display: "swap",
-  variable: "--font-fraunces",
+  variable: "--font-cormorant",
 });
 
-export const manrope = Manrope({
+export const montserrat = Montserrat({
   subsets: ["latin"],
   weight: ["400", "500", "600", "700"],
   display: "swap",
-  variable: "--font-manrope",
+  variable: "--font-montserrat",
 });
 
 // Devanagari faces: not preloaded (they are only needed for Hindi copy and subtitles).
@@ -36,4 +38,4 @@ export const mukta = Mukta({
   variable: "--font-mukta",
 });
 
-export const fontVariables = [fraunces.variable, manrope.variable, tiro.variable, mukta.variable].join(" ");
+export const fontVariables = [cormorant.variable, montserrat.variable, tiro.variable, mukta.variable].join(" ");

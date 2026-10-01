@@ -46,12 +46,12 @@ export async function VideoSection() {
         <div className="mb-[clamp(24px,3.4vw,44px)] flex flex-wrap items-end justify-between gap-x-10 gap-y-[18px]">
           <MaskText className="flex flex-col gap-3">
             <span className="font-sans text-[11px] leading-[1.2] font-semibold tracking-[.16em] text-g3 uppercase">
-              {t("eyebrow")} ·{" "}
+              {t("eyebrow")}{" "}
               <span lang="hi" className="font-hi text-[1.12em] font-medium tracking-normal normal-case">
-                {t("eyebrowHi")}
+                · {t("eyebrowHi")}
               </span>
             </span>
-            <h2 className="m-0 font-display text-[clamp(34px,4.2vw,56px)] leading-[1.06] font-normal tracking-[-.02em] text-iv font-soft">
+            <h2 className="m-0 font-display text-[clamp(26px,3.4vw,44px)] leading-[1.12] font-normal tracking-[-.018em] text-iv font-soft">
               <MaskLine>{t.rich("l1", { em })}</MaskLine>
             </h2>
           </MaskText>

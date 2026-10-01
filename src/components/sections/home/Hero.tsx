@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { getTranslations } from "next-intl/server";
 import { Icon, type IconName } from "@/components/icons/Icon";
 import { MandalaG } from "@/components/ui/ornaments/Mandala";
@@ -11,8 +12,16 @@ import { QuickActions } from "./QuickActions";
 
 /* §1 Hero (Home.dc.html 34–184, layout L() 1366–1382, vHero 1393–1425).
    Layout breakpoints: <768 mobile · 768–1023 stacked (art 440px) · ≥1024 two columns, art right.
-   Desktop art width = clamp(400, (vh − 170) × .8, 560); stacked layouts crop the art into a box
-   of min(58vh, W × 1.05 + 30, W × 1.14), W = min(vw − 32, 520), with a 72px ivory fade. */
+   Client revision: the desktop banner is a fixed 550px tall (art 384px wide); stacked layouts crop
+   the art into a box of min(58vh, W × 1.05 + 30, W × 1.14), W = min(vw − 32, 520), with a 72px
+   ivory fade. Slide 1 shows Pandit Ji; slides 2–3 swap the art for a full-bleed banner image.
+   HeroSlides mirrors the active slide on the section as [data-slide] / [data-bg] (group "hero"). */
+
+/** Full-bleed banners for slides 2 and 3. Replace the files to change the images. */
+const BANNERS = [
+  { src: "/images/hero/banner-2.webp", on: "group-data-[slide=1]/hero:opacity-100" },
+  { src: "/images/hero/banner-3.webp", on: "group-data-[slide=2]/hero:opacity-100" },
+];
 
 type Gem = { k: string; l: string; t: string; w: string; px: number; amb: string };
 
@@ -84,21 +93,40 @@ export async function Hero() {
   ];
 
   return (
-    <section data-screen-label="01 Hero" className="relative overflow-hidden bg-iv">
+    <section data-screen-label="01 Hero" data-slide="0" className="group/hero relative overflow-hidden bg-iv lg:h-[550px]">
       <ArchClip id="hero-arch" />
       <div
         aria-hidden="true"
-        className="pointer-events-none absolute top-1/2 left-1/2 size-[1180px] -translate-x-1/2 -translate-y-1/2 opacity-5 lg:left-[74%]"
+        className="pointer-events-none absolute top-1/2 left-1/2 size-[1180px] -translate-x-1/2 -translate-y-1/2 opacity-5 transition-opacity duration-700 group-data-[bg]/hero:opacity-0 motion-reduce:transition-none lg:left-[74%]"
       >
         <svg viewBox="-300 -300 600 600" width="100%" height="100%" className="block">
           <MandalaG R={296} col="#7A5C1C" sw={0.8} />
         </svg>
       </div>
 
-      <div className="relative mx-auto grid max-w-[1320px] grid-cols-[minmax(0,1fr)] items-center gap-7 px-4 pt-2 pb-10 md:px-8 md:pt-6 md:pb-14 lg:grid-cols-[minmax(0,1.02fr)_minmax(0,.98fr)] lg:gap-[clamp(40px,5vw,80px)] lg:pt-[clamp(28px,4vw,56px)] lg:pb-[clamp(56px,6vw,96px)]">
-        {/* Art column */}
-        <div className="relative order-0 h-[min(58svh,calc(min(100vw_-_32px,520px)_*_1.05_+_30px),calc(min(100vw_-_32px,520px)_*_1.14))] min-w-0 overflow-hidden pt-[34px] lg:order-2 lg:h-auto lg:overflow-visible lg:pt-14">
-          <HeroArt className="relative mx-auto aspect-[4/5] w-[84%] max-w-full md:w-[440px] lg:w-[clamp(400px,calc((100vh_-_170px)_*_.8),560px)]">
+      {/* Banner layer (slides 2–3): image crossfade under a deep-emerald scrim that keeps the copy
+          side readable — top→bottom on stacked layouts, left→right on desktop. */}
+      <div
+        aria-hidden="true"
+        className="pointer-events-none invisible absolute inset-0 opacity-0 transition-[opacity,visibility] duration-700 group-data-[bg]/hero:visible group-data-[bg]/hero:opacity-100 motion-reduce:transition-none"
+      >
+        {BANNERS.map((b) => (
+          <Image
+            key={b.src}
+            src={b.src}
+            alt=""
+            fill
+            sizes="100vw"
+            className={cn("object-cover opacity-0 transition-opacity duration-700 motion-reduce:transition-none", b.on)}
+          />
+        ))}
+        <span className="absolute inset-0 block bg-[linear-gradient(180deg,rgba(10,31,26,.12)_0%,rgba(10,31,26,.5)_36%,rgba(10,31,26,.9)_58%)] lg:bg-[linear-gradient(90deg,rgba(10,31,26,.9)_0%,rgba(10,31,26,.66)_46%,rgba(10,31,26,.1)_100%)]" />
+      </div>
+
+      <div className="relative mx-auto grid max-w-[1320px] grid-cols-[minmax(0,1fr)] items-center gap-7 px-4 pt-2 pb-10 md:px-8 md:pt-6 md:pb-14 lg:h-full lg:grid-cols-[minmax(0,1.02fr)_minmax(0,.98fr)] lg:gap-[clamp(40px,5vw,80px)] lg:py-0">
+        {/* Art column (slide 1 only; kept in flow on slides 2–3 so the height never jumps) */}
+        <div className="relative order-0 h-[min(58svh,calc(min(100vw_-_32px,520px)_*_1.05_+_30px),calc(min(100vw_-_32px,520px)_*_1.14))] min-w-0 overflow-hidden pt-[34px] transition-[opacity,visibility] duration-500 group-data-[bg]/hero:invisible group-data-[bg]/hero:opacity-0 motion-reduce:transition-none lg:order-2 lg:h-auto lg:overflow-visible lg:pt-[34px]">
+          <HeroArt className="relative mx-auto aspect-[4/5] w-[84%] max-w-full md:w-[440px] lg:w-[384px]">
             <div className="absolute inset-0 bg-n9 [clip-path:url(#hero-arch)]">
               <span
                 aria-hidden="true"
@@ -146,7 +174,7 @@ export async function Hero() {
 
         {/* Text column: slides + controls (client), trust row, mobile quick actions */}
         <HeroSlides>
-          <div className="flex flex-wrap items-center gap-x-[18px] gap-y-2.5 border-t border-s2 pt-[18px] font-sans text-[13px] leading-[1.3] font-semibold text-ink">
+          <div className="flex flex-wrap items-center gap-x-[18px] gap-y-2.5 border-t border-s2 pt-[18px] font-sans text-[13px] leading-[1.3] font-semibold text-ink transition-colors duration-500 group-data-[bg]/hero:border-iv/20 group-data-[bg]/hero:text-iv">
             {trust.map((x, i) => (
               <span key={x.k} className="contents">
                 {i > 0 && <span aria-hidden="true" className="size-1 rounded-pill bg-g5" />}

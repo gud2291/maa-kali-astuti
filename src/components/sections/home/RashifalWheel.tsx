@@ -118,7 +118,7 @@ export function RashifalWheel({ buildNow, stones }: { buildNow: number; stones: 
               ),
             })}
           </span>
-          <h2 className="m-0 font-display text-[clamp(34px,4.4vw,60px)] leading-[1.05] font-normal tracking-[-.02em] text-iv font-soft">
+          <h2 className="m-0 font-display text-[clamp(26px,3.4vw,44px)] leading-[1.12] font-normal tracking-[-.02em] text-iv font-soft">
             <MaskLine>{t("l1")}</MaskLine>
             <MaskLine>{t.rich("l2", { em })}</MaskLine>
           </h2>
