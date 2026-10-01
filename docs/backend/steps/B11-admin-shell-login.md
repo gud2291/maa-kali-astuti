@@ -24,26 +24,36 @@ Create:
 - `src/components/admin/ui/Toaster.tsx`, `src/components/admin/ui/toast.ts`
 
 ## Tasks
-- [ ] T1. `src/app/admin/layout.tsx` (root layout): `<html lang="en" className={fontVariables}>`, imports `../globals.css`; `<body className="bg-iv text-ink font-sans">`; `metadata` = `{ title: { default: "Admin · Maa Kali Astuti", template: "%s · Admin" }, robots: { index: false, follow: false } }`; `viewport.themeColor` `#0E3B30`; renders `children` + `<Toaster />`.
-- [ ] T2. `src/components/admin/ui/toast.ts` (zustand): `toast.ok(msg)`, `toast.err(msg)`, `toast.info(msg)`; max 3 visible, auto-dismiss 4 s. `Toaster.tsx`: bottom-centre on mobile (above the bottom nav), bottom-right on desktop, `aria-live="polite"`, tones `ok` / `sin` / `em5` with cream surface.
-- [ ] T3. `src/components/admin/errors.ts`: `ADMIN_ERRORS: Record<ErrorCode, string>` (plain English, one line each) and `errorText(code)`.
-- [ ] T4. `src/components/admin/AdminIcon.tsx`: wraps `Icon`; adds three paths in the same 24 px / 1.5 px stroke style: `gear`, `logout`, `drag` (6-dot grip). Type `AdminIconName = IconName | "gear" | "logout" | "drag"`.
-- [ ] T5. `src/components/admin/nav.ts`: `type NavItem = { href: string; label: string; icon: AdminIconName; perm: Permission; group: "Overview" | "Sales" | "Catalog" | "Consultations" | "Kundali" | "Leads" | "Content" | "System" }`; `NAV: NavItem[]` = only `{ href: "/admin", label: "Dashboard", icon: "grid", perm: "dashboard.view", group: "Overview" }`. Later steps append their items here. `navFor(role)` filters by `can()`.
-- [ ] T6. `AdminShell.tsx` (server): grid layout — sidebar (≥ 1024 px, 248 px wide, collapsible to 72 px), main column with `AdminTopbar` and `<main className="mx-auto w-full max-w-[1280px] px-4 pb-28 pt-6 lg:px-8 lg:pb-12">`; `AdminMobileNav` below 1024 px.
-- [ ] T7. `AdminSidebar.tsx` (client): `bg-n9`, logo (small `Logo` + "Admin" eyebrow in `g3`), groups with `text-sg5` labels, items `text-sg3` hover `text-g1`, active item `bg-n8 text-g1` with a 2 px `g5` left hairline; collapse toggle stored in `localStorage` (`mka.admin.collapsed`, read after mount only).
-- [ ] T8. `AdminTopbar.tsx` (client): sticky, `bg-cream` with bottom hairline `s2`, page area title slot, right side user menu (name, role, "View site" → `/`, "Sign out" → `logoutAction("admin")` then `/admin/login`). 56 px high.
-- [ ] T9. `AdminMobileNav.tsx` (client): fixed bottom bar (`bg-cream`, top hairline, `pb-[env(safe-area-inset-bottom)]`), first 4 permitted items + "More" opening a radix Dialog sheet with all items grouped; 44 px+ targets; active item `text-em7`.
-- [ ] T10. `src/app/admin/(panel)/layout.tsx`: `const admin = await getAdmin(); if (!admin) redirect("/admin/login");` → `<AdminShell admin={…} nav={navFor(admin.role)}>`.
-- [ ] T11. `src/app/admin/(panel)/page.tsx`: `await requireAdminPage("dashboard.view")`; greeting card ("Namaste, <name>", today's date in IST via `formatIst`), a grid of quick-link cards for every permitted nav item, and a notice when `?denied=1` ("You don't have access to that page."). (B39 replaces this with KPIs.)
-- [ ] T12. `src/app/admin/login/page.tsx` + `AdminLogin.tsx`: if `getAdmin()` → `redirect("/admin")`. Full-height `bg-n9` page with a centred cream card (max-w 420 px): `Logo`, "Admin sign in", `OtpForm` with `purpose="admin_login"` and English labels built from `ADMIN_ERRORS`; on success `router.replace(next)`.
-- [ ] T13. `src/app/admin/not-found.tsx`: simple branded 404 with a link to `/admin`.
-- [ ] T14. Finish per AGENTS.md §1 step 8.
+- [x] T1. `src/app/admin/layout.tsx` (root layout): `<html lang="en" className={fontVariables}>`, imports `../globals.css`; `<body className="bg-iv text-ink font-sans">`; `metadata` = `{ title: { default: "Admin · Maa Kali Astuti", template: "%s · Admin" }, robots: { index: false, follow: false } }`; `viewport.themeColor` `#0E3B30`; renders `children` + `<Toaster />`. — antigravity
+- [x] T2. `src/components/admin/ui/toast.ts` (zustand): `toast.ok(msg)`, `toast.err(msg)`, `toast.info(msg)`; max 3 visible, auto-dismiss 4 s. `Toaster.tsx`: bottom-centre on mobile (above the bottom nav), bottom-right on desktop, `aria-live="polite"`, tones `ok` / `sin` / `em5` with cream surface. — antigravity
+- [x] T3. `src/components/admin/errors.ts`: `ADMIN_ERRORS: Record<ErrorCode, string>` (plain English, one line each) and `errorText(code)`. — antigravity
+- [x] T4. `src/components/admin/AdminIcon.tsx`: wraps `Icon`; adds three paths in the same 24 px / 1.5 px stroke style: `gear`, `logout`, `drag` (6-dot grip). Type `AdminIconName = IconName | "gear" | "logout" | "drag"`. — antigravity
+- [x] T5. `src/components/admin/nav.ts`: `type NavItem = { href: string; label: string; icon: AdminIconName; perm: Permission; group: "Overview" | "Sales" | "Catalog" | "Consultations" | "Kundali" | "Leads" | "Content" | "System" }`; `NAV: NavItem[]` = only `{ href: "/admin", label: "Dashboard", icon: "grid", perm: "dashboard.view", group: "Overview" }`. Later steps append their items here. `navFor(role)` filters by `can()`. — antigravity
+- [x] T6. `AdminShell.tsx` (server): grid layout — sidebar (≥ 1024 px, 248 px wide, collapsible to 72 px), main column with `AdminTopbar` and `<main className="mx-auto w-full max-w-[1280px] px-4 pb-28 pt-6 lg:px-8 lg:pb-12">`; `AdminMobileNav` below 1024 px. — antigravity
+- [x] T7. `AdminSidebar.tsx` (client): `bg-n9`, logo (small `Logo` + "Admin" eyebrow in `g3`), groups with `text-sg5` labels, items `text-sg3` hover `text-g1`, active item `bg-n8 text-g1` with a 2 px `g5` left hairline; collapse toggle stored in `localStorage` (`mka.admin.collapsed`, read after mount only). — antigravity
+- [x] T8. `AdminTopbar.tsx` (client): sticky, `bg-cream` with bottom hairline `s2`, page area title slot, right side user menu (name, role, "View site" → `/`, "Sign out" → `logoutAction("admin")` then `/admin/login`). 56 px high. — antigravity
+- [x] T9. `AdminMobileNav.tsx` (client): fixed bottom bar (`bg-cream`, top hairline, `pb-[env(safe-area-inset-bottom)]`), first 4 permitted items + "More" opening a radix Dialog sheet with all items grouped; 44 px+ targets; active item `text-em7`. — antigravity
+- [x] T10. `src/app/admin/(panel)/layout.tsx`: `const admin = await getAdmin(); if (!admin) redirect("/admin/login");` → `<AdminShell admin={…} nav={navFor(admin.role)}>`. — antigravity
+- [x] T11. `src/app/admin/(panel)/page.tsx`: `await requireAdminPage("dashboard.view")`; greeting card ("Namaste, <name>", today's date in IST via `formatIst`), a grid of quick-link cards for every permitted nav item, and a notice when `?denied=1` ("You don't have access to that page."). (B39 replaces this with KPIs.) — antigravity
+- [x] T12. `src/app/admin/login/page.tsx` + `AdminLogin.tsx`: if `getAdmin()` → `redirect("/admin")`. Full-height `bg-n9` page with a centred cream card (max-w 420 px): `Logo`, "Admin sign in", `OtpForm` with `purpose="admin_login"` and English labels built from `ADMIN_ERRORS`; on success `router.replace(next)`. — antigravity
+- [x] T13. `src/app/admin/not-found.tsx`: simple branded 404 with a link to `/admin`. — antigravity
+- [x] T14. Finish per AGENTS.md §1 step 8. — antigravity
 
 ## Must not
 - No tables/forms kit (B12). No feature pages. No Hindi in admin.
 
 ## Done-notes
-_(agent: ≤ 12 lines)_
+- Created root layout `src/app/admin/layout.tsx` with brand fonts, Toaster, and viewport themeColor #0E3B30.
+- Created `src/components/admin/ui/toast.ts` and `Toaster.tsx` (cream surface, ok/sin/em5 tones, mobile & desktop positioning).
+- Created `src/components/admin/errors.ts` with ADMIN_ERRORS and errorText helper.
+- Created `AdminIcon.tsx` wrapping `Icon` with custom `gear`, `logout`, `drag` SVG paths.
+- Created `src/components/admin/nav.ts` with NAV and role-based `navFor`.
+- Created responsive admin shell (`AdminShell.tsx`, `AdminSidebar.tsx` with collapsible localStorage persistence, `AdminTopbar.tsx`, `AdminMobileNav.tsx` with Radix Dialog sheet).
+- Created `src/app/admin/(panel)/layout.tsx` and `page.tsx` (greeting in IST, denied notice, quick access grid).
+- Created `src/app/admin/login/page.tsx` and `AdminLogin.tsx` with OtpForm integration and redirect.
+- Created `src/app/admin/not-found.tsx` with branded 404 screen.
+- Migration added: no.
+- Note for B12: Admin UI kit can use `toast` from `@/components/admin/ui/toast` and `AdminIcon`.
 
 ## Manual QA (user)
 1. `pnpm dev` → `/admin` redirects to `/admin/login`.
