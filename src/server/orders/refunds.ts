@@ -8,6 +8,8 @@ import { audit } from "@/server/audit";
 import { log } from "@/server/log";
 import { AppError } from "@/server/result";
 import { sendOrderStatusEmail } from "./emails";
+import { sendBookingCancelled } from "@/server/bookings/emails";
+import { bookings } from "@/server/db/schema/consult";
 import { after } from "next/server";
 import type { PaymentStatus } from "@/lib/domain/enums";
 
@@ -237,6 +239,61 @@ export async function applyRefundWebhook(
   }
 
   const now = new Date();
+
+  if (refRow.entity === "booking") {
+    if (status === "failed") {
+      await db
+        .update(refunds)
+        .set({ status: "failed", updatedAt: now })
+        .where(eq(refunds.id, refRow.id));
+      return;
+    }
+
+    if (status === "processed") {
+      await db.transaction(async (tx) => {
+        await tx
+          .update(refunds)
+          .set({ status: "processed", updatedAt: now })
+          .where(eq(refunds.id, refRow.id));
+
+        if (refRow.paymentId) {
+          await tx
+            .update(payments)
+            .set({ status: "refunded", updatedAt: now })
+            .where(eq(payments.id, refRow.paymentId));
+        }
+
+        const [booking] = await tx
+          .select()
+          .from(bookings)
+          .where(eq(bookings.id, refRow.entityId))
+          .limit(1);
+
+        if (booking) {
+          const note = `Refund of ₹${refRow.amountInr} processed via Razorpay (${rzpRefundId})`;
+          const adminNote = booking.adminNote
+            ? `${booking.adminNote}; ${note}`
+            : note;
+          await tx
+            .update(bookings)
+            .set({ adminNote, updatedAt: now })
+            .where(eq(bookings.id, booking.id));
+        }
+      });
+
+      after(() => {
+        sendBookingCancelled(refRow.entityId, {
+          refundNote: `Refund of ₹${refRow.amountInr} has been processed via Razorpay (${rzpRefundId}).`,
+        }).catch((e) =>
+          log.error("email.booking_refund_webhook_email_failed", {
+            bookingId: refRow.entityId,
+            error: e instanceof Error ? e.message : String(e),
+          }),
+        );
+      });
+      return;
+    }
+  }
 
   if (status === "failed") {
     await db.transaction(async (tx) => {

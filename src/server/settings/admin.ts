@@ -72,17 +72,11 @@ export async function getSettingsForAdmin(): Promise<SettingsMap> {
   return result;
 }
 
-export async function updateSetting<K extends SettingsKey>(
+export async function writeSetting<K extends SettingsKey>(
   key: K,
   value: unknown,
-  actor?: AdminUser,
+  actor: AdminUser,
 ): Promise<void> {
-  const admin = actor ?? (await requireAdmin("settings.edit"));
-
-  if (!ADMIN_SETTINGS_KEYS.includes(key as AdminSettingsKey)) {
-    throw new AppError("FORBIDDEN");
-  }
-
   const schema = SETTINGS_SCHEMAS[key];
   const parsed = schema.parse(value);
 
@@ -124,23 +118,37 @@ export async function updateSetting<K extends SettingsKey>(
       key,
       value: parsed,
       updatedAt: new Date(),
-      updatedBy: admin.id,
+      updatedBy: actor.id,
     })
     .onConflictDoUpdate({
       target: settings.key,
       set: {
         value: parsed,
         updatedAt: new Date(),
-        updatedBy: admin.id,
+        updatedBy: actor.id,
       },
     });
 
   await audit({
-    actorId: admin.id,
+    actorId: actor.id,
     action: "settings.update",
     entity: "settings",
     entityId: key,
     summary: `Updated ${key} settings`,
     diff,
   });
+}
+
+export async function updateSetting<K extends SettingsKey>(
+  key: K,
+  value: unknown,
+  actor?: AdminUser,
+): Promise<void> {
+  const admin = actor ?? (await requireAdmin("settings.edit"));
+
+  if (!ADMIN_SETTINGS_KEYS.includes(key as AdminSettingsKey)) {
+    throw new AppError("FORBIDDEN");
+  }
+
+  await writeSetting(key, value, admin);
 }

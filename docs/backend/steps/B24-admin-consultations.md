@@ -23,23 +23,31 @@ Create:
 Modify: `src/server/settings/admin.ts` (export `writeSetting(key, value, actor)` used by `updateSetting`), `src/server/orders/refunds.ts` (refund webhook branches on `entity`), `src/server/bookings/emails.ts`, `src/components/admin/nav.ts` (+ Bookings `calendar` · Services `report` · Availability `clock`, group "Consultations")
 
 ## Tasks
-- [ ] T1. `consult-admin.ts` schemas: service (names EN/HI, modes ⊆ `MODE_KEYS` ≥ 1, guarantee, content Loc fields ≤ 300, covered ≤ 10 rows `{ icon, t, d }`, samples ≤ 6, sort, visible), tier (title EN/HI, price 1–200000, mins 15–180, recommended, inclusions ≤ 8), consult settings (startTimes per length `HH:mm` sorted unique, openDays ⊆ 0–6, window 1–120, lead 0–72, hold 5–30, reschedule hours 0–72, max reschedules 0–3, blocked ranges ≤ 50 with from < to), booking status/meeting link (https URL ≤ 300)/note ≤ 500/cancel (refund boolean, reason).
-- [ ] T2. `consult/admin.ts` (`consult.edit`): `listServicesAdmin()`, `updateService(key, input)`, `updateTier(serviceKey, tierKey, input)` (exactly one recommended tier per service), `getConsultSettings()`, `updateConsultSettings(input)` via `writeSetting("consult", …)`. Audit all. `admin-actions.ts`: invalidate `TAG.consult` (services) / `TAG.settings` (availability).
-- [ ] T3. `bookings/admin.ts` (`bookings.view` / `bookings.update`; audit writes): `listBookings({ view: "upcoming" | "pending" | "past" | "all", search, page })`, `getWeek(weekStartDayKey)` (Mon–Sun IST), `getBookingAdmin(id)` (+ signed palm URLs + report flag), `updateBookingStatus(id, to, note)` (`canMove(BOOKING_FLOW)`), `setMeetingLink(id, url)` (+ email), `attachReport(id, mediaId)` (+ email "report ready"), `rescheduleByAdmin(id, start)` (`rescheduleBooking(…, "admin")`), `cancelBooking(id, { refund, reason })` (status `cancelled`; refund → `refundPayment` + `refunds` row with entity `booking`; email), `addBookingNote(id, note)`, `adminSlots(serviceKey, tierKey, day)` (wraps `getDaySlots`). `admin-actions.ts` wraps them.
-- [ ] T4. `refunds.ts`: `applyRefundWebhook` handles `entity = "booking"` (update the refund row + email) besides orders.
-- [ ] T5. `BookingUpdateEmail` (EN/HI) for: meeting link added, report ready (manage link), cancelled (with refund note). `bookings/emails.ts` gets the senders.
-- [ ] T6. `/admin/services` (cards with from-price, visible badge) + `/admin/services/[key]` (`ServiceForm` + three `TierEditor`s).
-- [ ] T7. `/admin/availability` → `AvailabilityForm` (start times per session length as chip lists with add/remove, open-day toggles, window/lead/hold/reschedule numbers, blocked ranges list with date-time pickers and notes).
-- [ ] T8. `/admin/bookings`: view switch Calendar | List; `WeekCalendar` (`next/dynamic`; ≥ 768 px 7-day grid 08:00–21:00 IST with booking blocks coloured by status, prev/next week) and `DayList` (< 768 px, day switcher); List = `DataTable` with tabs and search; links to detail.
-- [ ] T9. `/admin/bookings/[id]` → `BookingDetail` (customer + WhatsApp/call, service/package/mode/time, birth details, question, numerology inputs, `PalmPhotos` (signed images, open full size), status badge, notes) + `BookingActions` (status buttons, meeting link form, `ReportUpload` (PDF via `useUpload("report")` → `attachReport`), `AdminReschedule` (day + `adminSlots`), cancel/refund dialog).
-- [ ] T10. `nav.ts`: add the three items.
-- [ ] T11. Finish per AGENTS.md §1 step 8.
+- [x] T1. `consult-admin.ts` schemas: service (names EN/HI, modes ⊆ `MODE_KEYS` ≥ 1, guarantee, content Loc fields ≤ 300, covered ≤ 10 rows `{ icon, t, d }`, samples ≤ 6, sort, visible), tier (title EN/HI, price 1–200000, mins 15–180, recommended, inclusions ≤ 8), consult settings (startTimes per length `HH:mm` sorted unique, openDays ⊆ 0–6, window 1–120, lead 0–72, hold 5–30, reschedule hours 0–72, max reschedules 0–3, blocked ranges ≤ 50 with from < to), booking status/meeting link (https URL ≤ 300)/note ≤ 500/cancel (refund boolean, reason). — antigravity
+- [x] T2. `consult/admin.ts` (`consult.edit`): `listServicesAdmin()`, `updateService(key, input)`, `updateTier(serviceKey, tierKey, input)` (exactly one recommended tier per service), `getConsultSettings()`, `updateConsultSettings(input)` via `writeSetting("consult", …)`. Audit all. `admin-actions.ts`: invalidate `TAG.consult` (services) / `TAG.settings` (availability). — antigravity
+- [x] T3. `bookings/admin.ts` (`bookings.view` / `bookings.update`; audit writes): `listBookings({ view: "upcoming" | "pending" | "past" | "all", search, page })`, `getWeek(weekStartDayKey)` (Mon–Sun IST), `getBookingAdmin(id)` (+ signed palm URLs + report flag), `updateBookingStatus(id, to, note)` (`canMove(BOOKING_FLOW)`), `setMeetingLink(id, url)` (+ email), `attachReport(id, mediaId)` (+ email "report ready"), `rescheduleByAdmin(id, start)` (`rescheduleBooking(…, "admin")`), `cancelBooking(id, { refund, reason })` (status `cancelled`; refund → `refundPayment` + `refunds` row with entity `booking`; email), `addBookingNote(id, note)`, `adminSlots(serviceKey, tierKey, day)` (wraps `getDaySlots`). `admin-actions.ts` wraps them. — antigravity
+- [x] T4. `refunds.ts`: `applyRefundWebhook` handles `entity = "booking"` (update the refund row + email) besides orders. — antigravity
+- [x] T5. `BookingUpdateEmail` (EN/HI) for: meeting link added, report ready (manage link), cancelled (with refund note). `bookings/emails.ts` gets the senders. — antigravity
+- [x] T6. `/admin/services` (cards with from-price, visible badge) + `/admin/services/[key]` (`ServiceForm` + three `TierEditor`s). — antigravity
+- [x] T7. `/admin/availability` → `AvailabilityForm` (start times per session length as chip lists with add/remove, open-day toggles, window/lead/hold/reschedule numbers, blocked ranges list with date-time pickers and notes). — antigravity
+- [x] T8. `/admin/bookings`: view switch Calendar | List; `WeekCalendar` (`next/dynamic`; ≥ 768 px 7-day grid 08:00–21:00 IST with booking blocks coloured by status, prev/next week) and `DayList` (< 768 px, day switcher); List = `DataTable` with tabs and search; links to detail. — antigravity
+- [x] T9. `/admin/bookings/[id]` → `BookingDetail` (customer + WhatsApp/call, service/package/mode/time, birth details, question, numerology inputs, `PalmPhotos` (signed images, open full size), status badge, notes) + `BookingActions` (status buttons, meeting link form, `ReportUpload` (PDF via `useUpload("report")` → `attachReport`), `AdminReschedule` (day + `adminSlots`), cancel/refund dialog). — antigravity
+- [x] T10. `nav.ts`: add the three items. — antigravity
+- [x] T11. Finish per AGENTS.md §1 step 8. — antigravity
 
 ## Must not
 - No new tables or columns. Palm photos only through signed URLs (never public).
 
 ## Done-notes
-_(agent: ≤ 12 lines)_
+- Created `consult-admin.ts` with validation schemas for services, tiers, consult settings, and bookings.
+- Built `consult/admin.ts` & `admin-actions.ts` (`consult.edit`) for services, tiers (enforcing 1 recommended), and availability.
+- Exported `writeSetting` from `settings/admin.ts` for reuse; updated `refunds.ts` `applyRefundWebhook` to handle `booking` entity.
+- Built `bookings/admin.ts` & `admin-actions.ts` (`bookings.view`/`update`) for week calendar, list, notes, status, reschedule, and refund.
+- Created `BookingUpdateEmail.tsx` and senders in `bookings/emails.ts` for meeting links, report ready, and cancellation.
+- Created `/admin/services`, `/admin/services/[key]`, `/admin/availability`, `/admin/bookings`, and `/admin/bookings/[id]`.
+- Built admin components: `ServiceForm`, `TierEditor`, `AvailabilityForm`, `WeekCalendar`, `DayList`, `BookingDetail`, `BookingActions`, `PalmPhotos`, `ReportUpload`, `AdminReschedule`.
+- Added Consultations group in `nav.ts` (Bookings, Services, Availability).
+- Migration added: no.
 
 ## Manual QA (user)
 1. Services: change a tier price/inclusions → `/consultations/<service>` and booking step 1 show it.

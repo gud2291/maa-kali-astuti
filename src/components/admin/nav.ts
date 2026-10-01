@@ -58,6 +58,27 @@ export const NAV: NavItem[] = [
     group: "Catalog",
   },
   {
+    href: "/admin/bookings",
+    label: "Bookings",
+    icon: "calendar",
+    perm: "bookings.view",
+    group: "Consultations",
+  },
+  {
+    href: "/admin/services",
+    label: "Services",
+    icon: "report",
+    perm: "consult.edit",
+    group: "Consultations",
+  },
+  {
+    href: "/admin/availability",
+    label: "Availability",
+    icon: "clock",
+    perm: "consult.edit",
+    group: "Consultations",
+  },
+  {
     href: "/admin/staff",
     label: "Staff",
     icon: "user",

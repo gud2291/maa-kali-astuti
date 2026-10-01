@@ -19,6 +19,10 @@ import {
   getBookingRescheduledSubject,
 } from "@/server/email/templates/BookingRescheduledEmail";
 import { AdminBookingAlertEmail } from "@/server/email/templates/AdminBookingAlertEmail";
+import {
+  BookingUpdateEmail,
+  getBookingUpdateSubject,
+} from "@/server/email/templates/BookingUpdateEmail";
 import type { Locale } from "@/lib/domain/enums";
 
 export async function sendBookingConfirmed(
@@ -370,6 +374,244 @@ export async function sendBookingRescheduled(bookingId: number): Promise<void> {
     }
   } catch (err) {
     log.error("booking.reschedule_email_fatal_error", {
+      bookingId,
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
+}
+
+export async function sendBookingMeetingLink(bookingId: number): Promise<void> {
+  try {
+    const [booking] = await db
+      .select()
+      .from(bookings)
+      .where(eq(bookings.id, bookingId))
+      .limit(1);
+
+    if (!booking || !booking.email || !booking.meetingLink) {
+      return;
+    }
+
+    const [contact, consultData] = await Promise.all([
+      getSetting("contact"),
+      getConsultRows(),
+    ]);
+
+    const service = consultData.services.find((s) => s.key === booking.serviceKey);
+    const tier = consultData.tiers.find(
+      (t) => t.serviceKey === booking.serviceKey && t.tierKey === booking.tierKey,
+    );
+
+    const isHi = booking.locale === "hi";
+    const serviceName = service
+      ? isHi
+        ? service.nameHi
+        : service.nameEn
+      : booking.serviceKey;
+    const tierTitle = tier
+      ? isHi
+        ? tier.titleHi || tier.titleEn
+        : tier.titleEn
+      : booking.tierKey;
+
+    const startFormatted = booking.startAt
+      ? formatIst(booking.startAt, {
+          date: true,
+          time: true,
+          weekday: true,
+          locale: booking.locale as "en" | "hi",
+        })
+      : null;
+
+    const accessKey = accessKeyFor("booking", booking.ref);
+    const managePath = isHi
+      ? `/hi/booking/${encodeURIComponent(booking.ref)}?k=${encodeURIComponent(accessKey)}`
+      : `/booking/${encodeURIComponent(booking.ref)}?k=${encodeURIComponent(accessKey)}`;
+    const manageUrl = absoluteUrl(managePath);
+
+    const subject = getBookingUpdateSubject(
+      booking.locale as Locale,
+      "meeting_link",
+      booking.ref,
+      serviceName,
+    );
+
+    await sendEmail({
+      to: booking.email,
+      subject,
+      react: (
+        <BookingUpdateEmail
+          locale={booking.locale as Locale}
+          kind="meeting_link"
+          refCode={booking.ref}
+          customerName={booking.name}
+          serviceName={serviceName}
+          tierTitle={tierTitle}
+          startFormatted={startFormatted}
+          manageUrl={manageUrl}
+          meetingLink={booking.meetingLink}
+          contact={{
+            phoneDisplay: contact.phoneDisplay,
+            email: contact.email,
+          }}
+        />
+      ),
+    });
+  } catch (err) {
+    log.error("booking.email_meeting_link_error", {
+      bookingId,
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
+}
+
+export async function sendBookingReportReady(bookingId: number): Promise<void> {
+  try {
+    const [booking] = await db
+      .select()
+      .from(bookings)
+      .where(eq(bookings.id, bookingId))
+      .limit(1);
+
+    if (!booking || !booking.email) {
+      return;
+    }
+
+    const [contact, consultData] = await Promise.all([
+      getSetting("contact"),
+      getConsultRows(),
+    ]);
+
+    const service = consultData.services.find((s) => s.key === booking.serviceKey);
+    const tier = consultData.tiers.find(
+      (t) => t.serviceKey === booking.serviceKey && t.tierKey === booking.tierKey,
+    );
+
+    const isHi = booking.locale === "hi";
+    const serviceName = service
+      ? isHi
+        ? service.nameHi
+        : service.nameEn
+      : booking.serviceKey;
+    const tierTitle = tier
+      ? isHi
+        ? tier.titleHi || tier.titleEn
+        : tier.titleEn
+      : booking.tierKey;
+
+    const accessKey = accessKeyFor("booking", booking.ref);
+    const managePath = isHi
+      ? `/hi/booking/${encodeURIComponent(booking.ref)}?k=${encodeURIComponent(accessKey)}`
+      : `/booking/${encodeURIComponent(booking.ref)}?k=${encodeURIComponent(accessKey)}`;
+    const manageUrl = absoluteUrl(managePath);
+
+    const subject = getBookingUpdateSubject(
+      booking.locale as Locale,
+      "report_ready",
+      booking.ref,
+      serviceName,
+    );
+
+    await sendEmail({
+      to: booking.email,
+      subject,
+      react: (
+        <BookingUpdateEmail
+          locale={booking.locale as Locale}
+          kind="report_ready"
+          refCode={booking.ref}
+          customerName={booking.name}
+          serviceName={serviceName}
+          tierTitle={tierTitle}
+          manageUrl={manageUrl}
+          contact={{
+            phoneDisplay: contact.phoneDisplay,
+            email: contact.email,
+          }}
+        />
+      ),
+    });
+  } catch (err) {
+    log.error("booking.email_report_ready_error", {
+      bookingId,
+      error: err instanceof Error ? err.message : String(err),
+    });
+  }
+}
+
+export async function sendBookingCancelled(
+  bookingId: number,
+  opts?: { refundNote?: string; reason?: string },
+): Promise<void> {
+  try {
+    const [booking] = await db
+      .select()
+      .from(bookings)
+      .where(eq(bookings.id, bookingId))
+      .limit(1);
+
+    if (!booking || !booking.email) {
+      return;
+    }
+
+    const [contact, consultData] = await Promise.all([
+      getSetting("contact"),
+      getConsultRows(),
+    ]);
+
+    const service = consultData.services.find((s) => s.key === booking.serviceKey);
+    const tier = consultData.tiers.find(
+      (t) => t.serviceKey === booking.serviceKey && t.tierKey === booking.tierKey,
+    );
+
+    const isHi = booking.locale === "hi";
+    const serviceName = service
+      ? isHi
+        ? service.nameHi
+        : service.nameEn
+      : booking.serviceKey;
+    const tierTitle = tier
+      ? isHi
+        ? tier.titleHi || tier.titleEn
+        : tier.titleEn
+      : booking.tierKey;
+
+    const accessKey = accessKeyFor("booking", booking.ref);
+    const managePath = isHi
+      ? `/hi/booking/${encodeURIComponent(booking.ref)}?k=${encodeURIComponent(accessKey)}`
+      : `/booking/${encodeURIComponent(booking.ref)}?k=${encodeURIComponent(accessKey)}`;
+    const manageUrl = absoluteUrl(managePath);
+
+    const subject = getBookingUpdateSubject(
+      booking.locale as Locale,
+      "cancelled",
+      booking.ref,
+      serviceName,
+    );
+
+    await sendEmail({
+      to: booking.email,
+      subject,
+      react: (
+        <BookingUpdateEmail
+          locale={booking.locale as Locale}
+          kind="cancelled"
+          refCode={booking.ref}
+          customerName={booking.name}
+          serviceName={serviceName}
+          tierTitle={tierTitle}
+          manageUrl={manageUrl}
+          refundNote={opts?.refundNote}
+          reason={opts?.reason}
+          contact={{
+            phoneDisplay: contact.phoneDisplay,
+            email: contact.email,
+          }}
+        />
+      ),
+    });
+  } catch (err) {
+    log.error("booking.email_cancelled_error", {
       bookingId,
       error: err instanceof Error ? err.message : String(err),
     });
