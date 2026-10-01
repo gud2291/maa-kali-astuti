@@ -48,7 +48,8 @@ export function chromeFor(path: string): ChromeConfig {
   if (path === "/consultations") return { ...BASE, active: "consult" };
   // Course-Detail: tabbar off (sticky Enquire bar), FAB 92px.
   if (path.startsWith("/sadhana-courses/")) return { ...BASE, active: "courses", tabbar: false, fabLift: "92px" };
-  if (path === "/sadhana-courses") return { ...BASE, active: "courses" };
+  // Product page (PDP): tabbar off (sticky Buy bar), FAB 92px.
+  if (path.startsWith("/product/")) return { ...BASE, active: "shop", tabbar: false, fabLift: "92px" };
   if (under(path, "/shop")) return { ...BASE, active: "shop" };
   if (path === "/cart") return { ...BASE, active: "cart" };
   if (path === "/kundali-99") return { ...BASE, active: "kundali" };

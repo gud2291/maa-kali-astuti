@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti · Phase B (backend · admin · commerce)
 
-**Current: B15**  ·  Claude → type `/next`  ·  Another AI → paste the prompt from `docs/backend/AGENT-PROMPT.md`
+**Current: B16**  ·  Claude → type `/next`  ·  Another AI → paste the prompt from `docs/backend/AGENT-PROMPT.md`
 Status: `TODO` · `IN-PROGRESS` · `DONE` · `BLOCKED`. Agent = lower-case name(s) of who worked on the step (`claude`, `antigravity`, … — `a+b` when two). Date = YYYY-MM-DD.
 Phase F (finished frontend) tracker: `docs/frontend/PROGRESS-F.md` — reference only, don't open unless a step says so.
 
@@ -30,7 +30,7 @@ Spec files are in `docs/backend/steps/`. Each step needs the previous one DONE.
 | B12 | Admin UI kit | DONE | antigravity | 2026-10-02 | M | any | `B12-admin-ui-kit.md` |
 | B13 | Admin: products & categories | DONE | antigravity | 2026-10-02 | M | any | `B13-admin-products.md` |
 | B14 | Admin: settings, coupons, staff | DONE | antigravity | 2026-10-02 | M | any | `B14-admin-settings-coupons-staff.md` |
-| B15 | Product page (PDP) | TODO | | | M | any | `B15-product-page.md` |
+| B15 | Product page (PDP) | DONE | antigravity | 2026-10-02 | M | any | `B15-product-page.md` |
 | B16 | Order engine (server) | TODO | | | H | Claude rec. | `B16-order-engine.md` |
 | B17 | Cart page + checkout UI (COD) | TODO | | | M | any | `B17-cart-checkout-ui.md` |
 | B18 | Online payments (Razorpay) | TODO | | | H | Claude rec. | `B18-razorpay.md` |
