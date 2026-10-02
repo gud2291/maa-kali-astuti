@@ -21,21 +21,28 @@ Create:
 Modify: `next.config.ts` (headers), `src/lib/core/commerce.ts` (`DEMO_SEED = IS_DEV`), `KundaliTool.tsx` (QA params only when `IS_DEV`), any file fixed in T5–T7 (list each in Done-notes), `messages/en.json`, `messages/hi.json` (`errors.page` strings)
 
 ## Tasks
-- [ ] T1. Error boundaries: `[locale]/error.tsx` (client; themed card with chakra, "Something went wrong", Retry (`reset`) + Home; EN/HI via messages), `global-error.tsx` (own `<html>`, minimal, bilingual static text), admin `error.tsx` files (English, Retry + Dashboard). Errors are not shown in detail to users.
-- [ ] T2. Loading: `account/loading.tsx` and `admin/(panel)/loading.tsx` — skeletons in theme colours (sand shimmer), no layout jump.
-- [ ] T3. `runtime.ts`; `DEMO_SEED = IS_DEV` (no demo cart/wishlist/recent searches in production); `/kundali-99` reads `?demo=` / `?pay=` only when `IS_DEV`.
-- [ ] T4. `next.config.ts`: add `Cross-Origin-Opener-Policy: same-origin-allow-popups`; confirm every third-party host the app uses is in the CSP (Razorpay, Turnstile, R2 endpoint, media origin, YouTube, i.ytimg) and nothing else.
-- [ ] T5. Guard check: `grep -rLn "requireAdminPage" src/app/admin/\(panel\)` (every page must call it — `kit` and `kundali/preview` additionally 404 outside development) and every export of `src/server/**/admin.ts` must start with `requireAdmin(`. Fix any miss.
-- [ ] T6. Public action check: every export of `src/server/**/actions.ts` parses with zod, and those listed in RULES §2 call `rateLimit` / `verifyTurnstile`. Fix any miss.
-- [ ] T7. Hygiene greps (RULES §9 list) across `src/`: fix every hit that is not an allowed exception.
-- [ ] T8. `docs/backend/GO-LIVE.md` — an ordered checklist for the user: Vercel plan (Pro for commerce), production Turso DB + `pnpm db:migrate` + `pnpm db:seed` (owner + settings), all Production env vars, domain + DNS on Vercel, `APP_URL`, R2 custom media domain + CORS, Turnstile hostnames, Resend domain verified, Razorpay KYC → live keys + live webhook, `CRON_SECRET` + optional 15-min pinger, real contact/social/fees/GSTIN in Settings, review policies and `[client-review]` texts, decide demo ratings (Health → Recalculate), remove or keep demo coupons, create staff accounts, a ₹1 live test order + refund, Google Search Console + sitemap, backups (USER-SETUP §8), monitoring (Vercel logs).
-- [ ] T9. Finish per AGENTS.md §1 step 8.
+- [x] T1. Error boundaries: `[locale]/error.tsx` (client; themed card with chakra, "Something went wrong", Retry (`reset`) + Home; EN/HI via messages), `global-error.tsx` (own `<html>`, minimal, bilingual static text), admin `error.tsx` files (English, Retry + Dashboard). Errors are not shown in detail to users. — antigravity
+- [x] T2. Loading: `account/loading.tsx` and `admin/(panel)/loading.tsx` — skeletons in theme colours (sand shimmer), no layout jump. — antigravity
+- [x] T3. `runtime.ts`; `DEMO_SEED = IS_DEV` (no demo cart/wishlist/recent searches in production); `/kundali-99` reads `?demo=` / `?pay=` only when `IS_DEV`. — antigravity
+- [x] T4. `next.config.ts`: add `Cross-Origin-Opener-Policy: same-origin-allow-popups`; confirm every third-party host the app uses is in the CSP (Razorpay, Turnstile, R2 endpoint, media origin, YouTube, i.ytimg) and nothing else. — antigravity
+- [x] T5. Guard check: `grep -rLn "requireAdminPage" src/app/admin/\(panel\)` (every page must call it — `kit` and `kundali/preview` additionally 404 outside development) and every export of `src/server/**/admin.ts` must start with `requireAdmin(`. Fix any miss. — antigravity
+- [x] T6. Public action check: every export of `src/server/**/actions.ts` parses with zod, and those listed in RULES §2 call `rateLimit` / `verifyTurnstile`. Fix any miss. — antigravity
+- [x] T7. Hygiene greps (RULES §9 list) across `src/`: fix every hit that is not an allowed exception. — antigravity
+- [x] T8. `docs/backend/GO-LIVE.md` — an ordered checklist for the user: Vercel plan (Pro for commerce), production Turso DB + `pnpm db:migrate` + `pnpm db:seed` (owner + settings), all Production env vars, domain + DNS on Vercel, `APP_URL`, R2 custom media domain + CORS, Turnstile hostnames, Resend domain verified, Razorpay KYC → live keys + live webhook, `CRON_SECRET` + optional 15-min pinger, real contact/social/fees/GSTIN in Settings, review policies and `[client-review]` texts, decide demo ratings (Health → Recalculate), remove or keep demo coupons, create staff accounts, a ₹1 live test order + refund, Google Search Console + sitemap, backups (USER-SETUP §8), monitoring (Vercel logs). — antigravity
+- [x] T9. Finish per AGENTS.md §1 step 8. — antigravity
 
 ## Must not
 - No new features. No dependency changes.
 
 ## Done-notes
-_(agent: ≤ 12 lines)_
+- Created runtime.ts (IS_DEV), global-error.tsx, [locale]/error.tsx, account/loading.tsx, admin error & loading boundaries.
+- Set DEMO_SEED = IS_DEV and guarded /kundali-99 QA params with IS_DEV.
+- Added Cross-Origin-Opener-Policy: same-origin-allow-popups and verified all 3rd-party CSP origins.
+- Verified all admin pages call requireAdminPage (kit & kundali/preview 404 in non-dev); verified all admin.ts exports call requireAdmin.
+- Standardized external fetch timeouts to 8000ms (videos/admin.ts, pincode.ts) and unexported helper in videos/admin.ts.
+- Verified public action zod/rate-limit/Turnstile guards and all hygiene rules (no any, no ts-ignore, no console.log, etc.).
+- Created docs/backend/GO-LIVE.md with comprehensive 13-stage ordered checklist.
+- Migration added: no. Ready for Claude final audit (B45).
 
 ## Manual QA (user)
 1. `pnpm build && pnpm start` (production mode): no demo cart on a fresh browser; `/kundali-99?demo=success` does nothing.

@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti · Phase B (backend · admin · commerce)
 
-**Current: B44**  ·  Claude → type `/next`  ·  Another AI → paste the prompt from `docs/backend/AGENT-PROMPT.md`
+**Current: B45**  ·  Claude → type `/next`  ·  Another AI → paste the prompt from `docs/backend/AGENT-PROMPT.md`
 Status: `TODO` · `IN-PROGRESS` · `DONE` · `BLOCKED`. Agent = lower-case name(s) of who worked on the step (`claude`, `antigravity`, … — `a+b` when two). Date = YYYY-MM-DD.
 Phase F (finished frontend) tracker: `docs/frontend/PROGRESS-F.md` — reference only, don't open unless a step says so.
 
@@ -59,7 +59,7 @@ Spec files are in `docs/backend/steps/`. Each step needs the previous one DONE.
 | B41 | Cron jobs & reminders | DONE | antigravity | 2026-10-02 | M | any | `B41-cron-reminders.md` |
 | B42 | SEO foundation | DONE | antigravity | 2026-10-02 | M | any | `B42-seo-foundation.md` |
 | B43 | Per-page metadata & structured data | DONE | antigravity | 2026-10-02 | L | any | `B43-seo-pages.md` |
-| B44 | Hardening & go-live prep | TODO | | | M | any | `B44-hardening-go-live.md` |
+| B44 | Hardening & go-live prep | DONE | antigravity | 2026-10-03 | M | any | `B44-hardening-go-live.md` |
 | B45 | Final audit 1 — other agents' work | TODO | | | — | **Claude only** | `B45-audit-agent-work.md` |
 | B46 | Final audit 2 — security, scale, build | TODO | | | — | **Claude only** | `B46-audit-security-scale.md` |
 

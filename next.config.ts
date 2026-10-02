@@ -26,7 +26,7 @@ const csp = [
   "style-src 'self' 'unsafe-inline'",
   join("img-src 'self' data: blob: https://i.ytimg.com https://cdn.razorpay.com", mediaOrigin),
   "font-src 'self'",
-  join("frame-src https://www.youtube-nocookie.com https://api.razorpay.com https://checkout.razorpay.com https://challenges.cloudflare.com"),
+  join("frame-src https://www.youtube-nocookie.com https://www.youtube.com https://api.razorpay.com https://checkout.razorpay.com https://challenges.cloudflare.com"),
   join(`connect-src 'self'${isDev ? " ws: wss:" : ""} https://api.razorpay.com https://lumberjack.razorpay.com https://challenges.cloudflare.com`, r2Origin, mediaOrigin),
   "frame-ancestors 'none'",
   "base-uri 'self'",
@@ -41,6 +41,7 @@ const securityHeaders = [
   { key: "X-Content-Type-Options", value: "nosniff" },
   { key: "X-Frame-Options", value: "DENY" },
   { key: "Referrer-Policy", value: "strict-origin-when-cross-origin" },
+  { key: "Cross-Origin-Opener-Policy", value: "same-origin-allow-popups" },
   {
     key: "Permissions-Policy",
     value:

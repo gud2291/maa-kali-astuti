@@ -1,4 +1,5 @@
 import type { CatalogSnapshot } from "@/lib/domain/types";
+import { IS_DEV } from "@/lib/core/runtime";
 
 /** Prefix for persisted client stores (`mka.store.v2.cart`, `….wish`). */
 export const STORE_KEY = "mka.store.v2";
@@ -10,7 +11,7 @@ export type Fees = CatalogSnapshot["fees"];
  * (Rose Quartz, Baglamukhi, 7 Mukhi Mala) so the drawer and wishlist are never empty in the demo
  * (mka-core.js 399). [client-confirm] Turn off before launch.
  */
-export const DEMO_SEED = true;
+export const DEMO_SEED: boolean = IS_DEV;
 
 export const WHATSAPP_NUMBER = "919000012345"; // [client-confirm] fallback +91 90000 12345
 export const WHATSAPP_DISPLAY = "+91 90000 12345"; // [client-confirm] fallback

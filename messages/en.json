@@ -2130,7 +2130,15 @@
     "UPLOAD_INVALID": "The uploaded file is invalid or exceeds the allowed size.",
     "NOT_CONFIGURED": "This service is currently unavailable. Please try again later.",
     "CONFLICT": "A conflict occurred with the current state. Please refresh and try again.",
-    "INTERNAL": "Something went wrong on our end. Please try again shortly."
+    "INTERNAL": "Something went wrong on our end. Please try again shortly.",
+    "page": {
+      "eyebrow": "॥ Something went wrong ॥",
+      "deva": "कुछ अप्रत्याशित हुआ",
+      "title": "Something went <em>wrong.</em>",
+      "body": "An unexpected error occurred while loading this page. Please try again or return home.",
+      "retry": "Try again",
+      "home": "Back to Home"
+    }
   },
   "auth": {
     "title": "Sign in to your account",

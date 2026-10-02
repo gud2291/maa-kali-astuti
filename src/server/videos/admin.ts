@@ -16,7 +16,7 @@ import type { VideoKind } from "@/lib/domain/enums";
 
 export type VideoAdminRow = typeof videos.$inferSelect;
 
-export function extractYoutubeId(input: string): string | null {
+function extractYoutubeId(input: string): string | null {
   const trimmed = input.trim();
   if (/^[\w-]{11}$/.test(trimmed)) {
     return trimmed;
@@ -46,7 +46,7 @@ export async function youtubeLookup(
 
   try {
     const res = await fetch(oembedUrl, {
-      signal: AbortSignal.timeout(5000),
+      signal: AbortSignal.timeout(8000),
     });
     if (res.ok) {
       const data = (await res.json()) as { title?: string; thumbnail_url?: string };

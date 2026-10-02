@@ -17,7 +17,7 @@ type IndiaPostResponse = {
 
 async function fetchIndiaPostPincode(pin: string): Promise<{ city: string; state: string }> {
   const res = await fetch(`https://api.postalpincode.in/pincode/${pin}`, {
-    signal: AbortSignal.timeout(5000),
+    signal: AbortSignal.timeout(8000),
   });
 
   if (!res.ok) {

@@ -28,6 +28,7 @@ import { fmt } from "@/lib/core/format";
 import { cn } from "@/lib/utils/cn";
 import { checkKundali99, type K99Draft, type K99Errors } from "@/lib/validation/astro";
 import { useUi } from "@/stores/ui";
+import { IS_DEV } from "@/lib/core/runtime";
 import { KundaliForm } from "./KundaliForm";
 import { PaySheet, type PayApp, type PayState } from "./PaySheet";
 
@@ -197,6 +198,7 @@ export function KundaliTool({
 
   // QA demo states, read once (the design's Tweaks props demoState / payOutcome).
   useEffect(() => {
+    if (!IS_DEV) return;
     const q = new URLSearchParams(window.location.search);
     failPay.current = q.get("pay") === "fail";
     const st = q.get("demo");

@@ -75,8 +75,10 @@ export async function getSettingsForAdmin(): Promise<SettingsMap> {
 export async function writeSetting<K extends SettingsKey>(
   key: K,
   value: unknown,
-  actor: AdminUser,
+  actor?: AdminUser,
 ): Promise<void> {
+  const currentAdmin = await requireAdmin();
+  const effectiveActor = actor ?? currentAdmin;
   const schema = SETTINGS_SCHEMAS[key];
   const parsed = schema.parse(value);
 
@@ -118,19 +120,19 @@ export async function writeSetting<K extends SettingsKey>(
       key,
       value: parsed,
       updatedAt: new Date(),
-      updatedBy: actor.id,
+      updatedBy: effectiveActor.id,
     })
     .onConflictDoUpdate({
       target: settings.key,
       set: {
         value: parsed,
         updatedAt: new Date(),
-        updatedBy: actor.id,
+        updatedBy: effectiveActor.id,
       },
     });
 
   await audit({
-    actorId: actor.id,
+    actorId: effectiveActor.id,
     action: "settings.update",
     entity: "settings",
     entityId: key,
