@@ -21,21 +21,29 @@ Create:
 Modify: `src/app/[locale]/layout.tsx` (metadata via `pageMeta` defaults from `settings.seo`; `<JsonLd>` Organization + WebSite)
 
 ## Tasks
-- [ ] T1. `meta.ts`: `pageMeta({ locale, path, title, description, image?, noindex?, type? }): Metadata` → `alternates.canonical` (`SITE_URL + path` for EN, `SITE_URL + "/hi" + path` for HI), `alternates.languages` (`en`, `hi`, `x-default` → EN), `openGraph` (url, title, description, locale `en_IN`/`hi_IN`, images 1200×630), `twitter: { card: "summary_large_image" }`, `robots` noindex/nofollow when asked. Descriptions trimmed to 160 chars.
-- [ ] T2. `jsonld.ts` (pure builders returning plain objects): `organization(settings)` (name, url, logo, sameAs from social, contactPoint), `website()` (with `SearchAction` → `/search?q={query}`), `person()` (Sadhak Pawan Pandey, jobTitle, url `/about`), `breadcrumbs(items)`, `product(p, { url, images, reviews })` (Offer: price, INR, availability by stock, seller; AggregateRating only when `reviews > 0`), `faqPage(items)`, `article(a, url)`, `video(v)`, `service(s, url)` (offers per tier), `course(c, url, feeInr)`.
-- [ ] T3. `JsonLd.tsx`: `<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }} />` — the only allowed non-SVG use (RULES §9); data always comes from our server.
-- [ ] T4. Layout: default metadata from `getSetting("seo")` (localised) through `pageMeta`; `<JsonLd>` with `organization` + `website` once per page.
-- [ ] T5. `sitemap.ts`: every indexable URL in both locales with `alternates.languages`: home, shop, categories, active products, consultations + services, kundali-99, love-calculator, rashifal + 12 rashis, sadhana-courses + 6 courses, rituals, about, videos, blog + published articles, contact, faq, 5 policies; `lastModified` from `updated_at` where available.
-- [ ] T6. `robots.ts`: allow `/`; disallow `/admin`, `/api`, `/account`, `/checkout`, `/cart`, `/order`, `/invoice`, `/booking`, `/kundali/report`, `/newsletter`, and the same under `/hi`; `sitemap: SITE_URL + "/sitemap.xml"`.
-- [ ] T7. `llms.txt/route.ts` (`text/plain`, `s-maxage=86400`): who Sadhak Pawan Pandey / Maa Kali Astuti are, offerings (products by category, consultations with from-prices, Kundali ₹99, courses, rituals), key URLs, contact, a note on honesty (no guaranteed outcomes) — built from the DB/settings.
-- [ ] T8. OG images with `ImageResponse` (`next/og`, 1200×630, async `params`): site default (emerald band, wordmark, tagline) and product (photo or art via absolute URL, name, price, MRP strike, small brand line). English text only (default font has no Devanagari).
-- [ ] T9. Finish per AGENTS.md §1 step 8.
+- [x] T1. `meta.ts`: `pageMeta({ locale, path, title, description, image?, noindex?, type? }): Metadata` → `alternates.canonical` (`SITE_URL + path` for EN, `SITE_URL + "/hi" + path` for HI), `alternates.languages` (`en`, `hi`, `x-default` → EN), `openGraph` (url, title, description, locale `en_IN`/`hi_IN`, images 1200×630), `twitter: { card: "summary_large_image" }`, `robots` noindex/nofollow when asked. Descriptions trimmed to 160 chars. — antigravity
+- [x] T2. `jsonld.ts` (pure builders returning plain objects): `organization(settings)` (name, url, logo, sameAs from social, contactPoint), `website()` (with `SearchAction` → `/search?q={query}`), `person()` (Sadhak Pawan Pandey, jobTitle, url `/about`), `breadcrumbs(items)`, `product(p, { url, images, reviews })` (Offer: price, INR, availability by stock, seller; AggregateRating only when `reviews > 0`), `faqPage(items)`, `article(a, url)`, `video(v)`, `service(s, url)` (offers per tier), `course(c, url, feeInr)`. — antigravity
+- [x] T3. `JsonLd.tsx`: `<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data).replace(/</g, "\\u003c") }} />` — the only allowed non-SVG use (RULES §9); data always comes from our server. — antigravity
+- [x] T4. Layout: default metadata from `getSetting("seo")` (localised) through `pageMeta`; `<JsonLd>` with `organization` + `website` once per page. — antigravity
+- [x] T5. `sitemap.ts`: every indexable URL in both locales with `alternates.languages`: home, shop, categories, active products, consultations + services, kundali-99, love-calculator, rashifal + 12 rashis, sadhana-courses + 6 courses, rituals, about, videos, blog + published articles, contact, faq, 5 policies; `lastModified` from `updated_at` where available. — antigravity
+- [x] T6. `robots.ts`: allow `/`; disallow `/admin`, `/api`, `/account`, `/checkout`, `/cart`, `/order`, `/invoice`, `/booking`, `/kundali/report`, `/newsletter`, and the same under `/hi`; `sitemap: SITE_URL + "/sitemap.xml"`. — antigravity
+- [x] T7. `llms.txt/route.ts` (`text/plain`, `s-maxage=86400`): who Sadhak Pawan Pandey / Maa Kali Astuti are, offerings (products by category, consultations with from-prices, Kundali ₹99, courses, rituals), key URLs, contact, a note on honesty (no guaranteed outcomes) — built from the DB/settings. — antigravity
+- [x] T8. OG images with `ImageResponse` (`next/og`, 1200×630, async `params`): site default (emerald band, wordmark, tagline) and product (photo or art via absolute URL, name, price, MRP strike, small brand line). English text only (default font has no Devanagari). — antigravity
+- [x] T9. Finish per AGENTS.md §1 step 8. — antigravity
 
 ## Must not
 - No per-page changes yet (B43). No keyword stuffing; no fake reviews/ratings in structured data.
 
 ## Done-notes
-_(agent: ≤ 12 lines)_
+- Created `src/lib/seo/meta.ts` with `pageMeta()` generating canonical, hreflang (en, hi, x-default), Open Graph, and Twitter metadata.
+- Created `src/lib/seo/jsonld.ts` with schema.org builders for Organization, WebSite, Person, Breadcrumbs, Product, FAQPage, Article, Video, Service, and Course.
+- Created `src/components/seo/JsonLd.tsx` for safe JSON-LD script injection with HTML character escaping.
+- Updated `src/app/[locale]/layout.tsx` to generate localized default metadata from `settings.seo` via `pageMeta` and inject Organization + WebSite JSON-LD.
+- Created dynamic `src/app/sitemap.ts` indexing core pages, categories, active products, services, courses, rashis, blog articles, and policies in both locales with hreflang alternates.
+- Created `src/app/robots.ts` with rules disallowing admin, checkout, account, and internal routes in both locales.
+- Created `src/app/llms.txt/route.ts` delivering plain-text structured knowledge for LLM agents and web search citation.
+- Created dynamic Open Graph images in `src/app/[locale]/opengraph-image.tsx` and `src/app/[locale]/product/[slug]/opengraph-image.tsx` via `next/og`.
+- Migration added: no.
 
 ## Manual QA (user)
 1. `/sitemap.xml`, `/robots.txt`, `/llms.txt` open and look right.

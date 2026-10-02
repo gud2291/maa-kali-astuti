@@ -16,6 +16,10 @@ import { SmoothScroll } from "@/components/layout/SmoothScroll";
 import { SiteSettingsProvider } from "@/components/layout/SiteSettingsProvider";
 import { getSetting } from "@/server/settings/queries";
 import { SITE_URL } from "@/lib/site";
+import { loc } from "@/lib/domain/loc";
+import { pageMeta } from "@/lib/seo/meta";
+import { organization, website } from "@/lib/seo/jsonld";
+import { JsonLd } from "@/components/seo/JsonLd";
 import "../globals.css";
 
 export function generateStaticParams() {
@@ -24,17 +28,26 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
   const { locale } = await params;
-  const t = await getTranslations({ locale, namespace: "meta" });
+  const [t, seo] = await Promise.all([
+    getTranslations({ locale, namespace: "meta" }),
+    getSetting("seo"),
+  ]);
+
+  const defaultTitle = loc(seo.title, locale) || t("title");
+  const defaultDesc = loc(seo.description, locale) || t("description");
+  const siteName = t("siteName") || (locale === "hi" ? "माँ काली स्तुति" : "Maa Kali Astuti");
+
+  const base = pageMeta({
+    locale,
+    path: "/",
+    title: defaultTitle,
+    description: defaultDesc,
+  });
+
   return {
-    title: { default: t("title"), template: `%s · ${t("siteName")}` },
-    description: t("description"),
-    applicationName: t("siteName"),
-    metadataBase: new URL(SITE_URL),
-    openGraph: {
-      type: "website",
-      siteName: t("siteName"),
-      locale: locale === "hi" ? "hi_IN" : "en_IN",
-    },
+    ...base,
+    title: { default: defaultTitle, template: `%s · ${siteName}` },
+    applicationName: siteName,
   };
 }
 
@@ -61,9 +74,19 @@ export default async function LocaleLayout({
     getSetting("announcement"),
   ]);
 
+  const orgJsonLd = organization({
+    siteName: locale === "hi" ? "माँ काली स्तुति" : "Maa Kali Astuti",
+    phone: contact.phoneTel || contact.phoneDisplay,
+    email: contact.email,
+    social,
+  });
+  const siteJsonLd = website();
+
   return (
     <html lang={locale} className={fontVariables}>
       <body>
+        <JsonLd data={orgJsonLd} />
+        <JsonLd data={siteJsonLd} />
         <a
           href="#main"
           className="sr-only-focusable fixed top-2 left-2 z-[10001] rounded-btn bg-em7 px-4 py-3 font-sans text-[14px] font-semibold text-iv no-underline"
