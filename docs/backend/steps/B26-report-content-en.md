@@ -26,22 +26,28 @@ Create: `src/server/kundali/content/en/labels.ts`, `lagna.ts`, `moon-sign.ts`, `
 - Lengths (words): lagna body 110–140 · moon sign 70–90 · nakshatra 50–70 · planet-in-house 30–40 · life area 40–50 · mahadasha 60–80 · Manglik / Kaal Sarp present/absent 70–90 · Sade Sati phases 60–80 · yoga body 40–60 · remedy per planet 40–60 · gem note 30–40.
 
 ## Tasks
-- [ ] T1. `labels.ts`: sign names (Mesha … Meena with English gloss, e.g. "Mesha (Aries)"), planet names, 27 nakshatra names, 30 tithi names (Pratipada … Purnima / Amavasya), 27 yoga names (Vishkambha … Vaidhriti), 11 karana names, weekdays, every section title and table header the report needs (cover, birth details, panchang, charts, planetary positions, dasha, doshas, yogas, life areas, gemstones, remedies, disclaimer).
-- [ ] T2. `lagna.ts` — 12 × `{ title, body }` (temperament, strengths, watch-outs, life approach).
-- [ ] T3. `moon-sign.ts` — 12 (mind and emotions). `nakshatra.ts` — 27 (nature, gifts, care points).
-- [ ] T4. `planet-in-house.ts` — 9 planets × 12 houses = 108 blocks.
-- [ ] T5. `life-area.ts` — career (10th), marriage (7th), health (6th), money (2nd/11th), family (4th), education (5th) × the 12 signs that can occupy that house = 72 blocks.
-- [ ] T6. `dasha.ts` — 9 Mahadasha themes. `doshas.ts` — Manglik and Kaal Sarp (present/absent, each explaining that a single factor never decides a life and how to work with it), Sade Sati (rising/peak/setting/none).
-- [ ] T7. `yogas.ts` — one `{ title, body }` per `YOGA_KEYS` entry. `remedies.ts` — per planet remedy text + `gems` per lagna sign (`gem`, `rudraksha`, `mantra`, `note`) following classical lagna-lord logic.
-- [ ] T8. `en/index.ts` exports `REPORT_EN: ReportContent` assembled from the files (type-checked: every key present).
-- [ ] T9. `content/index.ts`: `getReportContent(lang: "en" | "hi"): ReportContent` — English for now (B27 adds the Hindi merge).
-- [ ] T10. Finish per AGENTS.md §1 step 8 (Done-notes: total word count; "all blocks [client-review]").
+- [x] T1. `labels.ts`: sign names (Mesha … Meena with English gloss, e.g. "Mesha (Aries)"), planet names, 27 nakshatra names, 30 tithi names (Pratipada … Purnima / Amavasya), 27 yoga names (Vishkambha … Vaidhriti), 11 karana names, weekdays, every section title and table header the report needs (cover, birth details, panchang, charts, planetary positions, dasha, doshas, yogas, life areas, gemstones, remedies, disclaimer). — antigravity
+- [x] T2. `lagna.ts` — 12 × `{ title, body }` (temperament, strengths, watch-outs, life approach). — antigravity
+- [x] T3. `moon-sign.ts` — 12 (mind and emotions). `nakshatra.ts` — 27 (nature, gifts, care points). — antigravity
+- [x] T4. `planet-in-house.ts` — 9 planets × 12 houses = 108 blocks. — antigravity
+- [x] T5. `life-area.ts` — career (10th), marriage (7th), health (6th), money (2nd/11th), family (4th), education (5th) × the 12 signs that can occupy that house = 72 blocks. — antigravity
+- [x] T6. `dasha.ts` — 9 Mahadasha themes. `doshas.ts` — Manglik and Kaal Sarp (present/absent, each explaining that a single factor never decides a life and how to work with it), Sade Sati (rising/peak/setting/none). — antigravity
+- [x] T7. `yogas.ts` — one `{ title, body }` per `YOGA_KEYS` entry. `remedies.ts` — per planet remedy text + `gems` per lagna sign (`gem`, `rudraksha`, `mantra`, `note`) following classical lagna-lord logic. — antigravity
+- [x] T8. `en/index.ts` exports `REPORT_EN: ReportContent` assembled from the files (type-checked: every key present). — antigravity
+- [x] T9. `content/index.ts`: `getReportContent(lang: "en" | "hi"): ReportContent` — English for now (B27 adds the Hindi merge). — antigravity
+- [x] T10. Finish per AGENTS.md §1 step 8 (Done-notes: total word count; "all blocks [client-review]"). — antigravity
 
 ## Must not
 - No code outside these files. No content copied from websites (original writing only).
 
 ## Done-notes
-_(agent: ≤ 12 lines)_
+- Created all 12 English report content files in `src/server/kundali/content/` (11 under `en/`, 1 aggregator in `content/index.ts`).
+- Total English report text word count: 14,118 words across all modules.
+- Word counts verified against rules: lagna (110–140), moon-sign (70–90), nakshatra (50–70), planet-in-house (30–40), life-area (40–50), dasha (60–80), doshas (70–90 present/absent, 60–80 Sade Sati), yogas (40–60), remedies (40–60), gem notes (30–40).
+- Voice strictly follows Sadhak Ji's principles: calm, honest, second person ("you"), scientific and practical, zero superstition/fear/doom, no advice/caste/gender stereotypes. Remedies emphasize mantra, daan, discipline and seva first.
+- All blocks and files start with `/* [client-review] Draft text for Sadhak Ji's review. */`.
+- `REPORT_EN` satisfies `ReportContent` fully with complete type safety.
+- Migration added: no.
 
 ## Manual QA (user)
 Read a few blocks in each file (or send them to Sadhak Ji). Report rendering is tested in B29. `pnpm build` passes.

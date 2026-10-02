@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti · Phase B (backend · admin · commerce)
 
-**Current: B26**  ·  Claude → type `/next`  ·  Another AI → paste the prompt from `docs/backend/AGENT-PROMPT.md`
+**Current: B27**  ·  Claude → type `/next`  ·  Another AI → paste the prompt from `docs/backend/AGENT-PROMPT.md`
 Status: `TODO` · `IN-PROGRESS` · `DONE` · `BLOCKED`. Agent = lower-case name(s) of who worked on the step (`claude`, `antigravity`, … — `a+b` when two). Date = YYYY-MM-DD.
 Phase F (finished frontend) tracker: `docs/frontend/PROGRESS-F.md` — reference only, don't open unless a step says so.
 
@@ -41,7 +41,7 @@ Spec files are in `docs/backend/steps/`. Each step needs the previous one DONE.
 | B23 | Booking manage page + reschedule | DONE | antigravity | 2026-10-02 | M | any | `B23-booking-manage.md` |
 | B24 | Admin: consultations | DONE | antigravity | 2026-10-02 | M | any | `B24-admin-consultations.md` |
 | B25 | Kundali engine + birth places | DONE | antigravity | 2026-10-02 | H | Claude rec. | `B25-kundali-engine.md` |
-| B26 | Report content — English | TODO | | | L | any | `B26-report-content-en.md` |
+| B26 | Report content — English | DONE | antigravity | 2026-10-02 | L | any | `B26-report-content-en.md` |
 | B27 | Report content — Hindi part 1 | TODO | | | L | any | `B27-report-content-hi-1.md` |
 | B28 | Report content — Hindi part 2 | TODO | | | L | any | `B28-report-content-hi-2.md` |
 | B29 | Kundali report document | TODO | | | M | any | `B29-kundali-report-document.md` |
