@@ -4,6 +4,7 @@ import { eq } from "drizzle-orm";
 import { verifyWebhookSignature } from "@/server/payments/razorpay";
 import { dispatchPaid, dispatchFailed } from "@/server/payments/dispatch";
 import { applyRefundWebhook } from "@/server/orders/refunds";
+import { markLinkPaid } from "@/server/inquiries/links";
 import { log } from "@/server/log";
 
 export async function POST(request: Request): Promise<Response> {
@@ -145,6 +146,39 @@ export async function POST(request: Request): Promise<Response> {
         await applyRefundWebhook(rzpRefundId, status);
       } else {
         log.warn("webhook.missing_refund_id", { eventType });
+      }
+    } else if (eventType === "payment_link.paid") {
+      const linkEntity = payload?.payment_link?.entity;
+      const paymentEntity = payload?.payment?.entity;
+      const rzpLinkId =
+        typeof linkEntity?.id === "string" ? linkEntity.id : "";
+      const rzpPaymentId =
+        typeof paymentEntity?.id === "string"
+          ? paymentEntity.id
+          : typeof (linkEntity as Record<string, unknown> | undefined)?.payment_id === "string"
+            ? ((linkEntity as Record<string, unknown>).payment_id as string)
+            : "";
+      const amountPaise =
+        typeof paymentEntity?.amount === "number"
+          ? paymentEntity.amount
+          : typeof linkEntity?.amount_paid === "number"
+            ? linkEntity.amount_paid
+            : typeof linkEntity?.amount === "number"
+              ? linkEntity.amount
+              : 0;
+      const amountInr = Math.round(amountPaise / 100);
+      const method =
+        typeof paymentEntity?.method === "string" ? paymentEntity.method : null;
+
+      if (rzpLinkId) {
+        await markLinkPaid({
+          rzpLinkId,
+          rzpPaymentId,
+          amountInr,
+          method,
+        });
+      } else {
+        log.warn("webhook.missing_link_id", { eventType });
       }
     }
 

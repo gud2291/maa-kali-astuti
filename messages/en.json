@@ -1123,7 +1123,9 @@
       "city": "Enter your city",
       "area": "Choose the area closest to your concern",
       "exp": "Choose one",
-      "agree": "Please confirm this to send your inquiry"
+      "course": "Choose a course",
+      "agree": "Please confirm this to send your inquiry",
+      "submit": "Failed to submit inquiry. Please try again."
     },
     "count": "{n} / 600",
     "sending": "Sending…",

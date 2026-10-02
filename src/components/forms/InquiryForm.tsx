@@ -9,9 +9,11 @@ import { drawChart } from "@/components/motion/draw";
 import { enter } from "@/components/motion/fx";
 import { Field } from "@/components/ui/Field";
 import { Corner } from "@/components/ui/ornaments";
-import { submitInquiry } from "@/lib/api/inquiry";
+import { TurnstileWidget } from "@/components/auth/TurnstileWidget";
+import { InquiryError, submitInquiry } from "@/lib/api/inquiry";
 import { WHATSAPP_DISPLAY, waLink } from "@/lib/site";
 import { cn } from "@/lib/utils/cn";
+import type { Locale } from "@/lib/domain/enums";
 import {
   INQUIRY_AREAS,
   INQUIRY_EXP,
@@ -53,6 +55,7 @@ export function InquiryForm({
   courses?: CourseOption[];
 }) {
   const t = useTranslations("inquiry");
+  const tErrors = useTranslations("errors");
   const locale = useLocale();
   const uid = useId();
   const ritual = kind === "ritual";
@@ -63,6 +66,7 @@ export function InquiryForm({
     handleSubmit,
     setValue,
     setFocus,
+    setError,
     getValues,
     reset,
     watch,
@@ -92,6 +96,10 @@ export function InquiryForm({
 
   const [phase, setPhase] = useState<Phase>("idle");
   const [sent, setSent] = useState<Sent | null>(null);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [resetKey, setResetKey] = useState(0);
+  const [serverError, setServerError] = useState<string | null>(null);
+
   const alive = useRef(true);
   useEffect(
     () => () => {
@@ -116,11 +124,39 @@ export function InquiryForm({
 
   const onValid = async (v: InquiryValues) => {
     if (phase === "sending") return;
+    setServerError(null);
+
+    if (!turnstileToken) {
+      setServerError(tErrors("BOT_CHECK_FAILED"));
+      return;
+    }
+
     setPhase("sending");
-    const { refNo } = await submitInquiry(kind, v);
-    if (!alive.current) return;
-    setSent({ ...v, refNo });
-    setPhase("done");
+    try {
+      const { refNo } = await submitInquiry(kind, v, turnstileToken, locale as Locale);
+      if (!alive.current) return;
+      setSent({ ...v, refNo });
+      setPhase("done");
+    } catch (err: unknown) {
+      if (!alive.current) return;
+      setPhase("idle");
+      setResetKey((k) => k + 1);
+
+      if (err instanceof InquiryError) {
+        if (err.fieldErrors) {
+          for (const [field, message] of Object.entries(err.fieldErrors)) {
+            setError(field as never, { message });
+          }
+        }
+        try {
+          setServerError(tErrors(err.code as Parameters<typeof tErrors>[0]));
+        } catch {
+          setServerError(tErrors("INTERNAL"));
+        }
+      } else {
+        setServerError(tErrors("INTERNAL"));
+      }
+    }
   };
   const onInvalid = (e: FieldErrors<InquiryValues>) => {
     const first = TEXT_FIELDS.find((k) => e[k]);
@@ -322,6 +358,15 @@ export function InquiryForm({
           </button>
           {errors.agree && <ErrorRow className="-mt-3">{t("err.agree")}</ErrorRow>}
 
+          <div className="flex flex-col gap-2">
+            <TurnstileWidget
+              action="inquiry"
+              onToken={setTurnstileToken}
+              resetKey={resetKey}
+            />
+            {serverError && <ErrorRow>{serverError}</ErrorRow>}
+          </div>
+
           <div className="flex flex-wrap items-center gap-x-5 gap-y-3.5">
             <button
               type="submit"
@@ -404,6 +449,8 @@ export function InquiryForm({
               onClick={() => {
                 reset(inquiryDefaults(getValues("course")));
                 setSent(null);
+                setServerError(null);
+                setResetKey((k) => k + 1);
                 setPhase("idle");
               }}
               className="h-12 cursor-pointer rounded-btn border-0 bg-transparent px-[18px] font-sans text-[14px] leading-none font-semibold text-em7 shadow-ring-em hover:bg-em1"

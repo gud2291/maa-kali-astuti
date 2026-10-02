@@ -86,6 +86,13 @@ export const NAV: NavItem[] = [
     group: "Kundali",
   },
   {
+    href: "/admin/inquiries",
+    label: "Inquiries",
+    icon: "chat",
+    perm: "inquiries.view",
+    group: "Leads",
+  },
+  {
     href: "/admin/staff",
     label: "Staff",
     icon: "user",

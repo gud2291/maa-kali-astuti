@@ -2,6 +2,12 @@
    the issue message is the field name and the form maps it to copy. Phone is kept as digits only
    (max 10); the message is counted trimmed (20–600). */
 import { z } from "zod";
+import {
+  COURSE_KEYS,
+  INQUIRY_KINDS,
+  LOCALES,
+  type CourseKey,
+} from "@/lib/domain/enums";
 
 export type InquiryKind = "course" | "ritual";
 
@@ -56,3 +62,26 @@ export const inquirySchema = (kind: InquiryKind) =>
     if (f.why.trim().length < WHY_MIN) add("why");
     if (!f.agree) add("agree");
   });
+
+export const inquirySubmitSchema = values
+  .extend({
+    kind: z.enum(INQUIRY_KINDS),
+    locale: z.enum(LOCALES),
+    turnstileToken: z.string().min(1, "Turnstile token is required"),
+  })
+  .superRefine((f, ctx) => {
+    const baseResult = inquirySchema(f.kind).safeParse(f);
+    if (!baseResult.success) {
+      for (const issue of baseResult.error.issues) {
+        ctx.addIssue(issue);
+      }
+    }
+    if (f.kind === "course") {
+      if (!COURSE_KEYS.includes(f.course as CourseKey)) {
+        ctx.addIssue({ code: "custom", path: ["course"], message: "course" });
+      }
+    }
+  });
+
+export type InquirySubmitInput = z.infer<typeof inquirySubmitSchema>;
+

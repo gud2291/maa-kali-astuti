@@ -3,6 +3,7 @@ import { after } from "next/server";
 import { markOrderPaid, recordPaymentFailure } from "@/server/orders/service";
 import { markBookingPaid } from "@/server/bookings/service";
 import { markKundaliPaid } from "@/server/kundali/service";
+import { markLinkPaid } from "@/server/inquiries/links";
 import { sendOrderPlacedEmails } from "@/server/orders/emails";
 import { invalidateLater, TAG } from "@/server/cache";
 import { db } from "@/server/db/client";
@@ -68,6 +69,13 @@ export async function dispatchPaid(opts: {
     await markKundaliPaid({
       kundaliId: opts.entityId,
       rzpOrderId: opts.rzpOrderId,
+      rzpPaymentId: opts.rzpPaymentId,
+      amountInr: opts.amountInr,
+      method: opts.method,
+    });
+  } else if (opts.entity === "link") {
+    await markLinkPaid({
+      linkId: opts.entityId,
       rzpPaymentId: opts.rzpPaymentId,
       amountInr: opts.amountInr,
       method: opts.method,
