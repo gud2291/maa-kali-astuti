@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, type KeyboardEvent, type ReactNode } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Icon, type IconName } from "@/components/icons/Icon";
 import { RashiGlyph } from "@/components/signature/RashiGlyph";
@@ -15,6 +15,8 @@ import { useIsMobile } from "@/lib/hooks/useMedia";
 import { isReduced } from "@/lib/hooks/useReducedMotion";
 import { rashiHref, routes } from "@/lib/routes";
 import { cn } from "@/lib/utils/cn";
+import { loc } from "@/lib/domain/loc";
+import { useRashifal as useRashifalData } from "@/lib/hooks/useRashifal";
 import { Dots, useRashifal } from "./period";
 import { NightCrumbs } from "./ui";
 
@@ -35,7 +37,9 @@ const DT = "font-sans text-[10px] leading-[1.2] font-semibold tracking-[.14em] t
 
 export function RashifalHero({ stones }: { stones: Record<string, RashiStone> }) {
   const t = useTranslations("rashifal");
+  const locale = useLocale();
   const { per, day } = useRashifal();
+  const { entries } = useRashifalData(per);
   const mobile = useIsMobile();
   const cyc = useRashiCycle(todayRashi(day).i, mobile);
   const { refs } = cyc;
@@ -44,6 +48,12 @@ export function RashifalHero({ stones }: { stones: Record<string, RashiStone> })
 
   const r = RASHI[cyc.idx];
   const pr = predict(r, per, day);
+  const entry = entries.get(r.key);
+  const entryText = entry ? loc(entry.text, locale) : "";
+  const readingText = entryText || pr.text;
+  const meters = entry?.scores ?? pr.meters;
+  const luckyNum = entry?.lucky?.number ?? pr.luckyNum;
+  const luckyColour = entry?.lucky?.colour ? loc(entry.lucky.colour, locale) : r.colour;
   const stone = stones[r.key];
   const perLabel = t(`periods.${per}`);
 
@@ -148,7 +158,7 @@ export function RashifalHero({ stones }: { stones: Record<string, RashiStone> })
               </span>
             </div>
             <p lang="en" className="m-0 max-w-[560px] font-sans text-[17px] leading-[1.7] text-pretty text-em1">
-              {pr.text}
+              {readingText}
             </p>
             <div className="grid max-w-[520px] grid-cols-2 gap-x-6 gap-y-2.5">
               {AREAS.map(([k, , , icn]) => (
@@ -163,8 +173,8 @@ export function RashifalHero({ stones }: { stones: Record<string, RashiStone> })
                     {areaLabel(k)}
                   </span>
                   <Dots
-                    n={pr.meters[k]}
-                    label={t("meterAria", { area: areaLabel(k), n: pr.meters[k] })}
+                    n={meters[k]}
+                    label={t("meterAria", { area: areaLabel(k), n: meters[k] })}
                     on="#D9B96A"
                     ring="rgba(217,185,106,.6)"
                   />
@@ -174,7 +184,7 @@ export function RashifalHero({ stones }: { stones: Record<string, RashiStone> })
             <dl className="m-0 grid max-w-[560px] grid-cols-3 gap-3 rounded-btn bg-n8 p-4 shadow-[inset_0_0_0_1px_rgba(217,185,106,.3)]">
               <div className="flex flex-col gap-1.5">
                 <dt className={DT}>{t("lucky")}</dt>
-                <dd className="m-0 font-display text-[26px] leading-none text-iv">{pr.luckyNum}</dd>
+                <dd className="m-0 font-display text-[26px] leading-none text-iv">{luckyNum}</dd>
               </div>
               <div className="flex flex-col gap-1.5">
                 <dt className={DT}>{t("colour")}</dt>
@@ -183,7 +193,7 @@ export function RashifalHero({ stones }: { stones: Record<string, RashiStone> })
                     className="size-4 flex-none rounded-pill shadow-[0_0_0_1px_rgba(217,185,106,.6)]"
                     style={{ backgroundColor: r.hex }}
                   />
-                  {r.colour}
+                  {luckyColour}
                 </dd>
               </div>
               <div className="flex min-w-0 flex-col gap-1.5">
@@ -243,6 +253,18 @@ export function RashifalHero({ stones }: { stones: Record<string, RashiStone> })
             {RASHI.map((x) => {
               const p = predict(x, per, day);
               const on = x.i === cyc.idx;
+              const itemEntry = entries.get(x.key);
+              const itemText = itemEntry ? loc(itemEntry.text, locale) : "";
+              const shortText = itemText || p.short;
+              const overall = itemEntry?.scores
+                ? Math.round(
+                    (itemEntry.scores.love +
+                      itemEntry.scores.career +
+                      itemEntry.scores.health +
+                      itemEntry.scores.finance) /
+                      4,
+                  )
+                : p.overall;
               return (
                 <article
                   key={x.key}
@@ -275,12 +297,12 @@ export function RashifalHero({ stones }: { stones: Record<string, RashiStone> })
                     </span>
                   </div>
                   <p lang="en" className="m-0 font-sans text-[14.5px] leading-[1.6] text-em1">
-                    {p.short}
+                    {shortText}
                   </p>
                   <div className="mt-auto flex items-center justify-between gap-2.5">
                     <Dots
-                      n={p.overall}
-                      label={t("overall", { n: p.overall })}
+                      n={overall}
+                      label={t("overall", { n: overall })}
                       on="#D9B96A"
                       ring="rgba(217,185,106,.6)"
                     />

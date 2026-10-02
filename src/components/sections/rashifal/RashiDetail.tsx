@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useRef, type KeyboardEvent, type ReactNode } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { ProductCard } from "@/components/commerce/ProductCard";
 import { Icon, type IconName } from "@/components/icons/Icon";
@@ -18,6 +18,8 @@ import { isReduced } from "@/lib/hooks/useReducedMotion";
 import { rashiHref, routes } from "@/lib/routes";
 import { rovingTarget } from "@/lib/utils/roving";
 import { cn } from "@/lib/utils/cn";
+import { loc } from "@/lib/domain/loc";
+import { useRashifal as useRashifalData } from "@/lib/hooks/useRashifal";
 import type { Product } from "@/types/product";
 import { useRashifal } from "./period";
 import { brass, H2, NightCrumbs } from "./ui";
@@ -32,8 +34,22 @@ const DT = "font-sans text-[10px] leading-[1.2] font-semibold tracking-[.14em] t
 /** §1 Hero (31–62). Night; the arch (mandala spin 180 s, big glyph, Devanagari name) beside the copy. */
 export function RashiHero({ r }: { r: Rashi }) {
   const t = useTranslations("rashifal");
+  const locale = useLocale();
   const { per, setPer, day } = useRashifal();
+  const { entries } = useRashifalData(per);
   const pr = predict(r, per, day);
+  const entry = entries.get(r.key);
+  const entryText = entry ? loc(entry.text, locale) : "";
+  const readingText = entryText || pr.text;
+  const overall = entry?.scores
+    ? Math.round(
+        (entry.scores.love +
+          entry.scores.career +
+          entry.scores.health +
+          entry.scores.finance) /
+          4,
+      )
+    : pr.overall;
   const textRef = useRef<HTMLParagraphElement>(null);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const lastPer = useRef(per);
@@ -66,7 +82,7 @@ export function RashiHero({ r }: { r: Rashi }) {
     { k: t("detail.lord"), v: `${r.lordHi} · ${r.lord}` },
     { k: t("detail.element"), v: `${r.el} · ${r.elHi}` },
     { k: t("detail.day"), v: r.day },
-    { k: t("detail.overall"), v: t("detail.ofFive", { n: pr.overall }) },
+    { k: t("detail.overall"), v: t("detail.ofFive", { n: overall }) },
   ];
 
   return (
@@ -159,7 +175,7 @@ export function RashiHero({ r }: { r: Rashi }) {
                 lang="en"
                 className="m-0 max-w-[600px] font-sans text-[clamp(17px,1.5vw,19px)] leading-[1.7] text-pretty text-em1"
               >
-                {pr.text}
+                {readingText}
               </p>
             </div>
             <dl className="m-0 flex flex-wrap gap-x-7 gap-y-2.5 border-t border-[rgba(217,185,106,.25)] pt-4">
@@ -200,7 +216,9 @@ export function RashiAreas({ r }: { r: Rashi }) {
   const t = useTranslations("rashifal.areas");
   const tp = useTranslations("rashifal.periods");
   const { per, day } = useRashifal();
+  const { entries } = useRashifalData(per);
   const pr = predict(r, per, day);
+  const entry = entries.get(r.key);
   return (
     <section data-screen-label="By area" className="bg-iv">
       <div className="mx-auto max-w-[1320px] px-[clamp(16px,4vw,32px)] py-[clamp(56px,8vw,112px)]">
@@ -217,7 +235,7 @@ export function RashiAreas({ r }: { r: Rashi }) {
         </div>
         <div className="grid grid-cols-1 gap-x-[clamp(24px,4vw,64px)] border-t border-s2 w900:grid-cols-2">
           {AREAS.map(([k, en, hi, icn], i) => {
-            const n = pr.meters[k];
+            const n = entry?.scores ? entry.scores[k] : pr.meters[k];
             return (
               <article
                 key={k}
@@ -270,8 +288,13 @@ export function RashiAreas({ r }: { r: Rashi }) {
  *  below 1024 the gem card spans the row. */
 export function RashiLucky({ r, gem }: { r: Rashi; gem: Product | null }) {
   const t = useTranslations("rashifal.lucky");
+  const locale = useLocale();
   const { per, day } = useRashifal();
+  const { entries } = useRashifalData(per);
   const pr = predict(r, per, day);
+  const entry = entries.get(r.key);
+  const luckyNum = entry?.lucky?.number ?? pr.luckyNum;
+  const luckyColour = entry?.lucky?.colour ? loc(entry.lucky.colour, locale) : r.colour;
   const card =
     "flex min-h-[170px] flex-col justify-between gap-[18px] rounded-btn bg-iv p-5 shadow-[inset_0_0_0_1px_rgba(184,146,58,.45)]";
   const head = (k: string, kh: string) => (
@@ -299,7 +322,7 @@ export function RashiLucky({ r, gem }: { r: Rashi; gem: Product | null }) {
         <div className="grid grid-cols-2 items-stretch gap-[clamp(10px,1.6vw,16px)] min-[600px]:grid-cols-3 lg:grid-cols-[repeat(3,minmax(0,1fr))_minmax(0,1.6fr)]">
           <div data-reveal="1" className={card}>
             {head(t("num"), "शुभ अंक")}
-            <span className="font-display text-[64px] leading-none text-em9 tabular-nums">{pr.luckyNum}</span>
+            <span className="font-display text-[64px] leading-none text-em9 tabular-nums">{luckyNum}</span>
           </div>
           <div data-reveal="1" className={card}>
             {head(t("colour"), "शुभ रंग")}
@@ -309,7 +332,7 @@ export function RashiLucky({ r, gem }: { r: Rashi; gem: Product | null }) {
                 style={{ backgroundColor: r.hex }}
               />
               <span lang="en" className="font-display text-[21px] leading-[1.2] text-em9">
-                {r.colour}
+                {luckyColour}
               </span>
             </span>
           </div>

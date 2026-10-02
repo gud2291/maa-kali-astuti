@@ -1,6 +1,6 @@
 "use client";
 import { useRef, type KeyboardEvent } from "react";
-import { useTranslations } from "next-intl";
+import { useTranslations, useLocale } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Icon } from "@/components/icons/Icon";
 import { RashiGlyph } from "@/components/signature/RashiGlyph";
@@ -10,6 +10,8 @@ import { RASHI } from "@/lib/astro/rashi";
 import { rashiHref } from "@/lib/routes";
 import { rovingTarget } from "@/lib/utils/roving";
 import { cn } from "@/lib/utils/cn";
+import { loc } from "@/lib/domain/loc";
+import { useRashifal as useRashifalData } from "@/lib/hooks/useRashifal";
 import { Dots, useRashifal } from "./period";
 import { brass, H2 } from "./ui";
 
@@ -19,7 +21,9 @@ import { brass, H2 } from "./ui";
 
 export function RashifalGrid() {
   const t = useTranslations("rashifal");
+  const locale = useLocale();
   const { per, setPer, day, mine } = useRashifal();
+  const { entries } = useRashifalData(per);
   const tabRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const keys = PERIODS.map(([k]) => k);
 
@@ -92,6 +96,18 @@ export function RashifalGrid() {
           {RASHI.map((x, i) => {
             const p = predict(x, per, day);
             const me = mine === x.key;
+            const entry = entries.get(x.key);
+            const entryText = entry ? loc(entry.text, locale) : "";
+            const shortText = entryText || p.short;
+            const overall = entry?.scores
+              ? Math.round(
+                  (entry.scores.love +
+                    entry.scores.career +
+                    entry.scores.health +
+                    entry.scores.finance) /
+                    4,
+                )
+              : p.overall;
             return (
               <Link
                 key={x.key}
@@ -128,10 +144,10 @@ export function RashifalGrid() {
                   </span>
                 </span>
                 <span lang="en" className="font-sans text-[14px] leading-[1.6] text-pretty text-ink max-md:hidden">
-                  {p.short}
+                  {shortText}
                 </span>
                 <span className="mt-auto flex items-center justify-between gap-2 border-t border-s2 pt-2.5">
-                  <Dots n={p.overall} label={t("overall", { n: p.overall })} on="#B8923A" ring="#B8923A" />
+                  <Dots n={overall} label={t("overall", { n: overall })} on="#B8923A" ring="#B8923A" />
                   <span className="block size-4 text-g5">
                     <Icon name="arrowR" />
                   </span>
