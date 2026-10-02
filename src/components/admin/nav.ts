@@ -135,6 +135,13 @@ export const NAV: NavItem[] = [
     group: "Content",
   },
   {
+    href: "/admin/reviews",
+    label: "Reviews",
+    icon: "star",
+    perm: "reviews.moderate",
+    group: "Content",
+  },
+  {
     href: "/admin/content/faqs",
     label: "FAQs",
     icon: "question",

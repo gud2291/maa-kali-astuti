@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti · Phase B (backend · admin · commerce)
 
-**Current: B38**  ·  Claude → type `/next`  ·  Another AI → paste the prompt from `docs/backend/AGENT-PROMPT.md`
+**Current: B39**  ·  Claude → type `/next`  ·  Another AI → paste the prompt from `docs/backend/AGENT-PROMPT.md`
 Status: `TODO` · `IN-PROGRESS` · `DONE` · `BLOCKED`. Agent = lower-case name(s) of who worked on the step (`claude`, `antigravity`, … — `a+b` when two). Date = YYYY-MM-DD.
 Phase F (finished frontend) tracker: `docs/frontend/PROGRESS-F.md` — reference only, don't open unless a step says so.
 
@@ -53,7 +53,7 @@ Spec files are in `docs/backend/steps/`. Each step needs the previous one DONE.
 | B35 | Rashifal manager | DONE | antigravity | 2026-10-02 | M | any | `B35-rashifal-manager.md` |
 | B36 | Blog, policies, FAQ page, editor | DONE | antigravity | 2026-10-02 | M | any | `B36-blog-policies-faq.md` |
 | B37 | Starter articles + policy drafts | DONE | antigravity | 2026-10-02 | L | any | `B37-starter-content.md` |
-| B38 | Product reviews | TODO | | | M | any | `B38-reviews.md` |
+| B38 | Product reviews | DONE | antigravity | 2026-10-02 | M | any | `B38-reviews.md` |
 | B39 | Admin dashboard, badges, search | TODO | | | M | any | `B39-dashboard-search.md` |
 | B40 | Customers, exports, audit log, health | TODO | | | M | any | `B40-customers-audit-health.md` |
 | B41 | Cron jobs & reminders | TODO | | | M | any | `B41-cron-reminders.md` |

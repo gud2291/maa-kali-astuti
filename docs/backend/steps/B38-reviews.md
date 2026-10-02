@@ -22,21 +22,28 @@ Create:
 Modify: `src/server/reviews/queries.ts` (`getProductReviews`), `src/app/[locale]/product/[slug]/page.tsx` (add the section), `ProductInfo.tsx` (rating links to `#reviews`), `src/components/admin/nav.ts` (+ Reviews `star`, Content, `reviews.moderate`), `messages/en.json`, `messages/hi.json` (namespace `reviews`)
 
 ## Tasks
-- [ ] T1. `review.ts`: `reviewSubmitSchema` (productId, name 2–60, city ≤ 60, rating 1–5, title ≤ 80, body 20–1500, `orderNumber` + `contact` optional, photos ≤ 4 × `{ mediaId, claimKey }`, locale, turnstileToken).
-- [ ] T2. `reviews/service.ts`: `submitReview(input, ctx)` — verified when the signed-in customer, or `orderNumber` + matching phone/email, has a non-cancelled order containing the product; insert `pending`; `claimMedia(photos, { type: "review", id })`. `recomputeProductRating(productId)` — from **approved** reviews only: `rating_avg` (1 decimal), `rating_count`.
-- [ ] T3. `reviews/actions.ts`: `submitReviewAction` (Turnstile, `rateLimit("review:ip", ip, 5, 3600)`, max 1 review per product per email/phone per day), `moreReviewsAction({ productId, offset })` (10 per page, approved only).
-- [ ] T4. `getProductReviews(productId)` = `cached("product-reviews", …, (id) => [TAG.productReviews(id)])` → `{ avg, count, dist: [5★…1★ counts], items: first 10 (name, city, rating, title, body, verified, photos as MediaRef[], date ms) }`.
-- [ ] T5. PDP: `ReviewsSection` (`id="reviews"`): `ReviewSummary` (average, stars, count, distribution bars, "Write a review"), `ReviewList` (photos open full-screen, verified tick, star filter on the client, "Load more" via `moreReviewsAction`), `ReviewForm` (sheet: stars, title, text, name, city, optional order number + phone/email for the verified tick, photo upload via `useUpload("review")`, Turnstile; success → "Thank you — your review will appear after a quick check"). Hidden summary when `count = 0` (form still available).
-- [ ] T6. `reviews/admin.ts` (`reviews.moderate`; audit): `listReviews({ status, page })`, `approveReview(id)`, `rejectReview(id)`, `setShowOnHome(id, on)`, `deleteReview(id)` (deletes its media) — approve/reject/delete call `recomputeProductRating`. `admin-actions.ts` → `invalidate(TAG.catalog, TAG.product(pid), TAG.productReviews(pid), TAG.reviews)`.
-- [ ] T7. `/admin/reviews`: tabs pending/approved/rejected, `ReviewCard` (product thumb + name, stars, text, photos, verified, actions).
-- [ ] T8. Messages `reviews` (EN + HI); nav item.
-- [ ] T9. Finish per AGENTS.md §1 step 8.
+- [x] T1. `review.ts`: `reviewSubmitSchema` (productId, name 2–60, city ≤ 60, rating 1–5, title ≤ 80, body 20–1500, `orderNumber` + `contact` optional, photos ≤ 4 × `{ mediaId, claimKey }`, locale, turnstileToken). — antigravity
+- [x] T2. `reviews/service.ts`: `submitReview(input, ctx)` — verified when the signed-in customer, or `orderNumber` + matching phone/email, has a non-cancelled order containing the product; insert `pending`; `claimMedia(photos, { type: "review", id })`. `recomputeProductRating(productId)` — from **approved** reviews only: `rating_avg` (1 decimal), `rating_count`. — antigravity
+- [x] T3. `reviews/actions.ts`: `submitReviewAction` (Turnstile, `rateLimit("review:ip", ip, 5, 3600)`, max 1 review per product per email/phone per day), `moreReviewsAction({ productId, offset })` (10 per page, approved only). — antigravity
+- [x] T4. `getProductReviews(productId)` = `cached("product-reviews", …, (id) => [TAG.productReviews(id)])` → `{ avg, count, dist: [5★…1★ counts], items: first 10 (name, city, rating, title, body, verified, photos as MediaRef[], date ms) }`. — antigravity
+- [x] T5. PDP: `ReviewsSection` (`id="reviews"`): `ReviewSummary` (average, stars, count, distribution bars, "Write a review"), `ReviewList` (photos open full-screen, verified tick, star filter on the client, "Load more" via `moreReviewsAction`), `ReviewForm` (sheet: stars, title, text, name, city, optional order number + phone/email for the verified tick, photo upload via `useUpload("review")`, Turnstile; success → "Thank you — your review will appear after a quick check"). Hidden summary when `count = 0` (form still available). — antigravity
+- [x] T6. `reviews/admin.ts` (`reviews.moderate`; audit): `listReviews({ status, page })`, `approveReview(id)`, `rejectReview(id)`, `setShowOnHome(id, on)`, `deleteReview(id)` (deletes its media) — approve/reject/delete call `recomputeProductRating`. `admin-actions.ts` → `invalidate(TAG.catalog, TAG.product(pid), TAG.productReviews(pid), TAG.reviews)`. — antigravity
+- [x] T7. `/admin/reviews`: tabs pending/approved/rejected, `ReviewCard` (product thumb + name, stars, text, photos, verified, actions). — antigravity
+- [x] T8. Messages `reviews` (EN + HI); nav item. — antigravity
+- [x] T9. Finish per AGENTS.md §1 step 8. — antigravity
 
 ## Must not
 - Never show pending/rejected reviews publicly. Never let the client set `verified`.
 
 ## Done-notes
-_(agent: ≤ 12 lines)_
+- Created review schemas, backend service, actions, admin moderation, and admin actions.
+- Created PDP review UI: ReviewsSection (#reviews), ReviewSummary, ReviewList with lightbox, ReviewForm with up to 4 photos.
+- Created Admin Reviews management page at /admin/reviews with pending/approved/rejected tabs and ReviewCard.
+- Updated queries.ts (getProductReviews), PDP page (ReviewsSection), ProductInfo (rating anchor), nav.ts (Reviews item).
+- Added reviews namespace to messages/en.json and messages/hi.json.
+- Verified buyer status verified server-side against non-cancelled orders via session or orderNumber + contact.
+- Recomputes product rating average and count on review approval, rejection, or deletion.
+- Migration added: no.
 
 ## Manual QA (user)
 1. On a product page write a review with 2 photos (with your order number + phone → "verified").

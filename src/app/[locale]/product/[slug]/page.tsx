@@ -15,6 +15,8 @@ import { RelatedRail } from "@/components/sections/pdp/RelatedRail";
 import { RecentlyViewed } from "@/components/sections/pdp/RecentlyViewed";
 import { StickyBuyBar } from "@/components/sections/pdp/StickyBuyBar";
 import { TrackView } from "@/components/sections/pdp/TrackView";
+import { ReviewsSection } from "@/components/sections/pdp/ReviewsSection";
+import { getProductReviews } from "@/server/reviews/queries";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -68,6 +70,7 @@ export default async function Page({ params }: Props) {
 
   const { product, content, related, certificate } = detail;
   const store = await getSetting("store");
+  const reviewsData = await getProductReviews(product.id);
   const t = await getTranslations("pdp");
   const isHi = locale === "hi";
 
@@ -181,6 +184,13 @@ export default async function Page({ params }: Props) {
           />
         </div>
       </section>
+
+      {/* Product Reviews */}
+      <ReviewsSection
+        productId={product.id}
+        productName={isHi ? product.hi || product.name : product.name}
+        reviewsData={reviewsData}
+      />
 
       {/* Related rail */}
       <RelatedRail

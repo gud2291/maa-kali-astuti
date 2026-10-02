@@ -139,7 +139,9 @@ export function ProductInfo({ product }: Props) {
 
       {/* Rating & reviews */}
       <div className="flex items-center gap-3">
-        <Rating rating={product.rating} reviews={product.reviews} hi={hi} />
+        <a href="#reviews" className="no-underline hover:opacity-80 transition-opacity">
+          <Rating rating={product.rating} reviews={product.reviews} hi={hi} />
+        </a>
       </div>
 
       {/* Price block */}
