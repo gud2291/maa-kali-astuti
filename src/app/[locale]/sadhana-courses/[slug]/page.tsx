@@ -13,9 +13,9 @@ import {
   CourseStructure,
   CourseSupport,
 } from "@/components/sections/courses/CourseDetail";
-import { COURSE_FEE } from "@/components/sections/courses/CoursesSections";
 import { InlineArt } from "@/components/ui/InlineArt";
 import { getCourse, getCourseKit, getCourseOptions, getCourses } from "@/lib/api/content";
+import { getSetting } from "@/server/settings/queries";
 import { YANTRA_GOLD } from "@/lib/art/yantras";
 import { fmt } from "@/lib/core/format";
 
@@ -48,12 +48,15 @@ export default async function CoursePage({ params }: Props) {
   setRequestLocale(locale);
   const c = await getCourse(slug, locale);
   if (!c || c.slug !== slug) notFound();
-  const [all, kit, options, t] = await Promise.all([
+  const [all, kit, options, t, coursesSetting] = await Promise.all([
     getCourses(locale),
     getCourseKit(),
     getCourseOptions(locale),
     getTranslations("sadhana.detail.sticky"),
+    getSetting("courses"),
   ]);
+
+  const courseFee = c.feeInr ?? coursesSetting.feeInr;
 
   return (
     <>
@@ -63,12 +66,12 @@ export default async function CoursePage({ params }: Props) {
       <CourseStructure c={c} modules={kit.modules} />
       <CourseNiyam c={c} niyam={kit.niyam} />
       <CourseSupport />
-      <CourseFee />
+      <CourseFee fee={courseFee} instalments={coursesSetting.instalments} locale={locale} />
       <CourseEnquire c={c} others={all.filter((o) => o.key !== c.key)} courses={options} />
       <StickyBook
         targetId={COURSE_CTA_ID}
         name={c.en}
-        sub={t("sub", { price: fmt(COURSE_FEE), days: c.days })}
+        sub={t("sub", { price: fmt(courseFee), days: c.days })}
         anchor="enquire"
         label={t("cta")}
         ctaIcon="chat"

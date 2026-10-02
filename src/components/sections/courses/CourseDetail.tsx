@@ -351,10 +351,34 @@ export async function CourseSupport() {
 }
 
 /** §7 Fee (143–159): sand; the emerald fee card (inclusions) beside the payment terms (2 columns from 1024). */
-export async function CourseFee() {
+export async function CourseFee({
+  fee = COURSE_FEE,
+  instalments,
+  locale = "en",
+}: {
+  fee?: number;
+  instalments?: { count: number; amountInr: number } | null;
+  locale?: string;
+} = {}) {
   const t = await getTranslations("sadhana.detail.fee");
   const inc = t.raw("inc") as string[];
-  const pay = t.raw("pay") as { k: string; v: string }[];
+  const rawPay = t.raw("pay") as { k: string; v: string }[];
+  const pay = rawPay.map((p) => {
+    if (
+      instalments &&
+      (p.v.includes("16,667") ||
+        p.v.includes("16667") ||
+        p.k.toLowerCase().includes("instal") ||
+        p.k.includes("किस्त"))
+    ) {
+      const v =
+        locale === "hi"
+          ? `${instalments.count} महीनों में ${instalments.count} × ${fmt(instalments.amountInr)}`
+          : `${instalments.count} × ${fmt(instalments.amountInr)} over ${instalments.count} months`;
+      return { ...p, v };
+    }
+    return p;
+  });
   return (
     <section data-screen-label="Fee and payment" className="bg-s1 shadow-hair-y">
       <div className="mx-auto grid max-w-[1320px] grid-cols-1 items-stretch gap-[clamp(24px,4vw,56px)] px-[clamp(16px,4vw,32px)] py-[clamp(56px,8vw,112px)] lg:grid-cols-2">
@@ -365,7 +389,7 @@ export async function CourseFee() {
           <span className={cn(EYEBROW, "text-g3")}>{t("eyebrow")}</span>
           <span className="flex flex-wrap items-baseline gap-x-3.5 gap-y-1.5">
             <span className="font-display text-[clamp(44px,5vw,64px)] leading-none font-normal tracking-[-.015em] text-iv tabular">
-              {fmt(COURSE_FEE)}
+              {fmt(fee)}
             </span>
             <span className="font-sans text-[13.5px] leading-[1.3] font-medium text-sg3">{t("for")}</span>
           </span>

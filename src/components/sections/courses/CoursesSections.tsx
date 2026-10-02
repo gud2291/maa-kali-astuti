@@ -41,7 +41,7 @@ export const LEAD = "m-0 max-w-[460px] font-sans text-[15.5px] leading-[1.65] te
 
 /** §1 Hero (31–61): night, star sky, faint kali yantra top-right; copy + fee row + CTAs beside the
  *  "What every course includes" card (1.25fr / .75fr from 1024, aligned to the bottom). */
-export async function CoursesHero({ includes }: { includes: IconRow[] }) {
+export async function CoursesHero({ includes, fee }: { includes: IconRow[]; fee?: number }) {
   const t = await getTranslations("sadhana");
   return (
     <section data-screen-label="Courses hero" className="relative overflow-hidden bg-n9 text-em1">
@@ -79,7 +79,7 @@ export async function CoursesHero({ includes }: { includes: IconRow[] }) {
                 {t("hero.feeLabel")}
               </span>
               <span className="font-display text-[clamp(40px,4.4vw,56px)] leading-none font-normal tracking-[-.015em] text-iv tabular">
-                {fmt(COURSE_FEE)}
+                {fmt(fee ?? COURSE_FEE)}
               </span>
               <span className="font-sans text-[13px] leading-[1.3] font-medium text-sg3">{t("hero.feeNote")}</span>
             </span>

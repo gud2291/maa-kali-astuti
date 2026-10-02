@@ -24,21 +24,28 @@ Create:
 Modify: every file from the `YT_IDS` grep (prefer the video's `yt` id), every file from the fee grep (fee from course `fee_inr ?? settings.courses.feeInr`, instalments from settings), `src/components/admin/nav.ts` (Content group: Videos `video`, Testimonials `star`, FAQs `question`, Courses `yantra`, Rituals `diya`; perm `content.edit`)
 
 ## Tasks
-- [ ] T1. `validation/content.ts`: `videoSchema` (kind, youtubeId `^[\w-]{11}$` or null, category key, titles EN/HI ≤ 140, descriptions ≤ 1000, duration `^\d{1,2}:\d{2}(:\d{2})?$`, published date, featured, visible), `videoCategoriesSchema`, `testimonialSchema` (kind, quote EN/HI 10–600, name, city, tag, rating 1–5 or null, youtubeId, mediaId, featured, visible), `faqSchema` (set, q/a EN/HI), `courseSchema` (names, deity, days 1–120, content Loc fields ≤ 2000, attain ≤ 8, fee or null, visible), `ritualSchema` (icon ∈ `IconName`, names, lines), `reorderSchema` (ids ≤ 200).
-- [ ] T2. `videos/admin.ts`: `listVideosAdmin(kind)`, `createVideo`, `updateVideo`, `deleteVideo`, `reorderVideos(kind, ids)`, `updateVideoCategories(list)` (`writeSetting("videos", …)`), and `youtubeLookup(urlOrId)` → parses watch/youtu.be/shorts/embed URLs to the 11-char id, then `https://www.youtube.com/oembed?url=…&format=json` (5 s timeout) → `{ youtubeId, title, thumbnail }` (title optional on failure). Other domains: `list…`, `create…`, `update…`, `delete…`, `reorder…` for testimonials, FAQs (per set), rituals; courses: `listCoursesAdmin`, `updateCourse(key, input)` (fixed keys, no create/delete). Every export `requireAdmin("content.edit")` + audit.
-- [ ] T3. `admin-actions.ts` per domain: `invalidate(TAG.videos | TAG.testimonials | TAG.faqs | TAG.courses | TAG.rituals)`; video categories also `TAG.settings`.
-- [ ] T4. `SortableList` (client, dnd-kit vertical list: drag handle `drag` icon + Move up/down buttons for keyboard/touch; `onReorder(ids)` → action, optimistic order with rollback on error).
-- [ ] T5. `/admin/content/videos`: tabs Videos | Shorts; "Add video" → paste link → `youtubeLookup` prefill → `VideoForm` (sheet); list with thumbnail (`i.ytimg.com/vi/<id>/mqdefault.jpg`, else placeholder icon), featured/visible badges; `VideoCategories` editor.
-- [ ] T6. `/admin/content/testimonials` (list + `TestimonialForm`; photo via single `ImageManager` purpose `testimonial`), `/admin/content/faqs` (set tabs, list + `FaqForm`), `/admin/content/rituals` (list + `RitualForm` with `IconPicker`), `/admin/content/courses` (6 cards) + `/admin/content/courses/[key]` (`CourseForm` with `LocaleTabs`, `LocListEditor` for attain).
-- [ ] T7. Storefront: video players/thumbnails use `video.yt` when present (`ytEmbed(yt)`, thumbnail `https://i.ytimg.com/vi/<yt>/hqdefault.jpg`), else the current design preview; `YT_IDS` stays only as a fallback. Course fee/instalment texts come from data/settings (same formatting).
-- [ ] T8. `nav.ts` items.
-- [ ] T9. Finish per AGENTS.md §1 step 8.
+- [x] T1. `validation/content.ts`: `videoSchema` (kind, youtubeId `^[\w-]{11}$` or null, category key, titles EN/HI ≤ 140, descriptions ≤ 1000, duration `^\d{1,2}:\d{2}(:\d{2})?$`, published date, featured, visible), `videoCategoriesSchema`, `testimonialSchema` (kind, quote EN/HI 10–600, name, city, tag, rating 1–5 or null, youtubeId, mediaId, featured, visible), `faqSchema` (set, q/a EN/HI), `courseSchema` (names, deity, days 1–120, content Loc fields ≤ 2000, attain ≤ 8, fee or null, visible), `ritualSchema` (icon ∈ `IconName`, names, lines), `reorderSchema` (ids ≤ 200). — antigravity
+- [x] T2. `videos/admin.ts`: `listVideosAdmin(kind)`, `createVideo`, `updateVideo`, `deleteVideo`, `reorderVideos(kind, ids)`, `updateVideoCategories(list)` (`writeSetting("videos", …)`), and `youtubeLookup(urlOrId)` → parses watch/youtu.be/shorts/embed URLs to the 11-char id, then `https://www.youtube.com/oembed?url=…&format=json` (5 s timeout) → `{ youtubeId, title, thumbnail }` (title optional on failure). Other domains: `list…`, `create…`, `update…`, `delete…`, `reorder…` for testimonials, FAQs (per set), rituals; courses: `listCoursesAdmin`, `updateCourse(key, input)` (fixed keys, no create/delete). Every export `requireAdmin("content.edit")` + audit. — antigravity
+- [x] T3. `admin-actions.ts` per domain: `invalidate(TAG.videos | TAG.testimonials | TAG.faqs | TAG.courses | TAG.rituals)`; video categories also `TAG.settings`. — antigravity
+- [x] T4. `SortableList` (client, dnd-kit vertical list: drag handle `drag` icon + Move up/down buttons for keyboard/touch; `onReorder(ids)` → action, optimistic order with rollback on error). — antigravity
+- [x] T5. `/admin/content/videos`: tabs Videos | Shorts; "Add video" → paste link → `youtubeLookup` prefill → `VideoForm` (sheet); list with thumbnail (`i.ytimg.com/vi/<id>/mqdefault.jpg`, else placeholder icon), featured/visible badges; `VideoCategories` editor. — antigravity
+- [x] T6. `/admin/content/testimonials` (list + `TestimonialForm`; photo via single `ImageManager` purpose `testimonial`), `/admin/content/faqs` (set tabs, list + `FaqForm`), `/admin/content/rituals` (list + `RitualForm` with `IconPicker`), `/admin/content/courses` (6 cards) + `/admin/content/courses/[key]` (`CourseForm` with `LocaleTabs`, `LocListEditor` for attain). — antigravity
+- [x] T7. Storefront: video players/thumbnails use `video.yt` when present (`ytEmbed(yt)`, thumbnail `https://i.ytimg.com/vi/<yt>/hqdefault.jpg`), else the current design preview; `YT_IDS` stays only as a fallback. Course fee/instalment texts come from data/settings (same formatting). — antigravity
+- [x] T8. `nav.ts` items. — antigravity
+- [x] T9. Finish per AGENTS.md §1 step 8. — antigravity
 
 ## Must not
 - No home/hero/announcement/contact work (B34). No new course or category keys.
 
 ## Done-notes
-_(agent: ≤ 12 lines)_
+- Created validation schemas in `src/lib/validation/content.ts` for videos, categories, testimonials, FAQs, courses, rituals, reorder.
+- Implemented admin services (`admin.ts`) and server actions (`admin-actions.ts`) with `content.edit` permission checks and audit logs across videos, testimonials, FAQs, courses, rituals.
+- Implemented `SortableList` with @dnd-kit vertical drag-and-drop and keyboard/touch up/down controls with optimistic rollback.
+- Built Admin UI panels: `/admin/content/videos` (Videos & Shorts tabs, YouTube auto-lookup, categories editor), `/admin/content/testimonials` (single photo upload via ImageManager), `/admin/content/faqs` (set tabs), `/admin/content/rituals` (IconPicker), and `/admin/content/courses` (6 cards + `/admin/content/courses/[key]` with LocaleTabs and LocListEditor).
+- Updated storefront video players/cards on home and `/videos` to prefer `video.yt` for player/thumbnails, keeping design previews as fallback.
+- Updated course fee and instalment texts on course pages to dynamically format from course `fee_inr ?? settings.courses.feeInr` and settings instalments.
+- Added "Content" group items (Videos, Testimonials, FAQs, Courses, Rituals) to `src/components/admin/nav.ts`.
+- Migration added: no.
 
 ## Manual QA (user)
 1. Videos → paste a real YouTube link → title auto-fills → save → `/videos` and the home video section show it and it plays. Reorder → order changes on the site.

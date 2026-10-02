@@ -100,7 +100,7 @@ export function VideoPlayer({ videos, thumbs }: { videos: VideoItem[]; thumbs: R
   const animRef = useRef<Animation | null>(null);
 
   const v = videos[vid] ?? videos[0];
-  const yt = YT_IDS[v.id];
+  const yt = v?.yt || (v ? YT_IDS[v.id] : undefined);
 
   // Preview playback: bar over the full length + a one-second clock (vStart / vTick / vPause).
   useEffect(() => {
@@ -172,7 +172,15 @@ export function VideoPlayer({ videos, thumbs }: { videos: VideoItem[]; thumbs: R
               className="absolute inset-0 block transition-opacity duration-[400ms]"
               style={{ opacity: on ? 0.55 : 1 }}
             >
-              <InlineArt key={v.id} svg={thumbs[v.id] ?? ""} uid={`hf${v.id}`} />
+              {yt ? (
+                <img
+                  src={`https://i.ytimg.com/vi/${yt}/hqdefault.jpg`}
+                  alt={v.en}
+                  className="size-full object-cover"
+                />
+              ) : (
+                <InlineArt key={v.id} svg={thumbs[v.id] ?? ""} uid={`hf${v.id}`} />
+              )}
             </span>
           )}
           {!play && (
@@ -258,7 +266,15 @@ export function VideoPlayer({ videos, thumbs }: { videos: VideoItem[]; thumbs: R
                   )}
                 >
                   <span className="relative block aspect-video overflow-hidden rounded-3">
-                    <InlineArt svg={thumbs[x.id] ?? ""} uid={`hp${x.id}`} />
+                    {x.yt || YT_IDS[x.id] ? (
+                      <img
+                        src={`https://i.ytimg.com/vi/${x.yt || YT_IDS[x.id]}/hqdefault.jpg`}
+                        alt={x.en}
+                        className="size-full object-cover"
+                      />
+                    ) : (
+                      <InlineArt svg={thumbs[x.id] ?? ""} uid={`hp${x.id}`} />
+                    )}
                     <span className="absolute right-[5px] bottom-[5px] inline-flex h-[18px] items-center rounded-[2px] bg-[rgba(10,31,26,.85)] px-[5px] font-sans text-[10px] leading-none font-bold text-iv tabular">
                       {x.dur}
                     </span>

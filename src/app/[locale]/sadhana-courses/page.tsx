@@ -10,6 +10,7 @@ import {
 } from "@/components/sections/courses/CoursesSections";
 import { getCourseKit, getCourseOptions, getCourses } from "@/lib/api/content";
 import { getFaq } from "@/lib/api/consult";
+import { getSetting } from "@/server/settings/queries";
 
 /* Sadhana Courses (design/Sadhana-Courses.dc.html): night hero with the "includes" card → the six
    course cards (#six, S11 yantra draw) → five-step enrollment (line grows on view) → serious seekers
@@ -26,16 +27,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 export default async function SadhanaCoursesPage({ params }: Props) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const [courses, kit, faq, options] = await Promise.all([
+  const [courses, kit, faq, options, coursesSetting] = await Promise.all([
     getCourses(locale),
     getCourseKit(),
     getFaq("courses", locale),
     getCourseOptions(locale),
+    getSetting("courses"),
   ]);
 
   return (
     <>
-      <CoursesHero includes={kit.includes} />
+      <CoursesHero includes={kit.includes} fee={coursesSetting.feeInr} />
       <CourseCards courses={courses} />
       <Enrollment steps={kit.enroll} />
       <SeriousSeekers />

@@ -93,7 +93,7 @@ export function VideosLibrary({
 
   const catName = (k: string) => cats.find(([key]) => key === k)?.[1] ?? "";
   const v = videos.find((x) => x.id === vid) ?? videos[0];
-  const yt = YT_IDS[v.id];
+  const yt = v?.yt || (v ? YT_IDS[v.id] : undefined);
   const list = videos.filter((x) => cat === "all" || x.cat === cat);
 
   const writeUrl = (c: string, id?: string) => {
@@ -177,7 +177,11 @@ export function VideosLibrary({
 
   useEffect(() => () => animRef.current?.cancel(), []);
 
-  const start = (id = vid) => setPlay(YT_IDS[id] ? "yt" : "play");
+  const start = (id = vid) => {
+    const cur = videos.find((x) => x.id === id);
+    const curYt = cur?.yt || YT_IDS[id];
+    setPlay(curYt ? "yt" : "play");
+  };
 
   // pick 205–208: reset, scroll to the player, start.
   const pick = (id: string) => {
@@ -255,7 +259,15 @@ export function VideosLibrary({
                   className="absolute inset-0 block transition-opacity duration-[400ms]"
                   style={{ opacity: on ? 0.55 : 1 }}
                 >
-                  <InlineArt key={v.id} svg={thumbs[v.id] ?? ""} uid={`vf${v.id}`} />
+                  {yt ? (
+                    <img
+                      src={`https://i.ytimg.com/vi/${yt}/hqdefault.jpg`}
+                      alt={v.en}
+                      className="size-full object-cover"
+                    />
+                  ) : (
+                    <InlineArt key={v.id} svg={thumbs[v.id] ?? ""} uid={`vf${v.id}`} />
+                  )}
                 </span>
               )}
               {!play && (
@@ -425,7 +437,15 @@ export function VideosLibrary({
                   className="relative block aspect-video w-full cursor-pointer overflow-hidden rounded-btn border-0 bg-n9 p-0 shadow-[inset_0_0_0_1px_rgba(184,146,58,.35)] transition-[transform,box-shadow] duration-300 hover:-translate-y-[3px] hover:shadow-[inset_0_0_0_1px_#B8923A,0_24px_44px_-28px_rgba(14,59,48,.6)]"
                 >
                   <span className="absolute inset-0 block">
-                    <InlineArt svg={thumbs[x.id] ?? ""} uid={`vg${x.id}`} />
+                    {x.yt || YT_IDS[x.id] ? (
+                      <img
+                        src={`https://i.ytimg.com/vi/${x.yt || YT_IDS[x.id]}/hqdefault.jpg`}
+                        alt={x.en}
+                        className="size-full object-cover"
+                      />
+                    ) : (
+                      <InlineArt svg={thumbs[x.id] ?? ""} uid={`vg${x.id}`} />
+                    )}
                   </span>
                   <span className="absolute top-1/2 left-1/2 -mt-7 -ml-7 grid size-14 place-items-center rounded-pill bg-[rgba(10,31,26,.6)] text-g3 shadow-[inset_0_0_0_1.5px_#D9B96A]">
                     <Icon name="play" className="ml-[3px] size-[22px]" />
@@ -542,7 +562,15 @@ function ShortCard({ s, i, svg, onOpen }: { s: Short; i: number; svg: string; on
       className="relative aspect-[9/16] flex-[0_0_46%] cursor-pointer snap-start overflow-hidden rounded-[6px] border-0 bg-n9 p-0 shadow-[0_20px_40px_-26px_rgba(14,59,48,.6)] transition-transform duration-300 hover:-translate-y-1 md:flex-[0_0_30%] lg:flex-[0_0_calc((100%-70px)/6)]"
     >
       <span className="absolute inset-0 block">
-        <InlineArt svg={svg} uid={`vs${s.id}`} />
+        {s.yt || YT_IDS[s.id] ? (
+          <img
+            src={`https://i.ytimg.com/vi/${s.yt || YT_IDS[s.id]}/hqdefault.jpg`}
+            alt={s.en}
+            className="size-full object-cover"
+          />
+        ) : (
+          <InlineArt svg={svg} uid={`vs${s.id}`} />
+        )}
       </span>
       <span className="absolute top-2 right-2 inline-flex h-[22px] items-center gap-[5px] rounded-[2px] bg-[rgba(10,31,26,.85)] px-[7px] font-sans text-[11px] leading-none font-bold text-iv tabular">
         <Icon name="play" className="size-[11px]" />
