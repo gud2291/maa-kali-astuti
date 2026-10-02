@@ -93,6 +93,20 @@ export const NAV: NavItem[] = [
     group: "Leads",
   },
   {
+    href: "/admin/messages",
+    label: "Messages",
+    icon: "mail",
+    perm: "messages.view",
+    group: "Leads",
+  },
+  {
+    href: "/admin/subscribers",
+    label: "Subscribers",
+    icon: "bell",
+    perm: "messages.view",
+    group: "Leads",
+  },
+  {
     href: "/admin/staff",
     label: "Staff",
     icon: "user",

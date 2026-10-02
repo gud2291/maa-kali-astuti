@@ -1,6 +1,6 @@
 # PROGRESS — Maa Kali Astuti · Phase B (backend · admin · commerce)
 
-**Current: B32**  ·  Claude → type `/next`  ·  Another AI → paste the prompt from `docs/backend/AGENT-PROMPT.md`
+**Current: B33**  ·  Claude → type `/next`  ·  Another AI → paste the prompt from `docs/backend/AGENT-PROMPT.md`
 Status: `TODO` · `IN-PROGRESS` · `DONE` · `BLOCKED`. Agent = lower-case name(s) of who worked on the step (`claude`, `antigravity`, … — `a+b` when two). Date = YYYY-MM-DD.
 Phase F (finished frontend) tracker: `docs/frontend/PROGRESS-F.md` — reference only, don't open unless a step says so.
 
@@ -47,7 +47,7 @@ Spec files are in `docs/backend/steps/`. Each step needs the previous one DONE.
 | B29 | Kundali report document | DONE | antigravity | 2026-10-02 | M | any | `B29-kundali-report-document.md` |
 | B30 | Kundali ₹99 purchase, PDF, delivery | DONE | antigravity | 2026-10-02 | H | Claude rec. | `B30-kundali-purchase-pdf.md` |
 | B31 | Inquiries + payment links | DONE | antigravity | 2026-10-02 | M | any | `B31-inquiries-payment-links.md` |
-| B32 | Contact page, newsletter, inbox | TODO | | | L | any | `B32-contact-newsletter.md` |
+| B32 | Contact page, newsletter, inbox | DONE | antigravity | 2026-10-02 | L | any | `B32-contact-newsletter.md` |
 | B33 | Content managers | TODO | | | M | any | `B33-content-managers.md` |
 | B34 | Home & site settings | TODO | | | M | any | `B34-home-site-settings.md` |
 | B35 | Rashifal manager | TODO | | | M | any | `B35-rashifal-manager.md` |

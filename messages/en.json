@@ -2471,6 +2471,66 @@
       "body": "If you have questions about your session or need to speak with us, please message Sadhak Ji's office on WhatsApp.",
       "whatsapp": "Message Office on WhatsApp"
     }
+  },
+  "contact": {
+    "meta": {
+      "title": "Contact Us — Maa Kali Astuti",
+      "description": "Reach out to Sadhak Pawan Pandey and the Maa Kali Astuti team via our contact form, WhatsApp, phone or email."
+    },
+    "heading": "Get in Touch",
+    "subheading": "Have a question about your order, consultation or any of our services? Fill out the form below and we'll get back to you shortly.",
+    "form": {
+      "name": "Your Name",
+      "namePh": "Full name",
+      "nameErr": "Name must be 2–80 characters",
+      "phone": "Phone",
+      "phonePh": "10-digit mobile",
+      "phoneErr": "Enter a valid 10-digit Indian mobile number",
+      "email": "Email",
+      "emailPh": "your@email.com",
+      "emailErr": "Enter a valid email address",
+      "contactHint": "Please provide at least a phone number or email so we can reach you.",
+      "topic": "Topic",
+      "message": "Your Message",
+      "messagePh": "Tell us how we can help…",
+      "bodyErr": "Message must be 10–2000 characters",
+      "send": "Send Message",
+      "sending": "Sending…",
+      "success": "Message Sent Successfully",
+      "successSub": "Thank you for reaching out. We will respond within 24 hours.",
+      "rateLimited": "Too many messages. Please try again after some time.",
+      "botCheck": "Verification failed. Please try again.",
+      "validationError": "Please check your form fields and try again.",
+      "genericError": "Something went wrong. Please try again."
+    },
+    "topics": {
+      "order": "Order Query",
+      "consultation": "Consultation",
+      "kundali": "Kundali Report",
+      "course": "Sadhana Course",
+      "ritual": "Special Ritual",
+      "other": "Other"
+    },
+    "cards": {
+      "heading": "Other Ways to Reach Us",
+      "whatsapp": "WhatsApp",
+      "call": "Call Us",
+      "email": "Email",
+      "hours": "Hours"
+    }
+  },
+  "newsletter": {
+    "unsub": {
+      "metaTitle": "Unsubscribe — Maa Kali Astuti",
+      "title": "Unsubscribe from Newsletter",
+      "body": "Click the button below to confirm that you would like to stop receiving our newsletter emails.",
+      "confirm": "Confirm Unsubscribe",
+      "processing": "Processing…",
+      "doneTitle": "You have been unsubscribed",
+      "doneSub": "You will no longer receive newsletter emails from Maa Kali Astuti. You can re-subscribe anytime from our website.",
+      "error": "Something went wrong. The link may be invalid or expired.",
+      "invalidLink": "Invalid unsubscribe link."
+    }
   }
 }
 

@@ -3,6 +3,7 @@ import { useState, type ReactNode } from "react";
 import { useTranslations } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
 import { Icon } from "@/components/icons/Icon";
+import { NewsletterForm } from "@/components/forms/NewsletterForm";
 import { SOCIAL } from "@/lib/site";
 import { useUi } from "@/stores/ui";
 import { cn } from "@/lib/utils/cn";
@@ -27,82 +28,32 @@ export function FooterRoot({ children }: { children: ReactNode }) {
 export function FooterNewsletter() {
   const t = useTranslations("footer");
   const show = chromeFor(usePathname()).newsletter;
-  const [email, setEmail] = useState("");
-  const [done, setDone] = useState(false);
-  const [err, setErr] = useState(false);
   if (!show) return null;
-
-  const sub = () => {
-    // Mock submit (phase B wires the mailing list).
-    if (/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email.trim())) {
-      setDone(true);
-      setErr(false);
-    } else setErr(true);
-  };
 
   return (
     <div className="flex flex-col gap-3">
-      <label
-        htmlFor="nl-email"
+      <span
         className="font-sans text-[11px] leading-[1.3] font-semibold tracking-[.16em] text-g3 uppercase hi:tracking-normal"
       >
         {t("nlLabel")}
-      </label>
-      {done ? (
-        <span
-          role="status"
-          className="flex h-12 items-center gap-2.5 font-sans text-[15px] leading-[1.3] font-medium text-iv"
-        >
-          <span className="block size-5 flex-none text-g3">
-            <Icon name="checkc" />
-          </span>
-          {t("nlDone")}
-        </span>
-      ) : (
-        <>
-          <div className="flex gap-2">
-            <input
-              id="nl-email"
-              type="email"
-              value={email}
-              onChange={(e) => {
-                setEmail(e.target.value);
-                setErr(false);
-              }}
-              onKeyDown={(e) => {
-                if (e.key === "Enter") sub();
-              }}
-              placeholder={t("nlPh")}
-              autoComplete="email"
-              aria-invalid={err || undefined}
-              aria-describedby={err ? "nl-err" : undefined}
-              className={cn(
-                "h-12 min-w-0 flex-1 rounded-field border bg-[rgba(251,247,238,.04)] px-3.5 font-sans text-[15px] leading-none font-medium text-iv outline-none focus:border-g3",
-                err ? "border-rose" : "border-[rgba(217,185,106,.45)]",
-              )}
-            />
-            <button
-              type="button"
-              onClick={sub}
-              className="h-12 cursor-pointer rounded-btn border-0 bg-transparent px-5 font-sans text-[14px] leading-none font-semibold tracking-[.03em] text-g3 shadow-ring-g3 transition-colors duration-150 hover:bg-[rgba(217,185,106,.12)] hi:tracking-normal"
-            >
-              {t("subscribe")}
-            </button>
-          </div>
-          {err && (
-            <span
-              id="nl-err"
-              role="alert"
-              className="flex items-center gap-1.5 font-sans text-[13px] leading-[1.3] font-medium text-rose"
-            >
-              <span className="block size-3.5">
-                <Icon name="alert" />
-              </span>
-              {t("nlErr")}
-            </span>
-          )}
-        </>
-      )}
+      </span>
+      <div className="flex flex-col gap-2">
+        <div className="flex gap-2">
+          <NewsletterForm
+            idPrefix="nl"
+            label={t("nlLabel")}
+            placeholder={t("nlPh")}
+            subscribe={t("subscribe")}
+            errorText={t("nlErr")}
+            doneText={t("nlDone")}
+            source="footer"
+            inputClassName="h-12 min-w-0 flex-1 rounded-field border bg-[rgba(251,247,238,.04)] px-3.5 font-sans text-[15px] leading-none font-medium text-iv outline-none focus:border-g3 border-[rgba(217,185,106,.45)]"
+            buttonClassName="h-12 cursor-pointer rounded-btn border-0 bg-transparent px-5 font-sans text-[14px] leading-none font-semibold tracking-[.03em] text-g3 shadow-ring-g3 transition-colors duration-150 hover:bg-[rgba(217,185,106,.12)] hi:tracking-normal disabled:opacity-60"
+            errorClassName="flex items-center gap-1.5 font-sans text-[13px] leading-[1.3] font-medium text-rose"
+            doneClassName="flex h-12 items-center gap-2.5 font-sans text-[15px] leading-[1.3] font-medium text-iv"
+          />
+        </div>
+      </div>
     </div>
   );
 }
