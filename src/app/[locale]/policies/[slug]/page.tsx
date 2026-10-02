@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
-import { getTranslations, setRequestLocale } from "next-intl/server";
-import { ComingSoon } from "@/components/layout/ComingSoon";
+import { setRequestLocale } from "next-intl/server";
+import { getPage } from "@/server/pages/queries";
+import { PolicyView } from "@/components/sections/policies/PolicyView";
 import { POLICIES, type PolicySlug } from "@/lib/routes";
 
-/* Deferred page (INV §G): footer policy links. Content comes from the client ([client-confirm]). */
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
 export const dynamicParams = false;
@@ -18,14 +18,26 @@ const isPolicy = (s: string): s is PolicySlug => s in POLICIES;
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params;
   if (!isPolicy(slug)) return {};
-  const t = await getTranslations({ locale, namespace: "soon.pages" });
-  return { title: t(slug), robots: { index: false } };
+
+  const page = await getPage(slug);
+  const isHi = locale === "hi";
+  const title = (isHi && page?.titleHi) || page?.titleEn || POLICIES[slug];
+
+  return {
+    title,
+    description: `${title} - Maa Kali Astuti`,
+  };
 }
 
-export default async function Page({ params }: Props) {
+export default async function PolicyPage({
+  params,
+}: Props): Promise<React.JSX.Element> {
   const { locale, slug } = await params;
   if (!isPolicy(slug)) notFound();
+
   setRequestLocale(locale);
-  const t = await getTranslations("soon.pages");
-  return <ComingSoon title={t(slug)} />;
+
+  const page = await getPage(slug);
+
+  return <PolicyView page={page} slug={slug} />;
 }

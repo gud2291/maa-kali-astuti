@@ -156,6 +156,20 @@ export const NAV: NavItem[] = [
     group: "Content",
   },
   {
+    href: "/admin/content/blog",
+    label: "Blog",
+    icon: "scroll",
+    perm: "content.edit",
+    group: "Content",
+  },
+  {
+    href: "/admin/content/pages",
+    label: "Pages",
+    icon: "cert",
+    perm: "content.edit",
+    group: "Content",
+  },
+  {
     href: "/admin/staff",
     label: "Staff",
     icon: "user",

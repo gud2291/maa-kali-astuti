@@ -2531,6 +2531,57 @@
       "error": "Something went wrong. The link may be invalid or expired.",
       "invalidLink": "Invalid unsubscribe link."
     }
+  },
+  "blog": {
+    "title": "Spiritual Journal & Articles",
+    "subtitle": "Timeless wisdom on Rudraksha, sacred gems, planetary remedies, and daily sadhana.",
+    "allCategories": "All",
+    "minRead": "{mins} min read",
+    "readMore": "Read Article",
+    "loadMore": "Load More Articles",
+    "empty": "No articles found in this category.",
+    "clearFilter": "Clear filter",
+    "featured": "Featured Article",
+    "toc": "Contents",
+    "faqTitle": "Frequently Asked Questions",
+    "share": "Share",
+    "author": "About the Author",
+    "authorName": "Sadhak Pawan Pandey",
+    "authorBio": "Spiritual guide, astrologer, and sadhak dedicated to authentic Vedic wisdom, Maa Kali upasana, and consecrated spiritual items.",
+    "productsMentioned": "Products Mentioned in this Guide",
+    "related": "Related Articles"
+  },
+  "policies": {
+    "lastUpdated": "Last updated",
+    "empty": "This policy is currently being updated to reflect our latest terms. Please check back shortly or contact our support team.",
+    "shipping": "Shipping Policy",
+    "refund-returns": "Refund & Returns Policy",
+    "privacy": "Privacy Policy",
+    "terms": "Terms & Conditions",
+    "astrology-disclaimer": "Astrology Disclaimer"
+  },
+  "faqPage": {
+    "metaTitle": "Frequently Asked Questions — Maa Kali Astuti",
+    "metaDescription": "Find clear answers on Rudraksha energization, shipping, consultation booking, Kundali reports, and course enrollments.",
+    "heading": "Frequently Asked Questions",
+    "subheading": "Find clarity on consecration rituals, consultation formats, orders, and delivery timelines.",
+    "searchPlaceholder": "Search questions (e.g. energization, delivery, birth time)…",
+    "searchResults": "Search results ({count})",
+    "clearSearch": "Clear search",
+    "noResults": "No matching questions found",
+    "noResultsDesc": "Try searching with different keywords or browse the categories below.",
+    "emptySet": "No questions in this section yet.",
+    "tabs": {
+      "general": "General",
+      "shop": "Shop & Products",
+      "consult": "Consultations",
+      "kundali99": "Kundali ₹99",
+      "courses": "Sadhana Courses",
+      "rituals": "Vedic Rituals"
+    },
+    "stillQuestions": "Still Have Questions?",
+    "stillQuestionsDesc": "Our advisory office is here to guide you with authentic Vedic wisdom and personal attention.",
+    "contactUs": "Contact Office"
   }
 }
 
