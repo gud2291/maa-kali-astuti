@@ -6,13 +6,15 @@ import { usePathname } from "next/navigation";
 import { Logo } from "@/components/ui/Logo";
 import { AdminIcon } from "./AdminIcon";
 import type { NavItem } from "./nav";
+import type { BadgeCounts } from "@/server/dashboard/queries";
 import { cn } from "@/lib/utils/cn";
 
 export type AdminSidebarProps = {
   nav: NavItem[];
+  badges?: BadgeCounts;
 };
 
-export function AdminSidebar({ nav }: AdminSidebarProps): React.JSX.Element {
+export function AdminSidebar({ nav, badges }: AdminSidebarProps): React.JSX.Element {
   const [collapsed, setCollapsed] = useState(false);
   const pathname = usePathname();
 
@@ -98,11 +100,16 @@ export function AdminSidebar({ nav }: AdminSidebarProps): React.JSX.Element {
                     ? pathname === "/admin"
                     : pathname === item.href || pathname.startsWith(item.href + "/");
 
+                const badgeKey = item.badge;
+                const badgeCount = badgeKey && badges ? badges[badgeKey] : 0;
+                const displayCount =
+                  badgeCount > 99 ? "99+" : badgeCount > 0 ? String(badgeCount) : null;
+
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
-                    title={collapsed ? item.label : undefined}
+                    title={collapsed ? `${item.label}${displayCount ? ` (${displayCount})` : ""}` : undefined}
                     className={cn(
                       "group relative flex items-center transition-colors font-sans text-[13.5px] font-medium rounded",
                       collapsed
@@ -113,7 +120,7 @@ export function AdminSidebar({ nav }: AdminSidebarProps): React.JSX.Element {
                         : "text-sg3 hover:bg-n8/60 hover:text-g1",
                     )}
                   >
-                    <span className="block size-5 flex-none">
+                    <span className="relative block size-5 flex-none">
                       <AdminIcon
                         name={item.icon}
                         className={cn(
@@ -121,8 +128,22 @@ export function AdminSidebar({ nav }: AdminSidebarProps): React.JSX.Element {
                           isActive ? "text-g1" : "text-sg3 group-hover:text-g1",
                         )}
                       />
+                      {collapsed && displayCount && (
+                        <span className="absolute -top-1.5 -right-2 flex h-4 min-w-4 items-center justify-center rounded-pill bg-em7 px-1 font-sans text-[9px] font-bold text-iv leading-none">
+                          {displayCount}
+                        </span>
+                      )}
                     </span>
-                    {!collapsed && <span className="truncate">{item.label}</span>}
+                    {!collapsed && (
+                      <>
+                        <span className="truncate flex-1">{item.label}</span>
+                        {displayCount && (
+                          <span className="ml-auto rounded-pill bg-em7 px-1.5 py-0.5 font-sans text-[10.5px] font-bold text-iv leading-none">
+                            {displayCount}
+                          </span>
+                        )}
+                      </>
+                    )}
                   </Link>
                 );
               })}

@@ -13,12 +13,15 @@ export type NavGroup =
   | "Content"
   | "System";
 
+export type NavBadgeKey = "orders" | "attention" | "inquiries" | "messages" | "reviews";
+
 export type NavItem = {
   href: string;
   label: string;
   icon: AdminIconName;
   perm: Permission;
   group: NavGroup;
+  badge?: NavBadgeKey;
 };
 
 export const NAV: NavItem[] = [
@@ -35,6 +38,7 @@ export const NAV: NavItem[] = [
     icon: "package",
     perm: "orders.view",
     group: "Sales",
+    badge: "orders",
   },
   {
     href: "/admin/coupons",
@@ -91,6 +95,7 @@ export const NAV: NavItem[] = [
     icon: "chat",
     perm: "inquiries.view",
     group: "Leads",
+    badge: "inquiries",
   },
   {
     href: "/admin/messages",
@@ -98,6 +103,7 @@ export const NAV: NavItem[] = [
     icon: "mail",
     perm: "messages.view",
     group: "Leads",
+    badge: "messages",
   },
   {
     href: "/admin/subscribers",
@@ -140,6 +146,7 @@ export const NAV: NavItem[] = [
     icon: "star",
     perm: "reviews.moderate",
     group: "Content",
+    badge: "reviews",
   },
   {
     href: "/admin/content/faqs",
