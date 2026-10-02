@@ -4,6 +4,9 @@ import { setRequestLocale } from "next-intl/server";
 import { getArticleBySlug, getArticleList } from "@/server/articles/queries";
 import { getCatalog } from "@/server/catalog/queries";
 import { ArticleView } from "@/components/sections/blog/ArticleView";
+import { pageMeta } from "@/lib/seo/meta";
+import { article as articleSchema, breadcrumbs, faqPage } from "@/lib/seo/jsonld";
+import { JsonLd } from "@/components/seo/JsonLd";
 import type { Product } from "@/types/product";
 
 type Props = {
@@ -31,14 +34,21 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const description =
     (isHi && article.seoDescHi) ||
-    article.seoDescHi ||
+    article.seoDescEn ||
     (isHi && article.excerptHi) ||
-    article.excerptEn;
+    article.excerptEn ||
+    "";
 
-  return {
+  const image = article.coverMedia?.variants?.[0]?.key || article.legacyArt || null;
+
+  return pageMeta({
+    locale,
+    path: `/blog/${article.slug}`,
     title,
     description,
-  };
+    image,
+    type: "article",
+  });
 }
 
 export default async function ArticleDetailPage({
@@ -65,11 +75,50 @@ export default async function ArticleDetailPage({
     .map((pid) => catalog.products.find((p) => p.id === pid))
     .filter((p): p is Product => Boolean(p));
 
+  const isHi = locale === "hi";
+  const articleTitle = isHi ? article.titleHi || article.titleEn : article.titleEn;
+  const articleDesc = isHi ? article.excerptHi || article.excerptEn : article.excerptEn;
+  const coverUrl = article.coverMedia?.variants?.[0]?.key || article.legacyArt || undefined;
+
+  const breadcrumbData = breadcrumbs([
+    { name: isHi ? "होम" : "Home", url: "/" },
+    { name: isHi ? "ब्लॉग" : "Blog", url: "/blog" },
+    { name: articleTitle, url: `/blog/${article.slug}` },
+  ]);
+
+  const articleData = articleSchema(
+    {
+      title: articleTitle,
+      description: articleDesc,
+      image: coverUrl,
+      publishedAt: article.publishedAt
+        ? new Date(article.publishedAt).toISOString()
+        : new Date().toISOString(),
+      authorName: "Sadhak Pawan Pandey",
+    },
+    `/blog/${article.slug}`
+  );
+
+  const hasFaq = Array.isArray(article.faq) && article.faq.length > 0;
+  const faqData = hasFaq
+    ? faqPage(
+        article.faq.map((f) => ({
+          q: isHi ? f.q.hi || f.q.en : f.q.en,
+          a: isHi ? f.a.hi || f.a.en : f.a.en,
+        }))
+      )
+    : null;
+
   return (
-    <ArticleView
-      article={article}
-      relatedArticles={related}
-      products={mentionedProducts}
-    />
+    <>
+      <JsonLd data={breadcrumbData} />
+      <JsonLd data={articleData} />
+      {faqData && <JsonLd data={faqData} />}
+      <ArticleView
+        article={article}
+        relatedArticles={related}
+        products={mentionedProducts}
+      />
+    </>
   );
 }

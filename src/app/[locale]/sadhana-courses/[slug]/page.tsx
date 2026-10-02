@@ -15,9 +15,13 @@ import {
 } from "@/components/sections/courses/CourseDetail";
 import { InlineArt } from "@/components/ui/InlineArt";
 import { getCourse, getCourseKit, getCourseOptions, getCourses } from "@/lib/api/content";
+import { getFaq } from "@/lib/api/consult";
 import { getSetting } from "@/server/settings/queries";
 import { YANTRA_GOLD } from "@/lib/art/yantras";
 import { fmt } from "@/lib/core/format";
+import { pageMeta } from "@/lib/seo/meta";
+import { course as courseSchema, faqPage } from "@/lib/seo/jsonld";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 /* Course detail (design/Course-Detail.dc.html#c=<key>): /sadhana-courses/<deity>-sadhana for the six
    courses (INV §C); unknown slugs 404. Hero (arch yantra, S11) → overview → what you attain →
@@ -37,10 +41,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const c = await getCourse(slug, locale);
   if (!c) return {};
   const t = await getTranslations({ locale, namespace: "sadhana.meta" });
-  return {
+  return pageMeta({
+    locale,
+    path: `/sadhana-courses/${c.slug}`,
     title: t("detailTitle", { name: c.en }),
     description: t("detailDescription", { essence: c.essence, days: c.days }),
-  };
+  });
 }
 
 export default async function CoursePage({ params }: Props) {
@@ -48,18 +54,32 @@ export default async function CoursePage({ params }: Props) {
   setRequestLocale(locale);
   const c = await getCourse(slug, locale);
   if (!c || c.slug !== slug) notFound();
-  const [all, kit, options, t, coursesSetting] = await Promise.all([
+  const [all, kit, options, t, coursesSetting, faq] = await Promise.all([
     getCourses(locale),
     getCourseKit(),
     getCourseOptions(locale),
     getTranslations("sadhana.detail.sticky"),
     getSetting("courses"),
+    getFaq("courses", locale),
   ]);
 
   const courseFee = c.feeInr ?? coursesSetting.feeInr;
 
+  const courseData = courseSchema(
+    {
+      name: locale === "hi" ? c.hi : c.en,
+      description: c.essence,
+      providerName: "Sadhak Pawan Pandey",
+    },
+    `/sadhana-courses/${c.slug}`,
+    courseFee
+  );
+  const faqData = faqPage(faq.map((item) => ({ q: item.q, a: item.a })));
+
   return (
     <>
+      <JsonLd data={courseData} />
+      <JsonLd data={faqData} />
       <CourseHero c={c} />
       <CourseOverview c={c} />
       <CourseAttain c={c} />

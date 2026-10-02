@@ -1,17 +1,20 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { WishlistView } from "@/components/sections/wishlist/WishlistView";
+import { pageMeta } from "@/lib/seo/meta";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "wishlistPage" });
-  return {
+  return pageMeta({
+    locale,
+    path: "/wishlist",
     title: t("title"),
     description: t("subtitle"),
-    robots: { index: false, follow: false },
-  };
+    noindex: true,
+  });
 }
 
 export default async function Page({ params }: Props) {

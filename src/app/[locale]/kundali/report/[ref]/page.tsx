@@ -10,6 +10,7 @@ import { signedPrivateUrl } from "@/server/media/service";
 import { Icon } from "@/components/icons/Icon";
 import { computeChart } from "@/server/kundali/engine";
 import { routes } from "@/lib/routes";
+import { pageMeta } from "@/lib/seo/meta";
 
 export const dynamic = "force-dynamic";
 
@@ -19,14 +20,14 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { ref } = await params;
-  return {
+  const { locale, ref } = await params;
+  return pageMeta({
+    locale,
+    path: `/kundali/report/${ref}`,
     title: `Janam Kundali (${ref}) — Maa Kali Astuti`,
-    robots: {
-      index: false,
-      follow: false,
-    },
-  };
+    description: `Janam Kundali Report ${ref}`,
+    noindex: true,
+  });
 }
 
 export default async function KundaliReportPage({

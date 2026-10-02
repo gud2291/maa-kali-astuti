@@ -10,6 +10,7 @@ import {
 } from "@/components/sections/rituals/RitualsSections";
 import { getRituals } from "@/lib/api/content";
 import { getFaq } from "@/lib/api/consult";
+import { pageMeta } from "@/lib/seo/meta";
 
 /* Rituals & Anushthan (design/Rituals.dc.html): night hero with the diya thali → ethics → ritual
    types → scroll-filled five-step process (#process) → what you receive → inquiry (#inquire: FAQ
@@ -19,7 +20,12 @@ type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "rituals.meta" });
-  return { title: t("title"), description: t("description") };
+  return pageMeta({
+    locale,
+    path: "/rituals",
+    title: t("title"),
+    description: t("description"),
+  });
 }
 
 export default async function RitualsPage({ params }: Props) {

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import { setRequestLocale } from "next-intl/server";
 import { AboutTeaser } from "@/components/sections/home/AboutTeaser";
 import { AstroTools } from "@/components/sections/home/AstroTools";
@@ -26,12 +27,40 @@ import {
   getVideos,
 } from "@/lib/api/content";
 import { getSetting } from "@/server/settings/queries";
+import { pageMeta } from "@/lib/seo/meta";
 
 /* Home (design/Home.dc.html). F5 built §1–5 (hero → 12 Nag spotlight), F6 §6–9 (rashifal wheel →
    floating stones), F7 §10–17 (courses → newsletter). The footer's newsletter is off on Home. */
 
 /** Static page: date-dependent text renders with the build date, then updates on the client. */
 const BUILD_NOW = Date.now();
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>;
+}): Promise<Metadata> {
+  const { locale } = await params;
+  const seo = await getSetting("seo");
+  const isHi = locale === "hi";
+  const title =
+    (isHi ? seo.metaTitleHi : seo.metaTitleEn) ||
+    (isHi
+      ? "माँ काली स्तुति — साधक पवन पाण्डेय"
+      : "Maa Kali Astuti — Sadhak Pawan Pandey");
+  const description =
+    (isHi ? seo.metaDescHi : seo.metaDescEn) ||
+    (isHi
+      ? "प्रामाणिक रुद्राक्ष, रत्न, सिद्ध यंत्र एवं साधक पवन पाण्डेय जी से वैदिक परामर्श।"
+      : "Authentic rudraksha, energized gemstones, yantras and Vedic consultations with Sadhak Pawan Pandey.");
+  return pageMeta({
+    locale,
+    path: "/",
+    title,
+    description,
+    image: seo.ogImage,
+  });
+}
 
 export default async function HomePage({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;

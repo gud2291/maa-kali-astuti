@@ -4,6 +4,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { BookingFlow } from "@/components/sections/booking/BookingFlow";
 import { getConsultSteps, getModes, getService, getServices } from "@/lib/api/consult";
 import { getSetting } from "@/server/settings/queries";
+import { pageMeta } from "@/lib/seo/meta";
 import type { ConsultRules } from "@/server/bookings/availability";
 
 /* Booking (design/Booking.dc.html#s=<key>&tier=<t>): /book/kundali-reading?tier=detailed …
@@ -24,7 +25,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const s = await getService(service, locale);
   if (!s) return {};
   const t = await getTranslations({ locale, namespace: "booking.meta" });
-  return { title: t("title", { name: s.name }), description: t("description", { name: s.name }) };
+  return pageMeta({
+    locale,
+    path: `/book/${s.slug}`,
+    title: t("title", { name: s.name }),
+    description: t("description", { name: s.name }),
+    noindex: true,
+  });
 }
 
 export default async function BookPage({ params }: Props) {

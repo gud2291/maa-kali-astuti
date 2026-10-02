@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getOrderView } from "@/server/orders/queries";
 import { OrderSuccess } from "@/components/sections/order/OrderSuccess";
+import { pageMeta } from "@/lib/seo/meta";
 import type { Locale } from "@/lib/domain/enums";
 
 type Props = {
@@ -13,13 +14,13 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "order" });
-  return {
+  return pageMeta({
+    locale,
+    path: "/order/success",
     title: `${t("title")} — Maa Kali Astuti`,
-    robots: {
-      index: false,
-      follow: false,
-    },
-  };
+    description: t("title"),
+    noindex: true,
+  });
 }
 
 export default async function Page({ params, searchParams }: Props) {

@@ -13,6 +13,7 @@ import { PrintButton } from "@/components/sections/order/PrintButton";
 import Link from "next/link";
 import { Icon } from "@/components/icons/Icon";
 import styles from "@/components/sections/order/InvoiceDocument.module.css";
+import { pageMeta } from "@/lib/seo/meta";
 
 type Props = {
   params: Promise<{ locale: string; number: string }>;
@@ -20,14 +21,14 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { number } = await params;
-  return {
+  const { locale, number } = await params;
+  return pageMeta({
+    locale,
+    path: `/invoice/${number}`,
     title: `Invoice ${number} — Maa Kali Astuti`,
-    robots: {
-      index: false,
-      follow: false,
-    },
-  };
+    description: `Tax invoice ${number}`,
+    noindex: true,
+  });
 }
 
 export default async function InvoicePage({ params, searchParams }: Props) {

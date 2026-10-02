@@ -3,16 +3,20 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getCustomer } from "@/server/auth/guards";
 import { listMyAddresses, type SavedAddress } from "@/server/account/queries";
 import { CheckoutFlow, type CheckoutPrefill } from "@/components/sections/checkout/CheckoutFlow";
+import { pageMeta } from "@/lib/seo/meta";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "checkout" });
-  return {
+  return pageMeta({
+    locale,
+    path: "/checkout",
     title: t("pageTitle"),
-    robots: { index: false, follow: false },
-  };
+    description: t("contactSub"),
+    noindex: true,
+  });
 }
 
 export default async function Page({ params }: Props) {

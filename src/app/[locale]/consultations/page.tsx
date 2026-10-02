@@ -7,6 +7,9 @@ import { Credentials } from "@/components/sections/consult/Credentials";
 import { HowItWorks } from "@/components/sections/consult/HowItWorks";
 import { ServiceRows } from "@/components/sections/consult/ServiceRows";
 import { getConsultSteps, getFaq, getModes, getServices, getTestimonials } from "@/lib/api/consult";
+import { pageMeta } from "@/lib/seo/meta";
+import { faqPage } from "@/lib/seo/jsonld";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 /* Consultations landing (design/Consultations.dc.html): hero → four services → how it works →
    credentials → testimonials → FAQ. Static. Chrome: active "consult", tab bar on. */
@@ -15,7 +18,12 @@ type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "consult.meta" });
-  return { title: t("title"), description: t("description") };
+  return pageMeta({
+    locale,
+    path: "/consultations",
+    title: t("title"),
+    description: t("description"),
+  });
 }
 
 export default async function ConsultationsPage({ params }: Props) {
@@ -29,8 +37,11 @@ export default async function ConsultationsPage({ params }: Props) {
     getFaq("consult", locale),
   ]);
 
+  const faqData = faqPage(faq.map((item) => ({ q: item.q, a: item.a })));
+
   return (
     <>
+      <JsonLd data={faqData} />
       <ConsultHero />
       <ServiceRows services={services} modes={modes} />
       <HowItWorks icons={steps.map(([icon]) => icon)} />

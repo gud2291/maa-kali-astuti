@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { requireCustomerPage } from "@/server/auth/guards";
 import { getMyProfile } from "@/server/account/queries";
 import { ProfileForm } from "@/components/sections/account/ProfileForm";
+import { pageMeta } from "@/lib/seo/meta";
 import type { Locale } from "@/lib/domain/enums";
 
 type Props = {
@@ -11,13 +12,14 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  return {
-    title:
-      locale === "hi"
-        ? "प्रोफ़ाइल एवं जन्म विवरण — Maa Kali Astuti"
-        : "Profile & Birth Details — Maa Kali Astuti",
-    robots: { index: false, follow: false },
-  };
+  const t = await getTranslations({ locale, namespace: "account.profile" });
+  return pageMeta({
+    locale,
+    path: "/account/profile",
+    title: t("title"),
+    description: t("title"),
+    noindex: true,
+  });
 }
 
 export default async function AccountProfilePage({ params }: Props) {

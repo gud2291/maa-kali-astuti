@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { requireCustomerPage } from "@/server/auth/guards";
 import { listMyBookings } from "@/server/bookings/queries";
 import { BookingList } from "@/components/sections/account/BookingList";
+import { pageMeta } from "@/lib/seo/meta";
 import type { Locale } from "@/lib/domain/enums";
 
 type Props = {
@@ -11,10 +12,14 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  return {
-    title: locale === "hi" ? "मेरे परामर्श — Maa Kali Astuti" : "My Consultations — Maa Kali Astuti",
-    robots: { index: false, follow: false },
-  };
+  const t = await getTranslations({ locale, namespace: "account.bookings" });
+  return pageMeta({
+    locale,
+    path: "/account/bookings",
+    title: t("title"),
+    description: t("title"),
+    noindex: true,
+  });
 }
 
 export default async function AccountBookingsPage({ params }: Props): Promise<React.JSX.Element> {

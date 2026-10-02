@@ -17,6 +17,9 @@ import { StickyBuyBar } from "@/components/sections/pdp/StickyBuyBar";
 import { TrackView } from "@/components/sections/pdp/TrackView";
 import { ReviewsSection } from "@/components/sections/pdp/ReviewsSection";
 import { getProductReviews } from "@/server/reviews/queries";
+import { pageMeta } from "@/lib/seo/meta";
+import { breadcrumbs, product as productSchema } from "@/lib/seo/jsonld";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
@@ -43,22 +46,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     ? product.seoDescHi || content.description?.hi || content.description?.en || ""
     : product.seoDescEn || content.description?.en || content.description?.hi || "";
 
-  const description = descCandidate.slice(0, 160);
+  const description = descCandidate;
 
   const firstImage = product.images?.[0]
     ? product.images[0].variants?.[0]?.key || ""
     : product.photo || `/svg/products/${product.id}-main.svg`;
 
-  return {
+  return pageMeta({
+    locale,
+    path: `/product/${slug}`,
     title,
     description,
-    openGraph: {
-      title,
-      description,
-      images: firstImage ? [firstImage] : [],
-    },
-    robots: { index: true, follow: true },
-  };
+    image: firstImage,
+  });
 }
 
 export default async function Page({ params }: Props) {
@@ -74,8 +74,54 @@ export default async function Page({ params }: Props) {
   const t = await getTranslations("pdp");
   const isHi = locale === "hi";
 
+  const productName = isHi ? product.hi || product.name : product.name;
+  const productCategoryName = isHi ? product.catHi || product.catName : product.catName;
+  const productDesc = isHi
+    ? product.seoDescHi || content.description?.hi || content.description?.en || ""
+    : product.seoDescEn || content.description?.en || content.description?.hi || "";
+
+  const imageList = (product.images || [])
+    .map((img) => img.variants?.[0]?.key || "")
+    .filter(Boolean);
+  if (imageList.length === 0 && product.photo) {
+    imageList.push(product.photo);
+  }
+
+  const breadcrumbData = breadcrumbs([
+    { name: isHi ? "होम" : "Home", url: "/" },
+    { name: isHi ? "दुकान" : "Shop", url: "/shop" },
+    { name: productCategoryName, url: `/shop/${product.cat}` },
+    { name: productName, url: `/product/${product.slug}` },
+  ]);
+
+  const productData = productSchema(
+    {
+      id: product.id,
+      name: productName,
+      description: productDesc,
+      image: imageList,
+      priceInr: product.price,
+      mrpInr: product.mrp,
+      stock: product.stock,
+      ratingAvg: product.rating,
+      ratingCount: product.ratingCount,
+    },
+    {
+      url: `/product/${product.slug}`,
+      images: imageList,
+      reviews: reviewsData.reviews.map((r) => ({
+        author: r.author,
+        rating: r.rating,
+        body: r.body,
+        date: r.date,
+      })),
+    }
+  );
+
   return (
     <article className="relative mx-auto max-w-[1480px] px-[clamp(16px,3vw,32px)] pt-5 pb-16">
+      <JsonLd data={breadcrumbData} />
+      <JsonLd data={productData} />
       {/* Breadcrumb */}
       <nav
         aria-label={t("crumbShop")}

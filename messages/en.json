@@ -63,6 +63,7 @@
   },
   "cartPage": {
     "title": "Your Cart",
+    "description": "View and manage items in your sacred shopping cart.",
     "continueShopping": "Continue shopping",
     "summaryTitle": "Order Summary",
     "subtotal": "Subtotal",
@@ -2291,6 +2292,7 @@
   },
   "account": {
     "title": "My Account",
+    "description": "Manage your orders, consultations, kundali reports and profile.",
     "overview": {
       "title": "Dashboard",
       "welcome": "Namaste",
@@ -2392,6 +2394,7 @@
   },
   "searchPage": {
     "title": "Search",
+    "description": "Search energized rudrakshas, gemstones, consultations and articles.",
     "placeholder": "Search rudraksha, gemstones, consultations, articles…",
     "clearSearch": "Clear search",
     "trending": "Trending Searches",

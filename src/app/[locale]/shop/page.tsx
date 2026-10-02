@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { ShopView } from "@/components/sections/shop/ShopView";
 import { getAllProducts, getCategories, getIntents } from "@/lib/api/catalog";
+import { pageMeta } from "@/lib/seo/meta";
 
 /* All offerings (design/Shop.dc.html, `#c=all`). Static; filters live in the query string and
    are read on the client (ARCHITECTURE: all pages SSG). */
@@ -10,7 +11,12 @@ type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "shop" });
-  return { title: t("meta.all"), description: t("allDesc") };
+  return pageMeta({
+    locale,
+    path: "/shop",
+    title: t("meta.all"),
+    description: t("allDesc"),
+  });
 }
 
 export default async function ShopPage({ params }: Props) {

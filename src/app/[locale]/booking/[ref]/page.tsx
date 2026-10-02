@@ -7,6 +7,7 @@ import { getSetting } from "@/server/settings/queries";
 import { getConsultRows } from "@/server/consult/queries";
 import type { ConsultRules } from "@/server/bookings/availability";
 import { BookingManage } from "@/components/sections/booking/BookingManage";
+import { pageMeta } from "@/lib/seo/meta";
 
 export const dynamic = "force-dynamic";
 
@@ -16,14 +17,14 @@ type Props = {
 };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { ref } = await params;
-  return {
+  const { locale, ref } = await params;
+  return pageMeta({
+    locale,
+    path: `/booking/${ref}`,
     title: `Booking ${ref} — Maa Kali Astuti`,
-    robots: {
-      index: false,
-      follow: false,
-    },
-  };
+    description: `Booking ${ref}`,
+    noindex: true,
+  });
 }
 
 export default async function BookingManagePage({

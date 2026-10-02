@@ -11,6 +11,7 @@ import {
 import { getCourseKit, getCourseOptions, getCourses } from "@/lib/api/content";
 import { getFaq } from "@/lib/api/consult";
 import { getSetting } from "@/server/settings/queries";
+import { pageMeta } from "@/lib/seo/meta";
 
 /* Sadhana Courses (design/Sadhana-Courses.dc.html): night hero with the "includes" card → the six
    course cards (#six, S11 yantra draw) → five-step enrollment (line grows on view) → serious seekers
@@ -21,7 +22,12 @@ type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "sadhana.meta" });
-  return { title: t("title"), description: t("description") };
+  return pageMeta({
+    locale,
+    path: "/sadhana-courses",
+    title: t("title"),
+    description: t("description"),
+  });
 }
 
 export default async function SadhanaCoursesPage({ params }: Props) {

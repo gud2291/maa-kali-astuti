@@ -7,6 +7,7 @@ import { RashifalProvider } from "@/components/sections/rashifal/period";
 import { getProductsByIds } from "@/lib/api/catalog";
 import { RASHI } from "@/lib/astro/rashi";
 import { productHref } from "@/lib/routes";
+import { pageMeta } from "@/lib/seo/meta";
 
 /* Rashifal (design/Rashifal.dc.html): the night wheel hero (S8; half-dial + card rail below 768),
    the 12-rashi grid with the five period tabs (#rashis), and the date-of-birth → rashi helper.
@@ -19,7 +20,12 @@ const BUILD_NOW = Date.now();
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "rashifal.meta" });
-  return { title: t("title"), description: t("description") };
+  return pageMeta({
+    locale,
+    path: "/rashifal",
+    title: t("title"),
+    description: t("description"),
+  });
 }
 
 export default async function RashifalPage({ params }: Props) {

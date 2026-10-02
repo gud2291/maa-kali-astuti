@@ -6,6 +6,7 @@ import { RashiCta, RashiRecommend, RashiRemedy } from "@/components/sections/ras
 import { RashifalProvider } from "@/components/sections/rashifal/period";
 import { getProductsByIds } from "@/lib/api/catalog";
 import { RASHI } from "@/lib/astro/rashi";
+import { pageMeta } from "@/lib/seo/meta";
 
 /* Rashi detail (design/Rashi-Detail.dc.html#r=<key>&p=<period>): /rashifal/mesha … /meena
    (INV §C). Hero with the period tabs → area meters → lucky trio + gemstone → remedy →
@@ -26,10 +27,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const r = RASHI.find((x) => x.slug === rashi);
   if (!r) return {};
   const t = await getTranslations({ locale, namespace: "rashifal.meta" });
-  return {
+  return pageMeta({
+    locale,
+    path: `/rashifal/${r.slug}`,
     title: t("rashiTitle", { name: r.en, west: r.west }),
     description: t("rashiDescription", { name: r.en, west: r.west }),
-  };
+  });
 }
 
 export default async function RashiPage({ params }: Props) {

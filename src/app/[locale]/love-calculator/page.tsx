@@ -5,6 +5,7 @@ import { LoveNamesProvider } from "@/components/sections/love/LoveNames";
 import { LoveHero, LoveMilan, LoveProducts } from "@/components/sections/love/LoveSections";
 import { getAllProducts } from "@/lib/api/catalog";
 import { getService } from "@/lib/api/consult";
+import { pageMeta } from "@/lib/seo/meta";
 
 /* Love Calculator (design/Love-Calculator.dc.html): the name tool (S13), how it works (follows the
    typed names), the note of honesty + Ashtakoot Milan CTA, and 4 products for love & harmony.
@@ -14,7 +15,12 @@ type Props = { params: Promise<{ locale: string }> };
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "love.meta" });
-  return { title: t("title"), description: t("description") };
+  return pageMeta({
+    locale,
+    path: "/love-calculator",
+    title: t("title"),
+    description: t("description"),
+  });
 }
 
 export default async function LoveCalculatorPage({ params }: Props) {

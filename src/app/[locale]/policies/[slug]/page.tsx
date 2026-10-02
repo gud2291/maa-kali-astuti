@@ -5,6 +5,8 @@ import { getPage } from "@/server/pages/queries";
 import { PolicyView } from "@/components/sections/policies/PolicyView";
 import { POLICIES, type PolicySlug } from "@/lib/routes";
 
+import { pageMeta } from "@/lib/seo/meta";
+
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
 export const dynamicParams = false;
@@ -21,12 +23,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const page = await getPage(slug);
   const isHi = locale === "hi";
-  const title = (isHi && page?.titleHi) || page?.titleEn || POLICIES[slug];
+  const fallbackTitle = POLICIES[slug];
+  const title = (isHi && page?.titleHi) || page?.titleEn || fallbackTitle;
+  const siteName = isHi ? "माँ काली स्तुति" : "Maa Kali Astuti";
+  const description = `${title} — ${siteName}`;
 
-  return {
+  return pageMeta({
+    locale,
+    path: `/policies/${slug}`,
     title,
-    description: `${title} - Maa Kali Astuti`,
-  };
+    description,
+  });
 }
 
 export default async function PolicyPage({

@@ -2,16 +2,19 @@ import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getArticleList } from "@/server/articles/queries";
 import { BlogList } from "@/components/sections/blog/BlogList";
+import { pageMeta } from "@/lib/seo/meta";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "blog" });
-  return {
+  return pageMeta({
+    locale,
+    path: "/blog",
     title: t("title"),
     description: t("subtitle"),
-  };
+  });
 }
 
 export default async function BlogPage({ params }: Props): Promise<React.JSX.Element> {

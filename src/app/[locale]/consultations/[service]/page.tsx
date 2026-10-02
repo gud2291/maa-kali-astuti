@@ -11,6 +11,9 @@ import { Tiers } from "@/components/sections/consult/Tiers";
 import { getFaq, getModes, getService, getServices, isReport, recTier } from "@/lib/api/consult";
 import { fmt } from "@/lib/core/format";
 import { bookHref } from "@/lib/routes";
+import { pageMeta } from "@/lib/seo/meta";
+import { service as serviceSchema, faqPage } from "@/lib/seo/jsonld";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 /* Consultation detail (design/Consultation-Detail.dc.html#s=<key>): /consultations/kundali-reading,
    /palmistry, /tarot-reading, /numerology (INV §C). Hero → what's covered → sample pages →
@@ -29,7 +32,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const s = await getService(service, locale);
   if (!s) return {};
   const t = await getTranslations({ locale, namespace: "consult.detail" });
-  return { title: s.name, description: t(`copy.${s.key}.long`) };
+  return pageMeta({
+    locale,
+    path: `/consultations/${s.slug}`,
+    title: s.name,
+    description: t(`copy.${s.key}.long`),
+  });
 }
 
 export default async function ServicePage({ params }: Props) {
@@ -45,8 +53,24 @@ export default async function ServicePage({ params }: Props) {
   ]);
   const dur = isReport(s) ? t("dur.report") : t("dur.range", { a: s.tiers[0].mins, b: s.tiers[2].mins });
 
+  const serviceData = serviceSchema(
+    {
+      name: s.name,
+      description: t(`copy.${s.key}.long`),
+      serviceType: "Astrology & Spiritual Consultation",
+      tiers: s.tiers.map((tier) => ({
+        name: tier.name,
+        priceInr: tier.price,
+      })),
+    },
+    `/consultations/${s.slug}`
+  );
+  const faqData = faqPage(faq.map((item) => ({ q: item.q, a: item.a })));
+
   return (
     <>
+      <JsonLd data={serviceData} />
+      <JsonLd data={faqData} />
       <ServiceHero s={s} modes={modes} />
       <Covered s={s} />
       <SamplePages s={s} />

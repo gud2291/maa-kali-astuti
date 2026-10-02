@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { getCustomer } from "@/server/auth/guards";
 import { getAccountOverview } from "@/server/account/queries";
 import { AccountLogin } from "@/components/sections/account/AccountLogin";
 import { AccountOverview } from "@/components/sections/account/AccountOverview";
+import { pageMeta } from "@/lib/seo/meta";
 import type { Locale } from "@/lib/domain/enums";
 
 type Props = {
@@ -13,10 +14,14 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  return {
-    title: locale === "hi" ? "मेरा खाता — Maa Kali Astuti" : "My Account — Maa Kali Astuti",
-    robots: { index: false, follow: false },
-  };
+  const t = await getTranslations({ locale, namespace: "account" });
+  return pageMeta({
+    locale,
+    path: "/account",
+    title: t("title"),
+    description: t("description"),
+    noindex: true,
+  });
 }
 
 export default async function AccountPage({ params, searchParams }: Props) {

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { requireCustomerPage } from "@/server/auth/guards";
 import { listMyKundaliOrders } from "@/server/kundali/queries";
 import { KundaliList } from "@/components/sections/account/KundaliList";
+import { pageMeta } from "@/lib/seo/meta";
 import type { Locale } from "@/lib/domain/enums";
 
 type Props = {
@@ -11,10 +12,14 @@ type Props = {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
-  return {
-    title: locale === "hi" ? "मेरी जन्मपत्री — Maa Kali Astuti" : "My Kundali — Maa Kali Astuti",
-    robots: { index: false, follow: false },
-  };
+  const t = await getTranslations({ locale, namespace: "account.kundali" });
+  return pageMeta({
+    locale,
+    path: "/account/kundali",
+    title: t("title"),
+    description: t("title"),
+    noindex: true,
+  });
 }
 
 export default async function AccountKundaliPage({

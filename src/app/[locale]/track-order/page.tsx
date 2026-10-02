@@ -1,16 +1,19 @@
 import type { Metadata } from "next";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { TrackOrderForm } from "@/components/sections/track/TrackOrderForm";
+import { pageMeta } from "@/lib/seo/meta";
 
 type Props = { params: Promise<{ locale: string }> };
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "track" });
-  return {
+  return pageMeta({
+    locale,
+    path: "/track-order",
     title: t("title"),
     description: t("subtitle"),
-  };
+  });
 }
 
 export default async function Page({ params }: Props) {

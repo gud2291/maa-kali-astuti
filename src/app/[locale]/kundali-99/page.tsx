@@ -12,6 +12,9 @@ import { KundaliTool } from "@/components/sections/kundali/KundaliTool";
 import { getFaq } from "@/lib/api/consult";
 import { getKundaliReviews } from "@/lib/api/content";
 import { getSetting } from "@/server/settings/queries";
+import { pageMeta } from "@/lib/seo/meta";
+import { service as serviceSchema, faqPage } from "@/lib/seo/jsonld";
+import { JsonLd } from "@/components/seo/JsonLd";
 
 /* Janam Kundali ₹99 (design/Kundali-99.dc.html): night tool hero (form → generating → ready),
    the free preview with the ₹99 payment, then what's inside, sample pages, reviews and FAQ.
@@ -24,7 +27,12 @@ const BUILD_NOW = Date.now();
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "k99.meta" });
-  return { title: t("title"), description: t("description") };
+  return pageMeta({
+    locale,
+    path: "/kundali-99",
+    title: t("title"),
+    description: t("description"),
+  });
 }
 
 export default async function Kundali99Page({ params }: Props) {
@@ -36,8 +44,29 @@ export default async function Kundali99Page({ params }: Props) {
     getSetting("kundali"),
   ]);
 
+  const isHi = locale === "hi";
+  const serviceData = serviceSchema(
+    {
+      name: isHi ? `वैदिक जन्मपत्री ₹${kundaliSetting.priceInr}` : `Vedic Janam Kundali Report ₹${kundaliSetting.priceInr}`,
+      description: isHi
+        ? "साधक पवन पाण्डेय द्वारा विस्तृत वैदिक जन्मपत्री विश्लेषण।"
+        : "Complete computerized Vedic birth chart and comprehensive planetary life analysis.",
+      serviceType: "Vedic Astrology Report",
+      tiers: [
+        {
+          name: isHi ? "सम्पूर्ण जन्मपत्री" : "Complete Kundali Report",
+          priceInr: kundaliSetting.priceInr,
+        },
+      ],
+    },
+    "/kundali-99"
+  );
+  const faqData = faqPage(faq.map((item) => ({ q: item.q, a: item.a })));
+
   return (
     <>
+      <JsonLd data={serviceData} />
+      <JsonLd data={faqData} />
       <KundaliTool
         buildNow={BUILD_NOW}
         priceInr={kundaliSetting.priceInr}
