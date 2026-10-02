@@ -17,6 +17,7 @@ import { canMove, ORDER_FLOW } from "@/lib/domain/flows";
 import { formatIst } from "@/lib/core/ist";
 import { sendOrderStatusEmail } from "./emails";
 import { after } from "next/server";
+import { toCsv } from "@/server/csv";
 import type {
   OrderListFilters,
   OrderAdminTab,
@@ -643,17 +644,6 @@ export async function resolveAttention(
   return { ok: true };
 }
 
-function escapeCsvCell(val: string | number | null | undefined): string {
-  if (val == null) return '""';
-  let str = String(val);
-  // Formula injection defense: cells starting with = + - @ are prefixed with '
-  if (/^[=+\-@]/.test(str)) {
-    str = `'${str}`;
-  }
-  // RFC-4180 quoting: escape quotes with double quotes
-  return `"${str.replace(/"/g, '""')}"`;
-}
-
 export async function exportOrdersCsv(
   filters: OrderListFilters,
   actor: AdminUser,
@@ -705,49 +695,24 @@ export async function exportOrdersCsv(
     .orderBy(desc(orders.createdAt))
     .limit(5000);
 
-  const headers = [
-    "Order Number",
-    "Date (IST)",
-    "Status",
-    "Payment Method",
-    "Payment Status",
-    "Total (INR)",
-    "Customer Name",
-    "Customer Phone",
-    "Customer Email",
-    "City",
-    "State",
-    "Pincode",
-    "Courier",
-    "AWB",
-    "Tracking URL",
-    "Energization Date",
-  ];
-
-  const csvLines: string[] = [headers.map((h) => escapeCsvCell(h)).join(",")];
-
-  for (const o of rows) {
-    const address = o.shipAddress;
-    const line = [
-      escapeCsvCell(o.number),
-      escapeCsvCell(formatIst(o.createdAt, { time: true })),
-      escapeCsvCell(o.status),
-      escapeCsvCell(o.paymentMethod),
-      escapeCsvCell(o.paymentStatus),
-      escapeCsvCell(o.totalInr),
-      escapeCsvCell(o.name),
-      escapeCsvCell(o.phone),
-      escapeCsvCell(o.email),
-      escapeCsvCell(address?.city || ""),
-      escapeCsvCell(address?.state || ""),
-      escapeCsvCell(address?.pincode || ""),
-      escapeCsvCell(o.courier || ""),
-      escapeCsvCell(o.awb || ""),
-      escapeCsvCell(o.trackingUrl || ""),
-      escapeCsvCell(o.energizationOn || ""),
-    ];
-    csvLines.push(line.join(","));
-  }
+  const csv = toCsv(rows, [
+    { header: "Order Number", value: (o) => o.number },
+    { header: "Date (IST)", value: (o) => formatIst(o.createdAt, { time: true }) },
+    { header: "Status", value: (o) => o.status },
+    { header: "Payment Method", value: (o) => o.paymentMethod },
+    { header: "Payment Status", value: (o) => o.paymentStatus },
+    { header: "Total (INR)", value: (o) => o.totalInr },
+    { header: "Customer Name", value: (o) => o.name },
+    { header: "Customer Phone", value: (o) => o.phone },
+    { header: "Customer Email", value: (o) => o.email },
+    { header: "City", value: (o) => o.shipAddress?.city ?? "" },
+    { header: "State", value: (o) => o.shipAddress?.state ?? "" },
+    { header: "Pincode", value: (o) => o.shipAddress?.pincode ?? "" },
+    { header: "Courier", value: (o) => o.courier ?? "" },
+    { header: "AWB", value: (o) => o.awb ?? "" },
+    { header: "Tracking URL", value: (o) => o.trackingUrl ?? "" },
+    { header: "Energization Date", value: (o) => o.energizationOn ?? "" },
+  ]);
 
   await audit({
     actorId: actor.id,
@@ -757,5 +722,5 @@ export async function exportOrdersCsv(
     summary: `Exported ${rows.length} orders to CSV`,
   });
 
-  return csvLines.join("\r\n");
+  return csv;
 }

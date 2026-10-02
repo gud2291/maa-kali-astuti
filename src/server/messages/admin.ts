@@ -5,6 +5,7 @@ import { messages, subscribers } from "@/server/db/schema/crm";
 import { requireAdmin } from "@/server/auth/guards";
 import { audit } from "@/server/audit";
 import { AppError } from "@/server/result";
+import { toCsv } from "@/server/csv";
 import type { MessageStatus, SubscriberStatus } from "@/lib/domain/enums";
 
 /* ---------- Messages ---------- */
@@ -239,15 +240,8 @@ export async function countSubscribers(): Promise<{ subscribed: number; unsubscr
   return { subscribed, unsubscribed, total: subscribed + unsubscribed };
 }
 
-function escCsv(val: string): string {
-  if (/[",\r\n]/.test(val) || val.startsWith("=") || val.startsWith("+") || val.startsWith("-") || val.startsWith("@") || val.startsWith("\t")) {
-    return `"${val.replace(/"/g, '""')}"`;
-  }
-  return val;
-}
-
 export async function exportSubscribersCsv(): Promise<string> {
-  await requireAdmin("exports.run");
+  const admin = await requireAdmin("exports.run");
 
   const rows = await db
     .select({
@@ -261,29 +255,24 @@ export async function exportSubscribersCsv(): Promise<string> {
     .from(subscribers)
     .orderBy(desc(subscribers.createdAt));
 
-  const header = "Email,Locale,Source,Status,Subscribed At,Unsubscribed At";
-  const lines = rows.map((r) => {
-    const subscribedAt = r.createdAt ? new Date(r.createdAt).toISOString() : "";
-    const unsubAt = r.unsubscribedAt ? new Date(r.unsubscribedAt).toISOString() : "";
-    return [
-      escCsv(r.email),
-      escCsv(r.locale),
-      escCsv(r.source),
-      escCsv(r.status),
-      escCsv(subscribedAt),
-      escCsv(unsubAt),
-    ].join(",");
-  });
+  const csv = toCsv(rows, [
+    { header: "Email", value: (r) => r.email },
+    { header: "Locale", value: (r) => r.locale },
+    { header: "Source", value: (r) => r.source },
+    { header: "Status", value: (r) => r.status },
+    { header: "Subscribed At", value: (r) => (r.createdAt ? new Date(r.createdAt).toISOString() : "") },
+    { header: "Unsubscribed At", value: (r) => (r.unsubscribedAt ? new Date(r.unsubscribedAt).toISOString() : "") },
+  ]);
 
   await audit({
-    actorId: (await requireAdmin("exports.run")).id,
+    actorId: admin.id,
     action: "subscribers.export",
     entity: "subscriber",
     entityId: "all",
     summary: `Exported ${rows.length} subscribers to CSV`,
   });
 
-  return [header, ...lines].join("\n");
+  return csv;
 }
 
 export async function deleteSubscriber(id: number): Promise<{ success: true }> {

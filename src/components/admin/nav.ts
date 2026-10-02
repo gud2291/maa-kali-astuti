@@ -48,6 +48,13 @@ export const NAV: NavItem[] = [
     group: "Sales",
   },
   {
+    href: "/admin/customers",
+    label: "Customers",
+    icon: "user",
+    perm: "customers.view",
+    group: "Sales",
+  },
+  {
     href: "/admin/products",
     label: "Products",
     icon: "tag",
@@ -195,6 +202,20 @@ export const NAV: NavItem[] = [
     label: "Settings",
     icon: "gear",
     perm: "settings.edit",
+    group: "System",
+  },
+  {
+    href: "/admin/audit",
+    label: "Audit Log",
+    icon: "report",
+    perm: "audit.view",
+    group: "System",
+  },
+  {
+    href: "/admin/health",
+    label: "System Health",
+    icon: "health",
+    perm: "health.view",
     group: "System",
   },
 ];
