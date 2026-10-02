@@ -23,18 +23,23 @@ Modify: `src/server/kundali/content/index.ts`
 - Every file starts with `/* [client-review] Hindi draft for Sadhak Ji's review. */`.
 
 ## Tasks
-- [ ] T1. `hi/labels.ts` — every label from `en/labels.ts` (signs like "मेष", planets, 27 nakshatras, tithis, yogas, karanas, weekdays, section titles, table headers).
-- [ ] T2. `hi/lagna.ts`, `hi/moon-sign.ts`, `hi/nakshatra.ts`.
-- [ ] T3. `hi/dasha.ts`, `hi/doshas.ts`, `hi/yogas.ts`, `hi/remedies.ts` (incl. `gems`).
-- [ ] T4. `hi/index.ts` exports `REPORT_HI: PartialReportContent` (without `planetInHouse` and `lifeArea` — B28 adds them).
-- [ ] T5. `content/index.ts`: `getReportContent("hi")` = deep merge of `REPORT_EN` with `REPORT_HI` (Hindi value wins when present and non-empty).
-- [ ] T6. Finish per AGENTS.md §1 step 8.
+- [x] T1. `hi/labels.ts` — every label from `en/labels.ts` (signs like "मेष", planets, 27 nakshatras, tithis, yogas, karanas, weekdays, section titles, table headers). — antigravity
+- [x] T2. `hi/lagna.ts`, `hi/moon-sign.ts`, `hi/nakshatra.ts`. — antigravity
+- [x] T3. `hi/dasha.ts`, `hi/doshas.ts`, `hi/yogas.ts`, `hi/remedies.ts` (incl. `gems`). — antigravity
+- [x] T4. `hi/index.ts` exports `REPORT_HI: PartialReportContent` (without `planetInHouse` and `lifeArea` — B28 adds them). — antigravity
+- [x] T5. `content/index.ts`: `getReportContent("hi")` = deep merge of `REPORT_EN` with `REPORT_HI` (Hindi value wins when present and non-empty). — antigravity
+- [x] T6. Finish per AGENTS.md §1 step 8. — antigravity
 
 ## Must not
 - Must not change the English files or the types.
 
 ## Done-notes
-_(agent: ≤ 12 lines)_
+- Created: `src/server/kundali/content/hi/{labels,lagna,moon-sign,nakshatra,dasha,doshas,yogas,remedies,index}.ts`
+- Modified: `src/server/kundali/content/index.ts`
+- Decisions: Translated labels, ascendants, moon signs, 27 nakshatras, mahadashas, doshas, yogas, remedies, and gemstones into natural, respectful Hindi in Devanagari.
+- Implemented recursive `deepMerge` in `content/index.ts` with memoization; Hindi values take precedence when non-empty, falling back to English for missing sections.
+- Migration added: no.
+- Next step note: B28 will supply `planetInHouse` and `lifeArea` for Hindi part 2.
 
 ## Manual QA (user)
 Read samples (or send to Sadhak Ji). Rendering is tested in B29. `pnpm build` passes.
