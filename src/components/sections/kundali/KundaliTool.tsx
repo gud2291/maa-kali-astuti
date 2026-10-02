@@ -16,7 +16,10 @@ import { Chakra } from "@/components/signature/Chakra";
 import { Starfield } from "@/components/signature/Starfield";
 import { Corner } from "@/components/ui/ornaments/Corner";
 import { MandalaG } from "@/components/ui/ornaments/Mandala";
-import { CITIES, kundali, placeSearch, type City, type Kundali } from "@/lib/astro/kundali";
+import type { Kundali } from "@/lib/astro/kundali";
+import type { SelectedPlace } from "@/components/forms/PlaceInput";
+import { computeChartAction } from "@/server/kundali/actions";
+import { toKundali } from "@/lib/astro/from-snapshot";
 import { downloadKundali } from "@/lib/astro/kundali-download";
 import { t12 } from "@/lib/astro/slots";
 import { MON, MONH } from "@/lib/core/dates";
@@ -86,7 +89,7 @@ export function KundaliTool({ buildNow, intro, facts }: Props) {
 
   const [phase, setPhase] = useState<Phase>("form");
   const [f, setF] = useState<K99Draft>(EMPTY);
-  const [city, setCity] = useState<City | null>(null);
+  const [city, setCity] = useState<SelectedPlace | null>(null);
   const [tried, setTried] = useState(false);
   const [msg, setMsg] = useState(0);
   const [K, setK] = useState<Kundali | null>(null);
@@ -111,21 +114,72 @@ export function KundaliTool({ buildNow, intro, facts }: Props) {
   };
 
   /** gen(loop): loop = the demo "generating" state, which cycles the messages forever. */
-  const gen = (draft: K99Draft, picked: City | null, loop: boolean) => {
-    const q = draft.place.split(",")[0].trim();
-    const c = picked && picked[0] === q ? picked : (placeSearch(q)[0] ?? CITIES[0]);
+  const gen = (draft: K99Draft, picked: SelectedPlace | null, loop: boolean) => {
     stopGen();
     void loadPreview();
-    setCity(c);
+    setCity(picked);
     setMsg(0);
     setPhase("gen");
-    msgTimer.current = setInterval(() => setMsg((m) => (loop ? (m + 1) % MSG_N : Math.min(m + 1, MSG_N - 1))), 820);
+    msgTimer.current = setInterval(
+      () => setMsg((m) => (loop ? (m + 1) % MSG_N : Math.min(m + 1, MSG_N - 1))),
+      820,
+    );
     if (loop) return;
-    genTimer.current = setTimeout(() => {
+
+    const calcPromise = (async () => {
+      let p = picked;
+      if (!p) {
+        const q = draft.place.split(",")[0].trim();
+        try {
+          const res = await fetch(`/api/places?q=${encodeURIComponent(q)}`);
+          if (res.ok) {
+            const list = (await res.json()) as SelectedPlace[];
+            if (list.length > 0) p = list[0];
+          }
+        } catch {
+          // ignore
+        }
+      }
+      const finalPlace: SelectedPlace = p ?? {
+        id: "default_varanasi",
+        name: "Varanasi",
+        region: "Uttar Pradesh",
+        country: "IN",
+        lat: 25.3176,
+        lon: 82.9739,
+        tz: "Asia/Kolkata",
+      };
+
+      const result = await computeChartAction({
+        name: draft.name,
+        dob: draft.dob,
+        tob: draft.tob || null,
+        tobUnknown: draft.unknown,
+        place: {
+          name: finalPlace.region ? `${finalPlace.name}, ${finalPlace.region}` : finalPlace.name,
+          lat: finalPlace.lat,
+          lon: finalPlace.lon,
+          tz: finalPlace.tz,
+        },
+      });
+
+      if (result.ok) {
+        return toKundali(result.data);
+      }
+      return null;
+    })();
+
+    genTimer.current = setTimeout(async () => {
       clearInterval(msgTimer.current);
-      setK(kundali({ dob: draft.dob, tob: draft.tob, unknown: draft.unknown, city: c }));
-      setPhase("preview");
-      toPreview();
+      const computedK = await calcPromise;
+      if (computedK) {
+        setK(computedK);
+        setPhase("preview");
+        toPreview();
+      } else {
+        setPhase("form");
+        useUi.getState().toast({ msg: "Could not generate Kundali. Please check details.", tone: "rose" });
+      }
     }, 5300);
   };
 
@@ -135,13 +189,36 @@ export function KundaliTool({ buildNow, intro, facts }: Props) {
     failPay.current = q.get("pay") === "fail";
     const st = q.get("demo");
     if (st !== "generating" && st !== "preview" && st !== "success") return;
-    const c = CITIES[0];
+    const demoPlace: SelectedPlace = {
+      id: "demo_varanasi",
+      name: "Varanasi",
+      region: "Uttar Pradesh",
+      country: "IN",
+      lat: 25.3176,
+      lon: 82.9739,
+      tz: "Asia/Kolkata",
+    };
     setF(DEMO);
-    setCity(c);
-    if (st === "generating") gen(DEMO, c, true);
+    setCity(demoPlace);
+    if (st === "generating") gen(DEMO, demoPlace, true);
     else {
-      setK(kundali({ dob: DEMO.dob, tob: DEMO.tob, city: c }));
-      setPhase(st === "success" ? "done" : "preview");
+      computeChartAction({
+        name: DEMO.name,
+        dob: DEMO.dob,
+        tob: DEMO.tob,
+        tobUnknown: DEMO.unknown,
+        place: {
+          name: `${demoPlace.name}, ${demoPlace.region}`,
+          lat: demoPlace.lat,
+          lon: demoPlace.lon,
+          tz: demoPlace.tz,
+        },
+      }).then((res) => {
+        if (res.ok) {
+          setK(toKundali(res.data));
+          setPhase(st === "success" ? "done" : "preview");
+        }
+      });
     }
     // Mount only.
     // eslint-disable-next-line react-hooks/exhaustive-deps

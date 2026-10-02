@@ -1,12 +1,14 @@
 "use client";
-import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Icon } from "@/components/icons/Icon";
 import { enter } from "@/components/motion/fx";
 import { RashiGlyph } from "@/components/signature/RashiGlyph";
 import { EYEBROW } from "@/components/sections/consult/ui";
-import { kundali, placeSearch, type City } from "@/lib/astro/kundali";
+import { PlaceInput, type SelectedPlace } from "@/components/forms/PlaceInput";
+import { computeChartAction } from "@/server/kundali/actions";
+import { toKundali } from "@/lib/astro/from-snapshot";
 import { RASHI, sunRashi, type Rashi } from "@/lib/astro/rashi";
 import { rashiHref } from "@/lib/routes";
 import { useUi } from "@/stores/ui";
@@ -15,8 +17,8 @@ import { useRashifal } from "./period";
 import { brass, H2 } from "./ui";
 
 /* §3 "Find your rashi" (Rashifal.dc.html 139–197, findRashi 248–256). Sand. Date of birth alone
-   gives the Surya (sun) rashi; with "Add birth time and place" filled in, the approximate Kundali
-   maths gives the Chandra (Moon) rashi and nakshatra. Right column: the 4 × 3 glyph grid until a
+   gives the Surya (sun) rashi; with "Add birth time and place" filled in, the sidereal Kundali
+   engine gives the Chandra (Moon) rashi and nakshatra. Right column: the 4 × 3 glyph grid until a
    result, then the night result card (fades up 14px, 450 ms) with "Remember my rashi", which
    stores it on this device and marks it "Yours" in the grid above. */
 
@@ -38,20 +40,16 @@ export function RashiFinder() {
   const [dob, setDob] = useState("");
   const [tob, setTob] = useState("");
   const [place, setPlace] = useState("");
-  const [city, setCity] = useState<City | null>(null);
+  const [selectedPlace, setSelectedPlace] = useState<SelectedPlace | null>(null);
   const [more, setMore] = useState(false);
-  const [open, setOpen] = useState(false);
-  const [active, setActive] = useState(-1);
   const [tried, setTried] = useState(false);
   const [found, setFound] = useState<Found | null>(null);
   const [today, setToday] = useState("");
-  const blur = useRef<ReturnType<typeof setTimeout>>(undefined);
   const foundRef = useRef<HTMLDivElement>(null);
 
   // The date picker's max is the viewer's today (client only; the page is static).
   useEffect(() => {
     setToday(isoToday());
-    return () => clearTimeout(blur.current);
   }, []);
 
   // Result card entrance (fx.enter y14, 450 ms) on every new result.
@@ -59,36 +57,7 @@ export function RashiFinder() {
     if (found) enter(foundRef.current, { y: 14, dur: 450 });
   }, [found]);
 
-  const pq = place.trim();
-  const places = pq ? placeSearch(pq) : [];
-  const listOpen = open && places.length > 0;
-
-  const pick = (c: City) => {
-    setPlace(`${c[0]}, ${c[1]}`);
-    setCity(c);
-    setOpen(false);
-    setActive(-1);
-  };
-
-  const onPlaceKey = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Escape" && listOpen) {
-      e.preventDefault();
-      setOpen(false);
-      return;
-    }
-    if (!places.length) return;
-    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-      e.preventDefault();
-      setOpen(true);
-      const n = places.length;
-      setActive((a) => (e.key === "ArrowDown" ? (a + 1) % n : (a - 1 + n) % n));
-    } else if (e.key === "Enter" && listOpen && active >= 0 && places[active]) {
-      e.preventDefault();
-      pick(places[active]);
-    }
-  };
-
-  const find = (e: FormEvent) => {
+  const find = async (e: FormEvent) => {
     e.preventDefault();
     if (!dob || dob > isoToday()) {
       setTried(true);
@@ -96,12 +65,39 @@ export function RashiFinder() {
       return;
     }
     const [, m, d] = dob.split("-").map(Number);
-    const q = place.split(",")[0].trim();
-    const c = city || (q ? placeSearch(q)[0] : null);
-    if (more && tob && c) {
-      const K = kundali({ dob, tob, city: c });
-      setFound({ r: RASHI[K.rashi], moon: true, nak: K.nak });
-    } else setFound({ r: sunRashi(m, d), moon: false });
+    if (more && tob && (selectedPlace || place.trim())) {
+      let p = selectedPlace;
+      if (!p && place.trim()) {
+        try {
+          const res = await fetch(`/api/places?q=${encodeURIComponent(place.split(",")[0].trim())}`);
+          if (res.ok) {
+            const list = (await res.json()) as SelectedPlace[];
+            if (list.length > 0) p = list[0];
+          }
+        } catch {}
+      }
+      if (p) {
+        const result = await computeChartAction({
+          name: "User",
+          dob,
+          tob,
+          tobUnknown: false,
+          place: {
+            name: p.region ? `${p.name}, ${p.region}` : p.name,
+            lat: p.lat,
+            lon: p.lon,
+            tz: p.tz,
+          },
+        });
+        if (result.ok) {
+          const K = toKundali(result.data);
+          setFound({ r: RASHI[K.rashi], moon: true, nak: K.nak });
+          setTried(false);
+          return;
+        }
+      }
+    }
+    setFound({ r: sunRashi(m, d), moon: false });
     setTried(false);
   };
 
@@ -190,61 +186,21 @@ export function RashiFinder() {
                   <label htmlFor="rf-place" className={LABEL}>
                     {t("place")}
                   </label>
-                  <input
+                  <PlaceInput
                     id="rf-place"
-                    type="text"
-                    role="combobox"
-                    aria-autocomplete="list"
-                    aria-controls="rf-place-list"
-                    aria-expanded={listOpen}
-                    aria-activedescendant={listOpen && active >= 0 ? `rf-place-${active}` : undefined}
-                    autoComplete="off"
-                    placeholder={t("placeHint")}
                     value={place}
-                    onChange={(e) => {
-                      setPlace(e.target.value);
-                      setCity(null);
-                      setOpen(true);
-                      setActive(-1);
+                    onChange={(val) => {
+                      setPlace(val);
+                      setSelectedPlace(null);
                     }}
-                    onFocus={() => {
-                      clearTimeout(blur.current);
-                      setOpen(true);
+                    onSelect={(p) => {
+                      const placeStr = p.region ? `${p.name}, ${p.region}` : p.name;
+                      setPlace(placeStr);
+                      setSelectedPlace(p);
                     }}
-                    onBlur={() => {
-                      blur.current = setTimeout(() => setOpen(false), 160);
-                    }}
-                    onKeyDown={onPlaceKey}
+                    placeholder={t("placeHint")}
                     className={cn(FIELD, "shadow-[inset_0_0_0_1px_#EAE0CA]")}
                   />
-                  {listOpen && (
-                    <ul
-                      id="rf-place-list"
-                      role="listbox"
-                      aria-label={t("place")}
-                      className="absolute top-[calc(100%+6px)] right-0 left-0 z-[6] m-0 list-none rounded-btn bg-cream p-1.5 shadow-[inset_0_0_0_1px_#EAE0CA,0_18px_36px_-18px_rgba(14,59,48,.35)]"
-                    >
-                      {places.map((c, i) => (
-                        <li key={c[0]} id={`rf-place-${i}`} role="option" aria-selected={i === active}>
-                          <button
-                            type="button"
-                            tabIndex={-1}
-                            onMouseDown={(e) => {
-                              e.preventDefault();
-                              pick(c);
-                            }}
-                            className={cn(
-                              "flex min-h-11 w-full cursor-pointer items-center justify-between gap-3 rounded-field border-none bg-transparent px-2.5 py-2 text-left hover:bg-s1",
-                              i === active && "bg-s1",
-                            )}
-                          >
-                            <span className="font-sans text-[14.5px] leading-[1.2] font-semibold text-ink">{c[0]}</span>
-                            <span className="font-sans text-[12.5px] leading-[1.2] font-medium text-ink6">{c[1]}</span>
-                          </button>
-                        </li>
-                      ))}
-                    </ul>
-                  )}
                 </div>
               </div>
             )}

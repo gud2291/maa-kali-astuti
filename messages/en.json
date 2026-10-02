@@ -11,7 +11,9 @@
     "hindi": "हिंदी",
     "close": "Close",
     "loading": "Loading…",
-    "comingSoon": "Being prepared"
+    "comingSoon": "Being prepared",
+    "geoNamesAttribution": "Place data © GeoNames (CC BY 4.0)",
+    "searchPlace": "Search place of birth"
   },
   "product": {
     "wristSize": "Wrist size",

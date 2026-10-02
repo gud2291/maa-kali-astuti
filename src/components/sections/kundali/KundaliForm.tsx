@@ -1,15 +1,15 @@
 "use client";
-import { useRef, useState, type FormEvent, type KeyboardEvent } from "react";
+import type { FormEvent } from "react";
 import { useTranslations } from "next-intl";
 import { Icon } from "@/components/icons/Icon";
-import { placeSearch, type City } from "@/lib/astro/kundali";
+import { PlaceInput, type SelectedPlace } from "@/components/forms/PlaceInput";
 import { cn } from "@/lib/utils/cn";
 import type { K99Draft, K99Errors } from "@/lib/validation/astro";
 import { ErrorRow, FIELD, LABEL, ringOf } from "./ui";
 
 /* Kundali ₹99 form state (Kundali-99.dc.html 64–128): name; date + time of birth (2 columns from
    420px) with "I don't know my exact time" (greys the time, shows the noon note); the place
-   combobox (32 towns, prefix first, max 6; ↑ ↓ Enter Esc); the report language segmented control;
+   combobox with GeoNames lookup; the report language segmented control;
    WhatsApp (+91, digits only, 10) + optional email; "Generate my Kundali" with the gold sheen. */
 
 type Props = {
@@ -19,7 +19,7 @@ type Props = {
   set: <K extends keyof K99Draft>(k: K, v: K99Draft[K]) => void;
   /** The place was typed (the picked town is forgotten). */
   onPlace: (v: string) => void;
-  onPick: (c: City) => void;
+  onPick: (c: SelectedPlace) => void;
   onSubmit: (e: FormEvent) => void;
 };
 
@@ -27,37 +27,6 @@ const TWO = "grid grid-cols-1 gap-x-3 gap-y-[18px] min-[420px]:grid-cols-2";
 
 export function KundaliForm({ f, err, today, set, onPlace, onPick, onSubmit }: Props) {
   const t = useTranslations("k99.form");
-  const [open, setOpen] = useState(false);
-  const [active, setActive] = useState(-1);
-  const blur = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-
-  const pq = f.place.trim();
-  const places = pq ? placeSearch(pq) : [];
-  const listOpen = open && places.length > 0;
-
-  const pick = (c: City) => {
-    onPick(c);
-    setOpen(false);
-    setActive(-1);
-  };
-
-  const onPlaceKey = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Escape" && listOpen) {
-      e.preventDefault();
-      setOpen(false);
-      return;
-    }
-    if (!places.length) return;
-    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-      e.preventDefault();
-      setOpen(true);
-      const n = places.length;
-      setActive((a) => (e.key === "ArrowDown" ? (a + 1) % n : (a - 1 + n) % n));
-    } else if (e.key === "Enter" && listOpen && active >= 0 && places[active]) {
-      e.preventDefault();
-      pick(places[active]);
-    }
-  };
 
   const errRow = (k: keyof K99Errors) =>
     err[k] ? <ErrorRow id={`k-${k}-err`}>{t(`err.${err[k]}`)}</ErrorRow> : null;
@@ -143,67 +112,23 @@ export function KundaliForm({ f, err, today, set, onPlace, onPick, onSubmit }: P
         <label htmlFor="k-place" className={LABEL}>
           {t("place")}
         </label>
-        <div className="relative">
-          <input
-            id="k-place"
-            type="text"
-            role="combobox"
-            aria-autocomplete="list"
-            aria-controls="k-place-list"
-            aria-expanded={listOpen}
-            aria-activedescendant={listOpen && active >= 0 ? `k-place-${active}` : undefined}
-            autoComplete="off"
-            placeholder={t("placeHint")}
-            value={f.place}
-            onChange={(e) => {
-              onPlace(e.target.value);
-              setOpen(true);
-              setActive(-1);
-            }}
-            onFocus={() => {
-              clearTimeout(blur.current);
-              setOpen(true);
-            }}
-            onBlur={() => {
-              blur.current = setTimeout(() => setOpen(false), 160);
-            }}
-            onKeyDown={onPlaceKey}
-            {...aria("place")}
-            className={cn(FIELD, "pr-3.5 pl-[42px]")}
-            style={ringOf(!!err.place)}
-          />
-          <span aria-hidden="true" className="pointer-events-none absolute top-4 left-3.5 block size-5 text-g5">
-            <Icon name="pin" />
-          </span>
-          {listOpen && (
-            <ul
-              id="k-place-list"
-              role="listbox"
-              aria-label={t("place")}
-              className="absolute top-[calc(100%+6px)] right-0 left-0 z-[6] m-0 list-none rounded-btn bg-cream p-1.5 shadow-[inset_0_0_0_1px_#EAE0CA,0_18px_36px_-18px_rgba(14,59,48,.35)]"
-            >
-              {places.map((c, i) => (
-                <li key={c[0]} id={`k-place-${i}`} role="option" aria-selected={i === active}>
-                  <button
-                    type="button"
-                    tabIndex={-1}
-                    onMouseDown={(e) => {
-                      e.preventDefault();
-                      pick(c);
-                    }}
-                    className={cn(
-                      "flex min-h-11 w-full cursor-pointer items-center justify-between gap-3 rounded-field border-none bg-transparent px-2.5 py-2 text-left hover:bg-s1",
-                      i === active && "bg-s1",
-                    )}
-                  >
-                    <span className="font-sans text-[14.5px] leading-[1.2] font-semibold text-ink">{c[0]}</span>
-                    <span className="font-sans text-[12.5px] leading-[1.2] font-medium text-ink6">{c[1]}</span>
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
+        <PlaceInput
+          id="k-place"
+          value={f.place}
+          onChange={(val) => {
+            onPlace(val);
+          }}
+          onSelect={(p) => {
+            onPick(p);
+            onPlace(p.region ? `${p.name}, ${p.region}` : p.name);
+          }}
+          placeholder={t("placeHint")}
+          icon={<Icon name="pin" />}
+          hasError={!!err.place}
+          aria-describedby={err.place ? "k-place-err" : undefined}
+          className={cn(FIELD, "pr-3.5 pl-[42px]")}
+          style={ringOf(!!err.place)}
+        />
         {errRow("place")}
       </div>
 

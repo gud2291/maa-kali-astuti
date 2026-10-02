@@ -16,9 +16,10 @@ import { Icon } from "@/components/icons/Icon";
 import { drawChart, onView, prime } from "@/components/motion/draw";
 import { stagger } from "@/components/motion/fx";
 import { KundaliChart } from "@/components/signature/KundaliChart";
-import { Corner } from "@/components/ui/ornaments/Corner";
-import { MandalaG } from "@/components/ui/ornaments/Mandala";
-import { DEMO_K, kundali, placeSearch, type City, type Kundali } from "@/lib/astro/kundali";
+import { DEMO_K, type Kundali } from "@/lib/astro/kundali";
+import { PlaceInput, type SelectedPlace } from "@/components/forms/PlaceInput";
+import { computeChartAction } from "@/server/kundali/actions";
+import { toKundali } from "@/lib/astro/from-snapshot";
 import { RASHI } from "@/lib/astro/rashi";
 import { isReduced } from "@/lib/hooks/useReducedMotion";
 import { routes } from "@/lib/routes";
@@ -74,24 +75,18 @@ export function KundaliMini({ buildNow }: { buildNow: number }) {
   const today = isoDay(day);
 
   const [kf, setKf] = useState<KundaliDraft>(EMPTY);
+  const [selectedPlace, setSelectedPlace] = useState<SelectedPlace | null>(null);
   const [err, setErr] = useState<KundaliErrors>({});
   const [phase, setPhase] = useState<Phase>("form");
   const [res, setRes] = useState<{ K: Kundali; n: number } | null>(null);
-  const [open, setOpen] = useState(false);
-  const [active, setActive] = useState(-1);
 
   const chartRef = useRef<HTMLDivElement>(null);
   const resRef = useRef<HTMLDivElement>(null);
   const genTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const blurTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-
-  const places = kf.place.trim() && !kf.city ? placeSearch(kf.place) : [];
-  const listOpen = open && places.length > 0;
 
   useEffect(
     () => () => {
       clearTimeout(genTimer.current);
-      clearTimeout(blurTimer.current);
     },
     [],
   );
@@ -128,20 +123,9 @@ export function KundaliMini({ buildNow }: { buildNow: number }) {
     });
   };
 
-  const pick = (c: City) => {
-    setKf((f) => ({ ...f, place: `${c[0]}, ${c[1]}`, city: c }));
-    setErr((e) => {
-      const n = { ...e };
-      delete n.place;
-      return n;
-    });
-    setOpen(false);
-    setActive(-1);
-  };
-
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    const city = kf.city || (kf.place.trim() ? (placeSearch(kf.place.split(",")[0])[0] ?? null) : null);
+    const city = selectedPlace || (kf.place.trim() ? [kf.place, "", 0, 0] : null);
     const errors = checkKundali({ ...kf, city }, today);
     if (Object.keys(errors).length) {
       setErr(errors);
@@ -149,38 +133,64 @@ export function KundaliMini({ buildNow }: { buildNow: number }) {
     }
     setErr({});
     setPhase("gen");
-    setOpen(false);
-    const f = { ...kf, city, place: city ? `${city[0]}, ${city[1]}` : kf.place };
-    setKf(f);
+
     const reduced = isReduced();
     if (chartRef.current && !reduced)
       chartRef.current.animate([{ opacity: 1 }, { opacity: 0.18 }], { duration: 400, fill: "forwards" });
+
+    const calcPromise = (async () => {
+      let p = selectedPlace;
+      if (!p && kf.place.trim()) {
+        try {
+          const res = await fetch(`/api/places?q=${encodeURIComponent(kf.place.split(",")[0].trim())}`);
+          if (res.ok) {
+            const list = (await res.json()) as SelectedPlace[];
+            if (list.length > 0) p = list[0];
+          }
+        } catch {}
+      }
+      const finalPlace: SelectedPlace = p ?? {
+        id: "default_varanasi",
+        name: "Varanasi",
+        region: "Uttar Pradesh",
+        country: "IN",
+        lat: 25.3176,
+        lon: 82.9739,
+        tz: "Asia/Kolkata",
+      };
+
+      const result = await computeChartAction({
+        name: kf.name,
+        dob: kf.dob,
+        tob: kf.tob || null,
+        tobUnknown: kf.unknown,
+        place: {
+          name: finalPlace.region ? `${finalPlace.name}, ${finalPlace.region}` : finalPlace.name,
+          lat: finalPlace.lat,
+          lon: finalPlace.lon,
+          tz: finalPlace.tz,
+        },
+      });
+
+      if (result.ok) {
+        return toKundali(result.data);
+      }
+      return null;
+    })();
+
     clearTimeout(genTimer.current);
     genTimer.current = setTimeout(
-      () => {
-        setRes((r) => ({ K: kundali({ dob: f.dob, tob: f.tob, unknown: f.unknown, city }), n: (r?.n ?? 0) + 1 }));
-        setPhase("ready");
+      async () => {
+        const computedK = await calcPromise;
+        if (computedK) {
+          setRes((r) => ({ K: computedK, n: (r?.n ?? 0) + 1 }));
+          setPhase("ready");
+        } else {
+          setPhase("form");
+        }
       },
       reduced ? 0 : 1300,
     );
-  };
-
-  const onPlaceKey = (e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === "Escape" && listOpen) {
-      e.preventDefault();
-      setOpen(false);
-      return;
-    }
-    if (!places.length) return;
-    if (e.key === "ArrowDown" || e.key === "ArrowUp") {
-      e.preventDefault();
-      setOpen(true);
-      const n = places.length;
-      setActive((a) => (e.key === "ArrowDown" ? (a + 1) % n : (a - 1 + n) % n));
-    } else if (e.key === "Enter" && listOpen && active >= 0 && places[active]) {
-      e.preventDefault();
-      pick(places[active]);
-    }
   };
 
   const ring = (k: KundaliField) => (err[k] ? "#EBCFC9" : "transparent");
@@ -315,70 +325,29 @@ export function KundaliMini({ buildNow }: { buildNow: number }) {
               <label htmlFor="hk-place" className={labelCls}>
                 {t("place")}
               </label>
-              <div className="relative">
-                <input
-                  id="hk-place"
-                  type="text"
-                  role="combobox"
-                  aria-autocomplete="list"
-                  aria-controls="hk-place-list"
-                  aria-expanded={listOpen}
-                  aria-activedescendant={listOpen && active >= 0 ? `hk-place-${active}` : undefined}
-                  autoComplete="off"
-                  placeholder={t("placeHint")}
-                  value={kf.place}
-                  onChange={(e) => {
-                    set("place", e.target.value);
-                    setOpen(true);
-                    setActive(-1);
-                  }}
-                  onFocus={() => {
-                    clearTimeout(blurTimer.current);
-                    setOpen(true);
-                  }}
-                  onBlur={() => {
-                    blurTimer.current = setTimeout(() => setOpen(false), 160);
-                  }}
-                  onKeyDown={onPlaceKey}
-                  aria-invalid={!!err.place}
-                  className={cn(inputCls, "pr-3.5 pl-[42px] text-[16px] leading-[1.2]")}
-                  style={{ boxShadow: `inset 0 0 0 1.5px ${ring("place")}` }}
-                />
-                <span
-                  aria-hidden="true"
-                  className="pointer-events-none absolute top-[15px] left-3.5 block size-5 text-g5"
-                >
-                  <Icon name="pin" />
-                </span>
-                {listOpen && (
-                  <ul
-                    id="hk-place-list"
-                    role="listbox"
-                    aria-label={t("place")}
-                    className="absolute top-[calc(100%+6px)] right-0 left-0 z-[6] m-0 list-none rounded-btn bg-cream p-1.5 shadow-[inset_0_0_0_1px_#EAE0CA,0_18px_36px_-18px_rgba(14,59,48,.5)]"
-                  >
-                    {places.map((c, i) => (
-                      <li key={c[0]} id={`hk-place-${i}`} role="option" aria-selected={i === active}>
-                        <button
-                          type="button"
-                          tabIndex={-1}
-                          onMouseDown={(e) => {
-                            e.preventDefault();
-                            pick(c);
-                          }}
-                          className={cn(
-                            "flex min-h-11 w-full cursor-pointer items-center justify-between gap-3 rounded-field border-none bg-transparent px-2.5 py-2 text-left hover:bg-s1",
-                            i === active && "bg-s1",
-                          )}
-                        >
-                          <span className="font-sans text-[14.5px] leading-[1.2] font-semibold text-ink">{c[0]}</span>
-                          <span className="font-sans text-[12.5px] leading-[1.2] font-medium text-ink6">{c[1]}</span>
-                        </button>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-              </div>
+              <PlaceInput
+                id="hk-place"
+                value={kf.place}
+                onChange={(val) => {
+                  set("place", val);
+                  setSelectedPlace(null);
+                }}
+                onSelect={(p) => {
+                  const placeStr = p.region ? `${p.name}, ${p.region}` : p.name;
+                  set("place", placeStr);
+                  setSelectedPlace(p);
+                  setErr((e) => {
+                    const n = { ...e };
+                    delete n.place;
+                    return n;
+                  });
+                }}
+                placeholder={t("placeHint")}
+                icon={<Icon name="pin" />}
+                hasError={!!err.place}
+                className={cn(inputCls, "pr-3.5 pl-[42px] text-[16px] leading-[1.2]")}
+                style={{ boxShadow: `inset 0 0 0 1.5px ${ring("place")}` }}
+              />
               {err.place && <ErrLine>{t(`err.${err.place}`)}</ErrLine>}
             </div>
 

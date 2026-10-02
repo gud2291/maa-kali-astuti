@@ -11,7 +11,9 @@
     "hindi": "हिंदी",
     "close": "बंद करें",
     "loading": "लोड हो रहा है…",
-    "comingSoon": "तैयार हो रहा है"
+    "comingSoon": "तैयार हो रहा है",
+    "geoNamesAttribution": "स्थान डेटा © GeoNames (CC BY 4.0)",
+    "searchPlace": "जन्म स्थान खोजें"
   },
   "product": {
     "wristSize": "कलाई का साइज़",
