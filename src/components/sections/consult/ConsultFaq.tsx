@@ -1,7 +1,8 @@
 import { getTranslations } from "next-intl/server";
 import { Icon } from "@/components/icons/Icon";
 import { FaqList } from "@/components/ui/FaqList";
-import { WHATSAPP_DISPLAY, waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/core/commerce";
+import { getSetting } from "@/server/settings/queries";
 import { EYEBROW, rich } from "./ui";
 
 /* §6 FAQ (Consultations.dc.html 217–231). Ivory. "Before you book" heading with the emerald
@@ -9,7 +10,10 @@ import { EYEBROW, rich } from "./ui";
    set "consult" (first answer open). */
 
 export async function ConsultFaq({ items }: { items: [string, string][] }) {
-  const t = await getTranslations("consult.faq");
+  const [t, contact] = await Promise.all([
+    getTranslations("consult.faq"),
+    getSetting("contact"),
+  ]);
 
   return (
     <section data-screen-label="FAQ" className="bg-iv">
@@ -29,12 +33,12 @@ export async function ConsultFaq({ items }: { items: [string, string][] }) {
             </span>
             <span className="font-sans text-[14px] leading-[1.6] text-sg3">{t("waBody")}</span>
             <a
-              href={waLink()}
+              href={waLinkTo(contact.whatsapp)}
               target="_blank"
               rel="noopener noreferrer"
               className="mt-1 inline-flex h-11 items-center gap-2 self-start rounded-btn px-4 font-sans text-[14px] leading-none font-semibold text-g3 no-underline shadow-ring-g3 hover:bg-[rgba(217,185,106,.12)] hover:text-g3"
             >
-              {WHATSAPP_DISPLAY}
+              {contact.phoneDisplay}
             </a>
           </div>
         </div>

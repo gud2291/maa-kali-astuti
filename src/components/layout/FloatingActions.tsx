@@ -2,7 +2,8 @@
 import { useEffect, useRef, type CSSProperties } from "react";
 import { useTranslations } from "next-intl";
 import { Icon } from "@/components/icons/Icon";
-import { waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/core/commerce";
+import { useSiteSettings } from "./SiteSettingsProvider";
 import { scrollToTop } from "./scroll";
 
 /**
@@ -13,9 +14,10 @@ import { scrollToTop } from "./scroll";
  */
 export function WhatsAppFab({ bottom }: { bottom: string }) {
   const t = useTranslations("chrome");
+  const { contact } = useSiteSettings();
   return (
     <a
-      href={waLink()}
+      href={waLinkTo(contact.whatsapp)}
       target="_blank"
       rel="noopener noreferrer"
       aria-label={t("fab")}

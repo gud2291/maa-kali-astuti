@@ -5,7 +5,8 @@ import Link from "next/link";
 import { Icon } from "@/components/icons/Icon";
 import { Chakra } from "@/components/signature/Chakra";
 import { kundaliStatusAction } from "@/server/kundali/actions";
-import { waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/site";
+import { useSiteSettings } from "@/components/layout/SiteSettingsProvider";
 
 type Props = {
   refCode: string;
@@ -15,6 +16,7 @@ type Props = {
 };
 
 export function ReportStatus({ refCode, accessKey, name, hi = false }: Props): React.JSX.Element {
+  const { contact } = useSiteSettings();
   const [status, setStatus] = useState<"generating" | "ready" | "failed" | "timeout">("generating");
   const [pdfUrl, setPdfUrl] = useState<string | null>(null);
   const [attempts, setAttempts] = useState(0);
@@ -189,7 +191,7 @@ export function ReportStatus({ refCode, accessKey, name, hi = false }: Props): R
             {hi ? "पुनः जांचें" : "Check Again"}
           </button>
           <a
-            href={waLink()}
+            href={waLinkTo(contact.whatsapp)}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex h-[44px] items-center gap-2 rounded-btn border border-em7 px-4 font-sans text-[14px] font-semibold text-em7 no-underline hover:bg-s1"

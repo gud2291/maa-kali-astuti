@@ -6,7 +6,8 @@ import { Logo } from "@/components/ui/Logo";
 import { LotusRule } from "@/components/ui/ornaments/LotusRule";
 import { ButtonA, ButtonLink } from "@/components/ui/Button";
 import { routes } from "@/lib/routes";
-import { waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/core/commerce";
+import { getSetting } from "@/server/settings/queries";
 
 /**
  * Branded placeholder for pages linked by the design but not designed yet (INV §G): turning
@@ -14,7 +15,7 @@ import { waLink } from "@/lib/site";
  * Built only from existing design tokens and components.
  */
 export async function ComingSoon({ title, lead, children }: { title: string; lead?: string; children?: ReactNode }) {
-  const t = await getTranslations("soon");
+  const [t, contact] = await Promise.all([getTranslations("soon"), getSetting("contact")]);
   return (
     <section className="container-mka flex min-h-[72vh] flex-col items-center justify-center gap-6 section-y text-center">
       <div className="relative size-[112px]">
@@ -45,7 +46,7 @@ export async function ComingSoon({ title, lead, children }: { title: string; lea
         <ButtonLink href={routes.shop} variant="outline" size="md">
           {t("shop")}
         </ButtonLink>
-        <ButtonA href={waLink()} variant="outline" size="md">
+        <ButtonA href={waLinkTo(contact.whatsapp)} variant="outline" size="md">
           <span className="block size-[18px]">
             <Icon name="whatsapp" />
           </span>

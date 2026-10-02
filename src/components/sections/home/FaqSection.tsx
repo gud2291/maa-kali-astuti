@@ -3,13 +3,17 @@ import { getTranslations } from "next-intl/server";
 import { Icon } from "@/components/icons/Icon";
 import { MaskLine, MaskText } from "@/components/motion/MaskText";
 import { FaqList } from "@/components/ui/FaqList";
-import { waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/core/commerce";
+import { getSetting } from "@/server/settings/queries";
 
 /* §16 "15 FAQ" (Home.dc.html 894–911, L3 1258). Ivory band: heading + the emerald "Still unsure?"
    WhatsApp card (sticky at top 110px on ≥1024) beside FaqList set "home", first answer open. */
 
 export async function FaqSection({ items }: { items: [string, string][] }) {
-  const t = await getTranslations("home.faq");
+  const [t, contact] = await Promise.all([
+    getTranslations("home.faq"),
+    getSetting("contact"),
+  ]);
   const em = (c: ReactNode) => <em className="text-g5 italic">{c}</em>;
 
   return (
@@ -37,7 +41,7 @@ export async function FaqSection({ items }: { items: [string, string][] }) {
             <span className="font-display text-[22px] leading-[1.2] font-normal text-iv">{t("waTitle")}</span>
             <span className="font-sans text-[14.5px] leading-[1.6] text-sg3">{t("waBody")}</span>
             <a
-              href={waLink()}
+              href={waLinkTo(contact.whatsapp)}
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex h-[46px] items-center gap-2 self-start rounded-btn bg-g3 px-[18px] font-sans text-[14px] leading-none font-bold text-n9 no-underline hover:bg-g4 hover:text-n9"

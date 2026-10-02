@@ -4,11 +4,11 @@ import { useTranslations } from "next-intl";
 import { usePathname } from "@/i18n/navigation";
 import { Icon } from "@/components/icons/Icon";
 import { NewsletterForm } from "@/components/forms/NewsletterForm";
-import { SOCIAL } from "@/lib/site";
 import { useUi } from "@/stores/ui";
 import { cn } from "@/lib/utils/cn";
 import { chromeFor } from "./chrome-config";
 import { useSwitchLocale } from "./useSwitchLocale";
+import { useSiteSettings } from "./SiteSettingsProvider";
 
 /* Client islands of the server-rendered footer (SiteFooter.dc.html). */
 
@@ -61,11 +61,18 @@ export function FooterNewsletter() {
 /** Social circles (SiteFooter 59–61). Unconfirmed profiles show a toast instead of navigating. */
 export function FooterSocial() {
   const t = useTranslations("footer");
+  const { social } = useSiteSettings();
   const cls =
     "grid size-10 place-items-center rounded-pill text-g3 shadow-[inset_0_0_0_1px_rgba(217,185,106,.4)] transition-colors duration-150 hover:bg-[rgba(217,185,106,.12)]";
+  const items: { key: "youtube" | "instagram" | "facebook" | "whatsapp"; name: string; url: string | null }[] = [
+    { key: "youtube", name: "YouTube", url: social.youtube },
+    { key: "instagram", name: "Instagram", url: social.instagram },
+    { key: "facebook", name: "Facebook", url: social.facebook },
+    { key: "whatsapp", name: "WhatsApp Channel", url: social.whatsappChannel },
+  ];
   return (
     <div className="flex gap-2">
-      {SOCIAL.map((s) =>
+      {items.map((s) =>
         s.url ? (
           <a key={s.key} href={s.url} target="_blank" rel="noopener noreferrer" aria-label={s.name} className={cls}>
             <span className="block size-[18px]">

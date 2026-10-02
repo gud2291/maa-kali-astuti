@@ -14,7 +14,8 @@ import type { Course, IconRow } from "@/lib/api/content";
 import { YANTRA_GOLD, YANTRA_KALI_BG } from "@/lib/art/yantras";
 import { fmt } from "@/lib/core/format";
 import { courseHref, routes } from "@/lib/routes";
-import { waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/core/commerce";
+import { getSetting } from "@/server/settings/queries";
 import { cn } from "@/lib/utils/cn";
 import type { CourseOption } from "@/components/forms/InquiryForm";
 import { EnrollLine } from "./EnrollLine";
@@ -337,10 +338,11 @@ export async function CoursesFaq({ items }: { items: [string, string][] }) {
 }
 
 /** WhatsApp text link under the enquire copy (Sadhana-Courses 151, Course-Detail 167). */
-export function WaLink({ label }: { label: string }) {
+export async function WaLink({ label }: { label: string }) {
+  const contact = await getSetting("contact");
   return (
     <a
-      href={waLink()}
+      href={waLinkTo(contact.whatsapp)}
       target="_blank"
       rel="noopener noreferrer"
       className="mt-1.5 inline-flex items-center gap-2 self-start font-sans text-[14px] leading-none font-semibold text-em7 no-underline"

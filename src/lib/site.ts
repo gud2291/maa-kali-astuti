@@ -1,14 +1,17 @@
-/* Site-wide contact + social constants used by the chrome and footer (SiteChrome.dc.html 30,
-   129, 193–194; SiteFooter.dc.html 50–53). All are [client-confirm] placeholders. */
-export { WHATSAPP_DISPLAY, waLink } from "@/lib/core/commerce";
+/* Site-wide contact + social constants. These serve as documented fallbacks when database settings
+   are not available (e.g. before initial hydration or in offline scripts). */
+export { WHATSAPP_DISPLAY, waLink, waLinkTo } from "@/lib/core/commerce";
 
 /** Production origin for absolute metadata URLs (Vercel previews also resolve against it). */
 export const SITE_URL = "https://sadhakpawanpandey.com";
 
+/** Fallback telephone URL (tel:+...) */
 export const PHONE_TEL = "tel:+919000012345";
+
+/** Fallback customer care email */
 export const EMAIL = "care@sadhakpawanpandey.com";
 
-/** Social profiles. `null` = not confirmed yet: the footer shows a "coming soon" toast instead. */
+/** Fallback social profiles. `null` = not confirmed yet: the footer shows a "coming soon" toast instead. */
 export const SOCIAL: { key: "youtube" | "instagram" | "facebook" | "whatsapp"; name: string; url: string | null }[] = [
   { key: "youtube", name: "YouTube", url: null },
   { key: "instagram", name: "Instagram", url: null },

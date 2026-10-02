@@ -1,3 +1,5 @@
+"use client";
+
 import { useTranslations } from "next-intl";
 import { Icon } from "@/components/icons/Icon";
 import { rich } from "@/components/sections/consult/ui";
@@ -5,7 +7,8 @@ import { ButtonA, ButtonLink } from "@/components/ui/Button";
 import { Eyebrow } from "@/components/ui/Eyebrow";
 import { LotusRule } from "@/components/ui/ornaments/LotusRule";
 import { bookHref, routes } from "@/lib/routes";
-import { waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/core/commerce";
+import { useSiteSettings } from "@/components/layout/SiteSettingsProvider";
 
 /* Branded 404 (no design file; INV §H F14: reuse the S7 chakra + brand tokens). Rendered inside
    the locale layout, so the header, footer and tab bar stay. The three gold rings turn at
@@ -21,6 +24,7 @@ const RINGS = [
 
 export default function NotFound() {
   const t = useTranslations("notFound");
+  const { contact } = useSiteSettings();
   return (
     <section className="relative overflow-hidden bg-iv">
       <title>{t("meta")}</title>
@@ -66,7 +70,7 @@ export default function NotFound() {
             <Icon name="calendar" className="size-[18px]" />
             {t("consult")}
           </ButtonLink>
-          <ButtonA href={waLink()} variant="outline" size="md">
+          <ButtonA href={waLinkTo(contact.whatsapp)} variant="outline" size="md">
             <Icon name="whatsapp" className="size-[18px]" />
             {t("wa")}
           </ButtonA>

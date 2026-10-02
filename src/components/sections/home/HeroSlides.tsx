@@ -16,6 +16,18 @@ import { EXIT } from "@/components/motion/easing";
 import { isReduced } from "@/lib/hooks/useReducedMotion";
 import { routes } from "@/lib/routes";
 import { cn } from "@/lib/utils/cn";
+import { renderEm } from "./em";
+
+export type HeroSlideTextResolved = {
+  key: "s1" | "s2" | "s3";
+  eyebrow: string;
+  l1: string;
+  l2: string;
+  sub: string;
+  body: string;
+  cta1: string;
+  cta2: string;
+};
 
 /* Hero text column (Home.dc.html 57–159; script 993–1015, 1406–1408).
    Three slides, one per locale variant. Entrance: masked lines rise 900 ms (60 + i·60 ms) and
@@ -40,7 +52,13 @@ const v = (i: number) => ({ "--i": i }) as CSSProperties;
 
 const ctaBase = "inline-flex h-[54px] items-center justify-center rounded-btn no-underline";
 
-export function HeroSlides({ children }: { children?: ReactNode }) {
+export function HeroSlides({
+  slides,
+  children,
+}: {
+  slides?: HeroSlideTextResolved[];
+  children?: ReactNode;
+}) {
   const t = useTranslations("home.hero");
   const hi = useLocale() === "hi";
   const [slide, setSlide] = useState(0);
@@ -163,6 +181,7 @@ export function HeroSlides({ children }: { children?: ReactNode }) {
 
   const s = SLIDES[slide];
   const k = `slides.${s.k}` as const;
+  const override = slides?.find((x) => x.key === s.k);
   // Slides 2–3 sit on a dark banner image: ivory copy, gold accents.
   const dark = slide !== 0;
   const em = (c: ReactNode) => <em className={hi ? "text-g5 not-italic" : "text-g5 italic"}>{c}</em>;
@@ -202,7 +221,7 @@ export function HeroSlides({ children }: { children?: ReactNode }) {
               dark ? "text-g5" : "text-g7",
             )}
           >
-            {t(`${k}.eyebrow`)}
+            {override ? override.eyebrow : t(`${k}.eyebrow`)}
           </span>
           <h1
             className={cn(
@@ -214,12 +233,12 @@ export function HeroSlides({ children }: { children?: ReactNode }) {
           >
             <span className={line}>
               <span data-ln="" style={v(0)} className="block lg:whitespace-nowrap">
-                {t(`${k}.l1`)}
+                {override ? override.l1 : t(`${k}.l1`)}
               </span>
             </span>
             <span className={line}>
               <span data-ln="" style={v(1)} className="block lg:whitespace-nowrap">
-                {t.rich(`${k}.l2`, { em })}
+                {override ? renderEm(override.l2, hi ? "text-g5 not-italic" : "text-g5 italic") : t.rich(`${k}.l2`, { em })}
               </span>
             </span>
           </h1>
@@ -234,7 +253,7 @@ export function HeroSlides({ children }: { children?: ReactNode }) {
               dark ? "text-g5" : "text-g7",
             )}
           >
-            {t(`${k}.sub`)}
+            {override ? override.sub : t(`${k}.sub`)}
           </span>
           <p
             data-fade=""
@@ -246,7 +265,7 @@ export function HeroSlides({ children }: { children?: ReactNode }) {
               dark ? "text-iv/80" : "text-ink6",
             )}
           >
-            {t(`${k}.body`)}
+            {override ? override.body : t(`${k}.body`)}
           </p>
           <div data-fade="" style={v(3)} className="mt-2 flex flex-col flex-wrap gap-3 md:flex-row lg:mt-1">
             <Link
@@ -263,7 +282,7 @@ export function HeroSlides({ children }: { children?: ReactNode }) {
               <span className="block size-[18px]">
                 <Icon name={s.icon} />
               </span>
-              {t(`${k}.cta1`)}
+              {override ? override.cta1 : t(`${k}.cta1`)}
             </Link>
             <Link
               href={s.href2}
@@ -281,7 +300,7 @@ export function HeroSlides({ children }: { children?: ReactNode }) {
                   <Icon name={s.icon2} />
                 </span>
               )}
-              {t(`${k}.cta2`)}
+              {override ? override.cta2 : t(`${k}.cta2`)}
             </Link>
           </div>
         </div>

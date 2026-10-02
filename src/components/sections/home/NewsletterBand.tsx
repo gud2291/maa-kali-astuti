@@ -4,7 +4,8 @@ import { useTranslations } from "next-intl";
 import { Icon } from "@/components/icons/Icon";
 import { NewsletterForm } from "@/components/forms/NewsletterForm";
 import { MandalaG } from "@/components/ui/ornaments/Mandala";
-import { waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/site";
+import { useSiteSettings } from "@/components/layout/SiteSettingsProvider";
 
 /* §17 Newsletter (Home.dc.html 913–933, vNews 1358–1365). Emerald band with a faint mandala on the
    left. Two columns from 900px. Idle form → rose ring + alert on a bad email → "Subscribed" status.
@@ -12,6 +13,7 @@ import { waLink } from "@/lib/site";
 
 export function NewsletterBand() {
   const t = useTranslations("home.news");
+  const { contact } = useSiteSettings();
 
   return (
     <section lang="en" aria-label={t("aria")} className="relative overflow-hidden bg-em7 text-em1">
@@ -48,7 +50,7 @@ export function NewsletterBand() {
               doneClassName="flex min-h-[50px] items-center gap-2.5 font-sans text-[15px] leading-[1.4] font-medium text-iv"
               extra={
                 <a
-                  href={waLink(t("waText"))}
+                  href={waLinkTo(contact.whatsapp, t("waText"))}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex h-[50px] items-center gap-2 rounded-btn px-[18px] font-sans text-[14px] leading-none font-semibold text-g1 no-underline shadow-ring-g3 hover:bg-[rgba(217,185,106,.12)] hover:text-iv"

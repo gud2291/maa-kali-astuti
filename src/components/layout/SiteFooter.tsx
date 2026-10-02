@@ -5,7 +5,9 @@ import { Logo } from "@/components/ui/Logo";
 import { MandalaG } from "@/components/ui/ornaments/Mandala";
 import { rng } from "@/lib/core/rng";
 import { categoryHref, policyHref, routes, serviceHref } from "@/lib/routes";
-import { EMAIL, PAY_FOOTER, PHONE_TEL, WHATSAPP_DISPLAY, waLink } from "@/lib/site";
+import { PAY_FOOTER } from "@/lib/site";
+import { waLinkTo } from "@/lib/core/commerce";
+import { getSetting } from "@/server/settings/queries";
 import { FooterLang, FooterNewsletter, FooterRoot, FooterSocial } from "./FooterClient";
 
 /* Night sky (SiteFooter 91–94 + M.stars mka-core 171): 70 seeded stars on desktop; mobile shows
@@ -84,8 +86,9 @@ const contactCls = "flex items-center gap-[9px] font-sans text-[14px] leading-[1
  * Server-rendered; newsletter, social, language and the tab-bar padding are client islands.
  */
 export async function SiteFooter() {
-  const t = await getTranslations("footer");
+  const [t, contact] = await Promise.all([getTranslations("footer"), getSetting("contact")]);
   const l = (k: string) => t(`l.${k}`);
+  const phoneHref = contact.phoneTel.startsWith("tel:") ? contact.phoneTel : `tel:${contact.phoneTel}`;
 
   const cols: { h: string; links: [string, string][] }[] = [
     {
@@ -196,23 +199,23 @@ export async function SiteFooter() {
           ))}
           <div className="flex flex-col gap-[11px]">
             <span className={headCls}>{t("h.contact")}</span>
-            <a href={waLink()} target="_blank" rel="noopener noreferrer" className={contactCls}>
+            <a href={waLinkTo(contact.whatsapp)} target="_blank" rel="noopener noreferrer" className={contactCls}>
               <span className="block size-4 flex-none text-g3">
                 <Icon name="whatsapp" />
               </span>
-              {WHATSAPP_DISPLAY}
+              {contact.phoneDisplay}
             </a>
-            <a href={PHONE_TEL} className={contactCls}>
+            <a href={phoneHref} className={contactCls}>
               <span className="block size-4 flex-none text-g3">
                 <Icon name="phone" />
               </span>
               {t("callOffice")}
             </a>
-            <a href={`mailto:${EMAIL}`} className={`${contactCls} break-all`}>
+            <a href={`mailto:${contact.email}`} className={`${contactCls} break-all`}>
               <span className="block size-4 flex-none text-g3">
                 <Icon name="mail" />
               </span>
-              {EMAIL}
+              {contact.email}
             </a>
             <span className="flex items-center gap-[9px] font-sans text-[14px] leading-[1.35] font-medium text-em1">
               <span className="block size-4 flex-none text-g3">

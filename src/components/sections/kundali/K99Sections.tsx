@@ -7,9 +7,9 @@ import { FaqList } from "@/components/ui/FaqList";
 import { InlineArt } from "@/components/ui/InlineArt";
 import { Stars } from "@/components/ui/Rating";
 import { REPORT_PAGE_K99_SVG } from "@/lib/art/report-pages";
-import { fmt } from "@/lib/core/format";
 import { routes, serviceHref } from "@/lib/routes";
-import { waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/core/commerce";
+import { getSetting } from "@/server/settings/queries";
 import { cn } from "@/lib/utils/cn";
 import { K99_CONTENTS, K99_SAMPLES } from "./k99-data";
 import { UNDERLINE_LINK } from "./ui";
@@ -260,7 +260,10 @@ export async function K99Reviews({ reviews }: { reviews: Review[] }) {
 
 /** 04 Questions (320–329): sand; FaqList set kundali99. Extra bottom room below 768 for the pay bar. */
 export async function K99Faq({ items }: { items: [string, string][] }) {
-  const t = await getTranslations("k99.faq");
+  const [t, contact] = await Promise.all([
+    getTranslations("k99.faq"),
+    getSetting("contact"),
+  ]);
   return (
     <section data-screen-label="Kundali FAQ" className="bg-s1 shadow-hair-top">
       <div className="mx-auto grid max-w-[1320px] grid-cols-1 items-start gap-[clamp(28px,5vw,80px)] px-[clamp(16px,4vw,32px)] pt-[clamp(56px,8vw,112px)] pb-[clamp(88px,10vw,112px)] md:pb-[clamp(56px,8vw,112px)] lg:grid-cols-[minmax(0,.8fr)_minmax(0,1.6fr)]">
@@ -270,7 +273,7 @@ export async function K99Faq({ items }: { items: [string, string][] }) {
             {t.rich("title", rich())}
           </h2>
           <a
-            href={waLink()}
+            href={waLinkTo(contact.whatsapp)}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-2 inline-flex items-center gap-2 self-start font-sans text-[14px] leading-none font-semibold text-em7 no-underline"

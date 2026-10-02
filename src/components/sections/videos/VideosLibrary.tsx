@@ -14,7 +14,8 @@ import type { Short, Video } from "@/lib/api/content";
 import { secs } from "@/lib/core/format";
 import { isReduced } from "@/lib/hooks/useReducedMotion";
 import { routes } from "@/lib/routes";
-import { SOCIAL, YT_IDS, ytEmbed } from "@/lib/site";
+import { YT_IDS, ytEmbed } from "@/lib/site";
+import { useSiteSettings } from "@/components/layout/SiteSettingsProvider";
 import { useUi } from "@/stores/ui";
 import { cn } from "@/lib/utils/cn";
 import { ShortsViewer } from "./ShortsViewer";
@@ -39,7 +40,8 @@ const clock = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2,
 /** "Subscribe on YouTube": the channel once confirmed, else the design's info toast. */
 export function SubButton({ className }: { className: string }) {
   const t = useTranslations("home.video");
-  const url = SOCIAL.find((s) => s.key === "youtube")?.url;
+  const { social } = useSiteSettings();
+  const url = social.youtube;
   const cls = cn(
     "inline-flex cursor-pointer items-center gap-[9px] rounded-btn border-0 bg-g3 px-[22px] font-sans text-[14.5px] leading-none font-bold whitespace-nowrap text-n9 no-underline hover:bg-g4 hover:text-n9",
     className,

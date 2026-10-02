@@ -17,6 +17,7 @@ import type { Locale } from "@/lib/domain/enums";
 export type ContactEmailInfo = {
   phoneDisplay?: string;
   email?: string;
+  whatsapp?: string;
 };
 
 export type EmailShellProps = {

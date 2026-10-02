@@ -119,6 +119,7 @@ export async function createInquiry(
                 contact={{
                   phoneDisplay: contactSettings.phoneDisplay,
                   email: contactSettings.email,
+                  whatsapp: contactSettings.whatsapp,
                 }}
               />
             ),

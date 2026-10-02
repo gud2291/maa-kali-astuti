@@ -6,7 +6,8 @@ import { EASE } from "@/components/motion/easing";
 import { Chakra } from "@/components/signature/Chakra";
 import { fmt } from "@/lib/core/format";
 import { isReduced } from "@/lib/hooks/useReducedMotion";
-import { waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/site";
+import { useSiteSettings } from "@/components/layout/SiteSettingsProvider";
 import { cn } from "@/lib/utils/cn";
 
 /* Kundali ₹99 mock payment (Kundali-99.dc.html 342–389). A bottom sheet below 768 (radius 8 8 0 0,
@@ -52,6 +53,7 @@ export function PaySheet({
   onClose,
 }: Props) {
   const t = useTranslations("k99.sheet");
+  const { contact } = useSiteSettings();
   const ref = useRef<HTMLDivElement>(null);
   const busy = pay === "processing";
 
@@ -220,7 +222,7 @@ export function PaySheet({
                 {t("retry")}
               </button>
               <a
-                href={waLink()}
+                href={waLinkTo(contact.whatsapp)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex h-[50px] items-center gap-2 rounded-btn px-[18px] font-sans text-[14.5px] leading-none font-semibold text-em7 no-underline shadow-[inset_0_0_0_1px_#164E3F]"

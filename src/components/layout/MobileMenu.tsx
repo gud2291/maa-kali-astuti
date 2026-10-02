@@ -8,7 +8,8 @@ import { Logo } from "@/components/ui/Logo";
 import { MandalaG } from "@/components/ui/ornaments/Mandala";
 import { enter, stagger } from "@/components/motion/fx";
 import { routes } from "@/lib/routes";
-import { PHONE_TEL, waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/core/commerce";
+import { useSiteSettings } from "./SiteSettingsProvider";
 import { useUi } from "@/stores/ui";
 import { cn } from "@/lib/utils/cn";
 import { useSwitchLocale } from "./useSwitchLocale";
@@ -43,6 +44,8 @@ export function MobileMenu() {
 function MenuPanel() {
   const t = useTranslations("chrome");
   const { hi, setLocale } = useSwitchLocale();
+  const { contact } = useSiteSettings();
+  const phoneHref = contact.phoneTel.startsWith("tel:") ? contact.phoneTel : `tel:${contact.phoneTel}`;
   const ref = useRef<HTMLDivElement>(null);
   const close = () => useUi.getState().setMenuOpen(false);
 
@@ -144,13 +147,13 @@ function MenuPanel() {
       </div>
 
       <div className="relative mt-auto grid grid-cols-2 gap-2.5 px-5 pt-4 pb-[calc(20px+env(safe-area-inset-bottom))]">
-        <a href={waLink()} target="_blank" rel="noopener noreferrer" className={cta}>
+        <a href={waLinkTo(contact.whatsapp)} target="_blank" rel="noopener noreferrer" className={cta}>
           <span className="block size-[18px]">
             <Icon name="whatsapp" />
           </span>
           {t("nav.wa")}
         </a>
-        <a href={PHONE_TEL} className={cta}>
+        <a href={phoneHref} className={cta}>
           <span className="block size-[18px]">
             <Icon name="phone" />
           </span>

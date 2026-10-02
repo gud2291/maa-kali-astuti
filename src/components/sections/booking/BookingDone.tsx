@@ -9,7 +9,8 @@ import { Starfield } from "@/components/signature/Starfield";
 import { MandalaG } from "@/components/ui/ornaments/Mandala";
 import { downloadIcs, gcal, type CalEvent } from "@/lib/astro/calendar";
 import { routes } from "@/lib/routes";
-import { waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/site";
+import { useSiteSettings } from "@/components/layout/SiteSettingsProvider";
 import { rich } from "@/components/sections/consult/ui";
 
 /* Confirmation (Booking.dc.html 395–447). Night band: the gold check draws in (ring 1000 ms
@@ -35,6 +36,7 @@ export function BookingDone({
   steps: IconName[];
 }) {
   const t = useTranslations("booking.done");
+  const { contact } = useSiteSettings();
   const tc = useTranslations("consult.how");
   const texts = tc.raw("steps") as { t: string; d: string }[];
 
@@ -129,7 +131,7 @@ export function BookingDone({
                 </>
               )}
               <a
-                href={waLink()}
+                href={waLinkTo(contact.whatsapp)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="inline-flex h-[50px] items-center gap-[9px] rounded-btn px-5 font-sans text-[14.5px] leading-none font-semibold text-em1 no-underline shadow-ring-gold-45 hover:bg-[rgba(217,185,106,.08)] hover:text-iv"

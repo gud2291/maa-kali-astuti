@@ -7,9 +7,9 @@ import { ProductCard } from "@/components/commerce/ProductCard";
 import { ProductImage } from "@/components/commerce/ProductImage";
 import { Starfield } from "@/components/signature/Starfield";
 import { MandalaG } from "@/components/ui/ornaments/Mandala";
-import { shimmer } from "@/components/motion/fx";
 import { routes } from "@/lib/routes";
-import { waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/core/commerce";
+import { useSiteSettings } from "@/components/layout/SiteSettingsProvider";
 import type { Product } from "@/types/product";
 import { bannerKey, type ShopCat } from "./shop-data";
 
@@ -89,6 +89,7 @@ function Skeleton() {
 /** Night banner with stars + a faint mandala; floating art from 1024 (Shop.dc.html 185–199). */
 function EditorialBanner({ cat, art }: { cat: ShopCat; art: Product | undefined }) {
   const t = useTranslations("shop");
+  const { contact } = useSiteSettings();
   const k = bannerKey(cat);
   return (
     <div
@@ -120,7 +121,7 @@ function EditorialBanner({ cat, art }: { cat: ShopCat; art: Product | undefined 
         <span className="font-sans text-[15px] leading-[1.6] text-em1">{t("bannerBody")}</span>
         <div className="mt-1.5 flex flex-wrap gap-2.5">
           <a
-            href={waLink()}
+            href={waLinkTo(contact.whatsapp)}
             target="_blank"
             rel="noopener noreferrer"
             className="flex h-[46px] items-center gap-2 rounded-btn bg-g3 px-[18px] font-sans text-[14px] leading-none font-bold text-n9 no-underline hover:text-n9"
@@ -150,6 +151,7 @@ function EditorialBanner({ cat, art }: { cat: ShopCat; art: Product | undefined 
 /** Empty state (Shop.dc.html 162–172). */
 export function EmptyState({ onClear }: { onClear: () => void }) {
   const t = useTranslations("shop");
+  const { contact } = useSiteSettings();
   return (
     <div className="flex flex-col items-center gap-3.5 rounded-btn bg-s1 px-4 py-[clamp(40px,8vw,96px)] text-center shadow-[inset_0_0_0_1px_rgba(184,146,58,.3)]">
       <span aria-hidden="true" className="block size-[120px]">
@@ -183,7 +185,7 @@ export function EmptyState({ onClear }: { onClear: () => void }) {
           {t("clearFilters")}
         </button>
         <a
-          href={waLink()}
+          href={waLinkTo(contact.whatsapp)}
           target="_blank"
           rel="noopener noreferrer"
           className="flex h-12 items-center gap-2 rounded-btn px-5 font-sans text-[14px] leading-none font-semibold text-em7 no-underline shadow-ring-em hover:text-em7"

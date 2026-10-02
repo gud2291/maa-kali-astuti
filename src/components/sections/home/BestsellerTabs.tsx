@@ -7,9 +7,9 @@ import { ProductCard } from "@/components/commerce/ProductCard";
 import { InlineArt } from "@/components/ui/InlineArt";
 import { EASE } from "@/components/motion/easing";
 import { YANTRA_GOLD } from "@/lib/art/yantras";
-import { isReduced } from "@/lib/hooks/useReducedMotion";
 import { categoryHref, routes } from "@/lib/routes";
-import { waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/site";
+import { useSiteSettings } from "@/components/layout/SiteSettingsProvider";
 import { cn } from "@/lib/utils/cn";
 import type { Product } from "@/types/product";
 import { BEST_TAB_CAT, BEST_TABS, type BestTab } from "./home-data";
@@ -26,6 +26,7 @@ const allHref = (k: BestTab) => {
 
 export function BestsellerTabs({ lists, children }: { lists: Record<BestTab, Product[]>; children: ReactNode }) {
   const t = useTranslations("home.best");
+  const { contact } = useSiteSettings();
   const [tab, setTab] = useState<BestTab>("best");
   const gridRef = useRef<HTMLDivElement>(null);
   const tabRefs = useRef<Partial<Record<BestTab, HTMLButtonElement | null>>>({});
@@ -142,7 +143,7 @@ export function BestsellerTabs({ lists, children }: { lists: Record<BestTab, Pro
         {list.length < 8 && (
           <a
             data-card=""
-            href={waLink()}
+            href={waLinkTo(contact.whatsapp)}
             target="_blank"
             rel="noopener noreferrer"
             lang="en"

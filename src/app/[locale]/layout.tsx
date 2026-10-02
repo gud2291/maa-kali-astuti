@@ -13,6 +13,8 @@ import { SiteChrome } from "@/components/layout/SiteChrome";
 import { SiteFooter } from "@/components/layout/SiteFooter";
 import { PageTransition } from "@/components/layout/PageTransition";
 import { SmoothScroll } from "@/components/layout/SmoothScroll";
+import { SiteSettingsProvider } from "@/components/layout/SiteSettingsProvider";
+import { getSetting } from "@/server/settings/queries";
 import { SITE_URL } from "@/lib/site";
 import "../globals.css";
 
@@ -52,7 +54,12 @@ export default async function LocaleLayout({
   const { locale } = await params;
   if (!hasLocale(routing.locales, locale)) notFound();
   setRequestLocale(locale);
-  const t = await getTranslations({ locale, namespace: "common" });
+  const [t, contact, social, announcement] = await Promise.all([
+    getTranslations({ locale, namespace: "common" }),
+    getSetting("contact"),
+    getSetting("social"),
+    getSetting("announcement"),
+  ]);
 
   return (
     <html lang={locale} className={fontVariables}>
@@ -64,19 +71,21 @@ export default async function LocaleLayout({
           {t("skipToContent")}
         </a>
         <NextIntlClientProvider>
-          {/* Global chrome (F4): fixed header + spacer, menus, search, cart drawer, tab bar, FAB. */}
-          <SiteChrome />
-          <main id="main" tabIndex={-1} className="outline-none">
-            {children}
-          </main>
-          <SiteFooter />
-          <PageTransition />
-          <SmoothScroll />
-          <AmbientRoot />
-          {/* Global commerce layer (F3): persisted-store hydration, quick-add sheet, toasts. */}
-          <StoreHydrator />
-          <QuickAdd />
-          <Toaster />
+          <SiteSettingsProvider value={{ contact, social, announcement }}>
+            {/* Global chrome (F4): fixed header + spacer, menus, search, cart drawer, tab bar, FAB. */}
+            <SiteChrome />
+            <main id="main" tabIndex={-1} className="outline-none">
+              {children}
+            </main>
+            <SiteFooter />
+            <PageTransition />
+            <SmoothScroll />
+            <AmbientRoot />
+            {/* Global commerce layer (F3): persisted-store hydration, quick-add sheet, toasts. */}
+            <StoreHydrator />
+            <QuickAdd />
+            <Toaster />
+          </SiteSettingsProvider>
         </NextIntlClientProvider>
       </body>
     </html>

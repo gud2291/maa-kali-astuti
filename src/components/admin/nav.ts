@@ -107,6 +107,13 @@ export const NAV: NavItem[] = [
     group: "Leads",
   },
   {
+    href: "/admin/content/home",
+    label: "Home",
+    icon: "home",
+    perm: "content.edit",
+    group: "Content",
+  },
+  {
     href: "/admin/content/videos",
     label: "Videos",
     icon: "video",

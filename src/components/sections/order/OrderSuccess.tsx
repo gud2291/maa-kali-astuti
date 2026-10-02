@@ -6,7 +6,8 @@ import { useTranslations } from "next-intl";
 import type { OrderView } from "@/server/orders/queries";
 import type { Locale } from "@/lib/domain/enums";
 import { fmt } from "@/lib/core/format";
-import { waLink } from "@/lib/core/commerce";
+import { waLinkTo } from "@/lib/core/commerce";
+import { useSiteSettings } from "@/components/layout/SiteSettingsProvider";
 import { formatIst } from "@/lib/core/ist";
 import { OrderTimeline } from "./OrderTimeline";
 import { PayNow } from "./PayNow";
@@ -23,6 +24,7 @@ export function OrderSuccess({
   accessKey?: string;
 }): React.JSX.Element {
   const t = useTranslations("order");
+  const { contact } = useSiteSettings();
   const searchParams = useSearchParams();
   const effectiveKey = accessKey || searchParams?.get("k") || "";
   const [copied, setCopied] = useState(false);
@@ -297,7 +299,7 @@ export function OrderSuccess({
             {/* WhatsApp Updates Button */}
             <div className="mt-6">
               <a
-                href={waLink(`Namaste, I want to track my order ${order.number}`)}
+                href={waLinkTo(contact.whatsapp, `Namaste, I want to track my order ${order.number}`)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex w-full items-center justify-center gap-2 rounded-btn bg-em7 px-4 py-3 font-sans text-sm font-semibold text-iv shadow-sm transition hover:bg-em5 focus:outline-none focus:ring-2 focus:ring-g5 focus:ring-offset-2"

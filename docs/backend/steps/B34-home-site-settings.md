@@ -23,21 +23,30 @@ Create:
 Modify: `src/app/[locale]/layout.tsx`, `src/app/[locale]/page.tsx`, `Hero.tsx`, `HeroSlides.tsx`, `AnnouncementBar.tsx`, `src/lib/core/commerce.ts` (`waLinkTo`), `src/lib/site.ts` (constants become documented fallbacks), every file from the grep, `src/components/admin/nav.ts` (+ Home `home`, Content, `content.edit`)
 
 ## Tasks
-- [ ] T1. `home/admin.ts` (`content.edit`; audit): `getHomeAdmin()`, `updateSections(map)`, `updateHero(slides | null)` (null = back to the default texts), `updateAnnouncement(items | null)` — all through `writeSetting`. `admin-actions.ts` → `invalidate(TAG.settings)`.
-- [ ] T2. `/admin/content/home`: tabs **Sections** (17 switches with readable names, in page order), **Hero** (3 slide cards: eyebrow, line 1, line 2 (`<em>word</em>` marks the gold italic word — show this hint), Hindi sub-line, body, CTA labels; EN/HI tabs; optional image via single `ImageManager` purpose `banner`; "Reset to default"), **Announcement** (1–5 items, text EN/HI + optional link; "Reset to default").
-- [ ] T3. `SiteSettingsProvider` (client context `{ contact, social, announcement }`) + `useSiteSettings()`. `[locale]/layout.tsx` loads the three settings with `getSetting` and wraps the app with the provider.
-- [ ] T4. `commerce.ts`: `waLinkTo(number: string, text?: string)`; `waLink` keeps working as the fallback. Every grep hit switches: client components → `useSiteSettings()`; server components → `getSetting("contact" | "social")`. Social icons with a URL open it (`rel="noopener noreferrer"`); null keeps today's "coming soon" toast.
-- [ ] T5. `AnnouncementBar`: settings items (via `loc`) when not null, else the `chrome.ann` messages; same rotation/motion rules.
-- [ ] T6. Home page: render a section only when `getSetting("home").sections[key]` is true (keys = `HOME_SECTIONS`, mapped to the existing section components in order).
-- [ ] T7. `Hero`/`HeroSlides`: optional `slides` prop (server-localised strings + optional `MediaRef`); when present they replace the message texts and the slide image (`MediaImg`, same box and `priority` rules); `em.tsx` `renderEm(text)` turns `<em>…</em>` into `<em>` elements (no HTML parsing, no `dangerouslySetInnerHTML`).
-- [ ] T8. `nav.ts` item.
-- [ ] T9. Finish per AGENTS.md §1 step 8.
+- [x] T1. `home/admin.ts` (`content.edit`; audit): `getHomeAdmin()`, `updateSections(map)`, `updateHero(slides | null)` (null = back to the default texts), `updateAnnouncement(items | null)` — all through `writeSetting`. `admin-actions.ts` → `invalidate(TAG.settings)`. — antigravity
+- [x] T2. `/admin/content/home`: tabs **Sections** (17 switches with readable names, in page order), **Hero** (3 slide cards: eyebrow, line 1, line 2 (`<em>word</em>` marks the gold italic word — show this hint), Hindi sub-line, body, CTA labels; EN/HI tabs; optional image via single `ImageManager` purpose `banner`; "Reset to default"), **Announcement** (1–5 items, text EN/HI + optional link; "Reset to default"). — antigravity
+- [x] T3. `SiteSettingsProvider` (client context `{ contact, social, announcement }`) + `useSiteSettings()`. `[locale]/layout.tsx` loads the three settings with `getSetting` and wraps the app with the provider. — antigravity
+- [x] T4. `commerce.ts`: `waLinkTo(number: string, text?: string)`; `waLink` keeps working as the fallback. Every grep hit switches: client components → `useSiteSettings()`; server components → `getSetting("contact" | "social")`. Social icons with a URL open it (`rel="noopener noreferrer"`); null keeps today's "coming soon" toast. — antigravity
+- [x] T5. `AnnouncementBar`: settings items (via `loc`) when not null, else the `chrome.ann` messages; same rotation/motion rules. — antigravity
+- [x] T6. Home page: render a section only when `getSetting("home").sections[key]` is true (keys = `HOME_SECTIONS`, mapped to the existing section components in order). — antigravity
+- [x] T7. `Hero`/`HeroSlides`: optional `slides` prop (server-localised strings + optional `MediaRef`); when present they replace the message texts and the slide image (`MediaImg`, same box and `priority` rules); `em.tsx` `renderEm(text)` turns `<em>…</em>` into `<em>` elements (no HTML parsing, no `dangerouslySetInnerHTML`). — antigravity
+- [x] T8. `nav.ts` item. — antigravity
+- [x] T9. Finish per AGENTS.md §1 step 8. — antigravity
 
 ## Must not
 - Must not change hero motion/layout or section markup. Must not remove the message defaults.
 
 ## Done-notes
-_(agent: ≤ 12 lines)_
+- Created `src/server/home/admin.ts` & `admin-actions.ts` (`getHomeAdmin`, `updateSections`, `updateHero`, `updateAnnouncement`).
+- Created `/admin/content/home`: `page.tsx`, `SectionToggles.tsx`, `HeroSlidesForm.tsx`, `AnnouncementForm.tsx`.
+- Created `SiteSettingsProvider.tsx` (`useSiteSettings`) and wrapped app in `[locale]/layout.tsx`.
+- Created `src/components/sections/home/em.tsx` (`renderEm` tag parser without dangerouslySetInnerHTML).
+- Updated `commerce.ts` (`waLinkTo`), `site.ts` (documented fallbacks), and all grep hits for client/server settings.
+- Updated `AnnouncementBar.tsx` for dynamic DB announcements and contact settings.
+- Updated `[locale]/page.tsx` to conditionally render all 17 home sections by `sections[key]`.
+- Updated `Hero.tsx` & `HeroSlides.tsx` for custom slide copy, `MediaImg` banners, and `renderEm` text formatting.
+- Added Home item to Content group in `src/components/admin/nav.ts`.
+- Migration added: no.
 
 ## Manual QA (user)
 1. Admin → Home → hide "Journal" → home no longer shows it; show it again.

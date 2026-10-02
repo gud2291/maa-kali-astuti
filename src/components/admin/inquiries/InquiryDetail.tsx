@@ -17,7 +17,7 @@ import {
 } from "@/server/inquiries/admin-actions";
 import { fmt } from "@/lib/core/format";
 import { formatIst } from "@/lib/core/ist";
-import { waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/core/commerce";
 import type { InquiryDetailAdmin } from "@/server/inquiries/admin";
 import { INQUIRY_STATUS, type InquiryStatus } from "@/lib/domain/enums";
 import type { CourseSettings } from "@/lib/validation/settings";
@@ -214,7 +214,7 @@ export function InquiryDetail({
             <span>Call (+91 {inquiry.phone})</span>
           </a>
           <a
-            href={waLink(
+            href={waLinkTo(
               inquiry.phone,
               `Pranam ${inquiry.name}, thank you for contacting Maa Kali Astuti regarding ${courseOrRitualLabel} (Ref: ${inquiry.ref}).`,
             )}
@@ -518,7 +518,7 @@ export function InquiryDetail({
                           </div>
                         </button>
                         <a
-                          href={waLink(
+                          href={waLinkTo(
                             inquiry.phone,
                             `Pranam ${inquiry.name}, here is your payment link for ${link.purpose} (₹${link.amountInr}): ${link.shortUrl}`,
                           )}

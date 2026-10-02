@@ -12,7 +12,8 @@ import { CHAPTER_SVG } from "@/lib/art/chapters";
 import { PORTRAIT_BG_ABOUT_SVG } from "@/lib/art/portrait";
 import { VIDEO_THUMB_SVG } from "@/lib/art/thumbs";
 import { bookHref, routes, videoHref } from "@/lib/routes";
-import { waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/core/commerce";
+import { getSetting } from "@/server/settings/queries";
 import { cn } from "@/lib/utils/cn";
 import { StoryChapters } from "./StoryChapters";
 
@@ -239,7 +240,10 @@ export async function AboutPillars({ pillars }: { pillars: IconRow[] }) {
 /** §4 Published works (130–156): sand band; three book covers (3 cols ≥900, 2 ≥600) with a
  *  WhatsApp "Ask about a copy" link each. */
 export async function AboutBooks({ books }: { books: Book[] }) {
-  const t = await getTranslations("about.books");
+  const [t, contact] = await Promise.all([
+    getTranslations("about.books"),
+    getSetting("contact"),
+  ]);
   return (
     <section data-screen-label="04 Published works" className="bg-s1 shadow-hair-y">
       <div className="mx-auto max-w-[1320px] px-[clamp(16px,4vw,32px)] py-[clamp(64px,9vw,128px)]">
@@ -281,7 +285,7 @@ export async function AboutBooks({ books }: { books: Book[] }) {
                   {b.line}
                 </span>
                 <a
-                  href={waLink(t("askText", { title: b.en }))}
+                  href={waLinkTo(contact.whatsapp, t("askText", { title: b.en }))}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="mt-1 inline-flex min-h-10 items-center gap-[7px] font-sans text-[13.5px] leading-none font-semibold text-em7 no-underline hover:text-em7"
@@ -354,7 +358,10 @@ export async function AboutMedia({ videos, cats }: { videos: Video[]; cats: Reco
 
 /** §6 Contact band (182–194): emerald; heading + Book / WhatsApp (row from 900, right-aligned). */
 export async function AboutCta() {
-  const t = await getTranslations("about.cta");
+  const [t, contact] = await Promise.all([
+    getTranslations("about.cta"),
+    getSetting("contact"),
+  ]);
   return (
     <section aria-label={t("label")} className="relative overflow-hidden bg-em7 text-em1">
       <MandalaBox col="#D9B96A" className="top-1/2 right-[-160px] size-[520px] -translate-y-1/2 opacity-10" />
@@ -374,7 +381,7 @@ export async function AboutCta() {
             {t("book")}
           </Link>
           <a
-            href={waLink()}
+            href={waLinkTo(contact.whatsapp)}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex h-[52px] items-center gap-[9px] rounded-btn px-5 font-sans text-[14.5px] leading-none font-semibold whitespace-nowrap text-g1 no-underline shadow-ring-g3 hover:bg-[rgba(217,185,106,.12)] hover:text-iv"

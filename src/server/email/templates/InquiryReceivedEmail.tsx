@@ -8,7 +8,7 @@ import {
   EmailButton,
   type ContactEmailInfo,
 } from "../components";
-import { waLink } from "@/lib/site";
+import { waLink, waLinkTo } from "@/lib/core/commerce";
 
 export type InquiryReceivedEmailProps = {
   locale: Locale;
@@ -185,7 +185,7 @@ export function InquiryReceivedEmail({
       </EmailText>
 
       <Section style={{ textAlign: "center", margin: "28px 0 10px 0" }}>
-        <EmailButton href={waLink()}>
+        <EmailButton href={contact?.whatsapp ? waLinkTo(contact.whatsapp) : waLink()}>
           {d.whatsappCta}
         </EmailButton>
       </Section>

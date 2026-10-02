@@ -9,9 +9,10 @@ import intents from "@/lib/data/intents.json";
 import { categoryHref, intentHref, productHref, serviceHref } from "@/lib/routes";
 import { fmt } from "@/lib/core/format";
 import { loc } from "@/lib/domain/loc";
-import { waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/core/commerce";
 import { useCatalog } from "@/stores/catalog";
 import type { Product } from "@/types/product";
+import { useSiteSettings } from "./SiteSettingsProvider";
 
 /* Panel shell (SiteChrome 94 / 148): hangs under the header; enters −8px 280 ms and staggers its
    `[data-col]` children (y10, 360 ms, 45 ms steps) — SiteChrome 485. */
@@ -70,6 +71,7 @@ const BRACELETS = ["pyrite", "citrine", "rose", "tourmaline", "tiger", "amethyst
 export function MegaShop({ close, keep }: { close: () => void; keep: () => void }) {
   const t = useTranslations("chrome.mega");
   const hi = useLocale() === "hi";
+  const { contact } = useSiteSettings();
   const byId = useCatalog((s) => s.byId);
   const products = useCatalog((s) => s.snap?.products ?? []);
   const nag = byId.get("nag12");
@@ -163,7 +165,7 @@ export function MegaShop({ close, keep }: { close: () => void; keep: () => void 
           <span className={catName}>{t("notSure")}</span>
           <p className="m-0 font-sans text-[14px] leading-[1.55] font-normal text-ink6">{t("notSureBody")}</p>
           <a
-            href={waLink()}
+            href={waLinkTo(contact.whatsapp)}
             target="_blank"
             rel="noopener noreferrer"
             className="mt-1 flex items-center gap-2 font-sans text-[13px] leading-none font-semibold text-em7 no-underline"

@@ -1,14 +1,31 @@
 import Image from "next/image";
+import { inArray } from "drizzle-orm";
 import { getTranslations } from "next-intl/server";
 import { Icon, type IconName } from "@/components/icons/Icon";
 import { MandalaG } from "@/components/ui/ornaments/Mandala";
 import { ArchClip, ArchFrame } from "@/components/signature/ArchFrame";
 import { PanditJi } from "@/components/signature/PanditJi";
+import { MediaImg } from "@/components/media/MediaImg";
+import { db } from "@/server/db/client";
+import { media } from "@/server/db/schema/core";
+import { getSetting } from "@/server/settings/queries";
+import { toMediaRef } from "@/server/media/refs";
 import { rng } from "@/lib/core/rng";
+import { loc } from "@/lib/domain/loc";
+import type { MediaRef } from "@/lib/domain/media";
 import { cn } from "@/lib/utils/cn";
 import { HeroArt } from "./HeroArt";
-import { HeroSlides } from "./HeroSlides";
+import { HeroSlides, type HeroSlideTextResolved } from "./HeroSlides";
 import { QuickActions } from "./QuickActions";
+
+export type HeroSlideProp = HeroSlideTextResolved & {
+  media?: MediaRef | null;
+};
+
+export type HeroProps = {
+  locale?: string;
+  slides?: HeroSlideProp[];
+};
 
 /* §1 Hero (Home.dc.html 34–184, layout L() 1366–1382, vHero 1393–1425).
    Layout breakpoints: <768 mobile · 768–1023 stacked (art 440px) · ≥1024 two columns, art right.
@@ -84,13 +101,58 @@ const CHAKRA = [
   { ring: "inner", amb: "spin:60" },
 ] as const;
 
-export async function Hero() {
+export async function Hero({ locale, slides }: HeroProps = {}) {
   const t = await getTranslations("home.hero");
   const trust: { k: "a" | "b" | "c"; icon: IconName; size: string }[] = [
     { k: "a", icon: "starF", size: "size-[15px]" },
     { k: "b", icon: "rudraksha", size: "size-4" },
     { k: "c", icon: "flame", size: "size-4" },
   ];
+
+  let effectiveSlides: HeroSlideProp[] | undefined = slides;
+  if (!effectiveSlides) {
+    const home = await getSetting("home");
+    if (home.hero) {
+      const mediaIds = [
+        home.hero.s1.mediaId,
+        home.hero.s2.mediaId,
+        home.hero.s3.mediaId,
+      ].filter((id): id is number => typeof id === "number" && id > 0);
+
+      const mediaMap = new Map<number, MediaRef>();
+      if (mediaIds.length > 0) {
+        const rows = await db
+          .select()
+          .from(media)
+          .where(inArray(media.id, mediaIds));
+        for (const row of rows) {
+          if (row.status === "ready") {
+            mediaMap.set(row.id, toMediaRef(row));
+          }
+        }
+      }
+
+      const locKey = locale === "hi" ? "hi" : "en";
+      effectiveSlides = (["s1", "s2", "s3"] as const).map((k) => {
+        const s = home.hero![k];
+        return {
+          key: k,
+          eyebrow: loc(s.eyebrow, locKey),
+          l1: loc(s.l1, locKey),
+          l2: loc(s.l2, locKey),
+          sub: loc(s.sub, locKey),
+          body: loc(s.body, locKey),
+          cta1: loc(s.cta1, locKey),
+          cta2: loc(s.cta2, locKey),
+          media: s.mediaId ? mediaMap.get(s.mediaId) ?? null : null,
+        };
+      });
+    }
+  }
+
+  const s1Slide = effectiveSlides?.find((x) => x.key === "s1");
+  const s2Slide = effectiveSlides?.find((x) => x.key === "s2");
+  const s3Slide = effectiveSlides?.find((x) => x.key === "s3");
 
   return (
     <section data-screen-label="01 Hero" data-slide="0" className="group/hero relative overflow-hidden bg-iv lg:h-[550px]">
@@ -110,16 +172,40 @@ export async function Hero() {
         aria-hidden="true"
         className="pointer-events-none invisible absolute inset-0 opacity-0 transition-[opacity,visibility] duration-700 group-data-[bg]/hero:visible group-data-[bg]/hero:opacity-100 motion-reduce:transition-none"
       >
-        {BANNERS.map((b) => (
+        {s2Slide?.media ? (
+          <MediaImg
+            media={s2Slide.media}
+            fill
+            sizes="100vw"
+            alt=""
+            className="object-cover opacity-0 transition-opacity duration-700 motion-reduce:transition-none group-data-[slide=1]/hero:opacity-100"
+          />
+        ) : (
           <Image
-            key={b.src}
-            src={b.src}
+            src="/images/hero/banner-2.webp"
             alt=""
             fill
             sizes="100vw"
-            className={cn("object-cover opacity-0 transition-opacity duration-700 motion-reduce:transition-none", b.on)}
+            className="object-cover opacity-0 transition-opacity duration-700 motion-reduce:transition-none group-data-[slide=1]/hero:opacity-100"
           />
-        ))}
+        )}
+        {s3Slide?.media ? (
+          <MediaImg
+            media={s3Slide.media}
+            fill
+            sizes="100vw"
+            alt=""
+            className="object-cover opacity-0 transition-opacity duration-700 motion-reduce:transition-none group-data-[slide=2]/hero:opacity-100"
+          />
+        ) : (
+          <Image
+            src="/images/hero/banner-3.webp"
+            alt=""
+            fill
+            sizes="100vw"
+            className="object-cover opacity-0 transition-opacity duration-700 motion-reduce:transition-none group-data-[slide=2]/hero:opacity-100"
+          />
+        )}
         <span className="absolute inset-0 block bg-[linear-gradient(180deg,rgba(10,31,26,.12)_0%,rgba(10,31,26,.5)_36%,rgba(10,31,26,.9)_58%)] lg:bg-[linear-gradient(90deg,rgba(10,31,26,.9)_0%,rgba(10,31,26,.66)_46%,rgba(10,31,26,.1)_100%)]" />
       </div>
 
@@ -128,33 +214,46 @@ export async function Hero() {
         <div className="relative order-0 h-[min(58svh,calc(min(100vw_-_32px,520px)_*_1.05_+_30px),calc(min(100vw_-_32px,520px)_*_1.14))] min-w-0 overflow-hidden pt-[34px] transition-[opacity,visibility] duration-500 group-data-[bg]/hero:invisible group-data-[bg]/hero:opacity-0 motion-reduce:transition-none lg:order-2 lg:h-auto lg:overflow-visible lg:pt-[34px]">
           <HeroArt className="relative mx-auto aspect-[4/5] w-[84%] max-w-full md:w-[440px] lg:w-[384px]">
             <div className="absolute inset-0 bg-n9 [clip-path:url(#hero-arch)]">
-              <span
-                aria-hidden="true"
-                className="absolute inset-0 block bg-[radial-gradient(58%_44%_at_50%_36%,#1C4A3D,rgba(10,31,26,0))]"
-              />
-              <span aria-hidden="true" data-px="0.1" className="absolute inset-x-0 top-[-6%] block h-[72%]">
-                <HeroSky />
-              </span>
-              <div
-                aria-hidden="true"
-                className="absolute top-[35.2%] left-1/2 aspect-square w-[72%] -translate-x-1/2 -translate-y-1/2"
-              >
-                {CHAKRA.map((c) => (
-                  <span key={c.ring} data-amb={c.amb} className="absolute inset-0 block">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      src={`/svg/chakra/${c.ring}-d9b96a.svg`}
-                      alt=""
-                      width={400}
-                      height={400}
-                      className="block size-full"
-                    />
+              {s1Slide?.media ? (
+                <MediaImg
+                  media={s1Slide.media}
+                  fill
+                  sizes="(min-width: 1024px) 384px, (min-width: 768px) 440px, 84vw"
+                  alt=""
+                  priority
+                  className="object-cover"
+                />
+              ) : (
+                <>
+                  <span
+                    aria-hidden="true"
+                    className="absolute inset-0 block bg-[radial-gradient(58%_44%_at_50%_36%,#1C4A3D,rgba(10,31,26,0))]"
+                  />
+                  <span aria-hidden="true" data-px="0.1" className="absolute inset-x-0 top-[-6%] block h-[72%]">
+                    <HeroSky />
                   </span>
-                ))}
-              </div>
-              <span className="absolute inset-0 block">
-                <PanditJi />
-              </span>
+                  <div
+                    aria-hidden="true"
+                    className="absolute top-[35.2%] left-1/2 aspect-square w-[72%] -translate-x-1/2 -translate-y-1/2"
+                  >
+                    {CHAKRA.map((c) => (
+                      <span key={c.ring} data-amb={c.amb} className="absolute inset-0 block">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={`/svg/chakra/${c.ring}-d9b96a.svg`}
+                          alt=""
+                          width={400}
+                          height={400}
+                          className="block size-full"
+                        />
+                      </span>
+                    ))}
+                  </div>
+                  <span className="absolute inset-0 block">
+                    <PanditJi />
+                  </span>
+                </>
+              )}
             </div>
             <span aria-hidden="true" className="pointer-events-none absolute inset-0 block">
               <ArchFrame />
@@ -173,7 +272,7 @@ export async function Hero() {
         </div>
 
         {/* Text column: slides + controls (client), trust row, mobile quick actions */}
-        <HeroSlides>
+        <HeroSlides slides={effectiveSlides}>
           <div className="flex flex-wrap items-center gap-x-[18px] gap-y-2.5 border-t border-s2 pt-[18px] font-sans text-[13px] leading-[1.3] font-semibold text-ink transition-colors duration-500 group-data-[bg]/hero:border-iv/20 group-data-[bg]/hero:text-iv">
             {trust.map((x, i) => (
               <span key={x.k} className="contents">

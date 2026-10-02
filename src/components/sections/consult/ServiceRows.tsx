@@ -5,7 +5,8 @@ import type { Mode, ModeKey, Service } from "@/lib/api/consult";
 import { isReport } from "@/lib/api/consult";
 import { fmt } from "@/lib/core/format";
 import { bookHref, serviceHref } from "@/lib/routes";
-import { waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/core/commerce";
+import { getSetting } from "@/server/settings/queries";
 import { EYEBROW, LABEL, UNDERLINE, rich } from "./ui";
 
 /* §2 "Four services" #services (Consultations.dc.html 72–118). Sand band. Heading + intro, then one
@@ -15,7 +16,10 @@ import { EYEBROW, LABEL, UNDERLINE, rich } from "./ui";
    sits in a row with the actions. A WhatsApp nudge closes the section. */
 
 export async function ServiceRows({ services, modes }: { services: Service[]; modes: Record<ModeKey, Mode> }) {
-  const t = await getTranslations("consult");
+  const [t, contact] = await Promise.all([
+    getTranslations("consult"),
+    getSetting("contact"),
+  ]);
 
   return (
     <section id="services" data-screen-label="Four services" className="scroll-mt-[60px] bg-s1 shadow-hair-y">
@@ -147,7 +151,7 @@ export async function ServiceRows({ services, modes }: { services: Service[]; mo
         <div className="mt-[26px] flex flex-wrap items-center gap-x-4 gap-y-2.5 font-sans text-[14px] leading-[1.5] font-medium text-ink6">
           <span>{t("services.unsure")}</span>
           <a
-            href={waLink()}
+            href={waLinkTo(contact.whatsapp)}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-[7px] font-semibold text-em7 no-underline"

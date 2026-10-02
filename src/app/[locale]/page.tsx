@@ -25,6 +25,7 @@ import {
   getRituals,
   getVideos,
 } from "@/lib/api/content";
+import { getSetting } from "@/server/settings/queries";
 
 /* Home (design/Home.dc.html). F5 built §1–5 (hero → 12 Nag spotlight), F6 §6–9 (rashifal wheel →
    floating stones), F7 §10–17 (courses → newsletter). The footer's newsletter is off on Home. */
@@ -37,6 +38,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   setRequestLocale(locale);
 
   const [
+    home,
     nag12,
     serviceCards,
     courses,
@@ -47,6 +49,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     reviews,
     videos,
   ] = await Promise.all([
+    getSetting("home"),
     getProduct("nag12"),
     getServiceCards(locale),
     getCourses(locale),
@@ -58,25 +61,27 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
     getVideos(locale),
   ]);
 
+  const { sections } = home;
+
   return (
     <>
-      <Hero />
-      <TrustMarquee />
-      <CategoryArches />
-      <Bestsellers />
-      {nag12 && <NagSpotlight product={nag12} buildNow={BUILD_NOW} />}
-      <RashifalSection buildNow={BUILD_NOW} />
-      <AstroTools buildNow={BUILD_NOW} />
-      <ConsultBento services={serviceCards} />
-      <Intentions />
-      <CourseTrack courses={courses} />
-      <RitualsTeaser rituals={rituals} />
-      <AboutTeaser />
-      <VideoSection videos={videos} />
-      <Testimonials testimonials={testimonials} reviews={reviews} />
-      <Journal articles={journal} />
-      <FaqSection items={faqItems} />
-      <NewsletterBand />
+      {sections.hero && <Hero locale={locale} />}
+      {sections.trust && <TrustMarquee />}
+      {sections.categories && <CategoryArches />}
+      {sections.bestsellers && <Bestsellers />}
+      {sections.nagSpotlight && nag12 && <NagSpotlight product={nag12} buildNow={BUILD_NOW} />}
+      {sections.rashifal && <RashifalSection buildNow={BUILD_NOW} />}
+      {sections.astroTools && <AstroTools buildNow={BUILD_NOW} />}
+      {sections.consult && <ConsultBento services={serviceCards} />}
+      {sections.intentions && <Intentions />}
+      {sections.courses && <CourseTrack courses={courses} />}
+      {sections.rituals && <RitualsTeaser rituals={rituals} />}
+      {sections.about && <AboutTeaser />}
+      {sections.videos && <VideoSection videos={videos} />}
+      {sections.testimonials && <Testimonials testimonials={testimonials} reviews={reviews} />}
+      {sections.journal && <Journal articles={journal} />}
+      {sections.faq && <FaqSection items={faqItems} />}
+      {sections.newsletter && <NewsletterBand />}
     </>
   );
 }

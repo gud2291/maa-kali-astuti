@@ -14,7 +14,8 @@ import { addDays, dfmt, dlong } from "@/lib/core/dates";
 import { fmt } from "@/lib/core/format";
 import { useHydrated } from "@/lib/hooks/useHydrated";
 import { bookHref } from "@/lib/routes";
-import { waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/site";
+import { useSiteSettings } from "@/components/layout/SiteSettingsProvider";
 import { cn } from "@/lib/utils/cn";
 import {
   bookingDefaults,
@@ -94,6 +95,7 @@ export function BookingFlow({
   const t = useTranslations("booking");
   const tc = useTranslations("consult");
   const locale = useLocale();
+  const { contact } = useSiteSettings();
   const hi = locale === "hi";
   const hydrated = useHydrated();
 
@@ -509,7 +511,7 @@ export function BookingFlow({
                 </button>
               ) : (
                 <a
-                  href={waLink()}
+                  href={waLinkTo(contact.whatsapp)}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2 font-sans text-[14px] leading-none font-semibold text-em7 no-underline"

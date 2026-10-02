@@ -1,13 +1,17 @@
 import { getTranslations } from "next-intl/server";
 import { Icon } from "@/components/icons/Icon";
 import { MandalaG } from "@/components/ui/ornaments/Mandala";
-import { waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/core/commerce";
+import { getSetting } from "@/server/settings/queries";
 import { SubButton } from "./VideosLibrary";
 
 /** Videos §4 Subscribe band (design/Videos.dc.html 147–159): emerald, faint gold mandala right;
  *  YouTube disc + line + handle, then Subscribe / WhatsApp (row from 900, right-aligned). */
 export async function SubscribeBand({ subs }: { subs: string }) {
-  const t = await getTranslations("videos.sub");
+  const [t, contact] = await Promise.all([
+    getTranslations("videos.sub"),
+    getSetting("contact"),
+  ]);
   return (
     <section aria-label={t("label")} className="relative overflow-hidden bg-em7 text-em1">
       <div
@@ -36,7 +40,7 @@ export async function SubscribeBand({ subs }: { subs: string }) {
         <div className="flex flex-wrap justify-start gap-2.5 w900:justify-end">
           <SubButton className="h-[52px]" />
           <a
-            href={waLink(t("waText"))}
+            href={waLinkTo(contact.whatsapp, t("waText"))}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex h-[52px] items-center gap-[9px] rounded-btn px-5 font-sans text-[14.5px] leading-none font-semibold text-g1 no-underline shadow-ring-g3 hover:bg-[rgba(217,185,106,.12)] hover:text-iv"

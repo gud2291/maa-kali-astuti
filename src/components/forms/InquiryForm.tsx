@@ -11,7 +11,8 @@ import { Field } from "@/components/ui/Field";
 import { Corner } from "@/components/ui/ornaments";
 import { TurnstileWidget } from "@/components/auth/TurnstileWidget";
 import { InquiryError, submitInquiry } from "@/lib/api/inquiry";
-import { WHATSAPP_DISPLAY, waLink } from "@/lib/site";
+import { waLinkTo } from "@/lib/site";
+import { useSiteSettings } from "@/components/layout/SiteSettingsProvider";
 import { cn } from "@/lib/utils/cn";
 import type { Locale } from "@/lib/domain/enums";
 import {
@@ -57,6 +58,7 @@ export function InquiryForm({
   const t = useTranslations("inquiry");
   const tErrors = useTranslations("errors");
   const locale = useLocale();
+  const { contact } = useSiteSettings();
   const uid = useId();
   const ritual = kind === "ritual";
   const schema = useMemo(() => inquirySchema(kind), [kind]);
@@ -385,7 +387,7 @@ export function InquiryForm({
               {phase === "sending" ? t("sending") : t(`${kind}.send`)}
             </button>
             <a
-              href={waLink()}
+              href={waLinkTo(contact.whatsapp)}
               target="_blank"
               rel="noopener noreferrer"
               className="flex items-center gap-2 font-sans text-[14px] leading-none font-semibold text-em7 no-underline"
@@ -422,9 +424,9 @@ export function InquiryForm({
           </span>
           <span className="max-w-[520px] font-sans text-[16px] leading-[1.65] text-pretty text-ink">
             {ritual
-              ? t("ritual.done", { wa: WHATSAPP_DISPLAY, lang: t(`langName.${sent.lang}`) })
+              ? t("ritual.done", { wa: contact.phoneDisplay, lang: t(`langName.${sent.lang}`) })
               : t("course.done", {
-                  wa: WHATSAPP_DISPLAY,
+                  wa: contact.phoneDisplay,
                   course: (() => {
                     const c = courses.find((x) => x.key === sent.course) ?? courses[0];
                     return c ? (locale === "hi" ? c.hi : c.en) : "";
@@ -436,7 +438,7 @@ export function InquiryForm({
           </span>
           <div className="mt-1.5 flex flex-wrap gap-2.5">
             <a
-              href={waLink()}
+              href={waLinkTo(contact.whatsapp)}
               target="_blank"
               rel="noopener noreferrer"
               className="flex h-12 items-center gap-[9px] rounded-btn bg-em7 px-5 font-sans text-[14px] leading-none font-semibold text-iv no-underline shadow-ring-gold hover:text-iv"
