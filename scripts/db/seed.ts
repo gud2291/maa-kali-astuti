@@ -5,6 +5,8 @@ import { SETTINGS_DEFAULTS } from "../../src/lib/validation/settings";
 import { POLICIES } from "../../src/lib/routes";
 import { productContentFor } from "./seed-content";
 import type { RudrakshaInfo } from "./seed-content";
+import { SEEDED_ARTICLES } from "./content/articles";
+import { SEEDED_POLICIES } from "./content/policies";
 import type { Loc, RichDoc, ServiceContent, CourseContent } from "../../src/lib/domain/types";
 import type {
   CategoryKey,
@@ -568,6 +570,80 @@ export async function main(): Promise<void> {
   );
   const pagesInserted = await runBatch(pagesStmts);
   console.info(`seed: pages +${pagesInserted}`);
+
+  /* 15. starter articles content */
+  let articlesUpdated = 0;
+  for (const art of SEEDED_ARTICLES) {
+    const existing = await db
+      .select({
+        id: schema.articles.id,
+        bodyEn: schema.articles.bodyEn,
+      })
+      .from(schema.articles)
+      .where(eq(schema.articles.slug, art.slug))
+      .limit(1);
+
+    if (existing.length > 0) {
+      const row = existing[0];
+      const hasContent =
+        row &&
+        row.bodyEn &&
+        Array.isArray(row.bodyEn.content) &&
+        row.bodyEn.content.length > 0;
+
+      if (!hasContent) {
+        await db
+          .update(schema.articles)
+          .set({
+            titleHi: art.titleHi,
+            excerptEn: art.excerptEn,
+            excerptHi: art.excerptHi,
+            bodyEn: art.bodyEn,
+            faq: art.faq,
+            readMins: art.readMins,
+            updatedAt: new Date(),
+          })
+          .where(eq(schema.articles.slug, art.slug));
+        articlesUpdated += 1;
+      }
+    }
+  }
+  console.info(`seed: articles content +${articlesUpdated}`);
+
+  /* 16. policy drafts */
+  let policiesUpdated = 0;
+  for (const pol of SEEDED_POLICIES) {
+    const existing = await db
+      .select({
+        slug: schema.pages.slug,
+        bodyEn: schema.pages.bodyEn,
+      })
+      .from(schema.pages)
+      .where(eq(schema.pages.slug, pol.slug))
+      .limit(1);
+
+    if (existing.length > 0) {
+      const row = existing[0];
+      const hasContent =
+        row &&
+        row.bodyEn &&
+        Array.isArray(row.bodyEn.content) &&
+        row.bodyEn.content.length > 0;
+
+      if (!hasContent) {
+        await db
+          .update(schema.pages)
+          .set({
+            titleHi: pol.titleHi,
+            bodyEn: pol.bodyEn,
+            updatedAt: new Date(),
+          })
+          .where(eq(schema.pages.slug, pol.slug));
+        policiesUpdated += 1;
+      }
+    }
+  }
+  console.info(`seed: policies content +${policiesUpdated}`);
 }
 
 main().catch((err: unknown) => {

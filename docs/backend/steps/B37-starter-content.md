@@ -26,17 +26,22 @@ Modify: `scripts/db/seed.ts` (two new sections at the end)
 - Every file starts with `/* [client-review] Draft content. */`.
 
 ## Tasks
-- [ ] T1. `content/rich.ts`: tiny builders `doc(...)`, `p(text | parts)`, `h2(text)`, `h3(text)`, `ul([...])`, `ol([...])`, `quote(text)`, `b(text)`, `i(text)`, `a(text, href)` producing valid `RichDoc` JSON (passes `richDocSchema`).
-- [ ] T2. `content/articles.ts`: for each of the 6 seeded slugs: `excerpt` EN/HI (≤ 300 chars), `titleHi`, `body` EN (500–800 words, 3–5 `h2` sections), `faq` (3 × Q/A EN + HI), `readMins` (from word count). Topics = the 6 titles in `articles.json` (rudraksha authenticity checks; crystal bracelet by rashi; Baglamukhi amulet rules; 5 vs 7 Mukhi; Bitter Havan method; why exact birth time matters).
-- [ ] T3. `content/policies.ts`: the 5 policies (EN bodies 400–900 words, `titleHi`).
-- [ ] T4. `seed.ts`: section 15 — for each article slug whose `body_en` has no content, update `excerpt_en/hi`, `title_hi`, `body_en`, `faq`, `read_mins`; section 16 — for each policy slug whose `body_en` has no content, update `body_en`, `title_hi`. Both print `seed: … +<updated>`.
-- [ ] T5. Finish per AGENTS.md §1 step 8 (Done-notes: word counts; "run `pnpm db:seed`").
+- [x] T1. `content/rich.ts`: tiny builders `doc(...)`, `p(text | parts)`, `h2(text)`, `h3(text)`, `ul([...])`, `ol([...])`, `quote(text)`, `b(text)`, `i(text)`, `a(text, href)` producing valid `RichDoc` JSON (passes `richDocSchema`). — antigravity
+- [x] T2. `content/articles.ts`: for each of the 6 seeded slugs: `excerpt` EN/HI (≤ 300 chars), `titleHi`, `body` EN (500–800 words, 3–5 `h2` sections), `faq` (3 × Q/A EN + HI), `readMins` (from word count). Topics = the 6 titles in `articles.json` (rudraksha authenticity checks; crystal bracelet by rashi; Baglamukhi amulet rules; 5 vs 7 Mukhi; Bitter Havan method; why exact birth time matters). — antigravity
+- [x] T3. `content/policies.ts`: the 5 policies (EN bodies 400–900 words, `titleHi`). — antigravity
+- [x] T4. `seed.ts`: section 15 — for each article slug whose `body_en` has no content, update `excerpt_en/hi`, `title_hi`, `body_en`, `faq`, `read_mins`; section 16 — for each policy slug whose `body_en` has no content, update `body_en`, `title_hi`. Both print `seed: … +<updated>`. — antigravity
+- [x] T5. Finish per AGENTS.md §1 step 8 (Done-notes: word counts; "run `pnpm db:seed`"). — antigravity
 
 ## Must not
 - No changes to app code. Never overwrite non-empty bodies.
 
 ## Done-notes
-_(agent: ≤ 12 lines)_
+- Created: `scripts/db/content/rich.ts`, `scripts/db/content/articles.ts`, `scripts/db/content/policies.ts`.
+- Modified: `scripts/db/seed.ts` (sections 15 & 16). Migration added: no.
+- Article words: 685, 549, 550, 518, 534, 554 (all 500–800 words, 4–5 h2 sections, excerpts ≤ 300 chars, 3 FAQs EN+HI).
+- Policy words: 490, 495, 498, 547, 449 (all 400–900 words, DPDP Act 2023 with 30-day palm photo deletion, 7-day returns, 12h reschedule, store fees/days).
+- Seed updates rows only if `bodyEn` has no content; non-destructive, second run updates +0.
+- Next step needs: run `pnpm db:seed`.
 
 ## Manual QA (user)
 1. `pnpm db:seed` → articles +6, policies +5 (second run +0).
