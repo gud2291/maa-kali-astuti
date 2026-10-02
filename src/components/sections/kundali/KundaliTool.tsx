@@ -18,16 +18,16 @@ import { Corner } from "@/components/ui/ornaments/Corner";
 import { MandalaG } from "@/components/ui/ornaments/Mandala";
 import type { Kundali } from "@/lib/astro/kundali";
 import type { SelectedPlace } from "@/components/forms/PlaceInput";
-import { computeChartAction } from "@/server/kundali/actions";
+import { computeChartAction, createKundaliOrderAction } from "@/server/kundali/actions";
+import { openRazorpay } from "@/lib/payments/razorpay-client";
+import { confirmPaymentAction } from "@/server/payments/actions";
 import { toKundali } from "@/lib/astro/from-snapshot";
-import { downloadKundali } from "@/lib/astro/kundali-download";
 import { t12 } from "@/lib/astro/slots";
 import { MON, MONH } from "@/lib/core/dates";
 import { fmt } from "@/lib/core/format";
 import { cn } from "@/lib/utils/cn";
 import { checkKundali99, type K99Draft, type K99Errors } from "@/lib/validation/astro";
 import { useUi } from "@/stores/ui";
-import { K99_MRP } from "./k99-data";
 import { KundaliForm } from "./KundaliForm";
 import { PaySheet, type PayApp, type PayState } from "./PaySheet";
 
@@ -74,9 +74,19 @@ type Props = {
   /** Server-rendered hero blocks (breadcrumb → price, and the facts list). */
   intro: ReactNode;
   facts: ReactNode;
+  priceInr?: number;
+  mrpInr?: number;
+  enabled?: boolean;
 };
 
-export function KundaliTool({ buildNow, intro, facts }: Props) {
+export function KundaliTool({
+  buildNow,
+  intro,
+  facts,
+  priceInr = 99,
+  mrpInr = 499,
+  enabled = true,
+}: Props) {
   const t = useTranslations("k99");
   const hiUi = useLocale() === "hi";
   const today = isoDay(
@@ -96,6 +106,8 @@ export function KundaliTool({ buildNow, intro, facts }: Props) {
   const [sheet, setSheet] = useState(false);
   const [pay, setPay] = useState<PayState>("idle");
   const [app, setApp] = useState<PayApp>("gpay");
+  const [orderRef, setOrderRef] = useState<string | null>(null);
+  const [accessKey, setAccessKey] = useState<string | null>(null);
 
   const failPay = useRef(false);
   const msgTimer = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
@@ -253,19 +265,79 @@ export function KundaliTool({ buildNow, intro, facts }: Props) {
     setPay("idle");
   };
 
-  const payNow = () => {
+  const payNow = async () => {
+    if (!enabled) {
+      useUi.getState().toast({
+        msg: hiUi ? "कुंडली सेवा वर्तमान में अनुपलब्ध है" : "Kundali orders are temporarily unavailable",
+        tone: "warn",
+      });
+      return;
+    }
+
     setPay("processing");
-    clearTimeout(payTimer.current);
-    payTimer.current = setTimeout(() => {
-      if (failPay.current) {
+
+    // QA ?pay=fail support (Task T6: The ?demo= params stay untouched)
+    if (failPay.current) {
+      setTimeout(() => setPay("failed"), 1200);
+      return;
+    }
+
+    try {
+      const res = await createKundaliOrderAction({
+        name: f.name,
+        dob: f.dob,
+        tob: f.unknown ? null : (f.tob || null),
+        tobUnknown: f.unknown,
+        place: {
+          name: f.place,
+          lat: city?.lat ?? 25.3176,
+          lon: city?.lon ?? 82.9739,
+          tz: city?.tz ?? "Asia/Kolkata",
+        },
+        reportLang: (f.lang as "en" | "hi") || "en",
+        phone: f.phone,
+        email: f.email || undefined,
+        locale: hiUi ? "hi" : "en",
+        payPref: app === "card" ? "card" : "upi",
+      });
+
+      if (!res.ok) {
         setPay("failed");
         return;
       }
+
+      const rzpRes = await openRazorpay(res.data.rzp);
+      if (rzpRes.status === "dismissed") {
+        setPay("idle");
+        return;
+      }
+      if (rzpRes.status === "failed") {
+        setPay("failed");
+        return;
+      }
+
+      const confirmRes = await confirmPaymentAction({
+        entity: "kundali",
+        ref: res.data.ref,
+        razorpay_order_id: rzpRes.razorpay_order_id,
+        razorpay_payment_id: rzpRes.razorpay_payment_id,
+        razorpay_signature: rzpRes.razorpay_signature,
+      });
+
+      if (!confirmRes.ok) {
+        setPay("failed");
+        return;
+      }
+
+      setOrderRef(res.data.ref);
+      setAccessKey(res.data.accessKey);
       setPay("idle");
       setSheet(false);
       setPhase("done");
       toPreview();
-    }, 1800);
+    } catch {
+      setPay("failed");
+    }
   };
 
   const closeSheet = useCallback(() => {
@@ -283,16 +355,10 @@ export function KundaliTool({ buildNow, intro, facts }: Props) {
   const hiReport = f.lang === "hi";
 
   const download = () => {
-    if (!K) return;
-    const dl = new Date(`${f.dob}T12:00`);
-    downloadKundali({
-      K,
-      name: f.name,
-      // The file is English (Georgia/Arial), whatever the site language.
-      birthLine: `${dl.getDate()} ${MON[dl.getMonth()]} ${dl.getFullYear()} · ${f.unknown || !f.tob ? "time unknown (noon)" : t12(f.tob)} · ${f.place.split(",")[0] || ""}`,
-      hi: hiReport,
+    useUi.getState().toast({
+      msg: hiUi ? "कृपया नीचे दिए गए डाउनलोड बटन से PDF प्राप्त करें" : "Please use the Download button below for your report PDF",
+      tone: "ok",
     });
-    useUi.getState().toast({ msg: t("preview.done.toast"), tone: "ok" });
   };
 
   const msgs = t.raw("tool.msgs") as string[];
@@ -476,6 +542,10 @@ export function KundaliTool({ buildNow, intro, facts }: Props) {
           birthLine={birthLine}
           done={done}
           phoneMask={phoneMask}
+          orderRef={orderRef ?? undefined}
+          accessKey={accessKey ?? undefined}
+          priceInr={priceInr}
+          mrpInr={mrpInr}
           onPay={() => {
             setSheet(true);
             setPay("idle");
@@ -489,9 +559,9 @@ export function KundaliTool({ buildNow, intro, facts }: Props) {
           <div className="flex items-center justify-between gap-3">
             <span className="flex flex-col gap-1">
               <span className="flex items-baseline gap-2">
-                <span className="font-sans text-[20px] leading-none font-bold text-em9">₹99</span>
+                <span className="font-sans text-[20px] leading-none font-bold text-em9">₹{priceInr}</span>
                 <span className="font-sans text-[13px] leading-none font-medium text-ink6 line-through">
-                  {fmt(K99_MRP)}
+                  {fmt(mrpInr)}
                 </span>
               </span>
               <span className="font-sans text-[12px] leading-[1.2] font-semibold text-ink6">{t("bar.sub")}</span>
@@ -517,6 +587,8 @@ export function KundaliTool({ buildNow, intro, facts }: Props) {
         <PaySheet
           name={f.name}
           phoneMask={phoneMask}
+          priceInr={priceInr}
+          mrpInr={mrpInr}
           pay={pay}
           app={app}
           onApp={setApp}

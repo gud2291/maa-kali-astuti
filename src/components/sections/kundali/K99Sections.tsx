@@ -11,7 +11,7 @@ import { fmt } from "@/lib/core/format";
 import { routes, serviceHref } from "@/lib/routes";
 import { waLink } from "@/lib/site";
 import { cn } from "@/lib/utils/cn";
-import { K99_CONTENTS, K99_MRP, K99_OFF, K99_SAMPLES } from "./k99-data";
+import { K99_CONTENTS, K99_SAMPLES } from "./k99-data";
 import { UNDERLINE_LINK } from "./ui";
 
 /* Server-rendered parts of the Kundali ₹99 page (Kundali-99.dc.html). The interactive hero card,
@@ -21,8 +21,15 @@ import { UNDERLINE_LINK } from "./ui";
 const H2 = "m-0 font-display font-normal tracking-[-.018em] text-balance font-soft";
 
 /** Hero intro (35–46): breadcrumb, eyebrow, h1, Devanagari line, ₹99 · MRP · 80% OFF · taxes. */
-export async function K99Intro() {
+export async function K99Intro({
+  priceInr = 99,
+  mrpInr = 499,
+}: {
+  priceInr?: number;
+  mrpInr?: number;
+} = {}) {
   const t = await getTranslations("k99");
+  const off = mrpInr > priceInr ? Math.round(((mrpInr - priceInr) / mrpInr) * 100) : 0;
   return (
     <>
       <nav
@@ -47,16 +54,18 @@ export async function K99Intro() {
         {t.rich("hero.title", rich("text-g3"))}
       </h1>
       <span lang="hi" className="font-deva text-[clamp(18px,2vw,22px)] leading-[1.35] text-g3">
-        आपकी संपूर्ण जन्म कुंडली, केवल ₹99 में
+        आपकी संपूर्ण जन्म कुंडली, केवल ₹{priceInr} में
       </span>
       <div className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1.5">
-        <span className="font-sans text-[40px] leading-none font-bold tracking-[-.01em] text-iv tabular">₹99</span>
+        <span className="font-sans text-[40px] leading-none font-bold tracking-[-.01em] text-iv tabular">₹{priceInr}</span>
         <span className="font-sans text-[17px] leading-none font-medium text-sg5 tabular line-through">
-          {fmt(K99_MRP)}
+          {fmt(mrpInr)}
         </span>
-        <span className="inline-flex h-6 items-center rounded-pill bg-sin px-2.5 font-sans text-[11px] leading-none font-bold tracking-[.06em] text-iv">
-          {t("hero.off", { n: K99_OFF })}
-        </span>
+        {off > 0 && (
+          <span className="inline-flex h-6 items-center rounded-pill bg-sin px-2.5 font-sans text-[11px] leading-none font-bold tracking-[.06em] text-iv">
+            {t("hero.off", { n: off })}
+          </span>
+        )}
         <span className="font-sans text-[12.5px] leading-none font-medium text-sg3">{t("hero.tax")}</span>
       </div>
     </>

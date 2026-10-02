@@ -79,6 +79,13 @@ export const NAV: NavItem[] = [
     group: "Consultations",
   },
   {
+    href: "/admin/kundali",
+    label: "Kundali Orders",
+    icon: "kundali",
+    perm: "kundali.view",
+    group: "Kundali",
+  },
+  {
     href: "/admin/staff",
     label: "Staff",
     icon: "user",

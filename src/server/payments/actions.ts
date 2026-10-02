@@ -4,7 +4,7 @@ import { z } from "zod";
 import { runAction, type ActionResult, AppError } from "@/server/result";
 import { db } from "@/server/db/client";
 import { orders } from "@/server/db/schema/commerce";
-import { bookings } from "@/server/db/schema/consult";
+import { bookings, kundaliOrders } from "@/server/db/schema/consult";
 import { eq } from "drizzle-orm";
 import { env } from "@/server/env";
 import { safeEqualHex, sha256Hex } from "@/server/ids";
@@ -26,7 +26,7 @@ export type RazorpayCheckoutData = {
 };
 
 const confirmPaymentSchema = z.object({
-  entity: z.enum(["order", "booking"]),
+  entity: z.enum(["order", "booking", "kundali"]),
   ref: z.string().min(1),
   razorpay_order_id: z.string().min(1),
   razorpay_payment_id: z.string().min(1),
@@ -96,6 +96,32 @@ export async function confirmPaymentAction(
       await dispatchPaid({
         entity: "booking",
         entityId: booking.id,
+        rzpOrderId: data.razorpay_order_id,
+        rzpPaymentId: data.razorpay_payment_id,
+        amountInr,
+        method: payment.method,
+      });
+    } else if (data.entity === "kundali") {
+      const [kOrder] = await db
+        .select()
+        .from(kundaliOrders)
+        .where(eq(kundaliOrders.ref, data.ref))
+        .limit(1);
+
+      if (!kOrder) {
+        throw new AppError("NOT_FOUND", "Kundali order not found");
+      }
+
+      if (kOrder.razorpayOrderId !== data.razorpay_order_id) {
+        throw new AppError("VALIDATION", "Razorpay order ID mismatch");
+      }
+
+      const payment = await fetchPayment(data.razorpay_payment_id);
+      const amountInr = Math.round(payment.amount / 100);
+
+      await dispatchPaid({
+        entity: "kundali",
+        entityId: kOrder.id,
         rzpOrderId: data.razorpay_order_id,
         rzpPaymentId: data.razorpay_payment_id,
         amountInr,

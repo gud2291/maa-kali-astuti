@@ -15,7 +15,8 @@ import { REPORT_PAGE_K99_SVG } from "@/lib/art/report-pages";
 import { fmt } from "@/lib/core/format";
 import { serviceHref } from "@/lib/routes";
 import { cn } from "@/lib/utils/cn";
-import { K99_MRP, K99_OFF, K99_PAGES } from "./k99-data";
+import { K99_PAGES } from "./k99-data";
+import { ReportStatus } from "./ReportStatus";
 import { UNDERLINE_LINK } from "./ui";
 
 /* Kundali ₹99 free preview (Kundali-99.dc.html 166–259), shown once a chart exists.
@@ -34,8 +35,12 @@ type Props = {
   birthLine: string;
   done: boolean;
   phoneMask: string;
+  orderRef?: string;
+  accessKey?: string;
+  priceInr?: number;
+  mrpInr?: number;
   onPay: () => void;
-  onDownload: () => void;
+  onDownload?: () => void;
 };
 
 const EYE = "font-sans text-[11px] leading-[1.2] font-semibold tracking-[.16em] uppercase hi:tracking-normal";
@@ -43,12 +48,27 @@ const COLS =
   "grid grid-cols-[minmax(0,1.3fr)_minmax(0,1fr)_48px_64px] gap-2 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)_56px_72px_minmax(0,1.25fr)]";
 const TH = "font-sans text-[10.5px] leading-[1.2] font-bold tracking-[.14em] text-g7 uppercase hi:tracking-normal";
 
-export function KundaliPreview({ K, name, hiReport, unknown, birthLine, done, phoneMask, onPay, onDownload }: Props) {
+export function KundaliPreview({
+  K,
+  name,
+  hiReport,
+  unknown,
+  birthLine,
+  done,
+  phoneMask,
+  orderRef,
+  accessKey,
+  priceInr = 99,
+  mrpInr = 499,
+  onPay,
+  onDownload,
+}: Props) {
   const t = useTranslations("k99.preview");
   const chartRef = useRef<HTMLDivElement>(null);
   const okRef = useRef<HTMLSpanElement>(null);
   const first = name.trim().split(/\s+/)[0] || "";
   const kkey = `${K.lagna}|${K.planets.map((p) => `${p.sign}:${p.house}`).join(",")}|${hiReport}`;
+  const off = mrpInr > priceInr ? Math.round(((mrpInr - priceInr) / mrpInr) * 100) : 0;
 
   // S12: prime before paint, draw once a quarter of the chart is visible; again for a new chart.
   useLayoutEffect(() => {
@@ -309,13 +329,15 @@ export function KundaliPreview({ K, name, hiReport, unknown, birthLine, done, ph
             </div>
             <div className="flex min-w-0 flex-col gap-3">
               <span className="flex flex-wrap items-baseline gap-x-3 gap-y-1.5">
-                <span className="font-sans text-[40px] leading-none font-bold text-iv tabular">₹99</span>
+                <span className="font-sans text-[40px] leading-none font-bold text-iv tabular">₹{priceInr}</span>
                 <span className="font-sans text-[16px] leading-none font-medium text-sg5 line-through">
-                  {fmt(K99_MRP)}
+                  {fmt(mrpInr)}
                 </span>
-                <span className="font-sans text-[12px] leading-none font-bold tracking-[.06em] text-g3">
-                  {t("unlock.save", { n: K99_OFF })}
-                </span>
+                {off > 0 && (
+                  <span className="font-sans text-[12px] leading-none font-bold tracking-[.06em] text-g3">
+                    {t("unlock.save", { n: off })}
+                  </span>
+                )}
               </span>
               <button
                 type="button"
@@ -329,6 +351,10 @@ export function KundaliPreview({ K, name, hiReport, unknown, birthLine, done, ph
               </button>
               <span className="font-sans text-[12.5px] leading-[1.5] font-medium text-sg3">{t("unlock.note")}</span>
             </div>
+          </div>
+        ) : orderRef && accessKey ? (
+          <div className="mt-[clamp(28px,4vw,44px)]">
+            <ReportStatus refCode={orderRef} accessKey={accessKey} name={name} hi={hiReport} />
           </div>
         ) : (
           <div className="mt-[clamp(28px,4vw,44px)] grid grid-cols-1 items-center gap-x-12 gap-y-6 rounded-btn bg-s1 p-[clamp(22px,3.5vw,40px)] shadow-[inset_0_0_0_1px_rgba(184,146,58,.55)] lg:grid-cols-[minmax(0,1.3fr)_minmax(0,.7fr)]">

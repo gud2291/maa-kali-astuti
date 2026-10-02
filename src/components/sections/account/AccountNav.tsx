@@ -35,6 +35,12 @@ const TABS: NavTab[] = [
     icon: "calendar",
   },
   {
+    href: "/account/kundali",
+    labelEn: "My Kundali",
+    labelHi: "मेरी जन्मपत्री",
+    icon: "kundali",
+  },
+  {
     href: "/account/addresses",
     labelEn: "Addresses",
     labelHi: "सहेजे गए पते",

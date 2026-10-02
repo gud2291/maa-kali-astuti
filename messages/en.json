@@ -2295,7 +2295,8 @@
       "orders": "My Orders",
       "addresses": "Saved Addresses",
       "profile": "Profile & Birth Details",
-      "wishlist": "Sacred Wishlist"
+      "wishlist": "Sacred Wishlist",
+      "kundali": "My Kundali"
     },
     "orders": {
       "title": "My Orders",
@@ -2327,6 +2328,13 @@
       "upcoming": "Upcoming Sessions",
       "past": "Past Sessions",
       "explore": "Explore Consultations"
+    },
+    "kundali": {
+      "title": "My Kundali",
+      "noKundali": "No Kundali reports ordered yet",
+      "explore": "Get Janam Kundali for ₹99",
+      "viewOnline": "View Online",
+      "downloadPdf": "Download PDF"
     }
   },
   "invoice": {

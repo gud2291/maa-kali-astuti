@@ -8,7 +8,6 @@ import { fmt } from "@/lib/core/format";
 import { isReduced } from "@/lib/hooks/useReducedMotion";
 import { waLink } from "@/lib/site";
 import { cn } from "@/lib/utils/cn";
-import { K99_MRP } from "./k99-data";
 
 /* Kundali ₹99 mock payment (Kundali-99.dc.html 342–389). A bottom sheet below 768 (radius 8 8 0 0,
    rises 40px) and a centred 440px dialog above (rises 16px), 380 ms EASE, over a 62% night scrim.
@@ -30,6 +29,8 @@ const APPS: [PayApp, string][] = [
 type Props = {
   name: string;
   phoneMask: string;
+  priceInr?: number;
+  mrpInr?: number;
   pay: PayState;
   app: PayApp;
   onApp: (a: PayApp) => void;
@@ -38,7 +39,18 @@ type Props = {
   onClose: () => void;
 };
 
-export function PaySheet({ name, phoneMask, pay, app, onApp, onPay, onRetry, onClose }: Props) {
+export function PaySheet({
+  name,
+  phoneMask,
+  priceInr = 99,
+  mrpInr = 499,
+  pay,
+  app,
+  onApp,
+  onPay,
+  onRetry,
+  onClose,
+}: Props) {
   const t = useTranslations("k99.sheet");
   const ref = useRef<HTMLDivElement>(null);
   const busy = pay === "processing";
@@ -118,8 +130,8 @@ export function PaySheet({ name, phoneMask, pay, app, onApp, onPay, onRetry, onC
         <div className="flex items-baseline justify-between gap-3 py-4">
           <span className="font-sans text-[13px] leading-[1.3] font-semibold text-ink6">{t("amount")}</span>
           <span className="flex items-baseline gap-2">
-            <span className="font-sans text-[14px] leading-none font-medium text-ink6 line-through">{fmt(K99_MRP)}</span>
-            <span className="font-sans text-[28px] leading-none font-bold text-em9 tabular">₹99</span>
+            <span className="font-sans text-[14px] leading-none font-medium text-ink6 line-through">{fmt(mrpInr)}</span>
+            <span className="font-sans text-[28px] leading-none font-bold text-em9 tabular">₹{priceInr}</span>
           </span>
         </div>
 

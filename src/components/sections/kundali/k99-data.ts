@@ -28,7 +28,3 @@ export const K99_CONTENTS: [string, string][] = [
   ["Remedies you can follow", "26–28"],
 ];
 
-/** Report price (design: ₹99, MRP M.fmt(499), 80% off). [client-confirm] */
-export const K99_PRICE = 99;
-export const K99_MRP = 499;
-export const K99_OFF = 80;
