@@ -14,18 +14,17 @@ import { useActionForm, useLeaveGuard } from "@/components/admin/form/useActionF
 import { createCouponAction, updateCouponAction } from "@/server/coupons/admin-actions";
 import { couponInputSchema, type CouponInput } from "@/lib/validation/coupon";
 import type { CouponRow } from "@/server/coupons/admin";
+import { istDayKey } from "@/lib/core/ist";
 
 export type CouponFormProps = {
   coupon?: CouponRow | null;
 };
 
+/** IST calendar day for the date input (coupon days are IST days). */
 function toDateString(d: Date | null | undefined): string {
   if (!d) return "";
-  try {
-    return new Date(d).toISOString().slice(0, 10);
-  } catch {
-    return "";
-  }
+  const t = new Date(d).getTime();
+  return Number.isNaN(t) ? "" : istDayKey(t);
 }
 
 export function CouponForm({ coupon }: CouponFormProps): React.JSX.Element {

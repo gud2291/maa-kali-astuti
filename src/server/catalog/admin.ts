@@ -17,7 +17,7 @@ import { db } from "@/server/db/client";
 import { categories, products, productMedia } from "@/server/db/schema/catalog";
 import { media } from "@/server/db/schema/core";
 import { orderItems } from "@/server/db/schema/commerce";
-import { requireAdmin, type AdminUser } from "@/server/auth/guards";
+import { requireAdmin } from "@/server/auth/guards";
 import { audit, diffOf } from "@/server/audit";
 import { newProductId } from "@/server/ids";
 import { AppError } from "@/server/result";
@@ -249,9 +249,8 @@ export async function listProductOptions(): Promise<{ id: string; name: string }
 
 export async function createProduct(
   input: ProductInput,
-  actorArg?: AdminUser,
 ): Promise<{ id: string }> {
-  const actor = actorArg ?? (await requireAdmin("products.edit"));
+  const actor = await requireAdmin("products.edit");
 
   const [existingSlug] = await db
     .select({ id: products.id })
@@ -260,7 +259,7 @@ export async function createProduct(
 
   if (existingSlug) {
     throw new AppError("CONFLICT", "Slug is already in use", {
-      fieldErrors: { slug: ["This slug is already in use"] },
+      slug: "This slug is already in use",
     });
   }
 
@@ -331,9 +330,8 @@ export async function createProduct(
 export async function updateProduct(
   id: string,
   input: ProductInput,
-  actorArg?: AdminUser,
 ): Promise<{ id: string }> {
-  const actor = actorArg ?? (await requireAdmin("products.edit"));
+  const actor = await requireAdmin("products.edit");
 
   const [existing] = await db.select().from(products).where(eq(products.id, id));
   if (!existing) {
@@ -348,7 +346,7 @@ export async function updateProduct(
 
     if (slugConflict && slugConflict.id !== id) {
       throw new AppError("CONFLICT", "Slug is already in use", {
-        fieldErrors: { slug: ["This slug is already in use"] },
+        slug: "This slug is already in use",
       });
     }
   }
@@ -476,9 +474,8 @@ export async function updateProduct(
 export async function setProductStatus(
   id: string,
   status: ProductStatus,
-  actorArg?: AdminUser,
 ): Promise<void> {
-  const actor = actorArg ?? (await requireAdmin("products.edit"));
+  const actor = await requireAdmin("products.edit");
 
   const [existing] = await db.select().from(products).where(eq(products.id, id));
   if (!existing) {
@@ -514,9 +511,8 @@ export async function setProductStatus(
 
 export async function duplicateProduct(
   id: string,
-  actorArg?: AdminUser,
 ): Promise<{ id: string }> {
-  const actor = actorArg ?? (await requireAdmin("products.edit"));
+  const actor = await requireAdmin("products.edit");
 
   const [existing] = await db.select().from(products).where(eq(products.id, id));
   if (!existing) {
@@ -524,7 +520,7 @@ export async function duplicateProduct(
   }
 
   const newId = newProductId();
-  let baseSlug = `${existing.slug}-copy`;
+  const baseSlug = `${existing.slug}-copy`;
   let candidateSlug = baseSlug;
   let counter = 1;
 
@@ -573,9 +569,8 @@ export async function adjustStock(
   id: string,
   delta: number,
   reason: string,
-  actorArg?: AdminUser,
 ): Promise<{ id: string; stock: number }> {
-  const actor = actorArg ?? (await requireAdmin("products.edit"));
+  const actor = await requireAdmin("products.edit");
 
   const [existing] = await db
     .select({ id: products.id, stock: products.stock, nameEn: products.nameEn })
@@ -613,9 +608,8 @@ export async function adjustStock(
 
 export async function deleteProduct(
   id: string,
-  actorArg?: AdminUser,
 ): Promise<void> {
-  const actor = actorArg ?? (await requireAdmin("products.edit"));
+  const actor = await requireAdmin("products.edit");
 
   const [orderItemRef] = await db
     .select({ id: orderItems.id })
@@ -642,8 +636,10 @@ export async function deleteProduct(
 
   const mediaIds = mediaRows.map((r) => r.mediaId);
 
-  await db.delete(productMedia).where(eq(productMedia.productId, id));
-  await db.delete(products).where(eq(products.id, id));
+  await db.batch([
+    db.delete(productMedia).where(eq(productMedia.productId, id)),
+    db.delete(products).where(eq(products.id, id)),
+  ]);
 
   if (mediaIds.length > 0) {
     after(async () => {
@@ -712,9 +708,8 @@ export async function getCategoryAdmin(
 export async function updateCategory(
   key: CategoryKey,
   input: CategoryInput,
-  actorArg?: AdminUser,
 ): Promise<{ key: CategoryKey }> {
-  const actor = actorArg ?? (await requireAdmin("products.edit"));
+  const actor = await requireAdmin("products.edit");
 
   const [existing] = await db
     .select()

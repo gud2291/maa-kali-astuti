@@ -61,8 +61,17 @@ Every step B01–B44 was done by `antigravity` (no Claude or mixed steps). Commi
 - [x] **B11 Admin shell + login** — root admin layout (noindex, theme colour, toaster), panel layout redirect, shell/sidebar/topbar/mobile nav, OTP admin login (always lands on `/admin`, no redirect param trust), 404. No findings.
 - [x] **B12 Admin UI kit** — all listed primitives and form fields, `useActionForm` exactly as specified, dev-only `/admin/kit`. Findings:
   - **H — build break:** the kit's demo form (`KitDemoForm`) was written as JSX inside `useActionForm.ts`. Rewritten with `createElement` (same fields, same toast-only action), file name kept as specified. (`src/components/admin/form/useActionForm.ts`)
-- [ ] B13 Admin: products & categories
-- [ ] B14 Admin: settings, coupons, staff
+- [x] **B13 Admin products & categories** — schemas with the listed limits, list/edit/create/duplicate/status/stock/delete, media order batch + removed media in `after()`, audit diffs, invalidation of `catalog` + `product:<id>`, dnd-kit image manager, category editor. Findings:
+  - **H — build break:** `new AppError("CONFLICT", "…", { fieldErrors: { slug: [...] } })` does not match `AppError(code, message?, fieldErrors?: Record<string, string>)` → type error. Now `{ slug: "This slug is already in use" }` (also shows inline on the slug field). (`src/server/catalog/admin.ts`)
+  - **M** every write took an optional `actorArg?: AdminUser` and skipped `requireAdmin("products.edit")` when it was passed — breaks ARCH §2 "every export first calls `requireAdmin(perm)`" and is an auth-bypass waiting to happen. Removed; every write now always calls `requireAdmin`. (`src/server/catalog/admin.ts`)
+  - L `deleteProduct` deleted links and the row in two round trips → now one `db.batch` (ARCH §5). `let` → `const` for an unchanged slug base.
+  - Note (not changed, spec'd): saving the product form writes the loaded `stock` value back; if an order sells a unit between opening and saving the form, that sale is overwritten. Staff should change stock with **Adjust stock** (atomic) — listed for the user in the Fix-list hint below.
+- [x] **B14 Admin settings, coupons, staff** — settings tabs/forms with the shared schemas, allowed-key list, coupon CRUD (unique code, delete only unused), staff add/role/status/remove with "no self-change" and "one active owner" rules, session revoke, invite email in `after()`. Findings:
+  - **H — build break:** `new AppError("CONFLICT", { message: … })` / `{ code: … }` / `{ reason: … }` (object as the message argument) in 9 places → type errors. Fixed to `AppError(code, "message")`; the duplicate coupon code now also sets `fieldErrors.code`. (`src/server/staff/admin.ts`, `src/server/coupons/admin.ts`)
+  - **M** coupon start/end dates from the date inputs were parsed as **UTC midnight** → a coupon "ending 31 Oct" stopped at 05:30 IST on 31 Oct, and the edit form showed UTC days. Now start = 00:00 IST, end = 23:59:59 IST of the chosen day, and the form shows IST days. (`src/lib/validation/coupon.ts`, `src/components/admin/coupons/CouponForm.tsx`)
+  - L `notify.adminEmails` was validated as email only in the browser; the shared schema now requires valid emails (max 10). (`src/lib/validation/settings.ts`)
+  - L (left) `updateSetting` / `writeSetting` accept an optional actor (same pattern as B13). No caller passes one from client input; this file was being edited by someone else during the audit, so it is left for B46.
+  - L (left) `CouponForm` keeps two `as unknown as Date` casts for the date inputs (RULES §1). Needs a form-type refactor with `tsc` → B46.
 - [ ] B15 Product page
 - [ ] B16 Order engine
 - [ ] B17 Cart + checkout UI
@@ -103,6 +112,8 @@ Every step B01–B44 was done by `antigravity` (no Claude or mixed steps). Commi
 - `src/server/auth/actions.ts`, `src/server/email/send.ts` (B09)
 - `src/server/media/service.ts`, `src/lib/validation/media.ts` (B10)
 - `src/components/admin/form/useActionForm.ts` (B12)
+- `src/server/catalog/admin.ts` (B13)
+- `src/server/staff/admin.ts`, `src/server/coupons/admin.ts`, `src/lib/validation/coupon.ts`, `src/components/admin/coupons/CouponForm.tsx`, `src/lib/validation/settings.ts` (B14)
 - JSX → `createElement` (B09 finding): `src/server/orders/emails.ts`, `src/server/bookings/emails.ts`, `src/server/kundali/emails.ts`, `src/server/inquiries/service.ts`, `src/server/messages/actions.ts`, `src/server/cron/jobs.ts`
 
 ## Fix-list items added for the user

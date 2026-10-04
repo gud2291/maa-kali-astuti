@@ -1,10 +1,15 @@
 import { z } from "zod";
 import { COUPON_KINDS } from "@/lib/domain/enums";
+import { istWallToUtc } from "@/lib/core/ist";
 
-const dateOrNull = z
-  .union([z.date(), z.string(), z.null(), z.undefined()])
-  .transform((val) => {
+/** Admin date inputs are IST calendar days: a coupon starts at 00:00 IST and ends at 23:59:59 IST. */
+const istDayOrNull = (edge: "start" | "end") =>
+  z.union([z.date(), z.string(), z.null(), z.undefined()]).transform((val) => {
     if (!val || val === "") return null;
+    if (typeof val === "string" && /^\d{4}-\d{2}-\d{2}$/.test(val)) {
+      const start = istWallToUtc(val, "00:00");
+      return edge === "start" ? start : new Date(start.getTime() + 86_400_000 - 1);
+    }
     const d = new Date(val);
     return isNaN(d.getTime()) ? null : d;
   });
@@ -33,8 +38,8 @@ export const couponInputSchema = z
       .min(0, "Minimum cart amount must be 0 or more")
       .default(0),
     maxDiscountInr: positiveIntOrNull,
-    startsAt: dateOrNull,
-    endsAt: dateOrNull,
+    startsAt: istDayOrNull("start"),
+    endsAt: istDayOrNull("end"),
     usageLimit: positiveIntOrNull,
     perCustomerLimit: positiveIntOrNull,
     firstOrderOnly: z.boolean().default(false),

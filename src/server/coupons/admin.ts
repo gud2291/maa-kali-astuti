@@ -129,7 +129,9 @@ export async function createCoupon(input: CouponInput): Promise<CouponRow> {
     .limit(1);
 
   if (existing.length > 0) {
-    throw new AppError("CONFLICT", { code: "A coupon with this code already exists" });
+    throw new AppError("CONFLICT", "A coupon with this code already exists", {
+      code: "A coupon with this code already exists",
+    });
   }
 
   const [row] = await db
@@ -187,7 +189,9 @@ export async function updateCoupon(
       .limit(1);
 
     if (conflict.length > 0) {
-      throw new AppError("CONFLICT", { code: "A coupon with this code already exists" });
+      throw new AppError("CONFLICT", "A coupon with this code already exists", {
+        code: "A coupon with this code already exists",
+      });
     }
   }
 
@@ -278,9 +282,7 @@ export async function deleteCoupon(id: number): Promise<void> {
   }
 
   if (prev.usedCount > 0) {
-    throw new AppError("CONFLICT", {
-      reason: "Cannot delete a coupon that has already been used. Please deactivate it instead.",
-    });
+    throw new AppError("CONFLICT", "Cannot delete a coupon that has already been used. Please deactivate it instead.");
   }
 
   await db.delete(coupons).where(eq(coupons.id, id));

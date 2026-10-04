@@ -55,7 +55,7 @@ export const seoSettingsSchema = z.object({
 });
 
 export const notifySettingsSchema = z.object({
-  adminEmails: z.array(z.string().max(120)),
+  adminEmails: z.array(z.email().max(120)).max(10),
   orderAlerts: z.boolean(),
   bookingAlerts: z.boolean(),
   inquiryAlerts: z.boolean(),

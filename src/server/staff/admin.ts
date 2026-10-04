@@ -126,9 +126,7 @@ export async function changeRole(
   const admin = await requireAdmin("staff.manage");
 
   if (userId === admin.id) {
-    throw new AppError("FORBIDDEN", {
-      message: "You cannot change your own staff role",
-    });
+    throw new AppError("FORBIDDEN", "You cannot change your own staff role");
   }
 
   const existingRows = await db
@@ -149,9 +147,7 @@ export async function changeRole(
       .where(and(eq(users.role, "owner"), eq(users.status, "active")));
 
     if ((ownerCount?.count ?? 0) <= 1) {
-      throw new AppError("CONFLICT", {
-        message: "At least one active owner must remain",
-      });
+      throw new AppError("CONFLICT", "At least one active owner must remain");
     }
   }
 
@@ -180,9 +176,7 @@ export async function setStaffStatus(
   const admin = await requireAdmin("staff.manage");
 
   if (userId === admin.id) {
-    throw new AppError("FORBIDDEN", {
-      message: "You cannot change your own account status",
-    });
+    throw new AppError("FORBIDDEN", "You cannot change your own account status");
   }
 
   const existingRows = await db
@@ -203,9 +197,7 @@ export async function setStaffStatus(
       .where(and(eq(users.role, "owner"), eq(users.status, "active")));
 
     if ((ownerCount?.count ?? 0) <= 1) {
-      throw new AppError("CONFLICT", {
-        message: "At least one active owner must remain",
-      });
+      throw new AppError("CONFLICT", "At least one active owner must remain");
     }
   }
 
@@ -235,9 +227,7 @@ export async function removeStaff(userId: number): Promise<void> {
   const admin = await requireAdmin("staff.manage");
 
   if (userId === admin.id) {
-    throw new AppError("FORBIDDEN", {
-      message: "You cannot remove yourself from staff",
-    });
+    throw new AppError("FORBIDDEN", "You cannot remove yourself from staff");
   }
 
   const existingRows = await db
@@ -258,9 +248,7 @@ export async function removeStaff(userId: number): Promise<void> {
       .where(and(eq(users.role, "owner"), eq(users.status, "active")));
 
     if ((ownerCount?.count ?? 0) <= 1) {
-      throw new AppError("CONFLICT", {
-        message: "At least one active owner must remain",
-      });
+      throw new AppError("CONFLICT", "At least one active owner must remain");
     }
   }
 
