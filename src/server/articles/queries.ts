@@ -100,10 +100,31 @@ export const getJournalRows: (limit: number) => Promise<JournalRow[]> = cached(
 );
 
 async function fetchArticleList(): Promise<ArticleListItem[]> {
+  // List columns only — the rich-text bodies stay out of this (≤ 200 rows) cache entry.
   const rows = await db
     .select({
-      article: articles,
-      coverMedia: media,
+      article: {
+        id: articles.id,
+        slug: articles.slug,
+        category: articles.category,
+        titleEn: articles.titleEn,
+        titleHi: articles.titleHi,
+        excerptEn: articles.excerptEn,
+        excerptHi: articles.excerptHi,
+        coverMediaId: articles.coverMediaId,
+        legacyArt: articles.legacyArt,
+        readMins: articles.readMins,
+        publishedAt: articles.publishedAt,
+      },
+      coverMedia: {
+        id: media.id,
+        variants: media.variants,
+        width: media.width,
+        height: media.height,
+        blur: media.blur,
+        altEn: media.altEn,
+        altHi: media.altHi,
+      },
     })
     .from(articles)
     .leftJoin(media, eq(articles.coverMediaId, media.id))

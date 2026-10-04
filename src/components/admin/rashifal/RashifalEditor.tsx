@@ -14,7 +14,7 @@ import {
   getCoverageAction,
 } from "@/server/rashifal/admin-actions";
 import type { RashifalAdminEntry, PeriodCoverage } from "@/server/rashifal/admin";
-import { periodStart } from "@/server/rashifal/periods";
+import { periodStartKey as periodStart } from "@/lib/core/ist";
 import { addDaysKey } from "@/lib/core/ist";
 import { cn } from "@/lib/utils/cn";
 

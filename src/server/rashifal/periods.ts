@@ -2,7 +2,7 @@ import "server-only";
 
 import type { RashifalPeriod } from "@/lib/domain/enums";
 import type { Period as UiPeriod } from "@/lib/astro/predict";
-import { addDaysKey, weekdayOfKey } from "@/lib/core/ist";
+import { addDaysKey, periodStartKey } from "@/lib/core/ist";
 
 /**
  * Returns the canonical start date string (YYYY-MM-DD) for a given period and date.
@@ -12,18 +12,7 @@ import { addDaysKey, weekdayOfKey } from "@/lib/core/ist";
  * - year: yyyy-01-01
  */
 export function periodStart(period: RashifalPeriod, dayKey: string): string {
-  if (period === "day") {
-    return dayKey;
-  }
-  if (period === "week") {
-    const wd = weekdayOfKey(dayKey);
-    const daysSinceMonday = (wd + 6) % 7;
-    return addDaysKey(dayKey, -daysSinceMonday);
-  }
-  if (period === "month") {
-    return `${dayKey.slice(0, 7)}-01`;
-  }
-  return `${dayKey.slice(0, 4)}-01-01`;
+  return periodStartKey(period, dayKey);
 }
 
 /**

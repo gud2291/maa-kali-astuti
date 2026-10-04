@@ -126,8 +126,14 @@ Two throw-away scripts (not committed) were run over `src/`: (1) every local imp
 - [x] **B34 Home & site settings** — sections/hero/announcement through `writeSetting`, `invalidate(settings)`, `SiteSettingsProvider` loaded in the locale layout, WhatsApp/social links from settings, announcement and hero overrides with `renderEm` (no HTML injection). Findings:
   - **H — stored XSS:** announcement link `href` (editable by any `content.edit` user) and the social URLs were free strings, rendered as `<a href>` on every storefront page — a `javascript:` link would run in the owner's browser on the same origin as `/admin`. The shared settings schema now only accepts `https?://…` or a site path (`/…`, not `//`) for announcement links and `https?://` for social links. (`src/lib/validation/settings.ts`)
   - Found outside this audit (someone else's uncommitted working-tree fix, not touched here): "Reset to default" for hero/announcement wrote `null` into the NOT NULL `settings.value` column → `writeSetting` now deletes the row instead (and the seed skips null defaults).
-- [ ] B35 Rashifal manager
-- [ ] B36 Blog, policies, FAQ
+- [x] **B35 Rashifal manager** — period start/UI mapping, cached `getRashifal`, `/api/rashifal` (date clamped ±2 days, CDN header), client hook with no layout shift, schema (start must equal the period start), batch upsert on `rashifal_uniq`, coverage strip. Finding:
+  - **H — build break:** the client `RashifalEditor` imported `periodStart` from `src/server/rashifal/periods.ts`, which starts with `import "server-only"` → the admin bundle fails. The pure date rule now lives in the isomorphic `src/lib/core/ist.ts` (`periodStartKey`); `periods.ts` keeps `periodStart` (same signature) delegating to it, and the editor imports the isomorphic one. (`src/lib/core/ist.ts`, `src/server/rashifal/periods.ts`, `src/components/admin/rashifal/RashifalEditor.tsx`)
+- [x] **B36 Blog, policies, FAQ, editor** — recursive `richDocSchema` (node types, heading 2–3, safe link schemes, media-base images, 2000-node cap) enforced in the article/page actions, element-only `RichText`, Tiptap editor via `next/dynamic`, article/page admin with old+new slug invalidation, static blog/article/policy/FAQ pages. Findings:
+  - **H — type error:** `AppError("SLUG_TAKEN")` → `CONFLICT` with `fieldErrors.slug`. (`src/server/articles/admin.ts`)
+  - **M** `getArticleList()` selected whole article rows incl. both rich-text bodies for up to 200 articles into one cache entry (RULES §3; risks the 2 MB cache-entry limit as the blog grows). Now list columns only. (`src/server/articles/queries.ts`)
+  - **M** the storefront `ArticleView` used the **admin** toast (not mounted on the storefront → "link copied" never showed) with English-only text. Now the storefront toast with `pdp.linkCopied` / `errors.INTERNAL`. (`src/components/sections/blog/ArticleView.tsx`)
+  - L `RichText` now re-checks link schemes when rendering (defence in depth for seeded/old rows). (`src/components/content/RichText.tsx`)
+  - L (left) `ArticleView` still has a few English-only labels (breadcrumb "Home", "Copy Link") → B46.
 - [ ] B37 Starter content
 - [ ] B38 Reviews
 - [ ] B39 Dashboard, badges, search
@@ -158,6 +164,9 @@ Two throw-away scripts (not committed) were run over `src/`: (1) every local imp
 - `src/lib/validation/kundali.ts` (B25/B30), `src/components/sections/kundali/KundaliTool.tsx`, `src/app/api/kundali/[ref]/generate/route.ts` (B30)
 - `src/server/inquiries/links.ts`, `src/server/inquiries/admin-actions.ts` (B31)
 - `src/lib/validation/settings.ts` (B34)
+- `src/lib/core/ist.ts`, `src/server/rashifal/periods.ts`, `src/components/admin/rashifal/RashifalEditor.tsx` (B35)
+- `src/server/articles/admin.ts`, `src/server/articles/queries.ts`, `src/components/sections/blog/ArticleView.tsx`, `src/components/content/RichText.tsx` (B36)
+- `src/components/sections/kundali/KundaliTool.tsx` toast tones `warn`/`rose` → `info`/`err` (B30, type error)
 - `src/server/health.ts` (B40), `src/server/email/templates/BookingReminderEmail.tsx` (B41)
 - JSX → `createElement` (B09 finding): `src/server/orders/emails.ts`, `src/server/bookings/emails.ts`, `src/server/kundali/emails.ts`, `src/server/inquiries/service.ts`, `src/server/messages/actions.ts`, `src/server/cron/jobs.ts`
 

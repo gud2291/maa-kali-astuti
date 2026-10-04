@@ -68,3 +68,12 @@ export function formatIst(
 
   return new Intl.DateTimeFormat(loc, opts).format(dt);
 }
+
+/** Start day of a rashifal period: day → itself, week → Monday, month → 1st, year → 1 Jan.
+ *  Isomorphic (the admin editor snaps its date picker with it). */
+export function periodStartKey(period: "day" | "week" | "month" | "year", dayKey: string): string {
+  if (period === "day") return dayKey;
+  if (period === "week") return addDaysKey(dayKey, -((weekdayOfKey(dayKey) + 6) % 7));
+  if (period === "month") return `${dayKey.slice(0, 7)}-01`;
+  return `${dayKey.slice(0, 4)}-01-01`;
+}

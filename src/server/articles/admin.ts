@@ -204,7 +204,7 @@ export async function createArticle(
     .limit(1);
 
   if (existing.length > 0) {
-    throw new AppError("SLUG_TAKEN");
+    throw new AppError("CONFLICT", "Slug is already in use", { slug: "This slug is already in use" });
   }
 
   const publishedAt =
@@ -279,7 +279,7 @@ export async function updateArticle(
       .limit(1);
 
     if (slugClash.length > 0) {
-      throw new AppError("SLUG_TAKEN");
+      throw new AppError("CONFLICT", "Slug is already in use", { slug: "This slug is already in use" });
     }
   }
 

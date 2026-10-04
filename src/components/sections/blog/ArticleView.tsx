@@ -11,7 +11,7 @@ import { ProductsMentioned } from "./ProductsMentioned";
 import { FaqList } from "@/components/ui/FaqList";
 import { ARTICLE_CATEGORY_LABELS } from "@/lib/domain/labels";
 import { formatIst } from "@/lib/core/ist";
-import { toast } from "@/components/admin/ui/toast";
+import { useUi } from "@/stores/ui";
 import type { ArticleDetail, ArticleListItem } from "@/server/articles/queries";
 import type { ProductCardData } from "@/components/commerce/ProductCard";
 
@@ -27,6 +27,8 @@ export function ArticleView({
   products,
 }: ArticleViewProps): React.JSX.Element {
   const t = useTranslations("blog");
+  const tp = useTranslations("pdp");
+  const te = useTranslations("errors");
   const locale = useLocale();
   const isHi = locale === "hi";
 
@@ -72,10 +74,10 @@ export function ArticleView({
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
-      toast.ok("Article link copied to clipboard");
+      useUi.getState().toast({ msg: tp("linkCopied"), tone: "ok" });
       setTimeout(() => setCopied(false), 2500);
     } catch {
-      toast.err("Failed to copy link");
+      useUi.getState().toast({ msg: te("INTERNAL"), tone: "err" });
     }
   };
 

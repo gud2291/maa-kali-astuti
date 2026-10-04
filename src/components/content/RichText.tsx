@@ -2,6 +2,9 @@ import React from "react";
 import type { RichDoc, RichNode, RichMark } from "@/lib/domain/types";
 import { cn } from "@/lib/utils/cn";
 
+/** Same rule as `richDocSchema`: only http(s), mailto and site paths become links (defence in depth). */
+const SAFE_HREF = /^(https?:\/\/|mailto:|\/)/;
+
 export function slugifyText(text: string): string {
   const slug = text
     .toLowerCase()
@@ -59,7 +62,7 @@ function renderMarks(text: string, marks?: RichMark[]): React.ReactNode {
       current = <strong>{current}</strong>;
     } else if (mark.type === "italic") {
       current = <em className="italic hi:not-italic">{current}</em>;
-    } else if (mark.type === "link" && mark.attrs?.href) {
+    } else if (mark.type === "link" && mark.attrs?.href && SAFE_HREF.test(mark.attrs.href)) {
       const href = mark.attrs.href;
       const isExternal = href.startsWith("http://") || href.startsWith("https://");
       current = (

@@ -186,7 +186,7 @@ export function KundaliTool({
         toPreview();
       } else {
         setPhase("form");
-        useUi.getState().toast({ msg: "Could not generate Kundali. Please check details.", tone: "rose" });
+        useUi.getState().toast({ msg: "Could not generate Kundali. Please check details.", tone: "err" });
       }
     }, 5300);
   };
@@ -266,7 +266,7 @@ export function KundaliTool({
     if (!enabled) {
       useUi.getState().toast({
         msg: hiUi ? "कुंडली सेवा वर्तमान में अनुपलब्ध है" : "Kundali orders are temporarily unavailable",
-        tone: "warn",
+        tone: "info",
       });
       return;
     }
