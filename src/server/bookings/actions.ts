@@ -43,15 +43,16 @@ export async function createBookingAction(
     const ip = await clientIp();
     await rateLimit("booking:ip", ip, 10, 600);
 
+    // Check before creating the row, so an unconfigured store never holds a slot.
+    if (!env.RAZORPAY_KEY_ID || !env.RAZORPAY_KEY_SECRET) {
+      throw new AppError("NOT_CONFIGURED", "Razorpay is not configured");
+    }
+
     const customer = await getCustomer();
     const { bookingId, ref, accessKey, priceInr } = await createBooking(data, {
       userId: customer?.id ?? null,
       ip,
     });
-
-    if (!env.RAZORPAY_KEY_ID || !env.RAZORPAY_KEY_SECRET) {
-      throw new AppError("NOT_CONFIGURED", "Razorpay is not configured");
-    }
 
     const rzpOrder = await createRzpOrder({
       amountInr: priceInr,

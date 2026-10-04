@@ -1,6 +1,6 @@
 import "server-only";
 import { after } from "next/server";
-import { and, eq, gt, lt, ne, sql } from "drizzle-orm";
+import { and, eq, gt, inArray, lt, ne, sql } from "drizzle-orm";
 import { db } from "@/server/db/client";
 import { bookings } from "@/server/db/schema/consult";
 import { payments } from "@/server/db/schema/commerce";
@@ -10,10 +10,24 @@ import { accessKeyFor, refCode, sha256Hex } from "@/server/ids";
 import { claimMedia } from "@/server/media/service";
 import { AppError } from "@/server/result";
 import { log } from "@/server/log";
-import { istDayKey, addDaysKey, weekdayOfKey } from "@/lib/core/ist";
+import { istDayKey, istWallToUtc, addDaysKey, weekdayOfKey } from "@/lib/core/ist";
+import { getDaySlots } from "./availability";
 import type { BookingCreateInput } from "@/lib/validation/booking";
 import type { BookingDetailsRecord } from "@/lib/domain/types";
 import { sendBookingConfirmed, sendBookingRescheduled } from "./emails";
+
+/** The start must be one of the day's offered, free start times (open day, window, lead time, not blocked). */
+async function assertOfferedSlot(
+  serviceKey: BookingCreateInput["serviceKey"],
+  tierKey: BookingCreateInput["tierKey"],
+  start: Date,
+): Promise<void> {
+  if (Number.isNaN(start.getTime())) throw new AppError("SLOT_TAKEN");
+  const day = istDayKey(start);
+  const slots = await getDaySlots({ serviceKey, tierKey, day });
+  const offered = slots.some((s) => s.free && istWallToUtc(day, s.t).getTime() === start.getTime());
+  if (!offered) throw new AppError("SLOT_TAKEN");
+}
 
 export type CreateBookingContext = {
   userId: number | null;
@@ -69,6 +83,13 @@ export async function createBooking(
 
   const emailVal = input.details.email ? input.details.email.trim().toLowerCase() : null;
   const palmMediaIds = input.palms.map((p) => p.mediaId);
+
+  if (input.mode !== "report") {
+    if (!input.start) {
+      throw new AppError("VALIDATION", "Start time is required for live sessions");
+    }
+    await assertOfferedSlot(input.serviceKey, input.tierKey, new Date(input.start));
+  }
 
   let bookingId: number | null = null;
   let chosenRef = "";
@@ -202,7 +223,9 @@ export async function markBookingPaid(opts: {
     throw new AppError("NOT_FOUND", "Booking not found");
   }
 
-  if (booking.status !== "pending_payment") {
+  // A payment can arrive after the cron expired the hold: the money is taken, so still confirm
+  // (the clash check below flags an overlap for the admin).
+  if (booking.status !== "pending_payment" && booking.status !== "expired") {
     return { first: false, bookingId: booking.id };
   }
 
@@ -260,7 +283,7 @@ export async function markBookingPaid(opts: {
     .where(
       and(
         eq(bookings.id, opts.bookingId),
-        eq(bookings.status, "pending_payment"),
+        inArray(bookings.status, ["pending_payment", "expired"]),
       ),
     )
     .returning({ id: bookings.id });
@@ -269,16 +292,22 @@ export async function markBookingPaid(opts: {
     return { first: false, bookingId: booking.id };
   }
 
-  await db.insert(payments).values({
-    entity: "booking",
-    entityId: booking.id,
-    provider: "razorpay",
-    rzpOrderId: opts.rzpOrderId,
-    rzpPaymentId: opts.rzpPaymentId,
-    amountInr: opts.amountInr,
-    status: "captured",
-    method: opts.method ?? null,
-  });
+  await db
+    .insert(payments)
+    .values({
+      entity: "booking",
+      entityId: booking.id,
+      provider: "razorpay",
+      rzpOrderId: opts.rzpOrderId,
+      rzpPaymentId: opts.rzpPaymentId,
+      amountInr: opts.amountInr,
+      status: "captured",
+      method: opts.method ?? null,
+    })
+    .onConflictDoUpdate({
+      target: payments.rzpPaymentId,
+      set: { status: "captured", amountInr: opts.amountInr, error: null, updatedAt: now },
+    });
 
   // first time → after() emails
   after(async () => {
@@ -364,6 +393,7 @@ export async function rescheduleBooking(opts: {
     if (isDayBlocked) {
       throw new AppError("VALIDATION", "Selected day is blocked");
     }
+    await assertOfferedSlot(booking.serviceKey, booking.tierKey, newStart);
   }
 
   // Atomic update: reschedule only if no overlapping confirmed/held booking

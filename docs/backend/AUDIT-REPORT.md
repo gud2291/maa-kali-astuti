@@ -102,9 +102,12 @@ Two throw-away scripts (not committed) were run over `src/`: (1) every local imp
   - **M** `transitionOrder` checked the status outside the transaction and updated without a guard → two quick "Cancel" clicks (or two admins) restocked the items twice. The update is now conditional on the validated status inside the transaction; a lost race returns `CONFLICT`. (`src/server/orders/admin.ts`)
   - **H — type error:** `AppError("NOT_PAID")` → `CONFLICT`. (`src/server/orders/refunds.ts`)
   - L `applyRefundWebhook` treated every non-booking refund as an order refund; it now ignores other entities with a warning. (same file)
-- [ ] B22 Booking backend
-- [ ] B23 Booking manage
-- [ ] B24 Admin: consultations
+- [x] **B22 Booking backend** — day slots (open days, window, lead time, blocked ranges, overlap query on `bookings_start_idx`), `/api/slots` (no-store), atomic slot-claim `INSERT … WHERE NOT EXISTS … RETURNING` with bound values, HMAC access key, palm claim, Razorpay order + payments row, `markBookingPaid` first-time update + clash/mismatch notes, confirmation email with `.ics`, real booking flow in the UI. Findings:
+  - **H** `createBooking` only checked for **overlaps**: the start time from the browser was never compared with the offered slots, so a crafted request could book 03:00, a Sunday, a blocked day, a past time or a time inside the lead window. The start must now be one of `getDaySlots()`'s free start times (exact match) before the atomic claim. Customer reschedules get the same check. (`src/server/bookings/service.ts`)
+  - **M** a payment arriving after the daily cron turned the hold into `expired` was ignored (`status !== "pending_payment"` → no confirmation, no alert, money kept). `markBookingPaid` now also confirms `expired` bookings (the existing clash check flags overlaps for the admin), and its payments insert is idempotent on `rzp_payment_id`. The order side got the matching guard: a payment for an order the cron already cancelled now raises **needs attention** instead of silently fulfilling. (`src/server/bookings/service.ts`, `src/server/orders/service.ts`)
+  - L `createBookingAction` created the booking (holding the slot for 10 min) before checking that Razorpay is configured → check moved first. `/api/slots` 400 body now `{ error: "VALIDATION" }` (ARCH §12). (`src/server/bookings/actions.ts`, `src/app/api/slots/route.ts`)
+- [x] **B23 Booking manage** — key-or-owner views, upcoming/past list, atomic reschedule `UPDATE … WHERE NOT EXISTS` with customer rules (count, notice hours, open day, window), report link via signed URL, rescheduled email + `.ics`. Findings: exact-slot check (see B22); `RescheduleCard` read `res.error` (cross-cutting). L (left): `RescheduleCard` has inline EN/HI error copy → B46.
+- [x] **B24 Admin consultations** — service/tier editors (one recommended tier), availability settings through `writeSetting("consult")`, booking list/week calendar/detail, status via `BOOKING_FLOW`, meeting link, report upload, admin reschedule, cancel with Razorpay refund (`entity: "booking"`), booking webhook branch, update emails. Findings: `ActionState` type and `toast.error/success` (cross-cutting) and JSX in `bookings/emails.ts` (B09). No other findings.
 - [ ] B25 Kundali engine
 - [ ] B26 Report content EN
 - [ ] B27 Report content HI 1
@@ -143,6 +146,7 @@ Two throw-away scripts (not committed) were run over `src/`: (1) every local imp
 - `src/server/payments/actions.ts`, `src/app/api/webhooks/razorpay/route.ts`, `src/server/orders/service.ts` (B18)
 - `src/server/account/actions.ts`, `src/components/sections/account/AccountLogin.tsx` (B19)
 - `src/server/orders/admin.ts`, `src/server/orders/refunds.ts`, `src/components/admin/orders/OrderActions.tsx`, `src/server/cron/jobs.ts`, `src/server/customers/admin.ts` (B21)
+- `src/server/bookings/service.ts`, `src/server/bookings/actions.ts`, `src/app/api/slots/route.ts`, `src/server/orders/service.ts` (B22)
 - JSX → `createElement` (B09 finding): `src/server/orders/emails.ts`, `src/server/bookings/emails.ts`, `src/server/kundali/emails.ts`, `src/server/inquiries/service.ts`, `src/server/messages/actions.ts`, `src/server/cron/jobs.ts`
 
 ## Fix-list items added for the user

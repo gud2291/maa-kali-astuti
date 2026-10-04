@@ -19,7 +19,7 @@ export async function GET(request: NextRequest): Promise<Response> {
 
   if (!parsed.success) {
     return Response.json(
-      { error: "Invalid query parameters" },
+      { error: "VALIDATION" },
       {
         status: 400,
         headers: { "Cache-Control": "no-store" },

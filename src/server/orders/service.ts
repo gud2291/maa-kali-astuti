@@ -415,6 +415,23 @@ export async function markOrderPaid({
       public: true,
     });
 
+    // Paid after the daily cron cancelled the unpaid order: keep the money visible, never fulfil
+    // automatically (no stock taken) — the admin restores or refunds it.
+    if (existing.status === "cancelled") {
+      const reason = "Payment received after the order was cancelled — restore or refund";
+      await tx
+        .update(orders)
+        .set({ needsAttention: true, attentionReason: reason })
+        .where(eq(orders.id, orderId));
+      await tx.insert(orderEvents).values({
+        orderId,
+        type: "attention",
+        message: reason,
+        public: false,
+      });
+      return { ok: true as const, skipFinalize: true };
+    }
+
     if (amountInr !== updated[0].totalInr) {
       const reason = `Payment amount mismatch: received ₹${amountInr}, expected ₹${updated[0].totalInr}`;
       await tx
