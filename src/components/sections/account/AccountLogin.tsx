@@ -1,10 +1,10 @@
 "use client";
 
-import { useRouter } from "next/navigation";
+import { useRouter } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { OtpForm, type OtpLabels } from "@/components/auth/OtpForm";
 import type { Locale } from "@/lib/domain/enums";
-import type { ErrorCode } from "@/lib/domain/errors";
+import { ERROR_CODES, type ErrorCode } from "@/lib/domain/errors";
 import { Logo } from "@/components/ui/Logo";
 import { Icon } from "@/components/icons/Icon";
 
@@ -18,31 +18,9 @@ export function AccountLogin({
   const router = useRouter();
   const t = useTranslations("auth");
 
-  const errorKeys: ErrorCode[] = [
-    "INTERNAL",
-    "UNAUTHENTICATED",
-    "FORBIDDEN",
-    "NOT_FOUND",
-    "CONFLICT",
-    "VALIDATION",
-    "RATE_LIMITED",
-    "TURNSTILE_FAILED",
-    "OTP_EXPIRED",
-    "OTP_INVALID",
-    "OUT_OF_STOCK",
-    "SLOT_TAKEN",
-    "PAYMENT_FAILED",
-    "PAYMENT_MISMATCH",
-    "LIMIT_REACHED",
-    "FILE_TOO_LARGE",
-    "UNSUPPORTED_MEDIA",
-    "REFUND_FAILED",
-  ];
-
-  const errors: Record<ErrorCode, string> = {} as Record<ErrorCode, string>;
-  for (const k of errorKeys) {
-    errors[k] = t(`errors.${k}`);
-  }
+  // One friendly line per error code from the shared `errors` namespace (B09).
+  const te = useTranslations("errors");
+  const errors = Object.fromEntries(ERROR_CODES.map((k) => [k, te(k)])) as Record<ErrorCode, string>;
 
   const labels: OtpLabels = {
     title: t("title"),

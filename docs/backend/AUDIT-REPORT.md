@@ -86,8 +86,16 @@ Two throw-away scripts (not committed) were run over `src/`: (1) every local imp
   - (JSX in `orders/emails.ts` → fixed under B09.)
 - [x] **B17 Cart + checkout UI** — extracted cart pieces, `/cart` view + upsell, persisted checkout state, debounced quote, 5-step flow, review step with Turnstile, server quote used for totals. Findings:
   - **H** `StepReview` read `res.error` (does not exist) for every failed order → type error, and the shopper saw "undefined". Now `res.code` → `errors.<CODE>` (stock problems keep the checkout wording and re-quote). Raw exception text is no longer shown. Same fix in `useQuote`. (`StepReview.tsx`, `useQuote.ts`)
-- [ ] B18 Razorpay
-- [ ] B19 Account
+- [x] **B18 Razorpay** — REST client (Basic auth, paise only there, typed, 8 s), HMAC checkout/webhook signatures with constant-time compare, `markOrderPaid` (first-time-paid, mismatch → attention, no fulfilment), dispatch, confirm/retry actions, online checkout branch, webhook with raw-body verification + event-id dedupe, checkout.js loader, Pay-now. Findings:
+  - **M** webhook processing errors were swallowed with **HTTP 200** after the event id had been stored → Razorpay never retried and a later retry would be skipped as a duplicate, so a missed `payment.captured` could leave a paid order unpaid. Now the event row is removed and the route answers 500 so the retry is processed. (`src/app/api/webhooks/razorpay/route.ts`)
+  - **M** the webhook logged the raw `x-razorpay-signature` on failure (RULES §2 "never log signatures"). Now only `hasSignature`. (same file)
+  - **M** `confirmPaymentAction` trusted any payment whose signature matched, without looking at its status, and put the client's `razorpay_payment_id` straight into the Razorpay URL. Now ids/signature are format-checked (`order_…`, `pay_…`, 64-hex) and only `captured` / `authorized` payments mark an entity paid; a bad signature returns `PAYMENT_SIGNATURE` (was `PAYMENT_FAILED`). (`src/server/payments/actions.ts`)
+  - **H — type error:** `AppError("ALREADY_PAID")` is not an error code. Now `CONFLICT` ("already paid / processed"); `StepReview` and `PayNow` check `res.code === "CONFLICT"`. (`src/server/payments/actions.ts`)
+  - L a payment first reported as `failed` and authorised later (Razorpay late auth) would hit the unique `rzp_payment_id` inside `markOrderPaid` and roll the whole "paid" transaction back. The insert now upserts that row to `captured`. (`src/server/orders/service.ts`)
+- [x] **B19 Account** — account queries filter by the session user id, address actions own-rows-only with max 10 and one default, profile, invoice builder (Tax Invoice vs Bill of Supply, CGST/SGST vs IGST), invoice page (access key or owner session, noindex), checkout prefill + save address. Findings:
+  - **H — type error:** `AppError("LIMIT_REACHED")` → `CONFLICT` with the "Maximum 10 addresses" message. (`src/server/account/actions.ts`)
+  - **H — type error / broken labels:** `AccountLogin` typed six non-existent codes (`TURNSTILE_FAILED`, `LIMIT_REACHED`, …) as `ErrorCode` and missed real ones (e.g. `BOT_CHECK_FAILED`, `NOT_CONFIGURED`) → a failed bot check showed an empty error. Labels now come from the shared `errors` namespace for every `ERROR_CODES` entry. It also used the non-locale router, so Hindi users landed on the English page after login → `@/i18n/navigation`. (`src/components/sections/account/AccountLogin.tsx`)
+  - L (left) `AccountLogin` and `AddressSheet` contain inline EN/HI copy instead of `messages` (RULES §8) — cosmetic, B46.
 - [ ] B20 Track order, wishlist, search
 - [ ] B21 Admin: orders
 - [ ] B22 Booking backend
@@ -128,6 +136,8 @@ Two throw-away scripts (not committed) were run over `src/`: (1) every local imp
 - `src/lib/validation/checkout.ts` (B16)
 - `src/components/sections/checkout/StepReview.tsx`, `src/components/sections/checkout/useQuote.ts` (B17)
 - Cross-cutting: `src/server/result.ts`, `src/lib/validation/settings.ts`, `src/server/bookings/admin-actions.ts`, `src/server/consult/admin-actions.ts`, `src/components/admin/products/{ImageManager,ProductActions,StockAdjust}.tsx`, `src/components/admin/staff/StaffTable.tsx`, `src/components/sections/order/PayNow.tsx`, `src/components/sections/track/TrackOrderForm.tsx`, `src/components/sections/booking/RescheduleCard.tsx`, `src/components/admin/home/{AnnouncementForm,HeroSlidesForm,SectionToggles}.tsx`, and the 24 files of the toast rename (`src/components/admin/{blog/ArticleForm,bookings/AdminReschedule,bookings/BookingActions,bookings/ReportUpload,consult/AvailabilityForm,consult/ServiceForm,consult/TierEditor,content/CourseForm,content/FaqForm,content/RitualForm,content/SortableList,content/TestimonialForm,content/VideoCategories,content/VideoForm,editor/RichEditor,home/*,pages/PageForm,products/*,rashifal/RashifalEditor}.tsx`, `src/components/sections/blog/ArticleView.tsx`)
+- `src/server/payments/actions.ts`, `src/app/api/webhooks/razorpay/route.ts`, `src/server/orders/service.ts` (B18)
+- `src/server/account/actions.ts`, `src/components/sections/account/AccountLogin.tsx` (B19)
 - JSX → `createElement` (B09 finding): `src/server/orders/emails.ts`, `src/server/bookings/emails.ts`, `src/server/kundali/emails.ts`, `src/server/inquiries/service.ts`, `src/server/messages/actions.ts`, `src/server/cron/jobs.ts`
 
 ## Fix-list items added for the user

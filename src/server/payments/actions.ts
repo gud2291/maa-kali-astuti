@@ -27,11 +27,20 @@ export type RazorpayCheckoutData = {
 
 const confirmPaymentSchema = z.object({
   entity: z.enum(["order", "booking", "kundali"]),
-  ref: z.string().min(1),
-  razorpay_order_id: z.string().min(1),
-  razorpay_payment_id: z.string().min(1),
-  razorpay_signature: z.string().min(1),
+  ref: z.string().trim().min(1).max(40),
+  razorpay_order_id: z.string().regex(/^order_[A-Za-z0-9]{1,40}$/),
+  razorpay_payment_id: z.string().regex(/^pay_[A-Za-z0-9]{1,40}$/),
+  razorpay_signature: z.string().regex(/^[a-fA-F0-9]{64}$/),
 });
+
+/** Only a captured (or auto-capture pending, "authorized") payment may mark an entity paid. */
+async function fetchSettledAmount(paymentId: string): Promise<{ amountInr: number; method: string }> {
+  const payment = await fetchPayment(paymentId);
+  if (payment.status !== "captured" && payment.status !== "authorized") {
+    throw new AppError("PAYMENT_FAILED");
+  }
+  return { amountInr: Math.round(payment.amount / 100), method: payment.method };
+}
 
 export async function confirmPaymentAction(
   input: unknown,
@@ -46,7 +55,7 @@ export async function confirmPaymentAction(
     });
 
     if (!valid) {
-      throw new AppError("PAYMENT_FAILED", "Invalid payment signature");
+      throw new AppError("PAYMENT_SIGNATURE");
     }
 
     if (data.entity === "order") {
@@ -64,8 +73,7 @@ export async function confirmPaymentAction(
         throw new AppError("VALIDATION", "Razorpay order ID mismatch");
       }
 
-      const payment = await fetchPayment(data.razorpay_payment_id);
-      const amountInr = Math.round(payment.amount / 100);
+      const { amountInr, method } = await fetchSettledAmount(data.razorpay_payment_id);
 
       await dispatchPaid({
         entity: "order",
@@ -73,7 +81,7 @@ export async function confirmPaymentAction(
         rzpOrderId: data.razorpay_order_id,
         rzpPaymentId: data.razorpay_payment_id,
         amountInr,
-        method: payment.method,
+        method,
       });
     } else if (data.entity === "booking") {
       const [booking] = await db
@@ -90,8 +98,7 @@ export async function confirmPaymentAction(
         throw new AppError("VALIDATION", "Razorpay order ID mismatch");
       }
 
-      const payment = await fetchPayment(data.razorpay_payment_id);
-      const amountInr = Math.round(payment.amount / 100);
+      const { amountInr, method } = await fetchSettledAmount(data.razorpay_payment_id);
 
       await dispatchPaid({
         entity: "booking",
@@ -99,7 +106,7 @@ export async function confirmPaymentAction(
         rzpOrderId: data.razorpay_order_id,
         rzpPaymentId: data.razorpay_payment_id,
         amountInr,
-        method: payment.method,
+        method,
       });
     } else if (data.entity === "kundali") {
       const [kOrder] = await db
@@ -116,8 +123,7 @@ export async function confirmPaymentAction(
         throw new AppError("VALIDATION", "Razorpay order ID mismatch");
       }
 
-      const payment = await fetchPayment(data.razorpay_payment_id);
-      const amountInr = Math.round(payment.amount / 100);
+      const { amountInr, method } = await fetchSettledAmount(data.razorpay_payment_id);
 
       await dispatchPaid({
         entity: "kundali",
@@ -125,7 +131,7 @@ export async function confirmPaymentAction(
         rzpOrderId: data.razorpay_order_id,
         rzpPaymentId: data.razorpay_payment_id,
         amountInr,
-        method: payment.method,
+        method,
       });
     }
 
@@ -135,8 +141,8 @@ export async function confirmPaymentAction(
 
 const retryPaymentSchema = z.object({
   entity: z.literal("order"),
-  ref: z.string().min(1),
-  accessKey: z.string().min(1),
+  ref: z.string().trim().min(1).max(40),
+  accessKey: z.string().min(1).max(64),
 });
 
 export async function retryPaymentAction(
@@ -167,7 +173,8 @@ export async function retryPaymentAction(
     }
 
     if (order.status !== "pending_payment" || order.paymentStatus === "paid") {
-      throw new AppError("ALREADY_PAID", "Order is already paid or processed");
+      // Clients treat CONFLICT as "already paid / processed".
+      throw new AppError("CONFLICT", "Order is already paid or processed");
     }
 
     if (!order.razorpayOrderId) {

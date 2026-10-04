@@ -387,16 +387,24 @@ export async function markOrderPaid({
       return { ok: false as const };
     }
 
-    await tx.insert(payments).values({
-      entity: "order",
-      entityId: orderId,
-      provider: "razorpay",
-      rzpOrderId: rzpOrderId ?? existing.razorpayOrderId ?? null,
-      rzpPaymentId,
-      amountInr,
-      status: "captured",
-      method: method ?? null,
-    });
+    // A payment first reported as failed can be authorised later (Razorpay "late auth"):
+    // reuse its row instead of failing on the unique rzp_payment_id.
+    await tx
+      .insert(payments)
+      .values({
+        entity: "order",
+        entityId: orderId,
+        provider: "razorpay",
+        rzpOrderId: rzpOrderId ?? existing.razorpayOrderId ?? null,
+        rzpPaymentId,
+        amountInr,
+        status: "captured",
+        method: method ?? null,
+      })
+      .onConflictDoUpdate({
+        target: payments.rzpPaymentId,
+        set: { status: "captured", amountInr, method: method ?? null, error: null, updatedAt: now },
+      });
 
     await tx.insert(orderEvents).values({
       orderId,

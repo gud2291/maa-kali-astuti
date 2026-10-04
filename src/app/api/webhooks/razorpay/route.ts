@@ -21,7 +21,7 @@ export async function POST(request: Request): Promise<Response> {
   const signature = request.headers.get("x-razorpay-signature") || "";
   const valid = verifyWebhookSignature(rawBody, signature);
   if (!valid) {
-    log.warn("webhook.invalid_signature", { signature });
+    log.warn("webhook.invalid_signature", { hasSignature: signature !== "" });
     return new Response("Invalid signature", { status: 400 });
   }
 
@@ -194,6 +194,11 @@ export async function POST(request: Request): Promise<Response> {
       eventType,
       error: err instanceof Error ? err.message : String(err),
     });
-    return new Response("Internal error recorded", { status: 200 });
+    // Forget the event so Razorpay's retry is processed instead of skipped as a duplicate.
+    await db
+      .delete(webhookEvents)
+      .where(eq(webhookEvents.id, eventId))
+      .catch(() => undefined);
+    return new Response("Processing failed", { status: 500 });
   }
 }

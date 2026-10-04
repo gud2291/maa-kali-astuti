@@ -68,7 +68,7 @@ export async function saveAddressAction(
 
     const totalCount = countRow?.count ?? 0;
     if (totalCount >= 10) {
-      throw new AppError("LIMIT_REACHED", "Maximum 10 addresses allowed");
+      throw new AppError("CONFLICT", "Maximum 10 addresses allowed");
     }
 
     const shouldBeDefault = data.isDefault || totalCount === 0;
