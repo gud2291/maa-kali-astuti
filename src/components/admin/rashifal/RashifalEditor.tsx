@@ -122,7 +122,7 @@ export function RashifalEditor({
         setCards(nextCards);
         setInitialCardsState(JSON.stringify(nextCards));
       } else {
-        toast.error("Failed to load entries for selected period");
+        toast.err("Failed to load entries for selected period");
       }
     });
   };
@@ -151,7 +151,7 @@ export function RashifalEditor({
     const entriesToSave = Object.values(cards).filter((c) => c.textEn.trim().length > 0);
 
     if (entriesToSave.length === 0) {
-      toast.error("Please enter English prediction text for at least one rashi before saving.");
+      toast.err("Please enter English prediction text for at least one rashi before saving.");
       return;
     }
 
@@ -160,15 +160,15 @@ export function RashifalEditor({
       const rashiMeta = RASHI.find((r) => r.key === item.rashi);
       const name = rashiMeta?.en ?? item.rashi;
       if (item.textEn.trim().length < 20) {
-        toast.error(`${name}: English text must be at least 20 characters.`);
+        toast.err(`${name}: English text must be at least 20 characters.`);
         return;
       }
       if (item.textEn.trim().length > 1500) {
-        toast.error(`${name}: English text exceeds 1500 characters.`);
+        toast.err(`${name}: English text exceeds 1500 characters.`);
         return;
       }
       if (item.textHi.trim().length > 1500) {
-        toast.error(`${name}: Hindi text exceeds 1500 characters.`);
+        toast.err(`${name}: Hindi text exceeds 1500 characters.`);
         return;
       }
     }
@@ -204,7 +204,7 @@ export function RashifalEditor({
 
       const res = await savePeriodEntriesAction(payload);
       if (res.ok) {
-        toast.success(`Successfully saved ${payload.entries.length} rashi entries!`);
+        toast.ok(`Successfully saved ${payload.entries.length} rashi entries!`);
         setInitialCardsState(JSON.stringify(cards));
 
         // Refresh coverage
@@ -213,7 +213,7 @@ export function RashifalEditor({
           setCoverageData(covRes.data);
         }
       } else {
-        toast.error(res.message || "Failed to save rashifal entries");
+        toast.err(res.message || "Failed to save rashifal entries");
       }
     });
   };

@@ -163,7 +163,7 @@ export function SortableList<T extends SortableItem>({
         }
       } catch (err) {
         setOrder(prevOrder);
-        toast.error("Failed to update order. Reverted.");
+        toast.err("Failed to update order. Reverted.");
       }
     },
     [onReorder],

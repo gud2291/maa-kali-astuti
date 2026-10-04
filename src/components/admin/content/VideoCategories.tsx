@@ -65,7 +65,7 @@ export function VideoCategories({
   const handleSave = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     if (categories.some((c) => !c.key || !c.label.en)) {
-      toast.error("All categories must have a key and an English name");
+      toast.err("All categories must have a key and an English name");
       return;
     }
 
@@ -73,14 +73,14 @@ export function VideoCategories({
     try {
       const res = await updateVideoCategoriesAction(categories);
       if (res.ok) {
-        toast.success("Video categories saved");
+        toast.ok("Video categories saved");
         onOpenChange(false);
         router.refresh();
       } else {
-        toast.error(res.message ?? "Failed to save categories");
+        toast.err(res.message ?? "Failed to save categories");
       }
     } catch {
-      toast.error("An error occurred while saving categories");
+      toast.err("An error occurred while saving categories");
     } finally {
       setPending(false);
     }

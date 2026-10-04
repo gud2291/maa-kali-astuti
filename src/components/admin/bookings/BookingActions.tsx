@@ -54,13 +54,13 @@ export function BookingActions({
     try {
       const res = await updateBookingStatusAction(booking.id, { to });
       if (res.ok) {
-        toast.success(`Booking marked as ${to}`);
+        toast.ok(`Booking marked as ${to}`);
         router.refresh();
       } else {
-        toast.error(errorText(res.code));
+        toast.err(errorText(res.code));
       }
     } catch {
-      toast.error("Failed to update status");
+      toast.err("Failed to update status");
     } finally {
       setStatusPending(false);
     }
@@ -71,7 +71,7 @@ export function BookingActions({
     if (!meetingUrl.trim()) return;
 
     if (!meetingUrl.startsWith("https://")) {
-      toast.error("Meeting link must begin with https://");
+      toast.err("Meeting link must begin with https://");
       return;
     }
 
@@ -81,13 +81,13 @@ export function BookingActions({
         meetingLink: meetingUrl.trim(),
       });
       if (res.ok) {
-        toast.success("Meeting link saved & customer notified");
+        toast.ok("Meeting link saved & customer notified");
         router.refresh();
       } else {
-        toast.error(errorText(res.code));
+        toast.err(errorText(res.code));
       }
     } catch {
-      toast.error("Failed to save meeting link");
+      toast.err("Failed to save meeting link");
     } finally {
       setSavingLink(false);
     }
@@ -101,14 +101,14 @@ export function BookingActions({
         reason: cancelReason.trim() || undefined,
       });
       if (res.ok) {
-        toast.success("Booking cancelled successfully");
+        toast.ok("Booking cancelled successfully");
         setShowCancelDialog(false);
         router.refresh();
       } else {
-        toast.error(errorText(res.code));
+        toast.err(errorText(res.code));
       }
     } catch {
-      toast.error("Failed to cancel booking");
+      toast.err("Failed to cancel booking");
     } finally {
       setCancelling(false);
     }
@@ -124,14 +124,14 @@ export function BookingActions({
         note: noteText.trim(),
       });
       if (res.ok) {
-        toast.success("Note added to booking");
+        toast.ok("Note added to booking");
         setNoteText("");
         router.refresh();
       } else {
-        toast.error(errorText(res.code));
+        toast.err(errorText(res.code));
       }
     } catch {
-      toast.error("Failed to add note");
+      toast.err("Failed to add note");
     } finally {
       setSavingNote(false);
     }

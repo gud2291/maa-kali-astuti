@@ -77,7 +77,7 @@ export function AnnouncementForm({
 
   const handleAddItem = () => {
     if (items.length >= 5) {
-      toast.warn("Maximum of 5 announcement messages allowed");
+      toast.info("Maximum of 5 announcement messages allowed");
       return;
     }
     setItems((prev) => [
@@ -91,7 +91,7 @@ export function AnnouncementForm({
 
   const handleRemoveItem = (index: number) => {
     if (items.length <= 1) {
-      toast.warn("At least 1 announcement message is required");
+      toast.info("At least 1 announcement message is required");
       return;
     }
     setItems((prev) => prev.filter((_, i) => i !== index));
@@ -102,7 +102,7 @@ export function AnnouncementForm({
     for (let i = 0; i < items.length; i++) {
       const it = items[i];
       if (!it.text.en.trim() && !it.text.hi.trim()) {
-        toast.error(`Message ${i + 1} cannot be empty`);
+        toast.err(`Message ${i + 1} cannot be empty`);
         return;
       }
     }
@@ -110,9 +110,9 @@ export function AnnouncementForm({
     startTransition(async () => {
       const res = await updateAnnouncementAction(items);
       if (res.ok) {
-        toast.success("Announcement bar updated successfully");
+        toast.ok("Announcement bar updated successfully");
       } else {
-        toast.error(res.error || "Failed to update announcement bar");
+        toast.err(res.message ?? "Failed to update announcement bar");
       }
     });
   };
@@ -121,10 +121,10 @@ export function AnnouncementForm({
     const res = await updateAnnouncementAction(null);
     if (res.ok) {
       setItems(DEFAULT_ANNOUNCEMENT_ITEMS);
-      toast.success("Announcement bar reset to default messages");
+      toast.ok("Announcement bar reset to default messages");
       return true;
     }
-    toast.error(res.error || "Failed to reset announcement bar");
+    toast.err(res.message ?? "Failed to reset announcement bar");
     return false;
   };
 

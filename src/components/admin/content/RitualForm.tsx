@@ -64,7 +64,7 @@ export function RitualForm({
     e.preventDefault();
 
     if (!nameEn.trim() || !lineEn.trim()) {
-      toast.error("English name and line are required");
+      toast.err("English name and line are required");
       return;
     }
 
@@ -84,14 +84,14 @@ export function RitualForm({
         : await createRitualAction(payload);
 
       if (res.ok) {
-        toast.success(isEdit ? "Ritual updated" : "Ritual created");
+        toast.ok(isEdit ? "Ritual updated" : "Ritual created");
         onOpenChange(false);
         onSuccess();
       } else {
-        toast.error(res.message ?? "Failed to save ritual");
+        toast.err(res.message ?? "Failed to save ritual");
       }
     } catch {
-      toast.error("An error occurred");
+      toast.err("An error occurred");
     } finally {
       setPending(false);
     }
@@ -229,14 +229,14 @@ export function RitualsManager({
     try {
       const res = await deleteRitualAction(id);
       if (res.ok) {
-        toast.success("Ritual deleted");
+        toast.ok("Ritual deleted");
         router.refresh();
         return true;
       }
-      toast.error(res.message ?? "Failed to delete ritual");
+      toast.err(res.message ?? "Failed to delete ritual");
       return false;
     } catch {
-      toast.error("Failed to delete ritual");
+      toast.err("Failed to delete ritual");
       return false;
     }
   };
@@ -245,7 +245,7 @@ export function RitualsManager({
     const numIds = ids.map((id) => Number(id));
     const res = await reorderRitualsAction(numIds);
     if (res.ok) {
-      toast.success("Order updated");
+      toast.ok("Order updated");
       router.refresh();
       return { ok: true };
     }

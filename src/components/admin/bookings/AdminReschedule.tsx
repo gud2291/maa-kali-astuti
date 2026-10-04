@@ -39,10 +39,10 @@ export function AdminReschedule({
       if (res.ok) {
         setSlots(res.data.slots);
       } else {
-        toast.error(errorText(res.code));
+        toast.err(errorText(res.code));
       }
     } catch {
-      toast.error("Failed to load available slots");
+      toast.err("Failed to load available slots");
     } finally {
       setLoadingSlots(false);
     }
@@ -58,15 +58,15 @@ export function AdminReschedule({
         start: startUtc.getTime(),
       });
       if (res.ok) {
-        toast.success(
+        toast.ok(
           `Rescheduled to ${formatIst(startUtc, { date: true, time: true })}`,
         );
         router.refresh();
       } else {
-        toast.error(errorText(res.code));
+        toast.err(errorText(res.code));
       }
     } catch {
-      toast.error("Failed to reschedule booking");
+      toast.err("Failed to reschedule booking");
     } finally {
       setRescheduling(false);
     }

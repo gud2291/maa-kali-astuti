@@ -37,7 +37,9 @@ export async function runAction<T>(fn: () => Promise<T>): Promise<ActionResult<T
     unstable_rethrow(err);
 
     if (err instanceof AppError) {
-      return { ok: false, code: err.code, message: err.message, fieldErrors: err.fieldErrors };
+      // `message` only when the thrower gave one (AppError falls back to the code itself).
+      const message = err.message !== err.code ? err.message : undefined;
+      return { ok: false, code: err.code, message, fieldErrors: err.fieldErrors };
     }
 
     if (err instanceof ZodError) {

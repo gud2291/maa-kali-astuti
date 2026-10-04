@@ -35,11 +35,11 @@ export function StockAdjust({
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
     if (!reason.trim()) {
-      toast.error("Please provide a reason for the stock adjustment");
+      toast.err("Please provide a reason for the stock adjustment");
       return;
     }
     if (qty <= 0) {
-      toast.error("Quantity must be greater than 0");
+      toast.err("Quantity must be greater than 0");
       return;
     }
 
@@ -51,13 +51,13 @@ export function StockAdjust({
       });
 
       if (res.ok) {
-        toast.success(`Stock updated to ${res.data.stock}`);
+        toast.ok(`Stock updated to ${res.data.stock}`);
         onStockAdjusted?.(res.data.stock);
         setOpen(false);
         setReason("");
         setQty(1);
       } else {
-        toast.error(res.error || "Failed to adjust stock");
+        toast.err(res.message ?? "Failed to adjust stock");
       }
     });
   };

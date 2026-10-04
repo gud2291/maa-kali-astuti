@@ -63,7 +63,7 @@ export function useQuote(): UseQuoteReturn {
           setQuote(res.data);
           setError(null);
         } else {
-          setError(res.error);
+          setError(res.code);
         }
       }
     } catch (err) {

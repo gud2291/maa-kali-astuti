@@ -34,10 +34,10 @@ export function ProductActions({
     startTransition(async () => {
       const res = await duplicateProductAction({ id: product.id });
       if (res.ok) {
-        toast.success("Product duplicated as draft");
+        toast.ok("Product duplicated as draft");
         router.push(`/admin/products/${res.data.id}`);
       } else {
-        toast.error(res.error || "Failed to duplicate product");
+        toast.err(res.message ?? "Failed to duplicate product");
       }
     });
   };
@@ -52,10 +52,10 @@ export function ProductActions({
         status: nextStatus,
       });
       if (res.ok) {
-        toast.success(`Product marked as ${nextStatus}`);
+        toast.ok(`Product marked as ${nextStatus}`);
         router.refresh();
       } else {
-        toast.error(res.error || "Failed to change status");
+        toast.err(res.message ?? "Failed to change status");
       }
     });
   };
@@ -63,11 +63,11 @@ export function ProductActions({
   const handleDelete = async (): Promise<boolean> => {
     const res = await deleteProductAction({ id: product.id });
     if (res.ok) {
-      toast.success("Product deleted permanently");
+      toast.ok("Product deleted permanently");
       router.push("/admin/products");
       return true;
     } else {
-      toast.error(res.error || "Failed to delete product");
+      toast.err(res.message ?? "Failed to delete product");
       return false;
     }
   };

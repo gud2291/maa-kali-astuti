@@ -17,6 +17,7 @@ import { ProductImage } from "@/components/commerce/ProductImage";
 import { ErrorRow } from "@/components/sections/booking/ui";
 import { Link } from "@/i18n/navigation";
 import type { Quote } from "@/server/cart/quote";
+import type { ErrorCode } from "@/lib/domain/errors";
 
 export function StepReview({
   quote,
@@ -30,6 +31,10 @@ export function StepReview({
   onBack: () => void;
 }) {
   const t = useTranslations("checkout");
+  const te = useTranslations("errors");
+  /** Checkout wording for stock problems, the shared `errors` line for every other code. */
+  const errorMessage = (code: ErrorCode): string =>
+    code === "OUT_OF_STOCK" ? t("errors.OUT_OF_STOCK") : te(code);
   const locale = (useLocale() === "hi" ? "hi" : "en") as "en" | "hi";
   const router = useRouter();
 
@@ -83,7 +88,8 @@ export function StepReview({
           });
 
           if (!retryRes.ok) {
-            if (retryRes.error === "ALREADY_PAID") {
+            // CONFLICT = this order is already paid / processed.
+            if (retryRes.code === "CONFLICT") {
               useCart.getState().clear();
               useCheckout.getState().reset();
               router.replace(
@@ -123,19 +129,8 @@ export function StepReview({
           const res = await placeOrderAction(input);
 
           if (!res.ok) {
-            if (res.error === "OUT_OF_STOCK") {
-              await refetchQuote();
-              setGeneralError(t("errors.OUT_OF_STOCK"));
-            } else {
-              const errMap: Record<string, string> = {
-                CART_EMPTY: t("errors.CART_EMPTY"),
-                COUPON_INVALID: t("errors.COUPON_INVALID"),
-                RATE_LIMITED: t("errors.RATE_LIMITED"),
-                TURNSTILE_FAILED: t("errors.TURNSTILE_FAILED"),
-                NOT_CONFIGURED: t("errors.NOT_CONFIGURED"),
-              };
-              setGeneralError(errMap[res.error] ?? res.error);
-            }
+            if (res.code === "OUT_OF_STOCK") await refetchQuote();
+            setGeneralError(errorMessage(res.code));
             return;
           }
 
@@ -209,22 +204,11 @@ export function StepReview({
           `${routes.orderSuccess}?no=${encodeURIComponent(res.data.number)}&k=${encodeURIComponent(res.data.accessKey)}`,
         );
       } else {
-        if (res.error === "OUT_OF_STOCK") {
-          await refetchQuote();
-          setGeneralError(t("errors.OUT_OF_STOCK"));
-        } else {
-          const errMap: Record<string, string> = {
-            CART_EMPTY: t("errors.CART_EMPTY"),
-            COUPON_INVALID: t("errors.COUPON_INVALID"),
-            RATE_LIMITED: t("errors.RATE_LIMITED"),
-            TURNSTILE_FAILED: t("errors.TURNSTILE_FAILED"),
-            NOT_CONFIGURED: t("errors.NOT_CONFIGURED"),
-          };
-          setGeneralError(errMap[res.error] ?? res.error);
-        }
+        if (res.code === "OUT_OF_STOCK") await refetchQuote();
+        setGeneralError(errorMessage(res.code));
       }
-    } catch (err) {
-      setGeneralError(err instanceof Error ? err.message : t("errors.GENERIC"));
+    } catch {
+      setGeneralError(t("errors.GENERIC"));
     } finally {
       setPlacing(false);
     }

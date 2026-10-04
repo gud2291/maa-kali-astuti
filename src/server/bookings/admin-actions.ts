@@ -1,6 +1,6 @@
 "use server";
 
-import { runAction, type ActionState } from "@/server/result";
+import { runAction, type ActionResult } from "@/server/result";
 import {
   updateBookingStatus,
   setMeetingLink,
@@ -22,7 +22,7 @@ import type { BookingStatus, ServiceKey, TierKey } from "@/lib/domain/enums";
 export async function updateBookingStatusAction(
   id: number,
   input: BookingStatusUpdateInput,
-): Promise<ActionState<{ ok: boolean }>> {
+): Promise<ActionResult<{ ok: boolean }>> {
   return runAction(async () => {
     await updateBookingStatus(id, input.to, input.note);
     return { ok: true };
@@ -32,7 +32,7 @@ export async function updateBookingStatusAction(
 export async function setMeetingLinkAction(
   id: number,
   input: MeetingLinkInput,
-): Promise<ActionState<{ ok: boolean }>> {
+): Promise<ActionResult<{ ok: boolean }>> {
   return runAction(async () => {
     await setMeetingLink(id, input.meetingLink);
     return { ok: true };
@@ -42,7 +42,7 @@ export async function setMeetingLinkAction(
 export async function attachReportAction(
   id: number,
   mediaId: number,
-): Promise<ActionState<{ ok: boolean }>> {
+): Promise<ActionResult<{ ok: boolean }>> {
   return runAction(async () => {
     await attachReport(id, mediaId);
     return { ok: true };
@@ -52,7 +52,7 @@ export async function attachReportAction(
 export async function rescheduleByAdminAction(
   id: number,
   input: AdminRescheduleInput,
-): Promise<ActionState<{ ok: boolean }>> {
+): Promise<ActionResult<{ ok: boolean }>> {
   return runAction(async () => {
     await rescheduleByAdmin(id, input.start);
     return { ok: true };
@@ -62,7 +62,7 @@ export async function rescheduleByAdminAction(
 export async function cancelBookingAction(
   id: number,
   input: BookingCancelInput,
-): Promise<ActionState<{ ok: boolean }>> {
+): Promise<ActionResult<{ ok: boolean }>> {
   return runAction(async () => {
     await cancelBooking(id, input);
     return { ok: true };
@@ -72,7 +72,7 @@ export async function cancelBookingAction(
 export async function addBookingNoteAction(
   id: number,
   input: BookingNoteInput,
-): Promise<ActionState<{ ok: boolean }>> {
+): Promise<ActionResult<{ ok: boolean }>> {
   return runAction(async () => {
     await addBookingNote(id, input.note);
     return { ok: true };
@@ -83,7 +83,7 @@ export async function adminSlotsAction(
   serviceKey: ServiceKey,
   tierKey: TierKey,
   day: string,
-): Promise<ActionState<{ slots: { t: string; free: boolean }[] }>> {
+): Promise<ActionResult<{ slots: { t: string; free: boolean }[] }>> {
   return runAction(async () => {
     const slots = await adminSlots(serviceKey, tierKey, day);
     return { slots };

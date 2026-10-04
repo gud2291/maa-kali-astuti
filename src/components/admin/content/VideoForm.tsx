@@ -91,7 +91,7 @@ export function VideoForm({
 
   const handleLookup = async (): Promise<void> => {
     if (!urlInput.trim()) {
-      toast.error("Enter a YouTube URL or video ID first");
+      toast.err("Enter a YouTube URL or video ID first");
       return;
     }
 
@@ -106,12 +106,12 @@ export function VideoForm({
         if (res.data.title && !titleHi) {
           setTitleHi(res.data.title);
         }
-        toast.success("Fetched YouTube video info");
+        toast.ok("Fetched YouTube video info");
       } else {
-        toast.error(res.message ?? "Could not find video details");
+        toast.err(res.message ?? "Could not find video details");
       }
     } catch {
-      toast.error("Lookup failed");
+      toast.err("Lookup failed");
     } finally {
       setLookingUp(false);
     }
@@ -121,7 +121,7 @@ export function VideoForm({
     e.preventDefault();
 
     if (!titleEn.trim() || !titleHi.trim()) {
-      toast.error("Both English and Hindi titles are required");
+      toast.err("Both English and Hindi titles are required");
       return;
     }
 
@@ -146,14 +146,14 @@ export function VideoForm({
         : await createVideoAction(payload);
 
       if (res.ok) {
-        toast.success(isEdit ? "Video updated" : "Video created");
+        toast.ok(isEdit ? "Video updated" : "Video created");
         onOpenChange(false);
         onSuccess();
       } else {
-        toast.error(res.message ?? "Failed to save video");
+        toast.err(res.message ?? "Failed to save video");
       }
     } catch {
-      toast.error("An error occurred");
+      toast.err("An error occurred");
     } finally {
       setPending(false);
     }
@@ -434,14 +434,14 @@ export function VideosManager({
     try {
       const res = await deleteVideoAction(id);
       if (res.ok) {
-        toast.success("Video deleted");
+        toast.ok("Video deleted");
         router.refresh();
         return true;
       }
-      toast.error(res.message ?? "Failed to delete video");
+      toast.err(res.message ?? "Failed to delete video");
       return false;
     } catch {
-      toast.error("Failed to delete video");
+      toast.err("Failed to delete video");
       return false;
     }
   };
@@ -450,7 +450,7 @@ export function VideosManager({
     const numIds = ids.map((id) => Number(id));
     const res = await reorderVideosAction(tab, numIds);
     if (res.ok) {
-      toast.success("Order updated");
+      toast.ok("Order updated");
       router.refresh();
       return { ok: true };
     }

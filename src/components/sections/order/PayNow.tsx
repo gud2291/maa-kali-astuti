@@ -32,7 +32,8 @@ export function PayNow({
       });
 
       if (!res.ok) {
-        if (res.error === "ALREADY_PAID") {
+        // CONFLICT = already paid / processed.
+        if (res.code === "CONFLICT") {
           router.refresh();
           return;
         }

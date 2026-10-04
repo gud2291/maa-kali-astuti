@@ -178,6 +178,13 @@ export type SettingsMap = {
   invoice: z.infer<typeof invoiceSettingsSchema>;
 };
 
+/** Per-key shapes used by forms and server modules. */
+export type StoreSettings = SettingsMap["store"];
+export type ContactSettings = SettingsMap["contact"];
+export type ConsultSettings = SettingsMap["consult"];
+export type CourseSettings = SettingsMap["courses"];
+export type InvoiceSettings = SettingsMap["invoice"];
+
 export const SETTINGS_SCHEMAS: { [K in SettingsKey]: z.ZodType<SettingsMap[K]> } = {
   store: storeSettingsSchema,
   contact: contactSettingsSchema,

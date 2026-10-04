@@ -10,6 +10,7 @@ import type { OrderTrackingView } from "@/server/orders/queries";
 
 export function TrackOrderForm(): React.JSX.Element {
   const t = useTranslations("track");
+  const te = useTranslations("errors");
   const [number, setNumber] = useState("");
   const [contact, setContact] = useState("");
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
@@ -38,19 +39,15 @@ export function TrackOrderForm(): React.JSX.Element {
         });
 
         if (!res.ok) {
-          if (res.error?.code === "NOT_FOUND") {
-            setError(t("notFound"));
-          } else {
-            setError(res.error?.message || t("notFound"));
-          }
+          setError(res.code === "NOT_FOUND" ? t("notFound") : te(res.code));
           setResetKey((k) => k + 1);
           setTurnstileToken(null);
           return;
         }
 
         setResult(res.data);
-      } catch (err: unknown) {
-        setError(err instanceof Error ? err.message : t("notFound"));
+      } catch {
+        setError(te("INTERNAL"));
         setResetKey((k) => k + 1);
         setTurnstileToken(null);
       }

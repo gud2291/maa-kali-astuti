@@ -122,9 +122,9 @@ export function HeroSlidesForm({
     startTransition(async () => {
       const res = await updateHeroAction(slides);
       if (res.ok) {
-        toast.success("Hero slides updated successfully");
+        toast.ok("Hero slides updated successfully");
       } else {
-        toast.error(res.error || "Failed to update hero slides");
+        toast.err(res.message ?? "Failed to update hero slides");
       }
     });
   };
@@ -134,10 +134,10 @@ export function HeroSlidesForm({
     if (res.ok) {
       setSlides(DEFAULT_HERO_SLIDES);
       setMediaRefs({ s1: [], s2: [], s3: [] });
-      toast.success("Hero slides reset to default values");
+      toast.ok("Hero slides reset to default values");
       return true;
     }
-    toast.error(res.error || "Failed to reset hero slides");
+    toast.err(res.message ?? "Failed to reset hero slides");
     return false;
   };
 

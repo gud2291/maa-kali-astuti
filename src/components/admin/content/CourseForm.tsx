@@ -44,7 +44,7 @@ export function CourseForm({
     e.preventDefault();
 
     if (!nameEn.trim()) {
-      toast.error("Course name is required");
+      toast.err("Course name is required");
       return;
     }
 
@@ -68,14 +68,14 @@ export function CourseForm({
 
       const res = await updateCourseAction(course.key, payload);
       if (res.ok) {
-        toast.success(`Course "${course.nameEn}" updated successfully`);
+        toast.ok(`Course "${course.nameEn}" updated successfully`);
         router.push("/admin/content/courses");
         router.refresh();
       } else {
-        toast.error(res.message ?? "Failed to update course");
+        toast.err(res.message ?? "Failed to update course");
       }
     } catch {
-      toast.error("An error occurred while saving");
+      toast.err("An error occurred while saving");
     } finally {
       setPending(false);
     }

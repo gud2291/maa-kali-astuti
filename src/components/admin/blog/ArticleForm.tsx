@@ -175,7 +175,7 @@ export function ArticleForm({
 
     if (Object.keys(newErrors).length > 0) {
       setErrors(newErrors);
-      toast.error("Please fill in all required fields");
+      toast.err("Please fill in all required fields");
       return;
     }
 
@@ -205,18 +205,18 @@ export function ArticleForm({
       if (isEditing && initialData) {
         const res = await updateArticleAction(initialData.id, payload);
         if (res.ok) {
-          toast.success("Article updated successfully");
+          toast.ok("Article updated successfully");
           router.refresh();
         } else {
-          toast.error(res.message || "Failed to update article");
+          toast.err(res.message || "Failed to update article");
         }
       } else {
         const res = await createArticleAction(payload);
         if (res.ok) {
-          toast.success("Article created successfully");
+          toast.ok("Article created successfully");
           router.push(`/admin/content/blog/${res.data.id}`);
         } else {
-          toast.error(res.message || "Failed to create article");
+          toast.err(res.message || "Failed to create article");
         }
       }
     });
@@ -226,11 +226,11 @@ export function ArticleForm({
     if (!initialData) return false;
     const res = await deleteArticleAction(initialData.id);
     if (res.ok) {
-      toast.success("Article deleted");
+      toast.ok("Article deleted");
       router.push("/admin/content/blog");
       return true;
     }
-    toast.error(res.message || "Failed to delete article");
+    toast.err(res.message || "Failed to delete article");
     return false;
   };
 

@@ -11,7 +11,7 @@ import { cartLineSchema } from "@/lib/validation/cart";
 export const contactSchema = z.object({
   name: z.string().trim().min(2).max(80),
   phone: z.string().trim().regex(/^[6-9]\d{9}$/, { error: "phone_invalid" }),
-  email: z.string().trim().email().max(120),
+  email: z.string().trim().toLowerCase().email().max(120),
 });
 
 export type ContactInput = z.infer<typeof contactSchema>;
@@ -52,14 +52,14 @@ export const quoteSchema = z.object({
   method: z.enum(PAYMENT_METHODS),
   gift: z.boolean(),
   couponCode: z.string().trim().max(30).nullable(),
-  email: z.string().trim().email().max(120).nullable(),
+  email: z.string().trim().toLowerCase().email().max(120).nullable(),
 });
 
 export type QuoteInput = z.infer<typeof quoteSchema>;
 
 export const draftSchema = z.object({
   token: z.string().trim().max(64).nullable(),
-  email: z.string().trim().email().max(120),
+  email: z.string().trim().toLowerCase().email().max(120),
   phone: z.string().trim().regex(/^[6-9]\d{9}$/).optional(),
   name: z.string().trim().max(80).optional(),
   locale: z.enum(LOCALES),

@@ -82,12 +82,12 @@ export function RichEditor({
         if (res && res.media?.src) {
           const src = res.media.src;
           editor.chain().focus().setImage({ src, alt: file.name.replace(/\.[^/.]+$/, "") }).run();
-          toast.success("Image inserted into editor");
+          toast.ok("Image inserted into editor");
         } else {
-          toast.error("Failed to upload image");
+          toast.err("Failed to upload image");
         }
       } catch {
-        toast.error("Image upload failed");
+        toast.err("Image upload failed");
       } finally {
         if (fileInputRef.current) {
           fileInputRef.current.value = "";

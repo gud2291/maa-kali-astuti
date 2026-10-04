@@ -31,27 +31,27 @@ export function ReportUpload({
     if (!file) return;
 
     if (file.type !== "application/pdf" && !file.name.toLowerCase().endsWith(".pdf")) {
-      toast.error("Please upload a PDF document (.pdf)");
+      toast.err("Please upload a PDF document (.pdf)");
       return;
     }
 
     try {
       const res = await upload(file);
       if (!res) {
-        toast.error(errorText(state.error || "UPLOAD_INVALID"));
+        toast.err(errorText(state.error || "UPLOAD_INVALID"));
         return;
       }
 
       setAttaching(true);
       const actionRes = await attachReportAction(bookingId, res.mediaId);
       if (actionRes.ok) {
-        toast.success("Consultation report uploaded & client notified");
+        toast.ok("Consultation report uploaded & client notified");
         router.refresh();
       } else {
-        toast.error(errorText(actionRes.code));
+        toast.err(errorText(actionRes.code));
       }
     } catch {
-      toast.error("Failed to upload report document");
+      toast.err("Failed to upload report document");
     } finally {
       setAttaching(false);
       reset();

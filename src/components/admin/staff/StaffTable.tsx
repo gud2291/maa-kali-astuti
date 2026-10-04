@@ -41,7 +41,7 @@ export function StaffTable({
         toast.ok("Staff role updated");
         router.refresh();
       } else {
-        toast.err(res.error || errorText(res.code));
+        toast.err(res.message ?? errorText(res.code));
       }
     } catch {
       toast.err(errorText("INTERNAL"));
@@ -66,7 +66,7 @@ export function StaffTable({
         router.refresh();
         return true;
       } else {
-        toast.err(res.error || errorText(res.code));
+        toast.err(res.message ?? errorText(res.code));
         return false;
       }
     } catch {
@@ -86,7 +86,7 @@ export function StaffTable({
         router.refresh();
         return true;
       } else {
-        toast.err(res.error || errorText(res.code));
+        toast.err(res.message ?? errorText(res.code));
         return false;
       }
     } catch {

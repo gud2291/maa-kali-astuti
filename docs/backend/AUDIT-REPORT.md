@@ -31,6 +31,14 @@ Every step B01–B44 was done by `antigravity` (no Claude or mixed steps). Commi
 - `eslint-disable`: all `@next/next/no-img-element` except `BookingFlow.tsx:137` `react-hooks/exhaustive-deps` → checked under B22.
 - No FK `.references()` anywhere in the schema (DM §A marks them "documentation"). Not added: it would need table-rebuild migrations on live tables and could switch on FK enforcement in libSQL. Accepted deviation (L).
 
+## Cross-cutting checks (scripts, read-only)
+Two throw-away scripts (not committed) were run over `src/`: (1) every local import resolves to a file and every named import is really exported; (2) no `"use client"` module reaches a `server-only` module through value imports. Plus greps for misuse of the shared APIs. Findings fixed here (all **H — build break or runtime crash**):
+- `ActionResult` misuse: client code read `res.error` (the type only has `code` / `message`) → type errors, and at runtime messages showed `undefined`. Fixed in `StepReview.tsx`, `useQuote.ts` (B17), `ImageManager.tsx`, `ProductActions.tsx`, `StockAdjust.tsx` (B13), `StaffTable.tsx` (B14), `PayNow.tsx` (B18), `TrackOrderForm.tsx` (B20), `RescheduleCard.tsx` (B23), `AnnouncementForm.tsx`, `HeroSlidesForm.tsx`, `SectionToggles.tsx` (B34). Customer-facing errors now use the shared `errors` namespace.
+- Admin toast misuse: 24 admin components (B13, B21–B24, B33–B36) called `toast.error()` / `toast.success()`, but the admin toast (B11) only has `ok` / `err` / `info` → `TypeError: toast.error is not a function` the moment a save finished. Renamed to `toast.err` / `toast.ok` / `toast.info`.
+- `runAction` returned `message = code` for every `AppError` without a message (AppError falls back to the code). It now sends `message` only when the thrower gave one, so `res.message ?? errorText(res.code)` shows friendly text. (`src/server/result.ts`)
+- Missing exports: `StoreSettings`, `ContactSettings`, `ConsultSettings`, `CourseSettings`, `InvoiceSettings` were imported from `@/lib/validation/settings` by B15/B21/B24/B31 files but never declared → added as aliases of `SettingsMap[key]`. `ActionState` imported from `@/server/result` (B24) does not exist → `ActionResult`. (`src/lib/validation/settings.ts`, `src/server/bookings/admin-actions.ts`, `src/server/consult/admin-actions.ts`)
+- Client → server-only: `RashifalEditor.tsx` (client) imports `src/server/rashifal/periods.ts` (server-only) → see B35.
+
 ## T2. Per-step results
 
 - [x] **B01 Foundation** — spec met (env, log, result, ids, cache, request, loc, ist, drizzle config, CSP, proxy matcher). Findings:
@@ -72,9 +80,12 @@ Every step B01–B44 was done by `antigravity` (no Claude or mixed steps). Commi
   - L `notify.adminEmails` was validated as email only in the browser; the shared schema now requires valid emails (max 10). (`src/lib/validation/settings.ts`)
   - L (left) `updateSetting` / `writeSetting` accept an optional actor (same pattern as B13). No caller passes one from client input; this file was being edited by someone else during the audit, so it is left for B46.
   - L (left) `CouponForm` keeps two `as unknown as Date` casts for the date inputs (RULES §1). Needs a form-type refactor with `tsc` → B46.
-- [ ] B15 Product page
-- [ ] B16 Order engine
-- [ ] B17 Cart + checkout UI
+- [x] **B15 Product page** — `getProductDetail` (tag `catalog` as specified, related fallback), India Post lookup (throws on failure so nothing bad is cached; 8 s timeout), `/api/pincode/[pin]` (validation, CDN header), `usePincode`, gallery/info/accordions/placement/related/recently-viewed/sticky bar, `pdp` messages EN+HI. B15's own code: no findings. (The page's `generateMetadata` and JSON-LD were rewritten by B43 and contain type errors → fixed under B43.)
+- [x] **B16 Order engine** — quote re-prices from a fresh DB read, issues (unavailable / qty / stock), coupon via `evaluateCoupon`, COD limits; `placeOrder` one transaction (order + items + public event), COD → `finalizePlacement("strict")` (atomic stock, coupon `used_count` guarded by `usage_limit`, redemption row, invoice counter, draft link), retry on number clash; `markOrderPaid` first-time-paid pattern + payments row + mismatch → attention without fulfilment; access key HMAC-derived, `getOrderView` with `safeEqualHex`; emails in `after()`. Findings:
+  - **M** checkout emails were stored with their original case. Guest-order claiming (`attachGuestRecords`) and the coupon checks (`per_customer_limit`, `first_order_only`) compare lower-case emails, so a customer typing `Ravi@Gmail.com` never saw the order in their account and could reuse a one-per-customer / first-order coupon by changing letter case. Contact, quote and draft emails are now lower-cased by the shared schema. (`src/lib/validation/checkout.ts`)
+  - (JSX in `orders/emails.ts` → fixed under B09.)
+- [x] **B17 Cart + checkout UI** — extracted cart pieces, `/cart` view + upsell, persisted checkout state, debounced quote, 5-step flow, review step with Turnstile, server quote used for totals. Findings:
+  - **H** `StepReview` read `res.error` (does not exist) for every failed order → type error, and the shopper saw "undefined". Now `res.code` → `errors.<CODE>` (stock problems keep the checkout wording and re-quote). Raw exception text is no longer shown. Same fix in `useQuote`. (`StepReview.tsx`, `useQuote.ts`)
 - [ ] B18 Razorpay
 - [ ] B19 Account
 - [ ] B20 Track order, wishlist, search
@@ -114,6 +125,9 @@ Every step B01–B44 was done by `antigravity` (no Claude or mixed steps). Commi
 - `src/components/admin/form/useActionForm.ts` (B12)
 - `src/server/catalog/admin.ts` (B13)
 - `src/server/staff/admin.ts`, `src/server/coupons/admin.ts`, `src/lib/validation/coupon.ts`, `src/components/admin/coupons/CouponForm.tsx`, `src/lib/validation/settings.ts` (B14)
+- `src/lib/validation/checkout.ts` (B16)
+- `src/components/sections/checkout/StepReview.tsx`, `src/components/sections/checkout/useQuote.ts` (B17)
+- Cross-cutting: `src/server/result.ts`, `src/lib/validation/settings.ts`, `src/server/bookings/admin-actions.ts`, `src/server/consult/admin-actions.ts`, `src/components/admin/products/{ImageManager,ProductActions,StockAdjust}.tsx`, `src/components/admin/staff/StaffTable.tsx`, `src/components/sections/order/PayNow.tsx`, `src/components/sections/track/TrackOrderForm.tsx`, `src/components/sections/booking/RescheduleCard.tsx`, `src/components/admin/home/{AnnouncementForm,HeroSlidesForm,SectionToggles}.tsx`, and the 24 files of the toast rename (`src/components/admin/{blog/ArticleForm,bookings/AdminReschedule,bookings/BookingActions,bookings/ReportUpload,consult/AvailabilityForm,consult/ServiceForm,consult/TierEditor,content/CourseForm,content/FaqForm,content/RitualForm,content/SortableList,content/TestimonialForm,content/VideoCategories,content/VideoForm,editor/RichEditor,home/*,pages/PageForm,products/*,rashifal/RashifalEditor}.tsx`, `src/components/sections/blog/ArticleView.tsx`)
 - JSX → `createElement` (B09 finding): `src/server/orders/emails.ts`, `src/server/bookings/emails.ts`, `src/server/kundali/emails.ts`, `src/server/inquiries/service.ts`, `src/server/messages/actions.ts`, `src/server/cron/jobs.ts`
 
 ## Fix-list items added for the user

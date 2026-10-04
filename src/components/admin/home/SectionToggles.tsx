@@ -98,9 +98,9 @@ export function SectionToggles({
     startTransition(async () => {
       const res = await updateSectionsAction(sections);
       if (res.ok) {
-        toast.success("Home sections updated successfully");
+        toast.ok("Home sections updated successfully");
       } else {
-        toast.error(res.error || "Failed to update home sections");
+        toast.err(res.message ?? "Failed to update home sections");
       }
     });
   };

@@ -55,12 +55,12 @@ export function ServiceForm({ service }: ServiceFormProps): React.JSX.Element {
     try {
       const res = await updateServiceAction(service.key, values);
       if (res.ok) {
-        toast.success("Service updated successfully");
+        toast.ok("Service updated successfully");
       } else {
-        toast.error(errorText(res.code));
+        toast.err(errorText(res.code));
       }
     } catch {
-      toast.error("Failed to update service");
+      toast.err("Failed to update service");
     } finally {
       setPending(false);
     }

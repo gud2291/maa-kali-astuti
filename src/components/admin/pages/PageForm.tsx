@@ -57,10 +57,10 @@ export function PageForm({ initialData, mediaBase }: PageFormProps): React.JSX.E
       });
 
       if (res.ok) {
-        toast.success("Policy page updated successfully");
+        toast.ok("Policy page updated successfully");
         router.refresh();
       } else {
-        toast.error(res.message || "Failed to update page");
+        toast.err(res.message || "Failed to update page");
       }
     });
   };

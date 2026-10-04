@@ -22,6 +22,7 @@ import { ConfirmDialog } from "@/components/admin/ui/ConfirmDialog";
 import { prepareImage } from "@/lib/media/prepare-image";
 import { createUploadAction, confirmUploadAction } from "@/server/media/actions";
 import { toast } from "@/components/admin/ui/toast";
+import { errorText } from "@/components/admin/errors";
 import { cn } from "@/lib/utils/cn";
 import type { MediaRef } from "@/lib/domain/media";
 import type { UploadPurpose } from "@/lib/validation/media";
@@ -276,7 +277,7 @@ export function ImageManager({
         });
 
         if (!createRes.ok) {
-          throw new Error(createRes.error || "Failed to start upload");
+          throw new Error(errorText(createRes.code));
         }
 
         const { mediaId, uploads } = createRes.data;
@@ -309,8 +310,11 @@ export function ImageManager({
         );
 
         const confirmRes = await confirmUploadAction({ mediaId });
-        if (!confirmRes.ok || !confirmRes.data.ref) {
-          throw new Error(confirmRes.error || "Failed to confirm upload");
+        if (!confirmRes.ok) {
+          throw new Error(errorText(confirmRes.code));
+        }
+        if (!confirmRes.data.ref) {
+          throw new Error(errorText("UPLOAD_INVALID"));
         }
 
         return confirmRes.data.ref;
@@ -321,7 +325,7 @@ export function ImageManager({
             it.id === itemId ? { ...it, status: "error", error: msg } : it,
           ),
         );
-        toast.error(`Upload failed for ${file.name}: ${msg}`);
+        toast.err(`Upload failed for ${file.name}: ${msg}`);
         return null;
       }
     },
@@ -336,13 +340,13 @@ export function ImageManager({
 
     const availableSlots = max - value.length;
     if (availableSlots <= 0) {
-      toast.warn(`Maximum of ${max} photos reached`);
+      toast.info(`Maximum of ${max} photos reached`);
       return;
     }
 
     const filesToUpload = Array.from(fileList).slice(0, availableSlots);
     if (fileList.length > availableSlots) {
-      toast.warn(`Only uploading first ${availableSlots} files (limit ${max})`);
+      toast.info(`Only uploading first ${availableSlots} files (limit ${max})`);
     }
 
     // Reset input so re-selecting same file triggers change

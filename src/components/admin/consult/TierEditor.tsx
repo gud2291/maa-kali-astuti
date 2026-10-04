@@ -44,12 +44,12 @@ export function TierEditor({
     try {
       const res = await updateTierAction(serviceKey, tier.tierKey, values);
       if (res.ok) {
-        toast.success(`Updated ${values.titleEn} tier successfully`);
+        toast.ok(`Updated ${values.titleEn} tier successfully`);
       } else {
-        toast.error(errorText(res.code));
+        toast.err(errorText(res.code));
       }
     } catch {
-      toast.error("Failed to update tier");
+      toast.err("Failed to update tier");
     } finally {
       setPending(false);
     }

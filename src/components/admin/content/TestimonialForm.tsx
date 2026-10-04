@@ -80,7 +80,7 @@ export function TestimonialForm({
     e.preventDefault();
 
     if (quoteEn.trim().length < 10) {
-      toast.error("English quote must be at least 10 characters long");
+      toast.err("English quote must be at least 10 characters long");
       return;
     }
 
@@ -105,14 +105,14 @@ export function TestimonialForm({
         : await createTestimonialAction(payload);
 
       if (res.ok) {
-        toast.success(isEdit ? "Testimonial updated" : "Testimonial created");
+        toast.ok(isEdit ? "Testimonial updated" : "Testimonial created");
         onOpenChange(false);
         onSuccess();
       } else {
-        toast.error(res.message ?? "Failed to save testimonial");
+        toast.err(res.message ?? "Failed to save testimonial");
       }
     } catch {
-      toast.error("An error occurred");
+      toast.err("An error occurred");
     } finally {
       setPending(false);
     }
@@ -332,14 +332,14 @@ export function TestimonialsManager({
     try {
       const res = await deleteTestimonialAction(id);
       if (res.ok) {
-        toast.success("Testimonial deleted");
+        toast.ok("Testimonial deleted");
         router.refresh();
         return true;
       }
-      toast.error(res.message ?? "Failed to delete testimonial");
+      toast.err(res.message ?? "Failed to delete testimonial");
       return false;
     } catch {
-      toast.error("Failed to delete testimonial");
+      toast.err("Failed to delete testimonial");
       return false;
     }
   };
@@ -348,7 +348,7 @@ export function TestimonialsManager({
     const numIds = ids.map((id) => Number(id));
     const res = await reorderTestimonialsAction(numIds);
     if (res.ok) {
-      toast.success("Order updated");
+      toast.ok("Order updated");
       router.refresh();
       return { ok: true };
     }

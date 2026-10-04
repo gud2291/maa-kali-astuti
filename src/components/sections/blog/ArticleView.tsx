@@ -72,10 +72,10 @@ export function ArticleView({
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
-      toast.success("Article link copied to clipboard");
+      toast.ok("Article link copied to clipboard");
       setTimeout(() => setCopied(false), 2500);
     } catch {
-      toast.error("Failed to copy link");
+      toast.err("Failed to copy link");
     }
   };
 

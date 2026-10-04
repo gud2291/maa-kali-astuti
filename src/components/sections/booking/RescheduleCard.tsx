@@ -128,7 +128,7 @@ export function RescheduleCard({
           });
           router.refresh();
         } else {
-          const errCode = res.error || res.code;
+          const errCode = res.code;
           const msg =
             errCode === "SLOT_TAKEN"
               ? hi

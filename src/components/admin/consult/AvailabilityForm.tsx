@@ -66,12 +66,12 @@ export function AvailabilityForm({
     try {
       const res = await updateConsultSettingsAction(values);
       if (res.ok) {
-        toast.success("Availability settings saved successfully");
+        toast.ok("Availability settings saved successfully");
       } else {
-        toast.error(errorText(res.code));
+        toast.err(errorText(res.code));
       }
     } catch {
-      toast.error("Failed to save availability settings");
+      toast.err("Failed to save availability settings");
     } finally {
       setPending(false);
     }
@@ -80,12 +80,12 @@ export function AvailabilityForm({
   const addTimeSlot = (len: "30" | "45" | "60" | "90"): void => {
     const val = (newTimeInputs[len] || "").trim();
     if (!/^(?:[01]\d|2[0-3]):[0-5]\d$/.test(val)) {
-      toast.error("Invalid time format. Please use HH:mm (e.g. 14:30)");
+      toast.err("Invalid time format. Please use HH:mm (e.g. 14:30)");
       return;
     }
     const current = form.getValues(`startTimes.${len}`) || [];
     if (current.includes(val)) {
-      toast.error("Time slot already exists");
+      toast.err("Time slot already exists");
       return;
     }
     const next = [...current, val].sort();

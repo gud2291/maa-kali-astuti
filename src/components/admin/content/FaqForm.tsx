@@ -66,7 +66,7 @@ export function FaqForm({
     e.preventDefault();
 
     if (!qEn.trim() || !aEn.trim()) {
-      toast.error("English question and answer are required");
+      toast.err("English question and answer are required");
       return;
     }
 
@@ -86,14 +86,14 @@ export function FaqForm({
         : await createFaqAction(payload);
 
       if (res.ok) {
-        toast.success(isEdit ? "FAQ updated" : "FAQ created");
+        toast.ok(isEdit ? "FAQ updated" : "FAQ created");
         onOpenChange(false);
         onSuccess();
       } else {
-        toast.error(res.message ?? "Failed to save FAQ");
+        toast.err(res.message ?? "Failed to save FAQ");
       }
     } catch {
-      toast.error("An error occurred");
+      toast.err("An error occurred");
     } finally {
       setPending(false);
     }
@@ -242,14 +242,14 @@ export function FaqsManager({
     try {
       const res = await deleteFaqAction(id);
       if (res.ok) {
-        toast.success("FAQ deleted");
+        toast.ok("FAQ deleted");
         router.refresh();
         return true;
       }
-      toast.error(res.message ?? "Failed to delete FAQ");
+      toast.err(res.message ?? "Failed to delete FAQ");
       return false;
     } catch {
-      toast.error("Failed to delete FAQ");
+      toast.err("Failed to delete FAQ");
       return false;
     }
   };
@@ -258,7 +258,7 @@ export function FaqsManager({
     const numIds = ids.map((id) => Number(id));
     const res = await reorderFaqsAction(activeSet, numIds);
     if (res.ok) {
-      toast.success("Order updated");
+      toast.ok("Order updated");
       router.refresh();
       return { ok: true };
     }
