@@ -26,17 +26,17 @@ export function istWallToUtc(dayKey: string, hhmm: string): Date {
 /** Add n days to a dayKey string. */
 export function addDaysKey(dayKey: string, n: number): string {
   const [y, mo, d] = dayKey.split("-").map(Number);
-  const dt = new Date(y, mo - 1, d + n);
-  const yy = dt.getFullYear().toString();
-  const mm = (dt.getMonth() + 1).toString().padStart(2, "0");
-  const dd = dt.getDate().toString().padStart(2, "0");
+  const dt = new Date(Date.UTC(y, mo - 1, d + n));
+  const yy = dt.getUTCFullYear().toString();
+  const mm = (dt.getUTCMonth() + 1).toString().padStart(2, "0");
+  const dd = dt.getUTCDate().toString().padStart(2, "0");
   return `${yy}-${mm}-${dd}`;
 }
 
 /** 0 = Sunday for a dayKey string. */
 export function weekdayOfKey(dayKey: string): number {
   const [y, mo, d] = dayKey.split("-").map(Number);
-  return new Date(y, mo - 1, d).getDay();
+  return new Date(Date.UTC(y, mo - 1, d)).getUTCDay();
 }
 
 /** Format a Date/epoch in IST. */
@@ -51,7 +51,8 @@ export function formatIst(
     numberingSystem: "latn",
   };
 
-  if (o.date !== false && o.date !== undefined ? o.date : true) {
+  // Date shows unless explicitly turned off ({ time: true } = date + time).
+  if (o.date !== false) {
     opts.day = "numeric";
     opts.month = "short";
     opts.year = "numeric";

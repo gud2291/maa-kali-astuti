@@ -19,7 +19,11 @@ export function hmacHex(s: string): string {
 
 export function safeEqualHex(a: string, b: string): boolean {
   if (a.length !== b.length) return false;
-  return timingSafeEqual(Buffer.from(a, "hex"), Buffer.from(b, "hex"));
+  const ba = Buffer.from(a, "hex");
+  const bb = Buffer.from(b, "hex");
+  // Non-hex input decodes short: never equal, and timingSafeEqual must not throw.
+  if (ba.length * 2 !== a.length || bb.length !== ba.length) return false;
+  return timingSafeEqual(ba, bb);
 }
 
 export function accessKeyFor(scope: "order" | "booking" | "kundali", ref: string): string {
