@@ -39,10 +39,16 @@ Every step B01–B44 was done by `antigravity` (no Claude or mixed steps). Commi
   - L `safeEqualHex` threw `RangeError` on equal-length non-hex input (e.g. a forged Razorpay signature) → became `INTERNAL` instead of a clean mismatch. Now decodes first and returns false. (`src/server/ids.ts`)
 - [x] **B02 Schema 1** — enums (with `satisfies` checks), types, flows, permissions (role table = ARCH §6), settings schemas + defaults (= DM §I, seo/videos copied literally), core/catalog/content tables, indexes and defaults all match DM. `audit()` never throws. No findings besides the FK note above.
 - [x] **B03 Schema 2** — commerce / consult / crm tables: every column, nullability, default, unique and index matches DM §F–§H; `kundali.ts` = DM §B. Only two migrations exist and no later step touched the schema. No findings.
-- [ ] B04 Seed
-- [ ] B05 Data layer 1: catalog
-- [ ] B06 Data layer 2: content
-- [ ] B07 Data layer 3: home
+- [x] **B04 Seed** — 14 sections in order, `onConflictDoNothing`, empty-table guard for keyless tables, owner upsert, batches ≤ 50, own DB client without `server-only`, content builder per spec. (Sections 15–16 were added by B37 — audited there.) No findings.
+- [x] **B05 Catalog data layer** — `getCatalog` (3 parallel queries, hidden categories dropped, JSON-safe), mappers = inverse of B04, `toMediaRef`, `lib/api/catalog.ts` server-only with same exports, `dynamicParams` removed, rashifal pages use `getProductsByIds`. Findings:
+  - M `getSetting` caught **DB errors** and returned the defaults — inside `unstable_cache`, so one transient Turso error would pin default fees/contact/home settings until the next settings save. Now only a missing / invalid row falls back; DB errors propagate (not cached). (`src/server/settings/queries.ts`)
+  - L `getCatalog` selected every product column incl. the big `content` JSON for the list (RULES §3 "select only the columns they show"). Now explicit list columns for products and categories. (`src/server/catalog/queries.ts`)
+- [x] **B06 Content data layer** — all query files cached with the right tags/indexes and JSON-safe; consult mappers, `lib/api/consult.ts` / `content.ts` server-only, locale threaded through pages, search uses DB services/articles. Findings:
+  - L `src/server/consult/mappers.ts` was missing its first line `import "server-only"` (RULES §2). Added (only server code imports it).
+  - L `getRituals` / `getVideos` (`lib/api/content.ts`) have no explicit return type (RULES §1). Left as is: the inferred shapes feed phase-F components; adding hand-written types without `tsc` risks a build break. B46 can add them with a type-check run.
+- [x] **B07 Home from DB** — one `Promise.all` in the home page, sections take props, JSON/products-index imports gone, markup unchanged. Findings:
+  - L `getHomeReviews` formatted the fallback date with the server's local (UTC) day → off by one for reviews made 00:00–05:30 IST. Now uses `istDayKey`. (`src/lib/api/content.ts`)
+  - (The home page `generateMetadata` was later rewritten by B43 — its bug is listed under B43.)
 - [ ] B08 Client snapshot, coupons, fees
 - [ ] B09 Auth + email core
 - [ ] B10 Media uploads (R2)
@@ -84,6 +90,9 @@ Every step B01–B44 was done by `antigravity` (no Claude or mixed steps). Commi
 ## Files changed by this audit
 - `src/lib/core/ist.ts` (B01)
 - `src/server/ids.ts` (B01)
+- `src/server/settings/queries.ts`, `src/server/catalog/queries.ts` (B05)
+- `src/server/consult/mappers.ts` (B06)
+- `src/lib/api/content.ts` (B07)
 
 ## Fix-list items added for the user
 - (none yet)

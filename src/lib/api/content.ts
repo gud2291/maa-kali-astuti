@@ -7,6 +7,7 @@ import { getVideoRows } from "@/server/videos/queries";
 import { getSetting } from "@/server/settings/queries";
 import { loc } from "@/lib/domain/loc";
 import { MON } from "@/lib/core/dates";
+import { istDayKey } from "@/lib/core/ist";
 import type { CourseOption } from "@/components/forms/InquiryForm";
 import type { IconName } from "@/components/icons/Icon";
 import { getJournalRows } from "@/server/articles/queries";
@@ -263,8 +264,9 @@ export async function getHomeReviews(locale = "en"): Promise<HomeReview[]> {
   return rows.map((r, i) => {
     let d = r.legacyDate;
     if (!d && r.createdAt) {
-      const dt = new Date(r.createdAt);
-      d = `${dt.getDate()} ${MON[dt.getMonth()]} ${dt.getFullYear()}`;
+      // IST calendar day (the server runs in UTC).
+      const [y, m, day] = istDayKey(r.createdAt).split("-");
+      d = `${Number(day)} ${MON[Number(m) - 1]} ${y}`;
     }
     return {
       n: r.name,

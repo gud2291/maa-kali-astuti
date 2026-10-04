@@ -29,15 +29,53 @@ export type ProductDetail = {
   certificate: MediaRef | null;
 };
 
+/** Columns the list mapper (`toCategory` / `toProduct`) reads — never the big `content` JSON. */
+const CATEGORY_LIST_COLUMNS = {
+  key: categories.key,
+  slug: categories.slug,
+  nameEn: categories.nameEn,
+  nameHi: categories.nameHi,
+  shortEn: categories.shortEn,
+  descEn: categories.descEn,
+  descHi: categories.descHi,
+};
+
+const PRODUCT_LIST_COLUMNS = {
+  id: products.id,
+  slug: products.slug,
+  categoryKey: products.categoryKey,
+  sub: products.sub,
+  mukhi: products.mukhi,
+  stone: products.stone,
+  stoneName: products.stoneName,
+  nameEn: products.nameEn,
+  nameHi: products.nameHi,
+  longEn: products.longEn,
+  intentEn: products.intentEn,
+  intentKey: products.intentKey,
+  priceInr: products.priceInr,
+  mrpInr: products.mrpInr,
+  stock: products.stock,
+  sizes: products.sizes,
+  badges: products.badges,
+  ratingAvg: products.ratingAvg,
+  ratingCount: products.ratingCount,
+  popularity: products.popularity,
+  art: products.art,
+  legacyPhoto: products.legacyPhoto,
+  legacyPhoto2: products.legacyPhoto2,
+  publishedAt: products.publishedAt,
+};
+
 async function fetchCatalog(): Promise<CatalogData> {
   const [catRows, prodRows, mediaRows] = await Promise.all([
     db
-      .select()
+      .select(CATEGORY_LIST_COLUMNS)
       .from(categories)
       .where(eq(categories.visible, true))
       .orderBy(asc(categories.sort)),
     db
-      .select()
+      .select(PRODUCT_LIST_COLUMNS)
       .from(products)
       .where(eq(products.status, "active"))
       .orderBy(asc(products.sort)),

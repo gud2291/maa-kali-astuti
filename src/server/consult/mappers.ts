@@ -1,3 +1,4 @@
+import "server-only";
 import type { Service, Tier } from "@/lib/api/consult";
 import type { IconName } from "@/components/icons/Icon";
 import type { TierKey } from "@/lib/domain/enums";
