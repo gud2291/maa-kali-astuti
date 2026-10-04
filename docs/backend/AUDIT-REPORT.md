@@ -138,8 +138,11 @@ Two throw-away scripts (not committed) were run over `src/`: (1) every local imp
 - [x] **B38 Reviews** — submit schema, verified purchase (session or order number + matching contact, non-cancelled, contains the product), pending insert + photo claim, Turnstile + `review:ip` + 1/product/contact/day, cached PDP reviews with `reviews:<id>` tag, moderation with rating recompute and `catalog` / `product:<id>` / `reviews:<id>` / `reviews` invalidation. Findings:
   - **H — type error:** `AppError("DB_ERROR")` → `INTERNAL`. (`src/server/reviews/service.ts`)
   - **M** rating recompute and the PDP summary loaded **every** approved rating row of a product (unbounded select, RULES §3/§5). Now one `count/sum` aggregate and one `GROUP BY rating` (≤ 5 rows). (`src/server/reviews/service.ts`, `src/server/reviews/queries.ts`)
-- [ ] B39 Dashboard, badges, search
-- [ ] B40 Customers, audit log, health
+- [x] **B39 Dashboard, badges, search** — KPIs with IST boundaries, revenue series via one GROUP BY, top products, recent orders, upcoming bookings, low stock, role-filtered badge counts in parallel, SVG chart with a hidden table, role-filtered admin search (5 per group). No findings. L (left, scale): the "needs attention" badge counts `orders.needs_attention` without an index (not in DATA-MODEL) → B46.
+- [x] **B40 Customers, exports, audit log, health** — shared `toCsv` (BOM, CRLF, quoting, formula guard), registered/guest customers with key-based detail and LTV, block → revoke sessions, audit list on the listed indexes, health flags/latency/counts and owner actions (audited). Findings:
+  - **H — build break:** `src/server/health.ts` (a `.ts` file) contained JSX for the test email → rewritten with `createElement` + `EmailShell`; a missing owner email now returns `NOT_FOUND` instead of passing `null` as the recipient. (`src/server/health.ts`)
+  - **H — type error:** `AppError("VALIDATION_ERROR")` ×3 → `VALIDATION`. (`src/server/customers/admin.ts`)
+  - **M** "Recalculate all ratings" updated the products but never invalidated the cache, so cards/PDP kept the old stars. The health action now calls `invalidate(TAG.catalog)`. (`src/app/admin/(panel)/health/page.tsx`)
 - [ ] B41 Cron
 - [ ] B42 SEO foundation
 - [ ] B43 SEO pages
@@ -170,7 +173,7 @@ Two throw-away scripts (not committed) were run over `src/`: (1) every local imp
 - `src/server/articles/admin.ts`, `src/server/articles/queries.ts`, `src/components/sections/blog/ArticleView.tsx`, `src/components/content/RichText.tsx` (B36)
 - `src/components/sections/kundali/KundaliTool.tsx` toast tones `warn`/`rose` → `info`/`err` (B30, type error)
 - `src/server/reviews/service.ts`, `src/server/reviews/queries.ts` (B38)
-- `src/server/health.ts` (B40), `src/server/email/templates/BookingReminderEmail.tsx` (B41)
+- `src/server/health.ts`, `src/server/customers/admin.ts`, `src/app/admin/(panel)/health/page.tsx` (B40), `src/server/email/templates/BookingReminderEmail.tsx` (B41)
 - JSX → `createElement` (B09 finding): `src/server/orders/emails.ts`, `src/server/bookings/emails.ts`, `src/server/kundali/emails.ts`, `src/server/inquiries/service.ts`, `src/server/messages/actions.ts`, `src/server/cron/jobs.ts`
 
 ## Fix-list items added for the user

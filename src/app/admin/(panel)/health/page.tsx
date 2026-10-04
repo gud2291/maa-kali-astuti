@@ -1,4 +1,5 @@
 import { requireAdminPage } from "@/server/auth/guards";
+import { invalidate, TAG } from "@/server/cache";
 import {
   getHealth,
   sendTestEmail,
@@ -21,7 +22,10 @@ export default async function AdminHealthPage(): Promise<React.JSX.Element> {
 
   async function handleRecalculateRatingsAction(): Promise<{ success: boolean; count: number }> {
     "use server";
-    return recalculateAllRatings();
+    const res = await recalculateAllRatings();
+    // Ratings live on the cached catalog (cards, PDP, snapshot).
+    invalidate(TAG.catalog);
+    return res;
   }
 
   return (

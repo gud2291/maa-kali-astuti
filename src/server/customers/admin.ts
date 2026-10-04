@@ -280,7 +280,7 @@ export async function getCustomer(key: string): Promise<CustomerDetail> {
 
   if (key.startsWith("u-")) {
     const uid = parseInt(key.slice(2), 10);
-    if (isNaN(uid)) throw new AppError("VALIDATION_ERROR", "Invalid customer key");
+    if (isNaN(uid)) throw new AppError("VALIDATION", "Invalid customer key");
 
     const userRows = await db
       .select()
@@ -310,7 +310,7 @@ export async function getCustomer(key: string): Promise<CustomerDetail> {
     try {
       targetEmail = Buffer.from(key.slice(2), "base64url").toString("utf-8");
     } catch {
-      throw new AppError("VALIDATION_ERROR", "Invalid email key");
+      throw new AppError("VALIDATION", "Invalid email key");
     }
 
     // Check if a registered user exists with this email
@@ -368,7 +368,7 @@ export async function getCustomer(key: string): Promise<CustomerDetail> {
       };
     }
   } else {
-    throw new AppError("VALIDATION_ERROR", "Invalid customer key format");
+    throw new AppError("VALIDATION", "Invalid customer key format");
   }
 
   // Build match conditions across all customer contact points
