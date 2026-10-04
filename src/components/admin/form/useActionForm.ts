@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useTransition } from "react";
+import { createElement, useEffect, useTransition } from "react";
 import {
   useForm,
   type DefaultValues,
@@ -137,121 +137,131 @@ export function KitDemoForm(): React.JSX.Element {
   const hiValue = form.watch("descriptionHi");
   const isHiEmpty = !hiValue || hiValue.trim() === "";
 
-  return (
-    <form onSubmit={submit} className="space-y-6">
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
-        <TextField
-          name="name"
-          control={form.control}
-          label="Product Name"
-          hint="Visible to customers in the catalog"
-          required
-          maxLength={60}
-          showCount
-        />
-        <TextField
-          name="sku"
-          control={form.control}
-          label="SKU Identifier"
-          hint="Unique inventory code"
-          required
-        />
-      </div>
+  // Plain createElement: this module is a `.ts` file (no JSX).
+  const h = createElement;
+  const control = form.control;
 
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-3">
-        <MoneyField
-          name="price"
-          control={form.control}
-          label="Price (INR)"
-          hint="Whole rupees"
-          required
-        />
-        <NumberField
-          name="stock"
-          control={form.control}
-          label="Stock Units"
-          hint="Current quantity available"
-          required
-        />
-        <SelectField
-          name="category"
-          control={form.control}
-          label="Category"
-          placeholder="Choose category..."
-          options={[
-            { value: "kavach", label: "Kavach & Amulets" },
-            { value: "yantras", label: "Sacred Yantras" },
-            { value: "mala", label: "Rosaries & Malas" },
-            { value: "puja", label: "Puja Essentials" },
-          ]}
-          required
-        />
-      </div>
-
-      <div className="grid grid-cols-1 gap-5 sm:grid-cols-3 items-start">
-        <DateField
-          name="publishDate"
-          control={form.control}
-          label="Publish Date"
-          hint="Catalog release date"
-          required
-        />
-        <div className="pt-2">
-          <SwitchField
-            name="isActive"
-            control={form.control}
-            label="Active in Store"
-            description="Customers can browse and purchase"
-          />
-        </div>
-        <div className="pt-2">
-          <CheckboxField
-            name="featured"
-            control={form.control}
-            label="Featured Product"
-            description="Highlight on homepage showcase"
-          />
-        </div>
-      </div>
-
-      <div className="rounded-btn bg-cream p-4 shadow-ring-sand">
-        <h4 className="mb-3 font-display text-[16px] font-semibold text-ink">
-          Bilingual Descriptions
-        </h4>
-        <LocaleTabs
-          hiEmpty={isHiEmpty}
-          en={
-            <TextArea
-              name="descriptionEn"
-              control={form.control}
-              label="Description (English)"
-              hint="Detailed product overview"
-              rows={3}
-              maxLength={300}
-              showCount
-              required
-            />
-          }
-          hi={
-            <TextArea
-              name="descriptionHi"
-              control={form.control}
-              label="विवरण (हिंदी)"
-              hint="उत्पाद का हिंदी विवरण"
-              rows={3}
-              maxLength={300}
-              showCount
-            />
-          }
-        />
-      </div>
-
-      <FormBar
-        pending={pending}
-        dirty={isDirty}
-        cancelHref="/admin/kit"
-        saveLabel="Save Product"
-      />
-    </form>
+  return h(
+    "form",
+    { onSubmit: submit, className: "space-y-6" },
+    h(
+      "div",
+      { className: "grid grid-cols-1 gap-5 sm:grid-cols-2" },
+      h(TextField<DemoFormData>, {
+        name: "name",
+        control,
+        label: "Product Name",
+        hint: "Visible to customers in the catalog",
+        required: true,
+        maxLength: 60,
+        showCount: true,
+      }),
+      h(TextField<DemoFormData>, {
+        name: "sku",
+        control,
+        label: "SKU Identifier",
+        hint: "Unique inventory code",
+        required: true,
+      }),
+    ),
+    h(
+      "div",
+      { className: "grid grid-cols-1 gap-5 sm:grid-cols-3" },
+      h(MoneyField<DemoFormData>, {
+        name: "price",
+        control,
+        label: "Price (INR)",
+        hint: "Whole rupees",
+        required: true,
+      }),
+      h(NumberField<DemoFormData>, {
+        name: "stock",
+        control,
+        label: "Stock Units",
+        hint: "Current quantity available",
+        required: true,
+      }),
+      h(SelectField<DemoFormData>, {
+        name: "category",
+        control,
+        label: "Category",
+        placeholder: "Choose category...",
+        options: [
+          { value: "kavach", label: "Kavach & Amulets" },
+          { value: "yantras", label: "Sacred Yantras" },
+          { value: "mala", label: "Rosaries & Malas" },
+          { value: "puja", label: "Puja Essentials" },
+        ],
+        required: true,
+      }),
+    ),
+    h(
+      "div",
+      { className: "grid grid-cols-1 gap-5 sm:grid-cols-3 items-start" },
+      h(DateField<DemoFormData>, {
+        name: "publishDate",
+        control,
+        label: "Publish Date",
+        hint: "Catalog release date",
+        required: true,
+      }),
+      h(
+        "div",
+        { className: "pt-2" },
+        h(SwitchField<DemoFormData>, {
+          name: "isActive",
+          control,
+          label: "Active in Store",
+          description: "Customers can browse and purchase",
+        }),
+      ),
+      h(
+        "div",
+        { className: "pt-2" },
+        h(CheckboxField<DemoFormData>, {
+          name: "featured",
+          control,
+          label: "Featured Product",
+          description: "Highlight on homepage showcase",
+        }),
+      ),
+    ),
+    h(
+      "div",
+      { className: "rounded-btn bg-cream p-4 shadow-ring-sand" },
+      h(
+        "h4",
+        { className: "mb-3 font-display text-[16px] font-semibold text-ink" },
+        "Bilingual Descriptions",
+      ),
+      h(LocaleTabs, {
+        hiEmpty: isHiEmpty,
+        en: h(TextArea<DemoFormData>, {
+          name: "descriptionEn",
+          control,
+          label: "Description (English)",
+          hint: "Detailed product overview",
+          rows: 3,
+          maxLength: 300,
+          showCount: true,
+          required: true,
+        }),
+        hi: h(TextArea<DemoFormData>, {
+          name: "descriptionHi",
+          control,
+          label: "विवरण (हिंदी)",
+          hint: "उत्पाद का हिंदी विवरण",
+          rows: 3,
+          maxLength: 300,
+          showCount: true,
+        }),
+      }),
+    ),
+    h(FormBar, {
+      pending,
+      dirty: isDirty,
+      cancelHref: "/admin/kit",
+      saveLabel: "Save Product",
+    }),
   );
 }

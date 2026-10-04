@@ -24,14 +24,21 @@ function purposeConfig(purpose: UploadPurpose): {
   bucket: "public" | "private";
   kind: "image" | "pdf";
   maxBytesPerFile: number;
+  types: readonly string[];
 } {
   if (purpose === "report") {
-    return { bucket: "private", kind: "pdf", maxBytesPerFile: 10 * 1024 * 1024 };
+    return { bucket: "private", kind: "pdf", maxBytesPerFile: 10 * 1024 * 1024, types: ["application/pdf"] };
   }
   if (purpose === "palm") {
-    return { bucket: "private", kind: "image", maxBytesPerFile: 2 * 1024 * 1024 };
+    return { bucket: "private", kind: "image", maxBytesPerFile: 2 * 1024 * 1024, types: ["image/jpeg"] };
   }
-  return { bucket: "public", kind: "image", maxBytesPerFile: 2 * 1024 * 1024 };
+  // prepareImage emits WebP, or JPEG when the browser cannot encode WebP.
+  return {
+    bucket: "public",
+    kind: "image",
+    maxBytesPerFile: 2 * 1024 * 1024,
+    types: ["image/webp", "image/jpeg"],
+  };
 }
 
 export async function createUpload(
@@ -42,10 +49,15 @@ export async function createUpload(
   uploads: { w: number; url: string; type: string }[];
   claimKey: string | null;
 }> {
-  const { bucket, kind, maxBytesPerFile } = purposeConfig(input.purpose);
+  const { bucket, kind, maxBytesPerFile, types } = purposeConfig(input.purpose);
 
+  // Private files have one key per media row; every variant shares the declared type.
+  if (bucket === "private" && input.files.length !== 1) {
+    throw new AppError("UPLOAD_INVALID");
+  }
+  const firstType = input.files[0]?.type;
   for (const f of input.files) {
-    if (f.size > maxBytesPerFile) {
+    if (f.size > maxBytesPerFile || !types.includes(f.type) || f.type !== firstType) {
       throw new AppError("UPLOAD_INVALID");
     }
   }

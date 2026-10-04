@@ -32,7 +32,13 @@ export const createUploadSchema = z.object({
   files: z.array(uploadFileItemSchema).min(1).max(3),
   width: z.int().min(1).max(10000).nullable().optional(),
   height: z.int().min(1).max(10000).nullable().optional(),
-  blur: z.string().max(600).nullable().optional(),
+  // Tiny preview from prepareImage; rendered as a CSS background, so only image data URLs.
+  blur: z
+    .string()
+    .max(600)
+    .regex(/^data:image\/(webp|jpeg|png);base64,[A-Za-z0-9+/=]+$/)
+    .nullable()
+    .optional(),
 });
 
 export type CreateUploadInput = z.infer<typeof createUploadSchema>;

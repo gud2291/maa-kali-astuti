@@ -55,9 +55,12 @@ Every step B01–B44 was done by `antigravity` (no Claude or mixed steps). Commi
   - **M** `sendEmail` posted attachments raw: the booking `.ics` (plain text) and the Kundali PDF (`Buffer` → `{"type":"Buffer","data":[…]}` in JSON). The Resend REST API takes base64 `content`, so confirmation/reschedule emails with the calendar file and the Kundali email with the PDF would fail or carry broken files. Now every attachment is base64-encoded in `sendEmail`. (`src/server/email/send.ts`)
   - **M** customer OTP `next` accepted `/\evil.com` (browsers treat `/\` like `//`) → open redirect after login. Backslashes are now rejected. (`src/server/auth/actions.ts`)
   - L `alertKundaliGenerationFailed` logged a raw `Error` object inside `data` (serialises to `{}`); now logs the message. (`src/server/kundali/emails.ts`)
-- [ ] B10 Media uploads (R2)
-- [ ] B11 Admin shell + login
-- [ ] B12 Admin UI kit
+- [x] **B10 Media uploads** — aws4fetch R2 client (path-style, per-segment encoding, 8 s timeouts, signed PUT with content headers), create/confirm/claim/attach/delete/signed-URL service, admin vs customer guard split + `upload:ip` limit, browser `prepareImage`, XHR uploads, `MediaImg`, `ProductImage` switch. Findings:
+  - **M** `createUpload` never checked the declared file type against the purpose: an anonymous `review` upload could put a PDF (or a JPEG under a `.webp` key) into the **public** bucket, and a private upload with 2 files reused one key. Now: public/review = `image/webp` or `image/jpeg`, palm = `image/jpeg`, report = `application/pdf`, all variants the same type, private = exactly one file. (`src/server/media/service.ts`)
+  - L `blur` was any string ≤ 600 chars and is rendered as a CSS `url()` → customers could make review images load any URL. Now only `data:image/(webp|jpeg|png);base64,…`. (`src/lib/validation/media.ts`)
+- [x] **B11 Admin shell + login** — root admin layout (noindex, theme colour, toaster), panel layout redirect, shell/sidebar/topbar/mobile nav, OTP admin login (always lands on `/admin`, no redirect param trust), 404. No findings.
+- [x] **B12 Admin UI kit** — all listed primitives and form fields, `useActionForm` exactly as specified, dev-only `/admin/kit`. Findings:
+  - **H — build break:** the kit's demo form (`KitDemoForm`) was written as JSX inside `useActionForm.ts`. Rewritten with `createElement` (same fields, same toast-only action), file name kept as specified. (`src/components/admin/form/useActionForm.ts`)
 - [ ] B13 Admin: products & categories
 - [ ] B14 Admin: settings, coupons, staff
 - [ ] B15 Product page
@@ -98,6 +101,8 @@ Every step B01–B44 was done by `antigravity` (no Claude or mixed steps). Commi
 - `src/server/consult/mappers.ts` (B06)
 - `src/lib/api/content.ts` (B07)
 - `src/server/auth/actions.ts`, `src/server/email/send.ts` (B09)
+- `src/server/media/service.ts`, `src/lib/validation/media.ts` (B10)
+- `src/components/admin/form/useActionForm.ts` (B12)
 - JSX → `createElement` (B09 finding): `src/server/orders/emails.ts`, `src/server/bookings/emails.ts`, `src/server/kundali/emails.ts`, `src/server/inquiries/service.ts`, `src/server/messages/actions.ts`, `src/server/cron/jobs.ts`
 
 ## Fix-list items added for the user
