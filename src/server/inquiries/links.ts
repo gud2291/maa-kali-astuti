@@ -3,7 +3,7 @@ import { and, eq, sql } from "drizzle-orm";
 import { db } from "@/server/db/client";
 import { inquiries, inquiryEvents, paymentLinks } from "@/server/db/schema/crm";
 import { payments } from "@/server/db/schema/commerce";
-import { requireAdmin, type AdminUser } from "@/server/auth/guards";
+import { requireAdmin } from "@/server/auth/guards";
 import { audit } from "@/server/audit";
 import { createPaymentLink } from "@/server/payments/razorpay";
 import { AppError } from "@/server/result";
@@ -14,9 +14,8 @@ export type PaymentLinkRow = typeof paymentLinks.$inferSelect;
 export async function createInquiryLink(
   inquiryId: number,
   opts: { amountInr: number; purpose: string },
-  actor?: AdminUser | null,
 ): Promise<PaymentLinkRow> {
-  const admin = actor ?? (await requireAdmin("payment_links.create"));
+  const admin = await requireAdmin("payment_links.create");
 
   const [inquiry] = await db
     .select()
@@ -86,9 +85,8 @@ export async function createCustomLink(
     purpose: string;
     customer: { name: string; phone: string; email: string | null };
   },
-  actor?: AdminUser | null,
 ): Promise<PaymentLinkRow> {
-  const admin = actor ?? (await requireAdmin("payment_links.create"));
+  const admin = await requireAdmin("payment_links.create");
 
   const rzp = await createPaymentLink({
     amountInr: opts.amountInr,

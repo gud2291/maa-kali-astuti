@@ -1,7 +1,7 @@
 "use server";
 
 import { z } from "zod";
-import { runAction, type ActionResult } from "@/server/result";
+import { runAction, AppError, type ActionResult } from "@/server/result";
 import { INQUIRY_STATUS, type InquiryStatus } from "@/lib/domain/enums";
 import {
   setInquiryStatus,
@@ -13,6 +13,8 @@ import {
 import { createInquiryLink, createCustomLink, type PaymentLinkRow } from "./links";
 
 const statusSchema = z.enum(INQUIRY_STATUS);
+const idSchema = z.int().positive();
+const noteSchema = z.string().trim().max(2000);
 
 const inquiryLinkSchema = z.object({
   amountInr: z.number().int().min(1).max(1000000),
@@ -36,7 +38,7 @@ export async function setInquiryStatusAction(
 ): Promise<ActionResult<{ success: true }>> {
   return runAction(async () => {
     const validStatus = statusSchema.parse(to);
-    return setInquiryStatus(id, validStatus, note);
+    return setInquiryStatus(idSchema.parse(id), validStatus, noteSchema.optional().parse(note));
   });
 }
 
@@ -45,7 +47,7 @@ export async function assignInquiryAction(
   userId: number | null,
 ): Promise<ActionResult<{ success: true }>> {
   return runAction(async () => {
-    return assignInquiry(id, userId);
+    return assignInquiry(idSchema.parse(id), idSchema.nullable().parse(userId));
   });
 }
 
@@ -54,8 +56,10 @@ export async function setNextActionAction(
   atIso: string | null,
 ): Promise<ActionResult<{ success: true }>> {
   return runAction(async () => {
-    const at = atIso ? new Date(atIso) : null;
-    return setNextAction(id, at);
+    const raw = z.string().trim().max(40).nullable().parse(atIso);
+    const at = raw ? new Date(raw) : null;
+    if (at && Number.isNaN(at.getTime())) throw new AppError("VALIDATION");
+    return setNextAction(idSchema.parse(id), at);
   });
 }
 
@@ -65,7 +69,7 @@ export async function setFeeAction(
 ): Promise<ActionResult<{ success: true }>> {
   return runAction(async () => {
     const validFee = feeInr != null ? z.number().int().min(0).max(1000000).parse(feeInr) : null;
-    return setFee(id, validFee);
+    return setFee(idSchema.parse(id), validFee);
   });
 }
 
@@ -75,7 +79,7 @@ export async function addInquiryNoteAction(
 ): Promise<ActionResult<{ success: true }>> {
   return runAction(async () => {
     const validNote = z.string().trim().min(1).max(2000).parse(note);
-    return addInquiryNote(id, validNote);
+    return addInquiryNote(idSchema.parse(id), validNote);
   });
 }
 
@@ -85,7 +89,7 @@ export async function createInquiryLinkAction(
 ): Promise<ActionResult<PaymentLinkRow>> {
   return runAction(async () => {
     const parsed = inquiryLinkSchema.parse(input);
-    return createInquiryLink(inquiryId, parsed);
+    return createInquiryLink(z.int().positive().parse(inquiryId), parsed);
   });
 }
 

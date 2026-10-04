@@ -118,8 +118,10 @@ Two throw-away scripts (not committed) were run over `src/`: (1) every local imp
   - **M** Kundali emails were stored with their original case (guest claiming and lookups use lower case) → lower-cased by the schema. (`src/lib/validation/kundali.ts`)
   - L generate route answered `{ error: "Order not found" | "Unauthorized" }` → codes `NOT_FOUND` / `UNAUTHENTICATED` (ARCH §12). (`src/app/api/kundali/[ref]/generate/route.ts`)
   - L (left, file being edited by someone else): `createKundaliOrderAction` checks Razorpay configuration *after* inserting the order (harmless pending row) → B46. Stale "mock" wording in the `KundaliTool` / `PaySheet` header comments → B46.
-- [ ] B31 Inquiries + payment links
-- [ ] B32 Contact, newsletter, inbox
+- [x] **B31 Inquiries + payment links** — submit schema reuse, refs `MKA-S/R-` + 6 digits, Turnstile + `inquiry:ip` / `inquiry:phone` limits, emails in `after()`, Razorpay payment links (inquiry + custom) with first-time `markLinkPaid`, webhook `payment_link.paid`, pipeline admin (status/assignee/next action/fee/notes), link dialog. Findings:
+  - **M** `createInquiryLink` / `createCustomLink` accepted an optional `actor` and skipped `requireAdmin("payment_links.create")` when one was passed (same anti-pattern as B13). Removed. (`src/server/inquiries/links.ts`)
+  - **M** the inquiry admin actions passed ids, assignee, note and the next-action date straight from the browser without zod (RULES §2); an invalid date reached the DB as `Invalid Date`. All inputs are now parsed (positive int ids, note ≤ 2000, date checked). (`src/server/inquiries/admin-actions.ts`)
+- [x] **B32 Contact, newsletter, inbox** — contact/newsletter schemas (phone or email required), Turnstile + `contact:ip` / `newsletter:ip` limits, lower-cased emails, `unsub_token` random, unsubscribe only on button press, admin messages/subscribers with CSV export (injection-safe). Finding: JSX in `messages/actions.ts` (fixed under B09). No other findings.
 - [ ] B33 Content managers
 - [ ] B34 Home & site settings
 - [ ] B35 Rashifal manager
@@ -152,6 +154,7 @@ Two throw-away scripts (not committed) were run over `src/`: (1) every local imp
 - `src/server/orders/admin.ts`, `src/server/orders/refunds.ts`, `src/components/admin/orders/OrderActions.tsx`, `src/server/cron/jobs.ts`, `src/server/customers/admin.ts` (B21)
 - `src/server/bookings/service.ts`, `src/server/bookings/actions.ts`, `src/app/api/slots/route.ts`, `src/server/orders/service.ts` (B22)
 - `src/lib/validation/kundali.ts` (B25/B30), `src/components/sections/kundali/KundaliTool.tsx`, `src/app/api/kundali/[ref]/generate/route.ts` (B30)
+- `src/server/inquiries/links.ts`, `src/server/inquiries/admin-actions.ts` (B31)
 - `src/server/health.ts` (B40), `src/server/email/templates/BookingReminderEmail.tsx` (B41)
 - JSX → `createElement` (B09 finding): `src/server/orders/emails.ts`, `src/server/bookings/emails.ts`, `src/server/kundali/emails.ts`, `src/server/inquiries/service.ts`, `src/server/messages/actions.ts`, `src/server/cron/jobs.ts`
 
