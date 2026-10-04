@@ -464,6 +464,7 @@ export async function getCustomer(key: string): Promise<CustomerDetail> {
     if (o.status === "cancelled") continue;
     if (
       o.paymentStatus === "paid" ||
+      o.paymentStatus === "cod_collected" ||
       (o.paymentMethod === "cod" && o.status === "delivered")
     ) {
       ltv += Math.max(0, o.totalInr - (o.refundedInr ?? 0));

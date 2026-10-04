@@ -132,7 +132,11 @@ export function OrderActions({ order, canRefund }: OrderActionsProps): React.JSX
   const canCancel = possibleTransitions.includes("cancelled");
 
   const isOnline = order.paymentMethod !== "cod";
-  const isPaid = order.paymentStatus === "paid" || order.paymentStatus === "partially_refunded";
+  // Money received: online = paid, COD = cash collected (same rule as refundOrder).
+  const isPaid =
+    order.paymentStatus === "paid" ||
+    order.paymentStatus === "cod_collected" ||
+    order.paymentStatus === "partially_refunded";
   const refundableBalance = Math.max(0, order.totalInr - (order.refundedInr || 0));
 
   const handleCancel = async (): Promise<boolean> => {
@@ -341,7 +345,7 @@ export function OrderActions({ order, canRefund }: OrderActionsProps): React.JSX
           </button>
 
           {/* COD Mark Collected */}
-          {order.paymentMethod === "cod" && order.paymentStatus !== "paid" && (
+          {order.paymentMethod === "cod" && order.paymentStatus === "cod_pending" && (
             <ConfirmDialog
               title="Collect COD Payment?"
               body={

@@ -329,6 +329,17 @@ export async function transitionOrder(
     (order.paymentStatus === "paid" || order.paymentStatus === "cod_pending");
 
   await db.transaction(async (tx) => {
+    // Guard on the status we validated: a concurrent change (e.g. a double cancel) must not
+    // move the order twice or restock twice.
+    const moved = await tx
+      .update(orders)
+      .set(updates)
+      .where(and(eq(orders.id, id), eq(orders.status, order.status)))
+      .returning({ id: orders.id });
+    if (moved.length === 0) {
+      throw new AppError("CONFLICT", "The order changed meanwhile. Reload and try again.");
+    }
+
     if (shouldRestock) {
       const items = await tx
         .select()
@@ -345,8 +356,6 @@ export async function transitionOrder(
       }
       restocked = true;
     }
-
-    await tx.update(orders).set(updates).where(eq(orders.id, id));
 
     const statusMessage = input.note
       ? `Status changed from ${order.status} to ${input.to}: ${input.note}`
@@ -503,21 +512,24 @@ export async function markCodCollected(
     throw new AppError("VALIDATION", "Order is not COD");
   }
 
-  if (order.paymentStatus === "paid") {
+  // ARCH §7: COD money in hand = `cod_collected` (refunds and reports rely on it).
+  if (order.paymentStatus !== "cod_pending") {
     return { ok: true };
   }
 
   const now = new Date();
 
   await db.transaction(async (tx) => {
-    await tx
+    const moved = await tx
       .update(orders)
       .set({
-        paymentStatus: "paid",
+        paymentStatus: "cod_collected",
         paidAt: now,
         updatedAt: now,
       })
-      .where(eq(orders.id, id));
+      .where(and(eq(orders.id, id), eq(orders.paymentStatus, "cod_pending")))
+      .returning({ id: orders.id });
+    if (moved.length === 0) return;
 
     await tx.insert(payments).values({
       entity: "order",
@@ -545,7 +557,7 @@ export async function markCodCollected(
     entity: "order",
     entityId: id,
     summary: `Marked COD payment collected (₹${order.totalInr}) for order ${order.number}`,
-    diff: { paymentStatus: [order.paymentStatus, "paid"] },
+    diff: { paymentStatus: [order.paymentStatus, "cod_collected"] },
   });
 
   return { ok: true };

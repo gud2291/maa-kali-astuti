@@ -673,7 +673,7 @@ export async function adminDigest(now: Date): Promise<{ done: number }> {
   let codCount = 0;
 
   for (const o of yesterdayOrderRows) {
-    if (o.paymentStatus === "paid" || o.status === "delivered") {
+    if (o.paymentStatus === "paid" || o.paymentStatus === "cod_collected" || o.status === "delivered") {
       totalRevenueInr += o.totalInr;
     }
     if (o.paymentMethod === "cod") {

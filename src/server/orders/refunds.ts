@@ -34,18 +34,18 @@ export async function refundOrder(
     throw new AppError("VALIDATION", "Refund amount must be at least ₹1");
   }
 
-  // An order must be paid or partially_refunded to be refunded
-  if (
-    order.paymentStatus !== "paid" &&
-    order.paymentStatus !== "partially_refunded"
-  ) {
+  const isOnline = order.paymentMethod !== "cod";
+
+  // Money must have been received: online = paid, COD = cash collected (or already part-refunded).
+  const refundable: PaymentStatus[] = isOnline
+    ? ["paid", "partially_refunded"]
+    : ["cod_collected", "partially_refunded"];
+  if (!refundable.includes(order.paymentStatus)) {
     throw new AppError(
       "VALIDATION",
       `Cannot refund an order with payment status "${order.paymentStatus}"`,
     );
   }
-
-  const isOnline = order.paymentMethod !== "cod";
 
   if (isOnline) {
     // Find captured payment
@@ -64,7 +64,7 @@ export async function refundOrder(
 
     if (!payment || !payment.rzpPaymentId) {
       throw new AppError(
-        "NOT_PAID",
+        "CONFLICT",
         "No captured online payment record found for this order",
       );
     }
@@ -293,6 +293,11 @@ export async function applyRefundWebhook(
       });
       return;
     }
+  }
+
+  if (refRow.entity !== "order") {
+    log.warn("refund.webhook_unhandled_entity", { rzpRefundId, entity: refRow.entity });
+    return;
   }
 
   if (status === "failed") {
