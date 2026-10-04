@@ -20,7 +20,7 @@ export async function POST(
     .limit(1);
 
   if (!order) {
-    return NextResponse.json({ error: "Order not found" }, { status: 404 });
+    return NextResponse.json({ error: "NOT_FOUND" }, { status: 404 });
   }
 
   // Check authentication
@@ -42,7 +42,7 @@ export async function POST(
   }
 
   if (!isAuthorized) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return NextResponse.json({ error: "UNAUTHENTICATED" }, { status: 401 });
   }
 
   const res = await generateKundaliReport(order.id);

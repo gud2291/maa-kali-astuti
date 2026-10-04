@@ -112,8 +112,12 @@ Two throw-away scripts (not committed) were run over `src/`: (1) every local imp
   - L the place's `tz` was any string ≤ 60 chars; an unknown zone makes `Intl.DateTimeFormat` throw inside the engine → `INTERNAL`. It must now be a zone `Intl` accepts (→ `VALIDATION`). (`src/lib/validation/kundali.ts`)
   - Found outside this audit while it ran (someone else's uncommitted working-tree fix, not touched here): `src/server/kundali/actions.ts` imported `clientIp` from a non-existent `@/server/ip` (build break) → `@/server/request`.
 - [x] **B26 / B27 / B28 Report content (EN, HI 1, HI 2)** — checked by loading the data modules (read-only transpile) and counting: EN and HI both complete — labels 12/9/27/30/27/11/7, 12 lagna, 12 moon signs, 27 nakshatras, 9×12 planet-in-house (keys 1–12), 6×12 life areas, 9 dashas, doshas, 9 yogas, 9 remedies, 12 gem rows; no empty strings; ≈14.2k EN / 15.2k HI words; every file starts with the `[client-review]` comment as specified. Findings: a Hindi planet-in-house line (`ke` 11th house) had an **unterminated string** (B28 build break) — already fixed in the working tree by someone else during this audit (left for them to commit). L (left): `content/index.ts` merges with an `as unknown as T` cast → B46.
-- [ ] B29 Kundali report document
-- [ ] B30 Kundali purchase + PDF
+- [x] **B29 Kundali report document** — report model (lagna/moon/nakshatra, planets in houses, life areas, Vimshottari table, doshas, yogas, gems, remedies), A4 CSS, D1/Chandra/D9 SVG charts, server-only document, HTML render, dev-only admin preview. No findings (rendering only; the parse scan is clean).
+- [x] **B30 Kundali ₹99 purchase + PDF** — order creation with settings price and stored chart, `markKundaliPaid` first-time pattern + internal-key generation trigger, generation lock `UPDATE … WHERE gen_attempts < 5 AND (…) RETURNING`, Cloudflare PDF (45 s), private R2 + media row, ready email (PDF attached ≤ 5 MB), key-or-owner report page/status/PDF link, account list, admin list/detail/regenerate/resend. Findings:
+  - **M — wrong paid report:** when the visitor typed a place without picking a suggestion, the preview used the first search match but the **paid order** was sent with hard-coded Varanasi coordinates (`city?.lat ?? 25.3176 …`), and a place with no match silently became Varanasi. Now the place resolved for the preview is stored and reused for the order; no match → back to the form, never a silent fallback. (`src/components/sections/kundali/KundaliTool.tsx`)
+  - **M** Kundali emails were stored with their original case (guest claiming and lookups use lower case) → lower-cased by the schema. (`src/lib/validation/kundali.ts`)
+  - L generate route answered `{ error: "Order not found" | "Unauthorized" }` → codes `NOT_FOUND` / `UNAUTHENTICATED` (ARCH §12). (`src/app/api/kundali/[ref]/generate/route.ts`)
+  - L (left, file being edited by someone else): `createKundaliOrderAction` checks Razorpay configuration *after* inserting the order (harmless pending row) → B46. Stale "mock" wording in the `KundaliTool` / `PaySheet` header comments → B46.
 - [ ] B31 Inquiries + payment links
 - [ ] B32 Contact, newsletter, inbox
 - [ ] B33 Content managers
@@ -147,6 +151,8 @@ Two throw-away scripts (not committed) were run over `src/`: (1) every local imp
 - `src/server/account/actions.ts`, `src/components/sections/account/AccountLogin.tsx` (B19)
 - `src/server/orders/admin.ts`, `src/server/orders/refunds.ts`, `src/components/admin/orders/OrderActions.tsx`, `src/server/cron/jobs.ts`, `src/server/customers/admin.ts` (B21)
 - `src/server/bookings/service.ts`, `src/server/bookings/actions.ts`, `src/app/api/slots/route.ts`, `src/server/orders/service.ts` (B22)
+- `src/lib/validation/kundali.ts` (B25/B30), `src/components/sections/kundali/KundaliTool.tsx`, `src/app/api/kundali/[ref]/generate/route.ts` (B30)
+- `src/server/health.ts` (B40), `src/server/email/templates/BookingReminderEmail.tsx` (B41)
 - JSX → `createElement` (B09 finding): `src/server/orders/emails.ts`, `src/server/bookings/emails.ts`, `src/server/kundali/emails.ts`, `src/server/inquiries/service.ts`, `src/server/messages/actions.ts`, `src/server/cron/jobs.ts`
 
 ## Fix-list items added for the user

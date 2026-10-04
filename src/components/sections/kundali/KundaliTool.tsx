@@ -153,15 +153,10 @@ export function KundaliTool({
           // ignore
         }
       }
-      const finalPlace: SelectedPlace = p ?? {
-        id: "default_varanasi",
-        name: "Varanasi",
-        region: "Uttar Pradesh",
-        country: "IN",
-        lat: 25.3176,
-        lon: 82.9739,
-        tz: "Asia/Kolkata",
-      };
+      // No silent fallback place: the paid report must use the place the preview used.
+      if (!p) return null;
+      const finalPlace: SelectedPlace = p;
+      setCity(finalPlace);
 
       const result = await computeChartAction({
         name: draft.name,
@@ -276,6 +271,12 @@ export function KundaliTool({
       return;
     }
 
+    // The preview resolved a place; without one there is nothing correct to sell.
+    if (!city) {
+      edit();
+      return;
+    }
+
     setPay("processing");
 
     // QA ?pay=fail support (Task T6: The ?demo= params stay untouched)
@@ -291,10 +292,10 @@ export function KundaliTool({
         tob: f.unknown ? null : (f.tob || null),
         tobUnknown: f.unknown,
         place: {
-          name: f.place,
-          lat: city?.lat ?? 25.3176,
-          lon: city?.lon ?? 82.9739,
-          tz: city?.tz ?? "Asia/Kolkata",
+          name: city.region ? `${city.name}, ${city.region}` : city.name,
+          lat: city.lat,
+          lon: city.lon,
+          tz: city.tz,
         },
         reportLang: (f.lang as "en" | "hi") || "en",
         phone: f.phone,
