@@ -163,7 +163,7 @@ export function BookingReminderEmail({
       <Section
         style={{
           backgroundColor: "#FBF7EE",
-          border: "1px solid "#EAE0CA",
+          border: "1px solid #EAE0CA",
           borderRadius: "4px",
           padding: "16px 20px",
           margin: "20px 0",

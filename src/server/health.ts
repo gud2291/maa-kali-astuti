@@ -1,5 +1,6 @@
 import "server-only";
 
+import { createElement } from "react";
 import { and, count, eq, lt, sql } from "drizzle-orm";
 import { db } from "@/server/db/client";
 import { products } from "@/server/db/schema/catalog";
@@ -10,7 +11,9 @@ import { media, users } from "@/server/db/schema/core";
 import { requireAdmin } from "@/server/auth/guards";
 import { env, isConfigured } from "@/server/env";
 import { audit } from "@/server/audit";
+import { AppError } from "@/server/result";
 import { sendEmail } from "@/server/email/send";
+import { EmailShell, EmailText, EmailMuted } from "@/server/email/components";
 import { recomputeProductRating } from "@/server/reviews/service";
 
 export type ServiceHealthStatus = {
@@ -187,22 +190,33 @@ export async function sendTestEmail(): Promise<{ success: boolean; to: string }>
 
   const targetEmail =
     ownerUser[0]?.email ?? env.SEED_OWNER_EMAIL ?? admin.email;
+  if (!targetEmail) {
+    throw new AppError("NOT_FOUND", "No owner email to send the test to");
+  }
 
   await sendEmail({
     to: targetEmail,
     subject: `[Maa Kali Astuti] System Health Test Email`,
-    react: (
-      <div style={{ fontFamily: "sans-serif", padding: "24px", color: "#222" }}>
-        <h2 style={{ color: "#78181b" }}>Maa Kali Astuti — System Health Test</h2>
-        <p>This is a verification test email triggered from the admin health panel.</p>
-        <p><strong>Triggered by:</strong> {admin.name || admin.email} ({admin.role})</p>
-        <p><strong>Timestamp:</strong> {new Date().toISOString()}</p>
-        <hr style={{ margin: "20px 0", borderColor: "#e5e0d8" }} />
-        <p style={{ fontSize: "12px", color: "#666" }}>
-          If you received this email, the Resend integration is operational.
-        </p>
-      </div>
-    ),
+    // Plain createElement: this module is a `.ts` file (no JSX).
+    react: createElement(EmailShell, {
+      locale: "en",
+      preview: "System health test email",
+      children: [
+        createElement(EmailText, {
+          key: "intro",
+          children: "This is a verification test email triggered from the admin health panel.",
+        }),
+        createElement(EmailText, {
+          key: "by",
+          children: `Triggered by: ${admin.name || admin.email || "admin"} (${admin.role})`,
+        }),
+        createElement(EmailText, { key: "at", children: `Timestamp: ${new Date().toISOString()}` }),
+        createElement(EmailMuted, {
+          key: "ok",
+          children: "If you received this email, the Resend integration is operational.",
+        }),
+      ],
+    }),
     devNote: "Health test email triggered from /admin/health",
   });
 

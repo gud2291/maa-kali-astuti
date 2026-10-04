@@ -6,7 +6,20 @@ export const placeSchema = z.object({
   name: z.string().trim().min(1).max(120),
   lat: z.number().min(-90).max(90),
   lon: z.number().min(-180).max(180),
-  tz: z.string().trim().min(1).max(60),
+  // Must be a zone Intl knows, or the engine's offset lookup throws (→ INTERNAL).
+  tz: z
+    .string()
+    .trim()
+    .min(1)
+    .max(60)
+    .refine((v) => {
+      try {
+        new Intl.DateTimeFormat("en-US", { timeZone: v });
+        return true;
+      } catch {
+        return false;
+      }
+    }),
 });
 
 export const chartInputBaseShape = {
@@ -52,7 +65,7 @@ export const kundaliOrderSchema = z
     phone: z.string().trim().regex(/^[6-9]\d{9}$/, { error: "phoneBad" }),
     email: z.preprocess(
       (val) => (val === "" || val === null ? undefined : val),
-      z.string().trim().email({ error: "emailBad" }).optional(),
+      z.string().trim().toLowerCase().email({ error: "emailBad" }).max(120).optional(),
     ),
     locale: z.enum(LOCALES),
     payPref: z.enum(PAY_PREFS),
