@@ -1,5 +1,5 @@
 import "server-only";
-import { and, eq, desc, inArray } from "drizzle-orm";
+import { and, eq, desc, inArray, sql } from "drizzle-orm";
 import { db } from "@/server/db/client";
 import { reviews } from "@/server/db/schema/commerce";
 import { media } from "@/server/db/schema/core";
@@ -140,19 +140,22 @@ export async function fetchReviewItemsByProduct(
 }
 
 async function fetchProductReviews(productId: string): Promise<ProductReviewsData> {
-  const allRatings = await db
-    .select({ rating: reviews.rating })
+  // Distribution from one GROUP BY (at most 5 rows), not every rating row.
+  const byRating = await db
+    .select({ rating: reviews.rating, n: sql<number>`count(*)` })
     .from(reviews)
-    .where(and(eq(reviews.productId, productId), eq(reviews.status, "approved")));
+    .where(and(eq(reviews.productId, productId), eq(reviews.status, "approved")))
+    .groupBy(reviews.rating);
 
-  const count = allRatings.length;
-  const dist: [number, number, number, number, number] = [0, 0, 0, 0, 0];
+  let count = 0;
   let sum = 0;
-
-  for (const r of allRatings) {
-    sum += r.rating;
+  const dist: [number, number, number, number, number] = [0, 0, 0, 0, 0];
+  for (const r of byRating) {
+    const n = Number(r.n);
+    count += n;
+    sum += r.rating * n;
     if (r.rating >= 1 && r.rating <= 5) {
-      dist[5 - r.rating]++;
+      dist[5 - r.rating] += n;
     }
   }
 

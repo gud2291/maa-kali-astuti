@@ -134,8 +134,10 @@ Two throw-away scripts (not committed) were run over `src/`: (1) every local imp
   - **M** the storefront `ArticleView` used the **admin** toast (not mounted on the storefront → "link copied" never showed) with English-only text. Now the storefront toast with `pdp.linkCopied` / `errors.INTERNAL`. (`src/components/sections/blog/ArticleView.tsx`)
   - L `RichText` now re-checks link schemes when rendering (defence in depth for seeded/old rows). (`src/components/content/RichText.tsx`)
   - L (left) `ArticleView` still has a few English-only labels (breadcrumb "Home", "Copy Link") → B46.
-- [ ] B37 Starter content
-- [ ] B38 Reviews
+- [x] **B37 Starter articles + policy drafts** — rich-text builders, 6 article bodies + FAQ + Hindi titles/excerpts, 5 policies, `[client-review]` headers, seed sections 15–16 only fill empty bodies; links are site paths / `mailto:`. No findings.
+- [x] **B38 Reviews** — submit schema, verified purchase (session or order number + matching contact, non-cancelled, contains the product), pending insert + photo claim, Turnstile + `review:ip` + 1/product/contact/day, cached PDP reviews with `reviews:<id>` tag, moderation with rating recompute and `catalog` / `product:<id>` / `reviews:<id>` / `reviews` invalidation. Findings:
+  - **H — type error:** `AppError("DB_ERROR")` → `INTERNAL`. (`src/server/reviews/service.ts`)
+  - **M** rating recompute and the PDP summary loaded **every** approved rating row of a product (unbounded select, RULES §3/§5). Now one `count/sum` aggregate and one `GROUP BY rating` (≤ 5 rows). (`src/server/reviews/service.ts`, `src/server/reviews/queries.ts`)
 - [ ] B39 Dashboard, badges, search
 - [ ] B40 Customers, audit log, health
 - [ ] B41 Cron
@@ -167,6 +169,7 @@ Two throw-away scripts (not committed) were run over `src/`: (1) every local imp
 - `src/lib/core/ist.ts`, `src/server/rashifal/periods.ts`, `src/components/admin/rashifal/RashifalEditor.tsx` (B35)
 - `src/server/articles/admin.ts`, `src/server/articles/queries.ts`, `src/components/sections/blog/ArticleView.tsx`, `src/components/content/RichText.tsx` (B36)
 - `src/components/sections/kundali/KundaliTool.tsx` toast tones `warn`/`rose` → `info`/`err` (B30, type error)
+- `src/server/reviews/service.ts`, `src/server/reviews/queries.ts` (B38)
 - `src/server/health.ts` (B40), `src/server/email/templates/BookingReminderEmail.tsx` (B41)
 - JSX → `createElement` (B09 finding): `src/server/orders/emails.ts`, `src/server/bookings/emails.ts`, `src/server/kundali/emails.ts`, `src/server/inquiries/service.ts`, `src/server/messages/actions.ts`, `src/server/cron/jobs.ts`
 

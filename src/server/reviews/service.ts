@@ -125,7 +125,7 @@ export async function submitReview(
     .returning({ id: reviews.id });
 
   if (!created) {
-    throw new AppError("DB_ERROR");
+    throw new AppError("INTERNAL");
   }
 
   // Claim uploaded photos if provided
@@ -152,19 +152,17 @@ export async function submitReview(
 export async function recomputeProductRating(
   productId: string,
 ): Promise<{ avg: number; count: number }> {
-  const approved = await db
+  // One aggregate row instead of loading every approved rating.
+  const [agg] = await db
     .select({
-      rating: reviews.rating,
+      count: sql<number>`count(*)`,
+      sum: sql<number>`coalesce(sum(${reviews.rating}), 0)`,
     })
     .from(reviews)
     .where(and(eq(reviews.productId, productId), eq(reviews.status, "approved")));
 
-  const count = approved.length;
-  let avg = 0;
-  if (count > 0) {
-    const sum = approved.reduce((acc, r) => acc + r.rating, 0);
-    avg = Math.round((sum / count) * 10) / 10;
-  }
+  const count = Number(agg?.count ?? 0);
+  const avg = count > 0 ? Math.round((Number(agg?.sum ?? 0) / count) * 10) / 10 : 0;
 
   await db
     .update(products)
