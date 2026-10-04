@@ -122,8 +122,10 @@ Two throw-away scripts (not committed) were run over `src/`: (1) every local imp
   - **M** `createInquiryLink` / `createCustomLink` accepted an optional `actor` and skipped `requireAdmin("payment_links.create")` when one was passed (same anti-pattern as B13). Removed. (`src/server/inquiries/links.ts`)
   - **M** the inquiry admin actions passed ids, assignee, note and the next-action date straight from the browser without zod (RULES §2); an invalid date reached the DB as `Invalid Date`. All inputs are now parsed (positive int ids, note ≤ 2000, date checked). (`src/server/inquiries/admin-actions.ts`)
 - [x] **B32 Contact, newsletter, inbox** — contact/newsletter schemas (phone or email required), Turnstile + `contact:ip` / `newsletter:ip` limits, lower-cased emails, `unsub_token` random, unsubscribe only on button press, admin messages/subscribers with CSV export (injection-safe). Finding: JSX in `messages/actions.ts` (fixed under B09). No other findings.
-- [ ] B33 Content managers
-- [ ] B34 Home & site settings
+- [x] **B33 Content managers** — content schemas, videos (oEmbed lookup with timeout, categories via `writeSetting`), testimonials, FAQs, rituals, courses (fixed keys), sortable lists with rollback, every export `requireAdmin("content.edit")` + audit, the right tag per domain (+ `settings` for video categories), storefront `yt` usage. Findings: `toast.error/success` (cross-cutting). L (left): several content admin actions take a raw numeric `id` argument checked only by the DB lookup (admin-only) → B46.
+- [x] **B34 Home & site settings** — sections/hero/announcement through `writeSetting`, `invalidate(settings)`, `SiteSettingsProvider` loaded in the locale layout, WhatsApp/social links from settings, announcement and hero overrides with `renderEm` (no HTML injection). Findings:
+  - **H — stored XSS:** announcement link `href` (editable by any `content.edit` user) and the social URLs were free strings, rendered as `<a href>` on every storefront page — a `javascript:` link would run in the owner's browser on the same origin as `/admin`. The shared settings schema now only accepts `https?://…` or a site path (`/…`, not `//`) for announcement links and `https?://` for social links. (`src/lib/validation/settings.ts`)
+  - Found outside this audit (someone else's uncommitted working-tree fix, not touched here): "Reset to default" for hero/announcement wrote `null` into the NOT NULL `settings.value` column → `writeSetting` now deletes the row instead (and the seed skips null defaults).
 - [ ] B35 Rashifal manager
 - [ ] B36 Blog, policies, FAQ
 - [ ] B37 Starter content
@@ -155,6 +157,7 @@ Two throw-away scripts (not committed) were run over `src/`: (1) every local imp
 - `src/server/bookings/service.ts`, `src/server/bookings/actions.ts`, `src/app/api/slots/route.ts`, `src/server/orders/service.ts` (B22)
 - `src/lib/validation/kundali.ts` (B25/B30), `src/components/sections/kundali/KundaliTool.tsx`, `src/app/api/kundali/[ref]/generate/route.ts` (B30)
 - `src/server/inquiries/links.ts`, `src/server/inquiries/admin-actions.ts` (B31)
+- `src/lib/validation/settings.ts` (B34)
 - `src/server/health.ts` (B40), `src/server/email/templates/BookingReminderEmail.tsx` (B41)
 - JSX → `createElement` (B09 finding): `src/server/orders/emails.ts`, `src/server/bookings/emails.ts`, `src/server/kundali/emails.ts`, `src/server/inquiries/service.ts`, `src/server/messages/actions.ts`, `src/server/cron/jobs.ts`
 

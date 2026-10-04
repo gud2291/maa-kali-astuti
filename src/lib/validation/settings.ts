@@ -10,6 +10,9 @@ const locSchema = z.object({
 });
 
 const timeRegex = /^(?:[01]\d|2[0-3]):[0-5]\d$/;
+/** Links rendered as `href`: absolute http(s) or a site path — never `javascript:` / `data:`. */
+const safeHref = z.string().trim().max(500).regex(/^(https?:\/\/|\/(?!\/))/);
+const httpsUrl = z.string().trim().max(200).regex(/^https?:\/\//);
 const dayRegex = /^\d{4}-\d{2}-\d{2}$/;
 
 /* ---------- per-key schemas ---------- */
@@ -40,10 +43,10 @@ export const contactSettingsSchema = z.object({
 });
 
 export const socialSettingsSchema = z.object({
-  youtube: z.string().max(200).nullable(),
-  instagram: z.string().max(200).nullable(),
-  facebook: z.string().max(200).nullable(),
-  whatsappChannel: z.string().max(200).nullable(),
+  youtube: httpsUrl.nullable(),
+  instagram: httpsUrl.nullable(),
+  facebook: httpsUrl.nullable(),
+  whatsappChannel: httpsUrl.nullable(),
   youtubeHandle: z.string().max(100),
   youtubeSubs: locSchema,
 });
@@ -121,7 +124,7 @@ export const announcementSettingsSchema = z
     items: z.array(
       z.object({
         text: locSchema,
-        href: z.string().max(500).nullable(),
+        href: safeHref.nullable(),
       }),
     ),
   })
