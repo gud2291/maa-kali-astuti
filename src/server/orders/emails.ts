@@ -1,4 +1,5 @@
 import "server-only";
+import { createElement } from "react";
 import { eq } from "drizzle-orm";
 import { db } from "@/server/db/client";
 import { orders, orderItems } from "@/server/db/schema/commerce";
@@ -63,32 +64,30 @@ export async function sendOrderPlacedEmails(orderId: number): Promise<void> {
       await sendEmail({
         to: order.email,
         subject: orderPlacedSubject(order.locale as Locale, order.number),
-        react: (
-          <OrderPlacedEmail
-            locale={order.locale as Locale}
-            number={order.number}
-            orderUrl={orderUrl}
-            customerName={order.name}
-            items={emailItems}
-            totals={{
-              items: order.itemsInr,
-              energ: order.energInr,
-              discount: order.discountInr,
-              shipping: order.shippingInr,
-              express: order.expressInr,
-              cod: order.codInr,
-              total: order.totalInr,
-            }}
-            paymentMethod={order.paymentMethod as PaymentMethod}
-            paymentStatus={order.paymentStatus as PaymentStatus}
-            shipAddress={order.shipAddress}
-            energizationOn={order.energizationOn}
-            contact={{
-              phoneDisplay: contact?.phoneDisplay,
-              email: contact?.email,
-            }}
-          />
-        ),
+        react: createElement(OrderPlacedEmail, {
+          locale: order.locale as Locale,
+          number: order.number,
+          orderUrl,
+          customerName: order.name,
+          items: emailItems,
+          totals: {
+            items: order.itemsInr,
+            energ: order.energInr,
+            discount: order.discountInr,
+            shipping: order.shippingInr,
+            express: order.expressInr,
+            cod: order.codInr,
+            total: order.totalInr,
+          },
+          paymentMethod: order.paymentMethod as PaymentMethod,
+          paymentStatus: order.paymentStatus as PaymentStatus,
+          shipAddress: order.shipAddress,
+          energizationOn: order.energizationOn,
+          contact: {
+            phoneDisplay: contact?.phoneDisplay,
+            email: contact?.email,
+          },
+        }),
       });
     } catch (err) {
       log.error("order.customer_email_error", {
@@ -106,20 +105,18 @@ export async function sendOrderPlacedEmails(orderId: number): Promise<void> {
         await sendEmail({
           to: notify.adminEmails,
           subject: `[New Order] ${order.number} — ₹${order.totalInr}`,
-          react: (
-            <AdminOrderAlertEmail
-              number={order.number}
-              orderId={order.id}
-              totalInr={order.totalInr}
-              paymentMethod={order.paymentMethod as PaymentMethod}
-              paymentStatus={order.paymentStatus as PaymentStatus}
-              itemCount={totalItemsCount}
-              customerName={order.name}
-              customerPhone={order.phone}
-              customerEmail={order.email}
-              adminUrl={adminUrl}
-            />
-          ),
+          react: createElement(AdminOrderAlertEmail, {
+            number: order.number,
+            orderId: order.id,
+            totalInr: order.totalInr,
+            paymentMethod: order.paymentMethod as PaymentMethod,
+            paymentStatus: order.paymentStatus as PaymentStatus,
+            itemCount: totalItemsCount,
+            customerName: order.name,
+            customerPhone: order.phone,
+            customerEmail: order.email,
+            adminUrl,
+          }),
         });
       } catch (err) {
         log.error("order.admin_email_error", {
@@ -176,24 +173,22 @@ export async function sendOrderStatusEmail(
     await sendEmail({
       to: order.email,
       subject,
-      react: (
-        <OrderStatusEmail
-          locale={order.locale as Locale}
-          number={order.number}
-          customerName={order.name}
-          status={status}
-          orderUrl={orderUrl}
-          energizationOn={order.energizationOn}
-          courier={order.courier}
-          awb={order.awb}
-          trackingUrl={order.trackingUrl}
-          refundAmountInr={extra?.refundAmountInr}
-          contact={{
-            phoneDisplay: contact?.phoneDisplay,
-            email: contact?.email,
-          }}
-        />
-      ),
+      react: createElement(OrderStatusEmail, {
+        locale: order.locale as Locale,
+        number: order.number,
+        customerName: order.name,
+        status,
+        orderUrl,
+        energizationOn: order.energizationOn,
+        courier: order.courier,
+        awb: order.awb,
+        trackingUrl: order.trackingUrl,
+        refundAmountInr: extra?.refundAmountInr,
+        contact: {
+          phoneDisplay: contact?.phoneDisplay,
+          email: contact?.email,
+        },
+      }),
     });
   } catch (err) {
     log.error("order.sendOrderStatusEmail_failed", {

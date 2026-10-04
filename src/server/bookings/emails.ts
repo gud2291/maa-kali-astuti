@@ -1,4 +1,5 @@
 import "server-only";
+import { createElement } from "react";
 import { eq } from "drizzle-orm";
 import { db } from "@/server/db/client";
 import { bookings } from "@/server/db/schema/consult";
@@ -127,26 +128,24 @@ export async function sendBookingConfirmed(
         await sendEmail({
           to: booking.email,
           subject,
-          react: (
-            <BookingConfirmedEmail
-              locale={booking.locale as Locale}
-              refCode={booking.ref}
-              customerName={booking.name}
-              serviceName={serviceName}
-              tierTitle={tierTitle}
-              mode={booking.mode}
-              modeLabel={modeLabel}
-              startFormatted={startFormatted}
-              isReport={isReport}
-              priceInr={booking.priceInr}
-              manageUrl={manageUrl}
-              rescheduleMinHours={consultSettings.rescheduleMinHours ?? 12}
-              contact={{
-                phoneDisplay: contact.phoneDisplay,
-                email: contact.email,
-              }}
-            />
-          ),
+          react: createElement(BookingConfirmedEmail, {
+            locale: booking.locale as Locale,
+            refCode: booking.ref,
+            customerName: booking.name,
+            serviceName,
+            tierTitle,
+            mode: booking.mode,
+            modeLabel,
+            startFormatted,
+            isReport,
+            priceInr: booking.priceInr,
+            manageUrl,
+            rescheduleMinHours: consultSettings.rescheduleMinHours ?? 12,
+            contact: {
+              phoneDisplay: contact.phoneDisplay,
+              email: contact.email,
+            },
+          }),
           attachments,
         });
       } catch (err) {
@@ -172,34 +171,30 @@ export async function sendBookingConfirmed(
         await sendEmail({
           to: notify.adminEmails,
           subject,
-          react: (
-            <AdminBookingAlertEmail
-              refCode={booking.ref}
-              bookingId={booking.id}
-              serviceName={service?.nameEn ?? booking.serviceKey}
-              tierTitle={tier?.titleEn ?? booking.tierKey}
-              modeLabel={modeLabels[booking.mode]?.en ?? booking.mode}
-              startFormatted={
-                booking.startAt
-                  ? formatIst(booking.startAt, {
-                      date: true,
-                      time: true,
-                      weekday: true,
-                      locale: "en",
-                    })
-                  : null
-              }
-              isReport={isReport}
-              customerName={booking.name}
-              customerPhone={booking.phone}
-              customerEmail={booking.email}
-              priceInr={booking.priceInr}
-              adminUrl={adminUrl}
-              slotClash={alerts?.slotClash}
-              amountMismatch={alerts?.amountMismatch}
-              adminNote={booking.adminNote}
-            />
-          ),
+          react: createElement(AdminBookingAlertEmail, {
+            refCode: booking.ref,
+            bookingId: booking.id,
+            serviceName: service?.nameEn ?? booking.serviceKey,
+            tierTitle: tier?.titleEn ?? booking.tierKey,
+            modeLabel: modeLabels[booking.mode]?.en ?? booking.mode,
+            startFormatted: booking.startAt
+                ? formatIst(booking.startAt, {
+                    date: true,
+                    time: true,
+                    weekday: true,
+                    locale: "en",
+                  })
+                : null,
+            isReport,
+            customerName: booking.name,
+            customerPhone: booking.phone,
+            customerEmail: booking.email,
+            priceInr: booking.priceInr,
+            adminUrl,
+            slotClash: alerts?.slotClash,
+            amountMismatch: alerts?.amountMismatch,
+            adminNote: booking.adminNote,
+          }),
         });
       } catch (err) {
         log.error("booking.email_admin_alert_error", {
@@ -311,23 +306,21 @@ export async function sendBookingRescheduled(bookingId: number): Promise<void> {
         await sendEmail({
           to: booking.email,
           subject,
-          react: (
-            <BookingRescheduledEmail
-              locale={booking.locale as Locale}
-              refCode={booking.ref}
-              customerName={booking.name}
-              serviceName={serviceName}
-              tierTitle={tierTitle}
-              mode={booking.mode}
-              modeLabel={modeLabel}
-              startFormatted={startFormatted}
-              manageUrl={manageUrl}
-              contact={{
-                phoneDisplay: contact.phoneDisplay,
-                email: contact.email,
-              }}
-            />
-          ),
+          react: createElement(BookingRescheduledEmail, {
+            locale: booking.locale as Locale,
+            refCode: booking.ref,
+            customerName: booking.name,
+            serviceName,
+            tierTitle,
+            mode: booking.mode,
+            modeLabel,
+            startFormatted,
+            manageUrl,
+            contact: {
+              phoneDisplay: contact.phoneDisplay,
+              email: contact.email,
+            },
+          }),
           attachments,
         });
       } catch (err) {
@@ -347,23 +340,21 @@ export async function sendBookingRescheduled(bookingId: number): Promise<void> {
         await sendEmail({
           to: notify.adminEmails,
           subject,
-          react: (
-            <AdminBookingAlertEmail
-              refCode={booking.ref}
-              bookingId={booking.id}
-              serviceName={service?.nameEn ?? booking.serviceKey}
-              tierTitle={tier?.titleEn ?? booking.tierKey}
-              modeLabel={modeLabels[booking.mode]?.en ?? booking.mode}
-              startFormatted={startFormatted}
-              isReport={false}
-              customerName={booking.name}
-              customerPhone={booking.phone}
-              customerEmail={booking.email}
-              priceInr={booking.priceInr}
-              adminUrl={adminUrl}
-              adminNote={`Rescheduled (Reschedule #${booking.rescheduleCount})`}
-            />
-          ),
+          react: createElement(AdminBookingAlertEmail, {
+            refCode: booking.ref,
+            bookingId: booking.id,
+            serviceName: service?.nameEn ?? booking.serviceKey,
+            tierTitle: tier?.titleEn ?? booking.tierKey,
+            modeLabel: modeLabels[booking.mode]?.en ?? booking.mode,
+            startFormatted,
+            isReport: false,
+            customerName: booking.name,
+            customerPhone: booking.phone,
+            customerEmail: booking.email,
+            priceInr: booking.priceInr,
+            adminUrl,
+            adminNote: `Rescheduled (Reschedule #${booking.rescheduleCount})`,
+          }),
         });
       } catch (err) {
         log.error("booking.email_reschedule_admin_alert_error", {
@@ -439,23 +430,21 @@ export async function sendBookingMeetingLink(bookingId: number): Promise<void> {
     await sendEmail({
       to: booking.email,
       subject,
-      react: (
-        <BookingUpdateEmail
-          locale={booking.locale as Locale}
-          kind="meeting_link"
-          refCode={booking.ref}
-          customerName={booking.name}
-          serviceName={serviceName}
-          tierTitle={tierTitle}
-          startFormatted={startFormatted}
-          manageUrl={manageUrl}
-          meetingLink={booking.meetingLink}
-          contact={{
-            phoneDisplay: contact.phoneDisplay,
-            email: contact.email,
-          }}
-        />
-      ),
+      react: createElement(BookingUpdateEmail, {
+        locale: booking.locale as Locale,
+        kind: "meeting_link",
+        refCode: booking.ref,
+        customerName: booking.name,
+        serviceName,
+        tierTitle,
+        startFormatted,
+        manageUrl,
+        meetingLink: booking.meetingLink,
+        contact: {
+          phoneDisplay: contact.phoneDisplay,
+          email: contact.email,
+        },
+      }),
     });
   } catch (err) {
     log.error("booking.email_meeting_link_error", {
@@ -515,21 +504,19 @@ export async function sendBookingReportReady(bookingId: number): Promise<void> {
     await sendEmail({
       to: booking.email,
       subject,
-      react: (
-        <BookingUpdateEmail
-          locale={booking.locale as Locale}
-          kind="report_ready"
-          refCode={booking.ref}
-          customerName={booking.name}
-          serviceName={serviceName}
-          tierTitle={tierTitle}
-          manageUrl={manageUrl}
-          contact={{
-            phoneDisplay: contact.phoneDisplay,
-            email: contact.email,
-          }}
-        />
-      ),
+      react: createElement(BookingUpdateEmail, {
+        locale: booking.locale as Locale,
+        kind: "report_ready",
+        refCode: booking.ref,
+        customerName: booking.name,
+        serviceName,
+        tierTitle,
+        manageUrl,
+        contact: {
+          phoneDisplay: contact.phoneDisplay,
+          email: contact.email,
+        },
+      }),
     });
   } catch (err) {
     log.error("booking.email_report_ready_error", {
@@ -592,23 +579,21 @@ export async function sendBookingCancelled(
     await sendEmail({
       to: booking.email,
       subject,
-      react: (
-        <BookingUpdateEmail
-          locale={booking.locale as Locale}
-          kind="cancelled"
-          refCode={booking.ref}
-          customerName={booking.name}
-          serviceName={serviceName}
-          tierTitle={tierTitle}
-          manageUrl={manageUrl}
-          refundNote={opts?.refundNote}
-          reason={opts?.reason}
-          contact={{
-            phoneDisplay: contact.phoneDisplay,
-            email: contact.email,
-          }}
-        />
-      ),
+      react: createElement(BookingUpdateEmail, {
+        locale: booking.locale as Locale,
+        kind: "cancelled",
+        refCode: booking.ref,
+        customerName: booking.name,
+        serviceName,
+        tierTitle,
+        manageUrl,
+        refundNote: opts?.refundNote,
+        reason: opts?.reason,
+        contact: {
+          phoneDisplay: contact.phoneDisplay,
+          email: contact.email,
+        },
+      }),
     });
   } catch (err) {
     log.error("booking.email_cancelled_error", {

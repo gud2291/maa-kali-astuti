@@ -1,5 +1,6 @@
 "use server";
 
+import { createElement } from "react";
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { db } from "@/server/db/client";
@@ -45,14 +46,12 @@ export async function requestOtpAction(
       await sendEmail({
         to: data.email,
         subject,
-        react: (
-          <OtpEmail
-            code={code}
-            locale={data.locale}
-            purpose={data.purpose}
-            contact={contact}
-          />
-        ),
+        react: createElement(OtpEmail, {
+          code,
+          locale: data.locale,
+          purpose: data.purpose,
+          contact,
+        }),
         devNote: `OTP code: ${code}`,
       });
     }
@@ -120,6 +119,7 @@ export async function verifyOtpAction(
         data.next &&
         data.next.startsWith("/") &&
         !data.next.startsWith("//") &&
+        !data.next.includes("\\") &&
         !data.next.startsWith("/admin")
       ) {
         nextUrl = data.next;

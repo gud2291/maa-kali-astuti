@@ -1,4 +1,5 @@
 "use server";
+import { createElement } from "react";
 
 import { after } from "next/server";
 import { runAction, type ActionResult } from "@/server/result";
@@ -36,17 +37,15 @@ export async function submitContactAction(
           await sendEmail({
             to: notifySettings.adminEmails,
             subject: `[Contact] ${data.topic} · ${data.name.trim()}`,
-            react: (
-              <ContactAlertEmail
-                messageId={id}
-                name={data.name.trim()}
-                phone={data.phone?.trim() || null}
-                email={data.email?.trim().toLowerCase() || null}
-                topic={data.topic as MessageTopic}
-                body={data.body.trim()}
-                adminUrl={adminUrl}
-              />
-            ),
+            react: createElement(ContactAlertEmail, {
+              messageId: id,
+              name: data.name.trim(),
+              phone: data.phone?.trim() || null,
+              email: data.email?.trim().toLowerCase() || null,
+              topic: data.topic as MessageTopic,
+              body: data.body.trim(),
+              adminUrl,
+            }),
           });
         }
       } catch (err) {

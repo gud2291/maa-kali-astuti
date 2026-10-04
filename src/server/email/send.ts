@@ -7,9 +7,14 @@ import { log } from "@/server/log";
 
 export type EmailAttachment = {
   filename: string;
+  /** Raw file content (text or bytes); base64-encoded here for the Resend REST API. */
   content?: string | Buffer;
   path?: string;
 };
+
+function toBase64(content: string | Buffer): string {
+  return (typeof content === "string" ? Buffer.from(content, "utf8") : content).toString("base64");
+}
 
 export type SendEmailParams = {
   to: string | string[];
@@ -60,7 +65,11 @@ export async function sendEmail({
   }
 
   if (attachments && attachments.length > 0) {
-    payload.attachments = attachments;
+    payload.attachments = attachments.map((a) => ({
+      filename: a.filename,
+      ...(a.content != null ? { content: toBase64(a.content) } : {}),
+      ...(a.path ? { path: a.path } : {}),
+    }));
   }
 
   const res = await fetch("https://api.resend.com/emails", {

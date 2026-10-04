@@ -1,4 +1,5 @@
 import "server-only";
+import { createElement } from "react";
 import { and, eq, gte, inArray, isNull, lt, lte, ne, or, sql } from "drizzle-orm";
 import { db } from "@/server/db/client";
 import {
@@ -184,23 +185,21 @@ export async function bookingDayReminders(now: Date): Promise<{ done: number }> 
       await sendEmail({
         to: b.email,
         subject,
-        react: (
-          <BookingReminderEmail
-            locale={b.locale as Locale}
-            variant="day"
-            refCode={b.ref}
-            customerName={b.name}
-            serviceName={serviceName}
-            tierTitle={tierTitle}
-            startFormatted={startFormatted}
-            manageUrl={manageUrl}
-            meetingLink={b.meetingLink}
-            contact={{
-              phoneDisplay: contact.phoneDisplay,
-              email: contact.email,
-            }}
-          />
-        ),
+        react: createElement(BookingReminderEmail, {
+          locale: b.locale as Locale,
+          variant: "day",
+          refCode: b.ref,
+          customerName: b.name,
+          serviceName,
+          tierTitle,
+          startFormatted,
+          manageUrl,
+          meetingLink: b.meetingLink,
+          contact: {
+            phoneDisplay: contact.phoneDisplay,
+            email: contact.email,
+          },
+        }),
       });
 
       await db
@@ -280,23 +279,21 @@ export async function bookingHourReminders(now: Date): Promise<{ done: number }>
       await sendEmail({
         to: b.email,
         subject,
-        react: (
-          <BookingReminderEmail
-            locale={b.locale as Locale}
-            variant="hour"
-            refCode={b.ref}
-            customerName={b.name}
-            serviceName={serviceName}
-            tierTitle={tierTitle}
-            startFormatted={startFormatted}
-            manageUrl={manageUrl}
-            meetingLink={b.meetingLink}
-            contact={{
-              phoneDisplay: contact.phoneDisplay,
-              email: contact.email,
-            }}
-          />
-        ),
+        react: createElement(BookingReminderEmail, {
+          locale: b.locale as Locale,
+          variant: "hour",
+          refCode: b.ref,
+          customerName: b.name,
+          serviceName,
+          tierTitle,
+          startFormatted,
+          manageUrl,
+          meetingLink: b.meetingLink,
+          contact: {
+            phoneDisplay: contact.phoneDisplay,
+            email: contact.email,
+          },
+        }),
       });
 
       await db
@@ -383,18 +380,16 @@ export async function reviewRequests(now: Date): Promise<{ done: number }> {
       await sendEmail({
         to: o.email,
         subject: getReviewRequestSubject(o.locale as Locale, o.number),
-        react: (
-          <ReviewRequestEmail
-            locale={o.locale as Locale}
-            customerName={o.name}
-            orderNumber={o.number}
-            items={reviewItems}
-            contact={{
-              phoneDisplay: contact.phoneDisplay,
-              email: contact.email,
-            }}
-          />
-        ),
+        react: createElement(ReviewRequestEmail, {
+          locale: o.locale as Locale,
+          customerName: o.name,
+          orderNumber: o.number,
+          items: reviewItems,
+          contact: {
+            phoneDisplay: contact.phoneDisplay,
+            email: contact.email,
+          },
+        }),
       });
 
       await db.insert(orderEvents).values({
@@ -497,19 +492,17 @@ export async function abandonedCheckouts(now: Date): Promise<{ done: number }> {
       await sendEmail({
         to: d.email,
         subject: getAbandonedCheckoutSubject(d.locale as Locale),
-        react: (
-          <AbandonedCheckoutEmail
-            locale={d.locale as Locale}
-            customerName={d.name}
-            lines={lineItems}
-            totalInr={d.totalInr}
-            cartUrl={cartUrl}
-            contact={{
-              phoneDisplay: contact.phoneDisplay,
-              email: contact.email,
-            }}
-          />
-        ),
+        react: createElement(AbandonedCheckoutEmail, {
+          locale: d.locale as Locale,
+          customerName: d.name,
+          lines: lineItems,
+          totalInr: d.totalInr,
+          cartUrl,
+          contact: {
+            phoneDisplay: contact.phoneDisplay,
+            email: contact.email,
+          },
+        }),
       });
 
       await db
@@ -751,23 +744,21 @@ export async function adminDigest(now: Date): Promise<{ done: number }> {
         yesterdayOrderRows.length,
         todayBookingRows.length,
       ),
-      react: (
-        <AdminDigestEmail
-          dateFormatted={dateFormatted}
-          yesterdayOrders={{
-            count: yesterdayOrderRows.length,
-            totalRevenueInr,
-            paidCount,
-            codCount,
-          }}
-          todayBookings={{
-            count: todayBookingRows.length,
-            list: bookingsList,
-          }}
-          lowStockProducts={lowStockRows}
-          adminDashboardUrl={adminDashboardUrl}
-        />
-      ),
+      react: createElement(AdminDigestEmail, {
+        dateFormatted,
+        yesterdayOrders: {
+          count: yesterdayOrderRows.length,
+          totalRevenueInr,
+          paidCount,
+          codCount,
+        },
+        todayBookings: {
+          count: todayBookingRows.length,
+          list: bookingsList,
+        },
+        lowStockProducts: lowStockRows,
+        adminDashboardUrl,
+      }),
     });
     return { done: 1 };
   } catch (err) {

@@ -1,4 +1,5 @@
 import "server-only";
+import { createElement } from "react";
 import { after } from "next/server";
 import { db } from "@/server/db/client";
 import { inquiries, inquiryEvents } from "@/server/db/schema/crm";
@@ -108,21 +109,19 @@ export async function createInquiry(
               input.locale === "hi"
                 ? `पूछताछ प्राप्त हुई: ${courseOrArea} (${inquiryRef}) — माँ काली स्तुति`
                 : `Inquiry Received: ${courseOrArea} (${inquiryRef}) — Maa Kali Astuti`,
-            react: (
-              <InquiryReceivedEmail
-                locale={input.locale}
-                refCode={inquiryRef}
-                customerName={input.name.trim()}
-                kind={input.kind}
-                targetTitle={courseOrArea}
-                langPref={input.lang === "hindi" ? "हिंदी (Hindi)" : "English"}
-                contact={{
-                  phoneDisplay: contactSettings.phoneDisplay,
-                  email: contactSettings.email,
-                  whatsapp: contactSettings.whatsapp,
-                }}
-              />
-            ),
+            react: createElement(InquiryReceivedEmail, {
+              locale: input.locale,
+              refCode: inquiryRef,
+              customerName: input.name.trim(),
+              kind: input.kind,
+              targetTitle: courseOrArea,
+              langPref: input.lang === "hindi" ? "हिंदी (Hindi)" : "English",
+              contact: {
+                phoneDisplay: contactSettings.phoneDisplay,
+                email: contactSettings.email,
+                whatsapp: contactSettings.whatsapp,
+              },
+            }),
           });
         } catch (emailErr) {
           log.error("inquiry.customer_email_error", {
@@ -144,21 +143,19 @@ export async function createInquiry(
           await sendEmail({
             to: notifySettings.adminEmails,
             subject: `[New Inquiry] ${inquiryRef} · ${input.kind === "course" ? "Course" : "Ritual"} · ${input.name.trim()}`,
-            react: (
-              <AdminInquiryAlertEmail
-                refCode={inquiryRef}
-                inquiryId={inquiryId}
-                kind={input.kind}
-                name={input.name.trim()}
-                phone={input.phone.trim()}
-                email={targetEmail}
-                city={input.city.trim()}
-                courseOrArea={courseOrArea}
-                expOrLang={expOrLang}
-                why={input.why.trim()}
-                adminUrl={adminUrl}
-              />
-            ),
+            react: createElement(AdminInquiryAlertEmail, {
+              refCode: inquiryRef,
+              inquiryId,
+              kind: input.kind,
+              name: input.name.trim(),
+              phone: input.phone.trim(),
+              email: targetEmail,
+              city: input.city.trim(),
+              courseOrArea,
+              expOrLang,
+              why: input.why.trim(),
+              adminUrl,
+            }),
           });
         } catch (adminEmailErr) {
           log.error("inquiry.admin_email_error", {

@@ -1,5 +1,6 @@
 import "server-only";
 
+import { createElement, type CSSProperties } from "react";
 import { eq } from "drizzle-orm";
 import { db } from "@/server/db/client";
 import { kundaliOrders } from "@/server/db/schema/consult";
@@ -71,22 +72,20 @@ export async function sendKundaliReady(
     await sendEmail({
       to: order.email,
       subject,
-      react: (
-        <KundaliReadyEmail
-          locale={order.reportLang}
-          refCode={order.ref}
-          name={order.name}
-          dob={order.dob}
-          place={order.place}
-          reportUrl={reportUrl}
-          pdfUrl={pdfUrl}
-          hasAttachment={hasAttachment}
-          contact={{
-            phoneDisplay: contact.phoneDisplay,
-            email: contact.email,
-          }}
-        />
-      ),
+      react: createElement(KundaliReadyEmail, {
+        locale: order.reportLang,
+        refCode: order.ref,
+        name: order.name,
+        dob: order.dob,
+        place: order.place,
+        reportUrl,
+        pdfUrl,
+        hasAttachment,
+        contact: {
+          phoneDisplay: contact.phoneDisplay,
+          email: contact.email,
+        },
+      }),
       attachments: attachments.length > 0 ? attachments : undefined,
     });
 
@@ -131,17 +130,28 @@ export async function alertKundaliGenerationFailed(
     await sendEmail({
       to: notify.adminEmails,
       subject: `🚨 [Alert] Kundali Generation Failed: ${order.ref} (${order.name})`,
-      react: (
-        <EmailShell locale="en" preview={`Kundali generation failed for ${order.ref}`}>
-          <div style={{ padding: "0 24px" }}>
-            <h2 style={{ color: "#A8322D", margin: "0 0 16px 0" }}>
-              Kundali Generation Failed (5 Attempts)
-            </h2>
-            <EmailText>
-              Report generation for <strong>{order.name}</strong> ({order.ref}) has reached the maximum of 5 attempts and failed.
-            </EmailText>
-            <div
-              style={{
+      react: createElement(EmailShell, {
+        locale: "en",
+        preview: `Kundali generation failed for ${order.ref}`,
+        children: createElement(
+          "div",
+          { style: { padding: "0 24px" } },
+          createElement(
+            "h2",
+            { style: { color: "#A8322D", margin: "0 0 16px 0" } },
+            "Kundali Generation Failed (5 Attempts)",
+          ),
+          createElement(
+            EmailText,
+            null,
+            "Report generation for ",
+            createElement("strong", null, order.name),
+            ` (${order.ref}) has reached the maximum of 5 attempts and failed.`,
+          ),
+          createElement(
+            "div",
+            {
+              style: {
                 backgroundColor: "#FDF2F2",
                 border: "1px solid #F5C6CB",
                 padding: "12px 16px",
@@ -150,18 +160,22 @@ export async function alertKundaliGenerationFailed(
                 fontFamily: "monospace",
                 fontSize: "13px",
                 margin: "16px 0",
-              }}
-            >
-              {error}
-            </div>
-            <div style={{ textAlign: "center", margin: "24px 0" }}>
-              <EmailButton href={adminUrl}>View in Admin</EmailButton>
-            </div>
-          </div>
-        </EmailShell>
-      ),
+              },
+            },
+            error,
+          ),
+          createElement(
+            "div",
+            { style: { textAlign: "center", margin: "24px 0" } satisfies CSSProperties },
+            createElement(EmailButton, { href: adminUrl, children: "View in Admin" }),
+          ),
+        ),
+      }),
     });
   } catch (err) {
-    log.error("kundali.admin_alert_failed", { orderId, err });
+    log.error("kundali.admin_alert_failed", {
+      orderId,
+      error: err instanceof Error ? err.message : String(err),
+    });
   }
 }

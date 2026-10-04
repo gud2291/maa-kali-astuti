@@ -49,8 +49,12 @@ Every step B01–B44 was done by `antigravity` (no Claude or mixed steps). Commi
 - [x] **B07 Home from DB** — one `Promise.all` in the home page, sections take props, JSON/products-index imports gone, markup unchanged. Findings:
   - L `getHomeReviews` formatted the fallback date with the server's local (UTC) day → off by one for reviews made 00:00–05:30 IST. Now uses `istDayKey`. (`src/lib/api/content.ts`)
   - (The home page `generateMetadata` was later rewritten by B43 — its bug is listed under B43.)
-- [ ] B08 Client snapshot, coupons, fees
-- [ ] B09 Auth + email core
+- [x] **B08 Snapshot, coupons, fees** — `rateLimit` = ARCH §5 pattern, snapshot + CDN headers, catalog store (load once, one retry), fees out of constants, `evaluateCoupon` rules (format, active, window, usage, min cart, per-customer, first order), `checkCouponAction` re-prices from the DB and rate-limits, cart store v2 migrate, `products-index` deleted, coupon messages EN+HI. Demo cart seeding is dev-only (B44). No findings.
+- [x] **B09 Auth + email core** — sessions (hashed token, `__Host-` cookies in prod, fixed maxAge, admin role check), OTP (HMAC, 10 min, atomic attempts, consume), Turnstile, guards, guest-record claim batch, Resend REST sender, OTP email, EN+HI `errors`/`auth`. Findings:
+  - **H — build break:** server modules named `*.ts` (as the specs require) contained **JSX** (`react: (<OtpEmail … />)`). `.ts` files are not parsed as JSX by SWC or tsc → `pnpm dev`/`build` fail as soon as the module loads. Rewritten with `createElement(…)` (same props, same behaviour) in: `src/server/auth/actions.ts` (B09), `src/server/orders/emails.ts` (B16/B21), `src/server/bookings/emails.ts` (B22–B24), `src/server/kundali/emails.ts` (B30), `src/server/inquiries/service.ts` (B31), `src/server/messages/actions.ts` (B32), `src/server/cron/jobs.ts` (B41). (`src/server/health.ts` B40 and `src/components/admin/form/useActionForm.ts` B12 have the same problem — see those steps.)
+  - **M** `sendEmail` posted attachments raw: the booking `.ics` (plain text) and the Kundali PDF (`Buffer` → `{"type":"Buffer","data":[…]}` in JSON). The Resend REST API takes base64 `content`, so confirmation/reschedule emails with the calendar file and the Kundali email with the PDF would fail or carry broken files. Now every attachment is base64-encoded in `sendEmail`. (`src/server/email/send.ts`)
+  - **M** customer OTP `next` accepted `/\evil.com` (browsers treat `/\` like `//`) → open redirect after login. Backslashes are now rejected. (`src/server/auth/actions.ts`)
+  - L `alertKundaliGenerationFailed` logged a raw `Error` object inside `data` (serialises to `{}`); now logs the message. (`src/server/kundali/emails.ts`)
 - [ ] B10 Media uploads (R2)
 - [ ] B11 Admin shell + login
 - [ ] B12 Admin UI kit
@@ -93,6 +97,8 @@ Every step B01–B44 was done by `antigravity` (no Claude or mixed steps). Commi
 - `src/server/settings/queries.ts`, `src/server/catalog/queries.ts` (B05)
 - `src/server/consult/mappers.ts` (B06)
 - `src/lib/api/content.ts` (B07)
+- `src/server/auth/actions.ts`, `src/server/email/send.ts` (B09)
+- JSX → `createElement` (B09 finding): `src/server/orders/emails.ts`, `src/server/bookings/emails.ts`, `src/server/kundali/emails.ts`, `src/server/inquiries/service.ts`, `src/server/messages/actions.ts`, `src/server/cron/jobs.ts`
 
 ## Fix-list items added for the user
 - (none yet)
