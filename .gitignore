@@ -21,8 +21,15 @@ Thumbs.db
 *.zip
 *(standalone).html
 
-# local claude settings
-.claude/settings.local.json
+# AI / project docs — kept on this machine only, never pushed
+.claude/
+AGENTS.md
+CLAUDE.md
+PROGRESS.md
+docs/
+design/
+design-brief/
+client-requirements/
 
 # scaffold extras
 /.pnp
