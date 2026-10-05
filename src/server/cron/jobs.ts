@@ -43,6 +43,17 @@ import {
   getAdminDigestSubject,
 } from "@/server/email/templates/AdminDigestEmail";
 
+/** Runs `fn` over `items` with at most `size` in flight (RULES §5: no serial awaits for independent work). */
+async function inChunks<T>(
+  items: readonly T[],
+  size: number,
+  fn: (item: T) => Promise<void>,
+): Promise<void> {
+  for (let i = 0; i < items.length; i += size) {
+    await Promise.all(items.slice(i, i + size).map(fn));
+  }
+}
+
 /**
  * 1. Expire online unpaid orders after 24 hours.
  */
@@ -62,7 +73,7 @@ export async function expireUnpaidOrders(now: Date): Promise<{ done: number }> {
   if (rows.length === 0) return { done: 0 };
 
   let count = 0;
-  for (const row of rows) {
+  await inChunks(rows, 10, async (row) => {
     const res = await db
       .update(orders)
       .set({
@@ -84,7 +95,7 @@ export async function expireUnpaidOrders(now: Date): Promise<{ done: number }> {
       });
       count++;
     }
-  }
+  });
 
   return { done: count };
 }
@@ -114,7 +125,8 @@ export async function expireBookingHolds(now: Date): Promise<{ done: number }> {
       status: "expired",
       updatedAt: now,
     })
-    .where(inArray(bookings.id, ids))
+    // Re-check the status: a payment confirmed after the select must not be expired.
+    .where(and(inArray(bookings.id, ids), eq(bookings.status, "pending_payment")))
     .returning({ id: bookings.id });
 
   return { done: updated.length };
@@ -150,8 +162,8 @@ export async function bookingDayReminders(now: Date): Promise<{ done: number }> 
   ]);
 
   let count = 0;
-  for (const b of rows) {
-    if (!b.email || !b.startAt) continue;
+  await inChunks(rows, 10, async (b) => {
+    if (!b.email || !b.startAt) return;
 
     const service = consultData.services.find((s) => s.key === b.serviceKey);
     const tier = consultData.tiers.find(
@@ -209,9 +221,9 @@ export async function bookingDayReminders(now: Date): Promise<{ done: number }> 
 
       count++;
     } catch (err) {
-      log.error("cron.booking_day_reminder_failed", { bookingId: b.id, err });
+      log.error("cron.booking_day_reminder_failed", { bookingId: b.id, error: err instanceof Error ? err.message : String(err) });
     }
-  }
+  });
 
   return { done: count };
 }
@@ -244,8 +256,8 @@ export async function bookingHourReminders(now: Date): Promise<{ done: number }>
   ]);
 
   let count = 0;
-  for (const b of rows) {
-    if (!b.email || !b.startAt) continue;
+  await inChunks(rows, 10, async (b) => {
+    if (!b.email || !b.startAt) return;
 
     const service = consultData.services.find((s) => s.key === b.serviceKey);
     const tier = consultData.tiers.find(
@@ -303,9 +315,9 @@ export async function bookingHourReminders(now: Date): Promise<{ done: number }>
 
       count++;
     } catch (err) {
-      log.error("cron.booking_hour_reminder_failed", { bookingId: b.id, err });
+      log.error("cron.booking_hour_reminder_failed", { bookingId: b.id, error: err instanceof Error ? err.message : String(err) });
     }
-  }
+  });
 
   return { done: count };
 }
@@ -340,7 +352,7 @@ export async function reviewRequests(now: Date): Promise<{ done: number }> {
   const contact = await getSetting("contact");
   let count = 0;
 
-  for (const o of deliveredOrders) {
+  await inChunks(deliveredOrders, 10, async (o) => {
     const [existingEvent] = await db
       .select({ id: orderEvents.id })
       .from(orderEvents)
@@ -352,7 +364,7 @@ export async function reviewRequests(now: Date): Promise<{ done: number }> {
       )
       .limit(1);
 
-    if (existingEvent) continue;
+    if (existingEvent) return;
 
     const items = await db
       .select({
@@ -364,7 +376,7 @@ export async function reviewRequests(now: Date): Promise<{ done: number }> {
       .from(orderItems)
       .where(eq(orderItems.orderId, o.id));
 
-    if (items.length === 0) continue;
+    if (items.length === 0) return;
 
     const reviewItems = items.map((i) => ({
       productId: i.productId,
@@ -401,9 +413,9 @@ export async function reviewRequests(now: Date): Promise<{ done: number }> {
 
       count++;
     } catch (err) {
-      log.error("cron.review_request_failed", { orderId: o.id, err });
+      log.error("cron.review_request_failed", { orderId: o.id, error: err instanceof Error ? err.message : String(err) });
     }
-  }
+  });
 
   return { done: count };
 }
@@ -433,13 +445,13 @@ export async function abandonedCheckouts(now: Date): Promise<{ done: number }> {
   const contact = await getSetting("contact");
   let count = 0;
 
-  for (const d of drafts) {
+  await inChunks(drafts, 10, async (d) => {
     if (!d.email) {
       await db
         .update(checkoutDrafts)
         .set({ remindedAt: now })
         .where(eq(checkoutDrafts.token, d.token));
-      continue;
+      return;
     }
 
     const [recentOrder] = await db
@@ -458,7 +470,7 @@ export async function abandonedCheckouts(now: Date): Promise<{ done: number }> {
         .update(checkoutDrafts)
         .set({ remindedAt: now })
         .where(eq(checkoutDrafts.token, d.token));
-      continue;
+      return;
     }
 
     const lines = d.lines ?? [];
@@ -467,7 +479,7 @@ export async function abandonedCheckouts(now: Date): Promise<{ done: number }> {
         .update(checkoutDrafts)
         .set({ remindedAt: now })
         .where(eq(checkoutDrafts.token, d.token));
-      continue;
+      return;
     }
 
     const pids = lines.map((l) => l.pid);
@@ -512,9 +524,9 @@ export async function abandonedCheckouts(now: Date): Promise<{ done: number }> {
 
       count++;
     } catch (err) {
-      log.error("cron.abandoned_checkout_failed", { draftToken: d.token, err });
+      log.error("cron.abandoned_checkout_failed", { draftId: d.id, error: err instanceof Error ? err.message : String(err) });
     }
-  }
+  });
 
   return { done: count };
 }
@@ -551,7 +563,7 @@ export async function deleteOldPalmPhotos(now: Date): Promise<{ done: number }> 
       try {
         await deleteMedia(mediaId);
       } catch (err) {
-        log.warn("cron.delete_palm_media_failed", { mediaId, err });
+        log.warn("cron.delete_palm_media_failed", { mediaId, error: err instanceof Error ? err.message : String(err) });
       }
     }
 
@@ -593,7 +605,7 @@ export async function cleanupMedia(now: Date): Promise<{ done: number }> {
       await deleteMedia(m.id);
       count++;
     } catch (err) {
-      log.warn("cron.cleanup_media_failed", { mediaId: m.id, err });
+      log.warn("cron.cleanup_media_failed", { mediaId: m.id, error: err instanceof Error ? err.message : String(err) });
     }
   }
 
@@ -618,8 +630,9 @@ export async function retryKundali(now: Date): Promise<{ done: number }> {
     )
     .limit(5);
 
+  // In parallel: five serial 45 s renders would not fit the route's 60 s maxDuration.
   let count = 0;
-  for (const order of candidates) {
+  await inChunks(candidates, 5, async (order) => {
     const url = absoluteUrl(`/api/kundali/${encodeURIComponent(order.ref)}/generate`);
     try {
       await fetch(url, {
@@ -631,9 +644,12 @@ export async function retryKundali(now: Date): Promise<{ done: number }> {
       });
       count++;
     } catch (err) {
-      log.warn("cron.retry_kundali_failed", { ref: order.ref, err });
+      log.warn("cron.retry_kundali_failed", {
+        ref: order.ref,
+        error: err instanceof Error ? err.message : String(err),
+      });
     }
-  }
+  });
 
   return { done: count };
 }

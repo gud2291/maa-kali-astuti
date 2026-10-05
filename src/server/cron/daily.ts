@@ -36,7 +36,7 @@ export async function runDailyCron(now = new Date()): Promise<DailyCronResult> {
       const res = await job.fn(now);
       result[job.name] = res.done;
     } catch (err) {
-      log.error(`cron.daily.${job.name}_failed`, { err });
+      log.error(`cron.daily.${job.name}_failed`, { error: err instanceof Error ? err.message : String(err) });
       result[job.name] = "error";
     }
   }

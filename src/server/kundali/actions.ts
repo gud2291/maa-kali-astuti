@@ -3,7 +3,7 @@
 import { z } from "zod";
 import { eq } from "drizzle-orm";
 import { runAction, type ActionResult, AppError } from "@/server/result";
-import { clientIp } from "@/server/ip";
+import { clientIp } from "@/server/request";
 import { rateLimit } from "@/server/rate-limit";
 import { chartInputSchema, kundaliOrderSchema } from "@/lib/validation/kundali";
 import { computeChart } from "@/server/kundali/engine";
@@ -55,14 +55,15 @@ export async function createKundaliOrderAction(
     const ip = await clientIp();
     await rateLimit("k99:ip", ip, 10, 600);
 
+    // Check before creating the row, so an unconfigured store never leaves pending orders.
+    if (!isConfigured("razorpay") || !env.RAZORPAY_KEY_ID) {
+      throw new AppError("NOT_CONFIGURED", "Razorpay is not configured");
+    }
+
     const customer = await getCustomer();
     const order = await createKundaliOrder(data, {
       userId: customer?.id ?? null,
     });
-
-    if (!isConfigured("razorpay") || !env.RAZORPAY_KEY_ID) {
-      throw new AppError("NOT_CONFIGURED", "Razorpay is not configured");
-    }
 
     const rzpOrder = await createRzpOrder({
       amountInr: order.priceInr,

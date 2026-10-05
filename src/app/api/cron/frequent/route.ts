@@ -16,7 +16,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const auth = req.headers.get("authorization");
   if (!auth || !auth.startsWith("Bearer ")) {
     return NextResponse.json(
-      { error: "UNAUTHORIZED" },
+      { error: "UNAUTHENTICATED" },
       { status: 401, headers: { "Cache-Control": "no-store" } },
     );
   }
@@ -26,7 +26,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
 
   if (!valid) {
     return NextResponse.json(
-      { error: "UNAUTHORIZED" },
+      { error: "UNAUTHENTICATED" },
       { status: 401, headers: { "Cache-Control": "no-store" } },
     );
   }

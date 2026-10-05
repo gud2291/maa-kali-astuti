@@ -22,7 +22,7 @@ export async function runFrequentCron(now = new Date()): Promise<FrequentCronRes
       const res = await job.fn(now);
       result[job.name] = res.done;
     } catch (err) {
-      log.error(`cron.frequent.${job.name}_failed`, { err });
+      log.error(`cron.frequent.${job.name}_failed`, { error: err instanceof Error ? err.message : String(err) });
       result[job.name] = "error";
     }
   }
