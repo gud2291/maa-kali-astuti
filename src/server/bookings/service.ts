@@ -226,6 +226,31 @@ export async function markBookingPaid(opts: {
   // A payment can arrive after the cron expired the hold: the money is taken, so still confirm
   // (the clash check below flags an overlap for the admin).
   if (booking.status !== "pending_payment" && booking.status !== "expired") {
+    // Cancelled before the money arrived (or a second payment): keep it visible for a refund.
+    const extra = await db
+      .insert(payments)
+      .values({
+        entity: "booking",
+        entityId: booking.id,
+        provider: "razorpay",
+        rzpOrderId: opts.rzpOrderId,
+        rzpPaymentId: opts.rzpPaymentId,
+        amountInr: opts.amountInr,
+        status: "captured",
+        method: opts.method ?? null,
+      })
+      .onConflictDoNothing({ target: payments.rzpPaymentId })
+      .returning({ id: payments.id });
+    if (extra.length > 0) {
+      const note = booking.paidAt === null
+        ? `Payment received while ${booking.status} — refund it`
+        : `Extra payment received: ${opts.rzpPaymentId} (₹${opts.amountInr}) — refund it`;
+      await db
+        .update(bookings)
+        .set({ adminNote: booking.adminNote ? `${booking.adminNote}; ${note}` : note, updatedAt: new Date() })
+        .where(eq(bookings.id, booking.id));
+      log.warn("booking.unexpected_payment", { bookingId: booking.id, status: booking.status });
+    }
     return { first: false, bookingId: booking.id };
   }
 
@@ -402,6 +427,8 @@ export async function rescheduleBooking(opts: {
     SET start_at = ${newStart.getTime()},
         end_at = ${newEnd.getTime()},
         reschedule_count = reschedule_count + 1,
+        reminder_day_at = NULL,
+        reminder_hour_at = NULL,
         updated_at = ${now}
     WHERE id = ${opts.bookingId}
       AND NOT EXISTS (

@@ -324,9 +324,14 @@ export async function transitionOrder(
   let restocked = false;
   let restockedProductIds: string[] = [];
 
+  // Stock was taken only if finalizePlacement ran, and that always issues the invoice number
+  // (an amount-mismatch or paid-after-cancel order never took stock).
   const shouldRestock =
     input.to === "cancelled" &&
-    (order.paymentStatus === "paid" || order.paymentStatus === "cod_pending");
+    order.invoiceNo !== null &&
+    (order.paymentStatus === "paid" ||
+      order.paymentStatus === "partially_refunded" ||
+      order.paymentStatus === "cod_pending");
 
   await db.transaction(async (tx) => {
     // Guard on the status we validated: a concurrent change (e.g. a double cancel) must not

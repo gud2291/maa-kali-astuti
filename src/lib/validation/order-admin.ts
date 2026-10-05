@@ -32,6 +32,15 @@ export const orderListFilterSchema = z.object({
 
 export type OrderListFilters = z.infer<typeof orderListFilterSchema>;
 
+// Rendered as a link on the customer's order page: only http(s), never `javascript:` and co.
+const trackingUrlSchema = z
+  .string()
+  .trim()
+  .max(500)
+  .regex(/^https?:\/\/[^\s]+$/i, "Must start with https://")
+  .optional()
+  .or(z.literal(""));
+
 export const transitionSchema = z
   .object({
     to: z.enum(ORDER_STATUS),
@@ -39,7 +48,7 @@ export const transitionSchema = z
     notify: z.boolean().default(true),
     courier: z.string().trim().max(60).optional(),
     awb: z.string().trim().max(40).optional(),
-    trackingUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
+    trackingUrl: trackingUrlSchema,
   })
   .superRefine((data, ctx) => {
     if (data.to === "shipped") {
@@ -87,7 +96,7 @@ export type EnergizationBulkInput = z.infer<typeof energizationBulkSchema>;
 export const trackingSchema = z.object({
   courier: z.string().trim().min(1, "Courier is required").max(60),
   awb: z.string().trim().min(1, "AWB is required").max(40),
-  trackingUrl: z.string().url("Invalid URL").optional().or(z.literal("")),
+  trackingUrl: trackingUrlSchema,
 });
 
 export type TrackingInput = z.infer<typeof trackingSchema>;

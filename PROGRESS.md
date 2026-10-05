@@ -70,7 +70,7 @@ Spec files are in `docs/backend/steps/`. Each step needs the previous one DONE.
 | B43 | Per-page metadata & structured data | DONE | antigravity | 2026-10-02 | L | any | `B43-seo-pages.md` |
 | B44 | Hardening & go-live prep | DONE | antigravity | 2026-10-03 | M | any | `B44-hardening-go-live.md` |
 | B45 | Final audit 1 — other agents' work | DONE | claude | 2026-10-05 | — | **Claude only** | `B45-audit-agent-work.md` |
-| B46 | Final audit 2 — security, scale, build | TODO | | | — | **Claude only** | `B46-audit-security-scale.md` |
+| B46 | Final audit 2 — security, scale, build | IN-PROGRESS | claude | 2026-10-05 | — | **Claude only** | `B46-audit-security-scale.md` |
 
 ## Optional (only when the user asks — Claude writes the spec first)
 | Step | Title |

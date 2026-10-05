@@ -1,5 +1,5 @@
 import "server-only";
-import { and, desc, eq } from "drizzle-orm";
+import { and, desc, eq, sql } from "drizzle-orm";
 import { db } from "@/server/db/client";
 import { orders, orderEvents, payments, refunds } from "@/server/db/schema/commerce";
 import { refundPayment } from "@/server/payments/razorpay";
@@ -69,7 +69,15 @@ export async function refundOrder(
       );
     }
 
-    const maxRefundable = payment.amountInr - (order.refundedInr || 0);
+    // Refunds still waiting for their webhook are not in refundedInr yet: count them too, so a
+    // second click cannot refund the same money twice.
+    const [pending] = await db
+      .select({ total: sql<number>`coalesce(sum(${refunds.amountInr}), 0)` })
+      .from(refunds)
+      .where(
+        and(eq(refunds.entity, "order"), eq(refunds.entityId, id), eq(refunds.status, "pending")),
+      );
+    const maxRefundable = payment.amountInr - (order.refundedInr || 0) - Number(pending?.total ?? 0);
     if (input.amountInr > maxRefundable) {
       throw new AppError(
         "VALIDATION",

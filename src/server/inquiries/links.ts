@@ -146,47 +146,56 @@ export async function markLinkPaid(opts: {
     return { ok: false, first: false };
   }
 
-  const [updatedLink] = await db
-    .update(paymentLinks)
-    .set({
-      status: "paid",
-      paidAt: new Date(),
-    })
-    .where(whereClause)
-    .returning();
+  // One transaction: a failure part-way must not leave the link "paid" with the money unrecorded
+  // (the webhook retry would then skip it).
+  const updatedLink = await db.transaction(async (tx) => {
+    const [link] = await tx
+      .update(paymentLinks)
+      .set({
+        status: "paid",
+        paidAt: new Date(),
+      })
+      .where(whereClause)
+      .returning();
+
+    if (!link) return null;
+
+    await tx
+      .insert(payments)
+      .values({
+        entity: "link",
+        entityId: link.id,
+        provider: "razorpay",
+        rzpOrderId: null,
+        rzpPaymentId: opts.rzpPaymentId || null,
+        amountInr: opts.amountInr,
+        status: "captured",
+        method: opts.method ?? null,
+      })
+      .onConflictDoNothing({ target: payments.rzpPaymentId });
+
+    // If associated with an inquiry, update inquiry paid amount & event
+    if (link.entity === "inquiry" && link.entityId) {
+      await tx
+        .update(inquiries)
+        .set({
+          paidInr: sql`${inquiries.paidInr} + ${opts.amountInr}`,
+        })
+        .where(eq(inquiries.id, link.entityId));
+
+      await tx.insert(inquiryEvents).values({
+        inquiryId: link.entityId,
+        type: "payment",
+        message: `Payment received: ₹${opts.amountInr} (Payment ID: ${opts.rzpPaymentId})`,
+        actorId: null,
+      });
+    }
+    return link;
+  });
 
   if (!updatedLink) {
     // Already marked paid or not found
     return { ok: true, first: false };
-  }
-
-  // Insert row into payments
-  await db.insert(payments).values({
-    entity: "link",
-    entityId: updatedLink.id,
-    provider: "razorpay",
-    rzpOrderId: null,
-    rzpPaymentId: opts.rzpPaymentId,
-    amountInr: opts.amountInr,
-    status: "captured",
-    method: opts.method ?? null,
-  });
-
-  // If associated with an inquiry, update inquiry paid amount & event
-  if (updatedLink.entity === "inquiry" && updatedLink.entityId) {
-    await db
-      .update(inquiries)
-      .set({
-        paidInr: sql`${inquiries.paidInr} + ${opts.amountInr}`,
-      })
-      .where(eq(inquiries.id, updatedLink.entityId));
-
-    await db.insert(inquiryEvents).values({
-      inquiryId: updatedLink.entityId,
-      type: "payment",
-      message: `Payment received: ₹${opts.amountInr} (Payment ID: ${opts.rzpPaymentId})`,
-      actorId: null,
-    });
   }
 
   log.info("payment_link.paid_success", {

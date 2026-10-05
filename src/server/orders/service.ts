@@ -1,5 +1,5 @@
 import "server-only";
-import { and, count, eq, gte, lt, ne, sql } from "drizzle-orm";
+import { and, count, eq, gte, inArray, lt, sql } from "drizzle-orm";
 import { db } from "@/server/db/client";
 import {
   orders,
@@ -353,7 +353,7 @@ export async function markOrderPaid({
 }): Promise<{ first: boolean }> {
   const now = new Date();
 
-  // Transaction A: Atomic first-time-paid update + payments row + event paid
+  // One transaction: first-time-paid update + payments row + event + finalize (stock, coupon, invoice)
   const txAResult = await db.transaction(async (tx) => {
     const [existing] = await tx
       .select({
@@ -380,10 +380,36 @@ export async function markOrderPaid({
         placedAt: sql`CASE WHEN ${orders.placedAt} IS NULL THEN ${now.getTime()} ELSE ${orders.placedAt} END`,
         razorpayOrderId: rzpOrderId ? rzpOrderId : orders.razorpayOrderId,
       })
-      .where(and(eq(orders.id, orderId), ne(orders.paymentStatus, "paid")))
+      // Only an unpaid order can become paid: a replayed confirm or a late webhook must never
+      // flip a refunded / partially refunded order back to "paid" and re-run fulfilment.
+      .where(and(eq(orders.id, orderId), inArray(orders.paymentStatus, ["unpaid", "failed"])))
       .returning({ id: orders.id, totalInr: orders.totalInr, status: orders.status });
 
     if (updated.length === 0) {
+      // Already processed. A *different* captured payment (double pay, pay after refund) must
+      // still be recorded and flagged so the admin can refund it.
+      const extra = await tx
+        .insert(payments)
+        .values({
+          entity: "order",
+          entityId: orderId,
+          provider: "razorpay",
+          rzpOrderId: rzpOrderId ?? existing.razorpayOrderId ?? null,
+          rzpPaymentId,
+          amountInr,
+          status: "captured",
+          method: method ?? null,
+        })
+        .onConflictDoNothing({ target: payments.rzpPaymentId })
+        .returning({ id: payments.id });
+      if (extra.length > 0) {
+        const reason = `Extra payment received: ${rzpPaymentId} (₹${amountInr}) — refund it`;
+        await tx
+          .update(orders)
+          .set({ needsAttention: true, attentionReason: reason })
+          .where(eq(orders.id, orderId));
+        await tx.insert(orderEvents).values({ orderId, type: "attention", message: reason, public: false });
+      }
       return { ok: false as const };
     }
 
@@ -429,7 +455,7 @@ export async function markOrderPaid({
         message: reason,
         public: false,
       });
-      return { ok: true as const, skipFinalize: true };
+      return { ok: true as const };
     }
 
     if (amountInr !== updated[0].totalInr) {
@@ -449,26 +475,16 @@ export async function markOrderPaid({
         public: false,
       });
 
-      return { ok: true as const, skipFinalize: true };
+      return { ok: true as const };
     }
 
-    return { ok: true as const, skipFinalize: false };
-  });
-
-  if (!txAResult.ok) {
-    return { first: false };
-  }
-
-  if (txAResult.skipFinalize) {
-    return { first: true };
-  }
-
-  // Transaction B: finalize placement with mode "paid"
-  await db.transaction(async (tx) => {
+    // Same transaction as the paid flag: if finalising fails, nothing is committed and the
+    // webhook / confirm retry can still process the payment.
     await finalizePlacement(tx, orderId, "paid");
+    return { ok: true as const };
   });
 
-  return { first: true };
+  return { first: txAResult.ok };
 }
 
 export async function recordPaymentFailure({
@@ -500,7 +516,10 @@ export async function recordPaymentFailure({
       amountInr: order.totalInr,
       status: "failed",
       error: error ?? "Payment failed",
-    });
+    })
+    // A late or repeated failure event for a payment we already recorded must not throw
+    // (the webhook would answer 500 forever).
+    .onConflictDoNothing({ target: payments.rzpPaymentId });
 
     await tx.insert(orderEvents).values({
       orderId,

@@ -287,7 +287,10 @@ export async function generateKundaliReport(
       try {
         await sendKundaliReady(locked.id, pdfBuffer);
       } catch (err) {
-        log.error("kundali.after_email_failed", { orderId: locked.id, err });
+        log.error("kundali.after_email_failed", {
+          orderId: locked.id,
+          error: err instanceof Error ? err.message : String(err),
+        });
       }
     });
 
@@ -309,14 +312,13 @@ export async function generateKundaliReport(
       })
       .where(eq(kundaliOrders.id, locked.id));
 
-    // locked.genAttempts after sql`genAttempts + 1` was incremented
-    const attempts = (locked.genAttempts ?? 0) + 1;
-    if (attempts >= 5) {
+    // `returning()` already gives the incremented count: alert once, on the last allowed attempt.
+    if (locked.genAttempts >= 5) {
       after(async () => {
         try {
           await alertKundaliGenerationFailed(locked.id, shortError);
         } catch (e) {
-          log.error("kundali.alert_admin_failed", e);
+          log.error("kundali.alert_admin_failed", { error: e instanceof Error ? e.message : String(e) });
         }
       });
     }
