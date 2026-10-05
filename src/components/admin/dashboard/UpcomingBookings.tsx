@@ -15,8 +15,8 @@ function getBookingStatusBadge(status: BookingStatus): { tone: BadgeTone; label:
       return { tone: "ok", label: "Confirmed" };
     case "completed":
       return { tone: "info", label: "Completed" };
-    case "hold":
-      return { tone: "warn", label: "On Hold" };
+    case "pending_payment":
+      return { tone: "warn", label: "Awaiting payment" };
     case "cancelled":
       return { tone: "danger", label: "Cancelled" };
     default:

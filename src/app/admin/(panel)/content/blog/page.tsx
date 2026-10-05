@@ -39,7 +39,6 @@ export default async function AdminBlogPage(props: {
   });
 
   const categoryOptions = [
-    { value: "", label: "All Categories" },
     ...ARTICLE_CATEGORIES.map((k) => ({
       value: k,
       label: ARTICLE_CATEGORY_LABELS[k]?.en ?? k,
@@ -47,7 +46,6 @@ export default async function AdminBlogPage(props: {
   ];
 
   const statusOptions = [
-    { value: "", label: "All Statuses" },
     { value: "draft", label: "Draft" },
     { value: "published", label: "Published" },
   ];
@@ -56,7 +54,7 @@ export default async function AdminBlogPage(props: {
     {
       key: "title",
       header: "Article",
-      render: (row) => (
+      cell: (row) => (
         <div className="flex items-center gap-3">
           {row.coverMedia?.src ? (
             /* eslint-disable-next-line @next/next/no-img-element */
@@ -87,7 +85,7 @@ export default async function AdminBlogPage(props: {
     {
       key: "category",
       header: "Category",
-      render: (row) => (
+      cell: (row) => (
         <span className="font-sans text-[13px] text-ink6 capitalize">
           {ARTICLE_CATEGORY_LABELS[row.category]?.en ?? row.category}
         </span>
@@ -96,7 +94,7 @@ export default async function AdminBlogPage(props: {
     {
       key: "readMins",
       header: "Read Time",
-      render: (row) => (
+      cell: (row) => (
         <span className="font-sans text-[13px] text-ink6">
           {row.readMins} min
         </span>
@@ -105,17 +103,14 @@ export default async function AdminBlogPage(props: {
     {
       key: "status",
       header: "Status",
-      render: (row) => (
-        <StatusBadge
-          status={row.status === "published" ? "active" : "draft"}
-          label={row.status === "published" ? "Published" : "Draft"}
-        />
+      cell: (row) => (
+        <StatusBadge tone={row.status === "published" ? "ok" : "muted"}>{row.status === "published" ? "Published" : "Draft"}</StatusBadge>
       ),
     },
     {
       key: "publishedAt",
       header: "Published",
-      render: (row) => (
+      cell: (row) => (
         <span className="font-sans text-[12px] text-ink6 tabular">
           {row.publishedAt ? formatIst(row.publishedAt) : "—"}
         </span>
@@ -125,7 +120,7 @@ export default async function AdminBlogPage(props: {
       key: "actions",
       header: "",
       className: "text-right",
-      render: (row) => (
+      cell: (row) => (
         <div className="flex items-center justify-end gap-2">
           {row.status === "published" && (
             <Link
@@ -154,7 +149,7 @@ export default async function AdminBlogPage(props: {
       <PageHeader
         title="Blog Articles"
         description="Manage spiritual articles, guides, remedies, and astrological insights."
-        action={
+        actions={
           <Link
             href="/admin/content/blog/new"
             className={buttonClass("primary", "sm")}
@@ -171,16 +166,8 @@ export default async function AdminBlogPage(props: {
           <SearchBox placeholder="Search articles by title or slug…" />
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <FilterSelect
-            paramName="category"
-            options={categoryOptions}
-            defaultValue=""
-          />
-          <FilterSelect
-            paramName="status"
-            options={statusOptions}
-            defaultValue=""
-          />
+          <FilterSelect param="category" label="All Categories" options={categoryOptions} />
+          <FilterSelect param="status" label="All Statuses" options={statusOptions} />
         </div>
       </div>
 
@@ -189,7 +176,7 @@ export default async function AdminBlogPage(props: {
         <EmptyState
           icon="scroll"
           title="No articles found"
-          description={
+          body={
             search || category || status
               ? "No articles match the selected filters."
               : "Start by writing your first blog article."
@@ -207,10 +194,10 @@ export default async function AdminBlogPage(props: {
         <div className="space-y-4">
           <DataTable
             columns={columns}
-            data={items}
-            keyExtractor={(item) => String(item.id)}
+            rows={items}
+            empty={null}
           />
-          <Pagination totalPages={pages} currentPage={page} />
+          <Pagination totalPages={pages} page={page} />
         </div>
       )}
     </div>

@@ -112,7 +112,7 @@ export function SectionToggles({
       <CardHeader
         title="Home Page Sections"
         description="Toggle sections on or off to control what appears on the storefront home page. Sections appear in the order listed below."
-        action={
+        actions={
           <button
             type="button"
             onClick={handleSave}

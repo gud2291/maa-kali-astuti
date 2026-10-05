@@ -179,7 +179,7 @@ export function RescheduleCard({
                 rel="noopener noreferrer"
                 className="mt-2 inline-flex items-center gap-1.5 font-sans text-[13px] font-semibold text-em7 hover:text-em9"
               >
-                <Icon name="wa" className="size-4" />
+                <Icon name="whatsapp" className="size-4" />
                 <span>{t("help.whatsapp")}</span>
               </a>
             )}

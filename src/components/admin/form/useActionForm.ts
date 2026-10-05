@@ -7,6 +7,7 @@ import {
   type UseFormReturn,
   type Path,
   type FieldValues,
+  type Resolver,
 } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -47,13 +48,18 @@ export function useActionForm<TSchema extends z.ZodType<FieldValues>, TData>({
 }: UseActionFormOptions<TSchema, TData>): UseActionFormReturn<TSchema> {
   const [pending, startTransition] = useTransition();
 
-  const form = useForm<z.infer<TSchema>>({
-    resolver: zodResolver(schema),
+  type Values = z.infer<TSchema>;
+  // zodResolver's overloads cannot be resolved for a generic schema; the schema's parsed
+  // output is exactly what the form submits, so the resolver is typed to that.
+  const resolver = zodResolver(schema as never) as unknown as Resolver<Values, unknown, Values>;
+
+  const form = useForm<Values, unknown, Values>({
+    resolver,
     defaultValues,
     mode: "onBlur",
   });
 
-  const submit = form.handleSubmit((values: z.infer<TSchema>) => {
+  const submit = form.handleSubmit((values: Values) => {
     startTransition(async () => {
       try {
         const res = await action(values);

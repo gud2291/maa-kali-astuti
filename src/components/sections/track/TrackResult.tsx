@@ -33,7 +33,7 @@ export function TrackResult({ order, onReset }: Props): React.JSX.Element {
           </div>
           {(order.city || order.state) && (
             <div className="flex items-center gap-1.5 text-xs text-ink6">
-              <Icon name="location" className="size-4 text-g5" />
+              <Icon name="pin" className="size-4 text-g5" />
               <span>
                 {t("deliveryTo")}:{" "}
                 <strong className="font-medium text-ink">
@@ -87,7 +87,7 @@ export function TrackResult({ order, onReset }: Props): React.JSX.Element {
                 className="inline-flex h-9 items-center justify-center gap-1.5 rounded-btn bg-em7 px-4 font-sans text-xs font-semibold text-iv transition-colors hover:bg-em5"
               >
                 <span>{t("trackCourier")}</span>
-                <Icon name="external" className="size-3.5" />
+                <Icon name="arrowUR" className="size-3.5" />
               </a>
             )}
           </div>
@@ -112,7 +112,7 @@ export function TrackResult({ order, onReset }: Props): React.JSX.Element {
                   />
                 ) : (
                   <span className="flex size-12 items-center justify-center rounded-3 border border-s2 bg-iv text-g5">
-                    <Icon name="sacred" className="size-6" />
+                    <Icon name="lotus" className="size-6" />
                   </span>
                 )}
                 <div>

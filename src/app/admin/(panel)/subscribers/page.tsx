@@ -103,7 +103,7 @@ export default async function AdminSubscribersPage({
       {/* Toolbar */}
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
         <div className="w-full sm:w-80">
-          <SearchBox placeholder="Search by email…" defaultValue={search} />
+          <SearchBox placeholder="Search by email…" />
         </div>
 
         <div className="flex items-center gap-3">
@@ -147,17 +147,13 @@ export default async function AdminSubscribersPage({
           <EmptyState
             icon="bell"
             title="No subscribers found"
-            description={search ? `No subscribers matching "${search}".` : "Newsletter subscribers will appear here."}
+            body={search ? `No subscribers matching "${search}".` : "Newsletter subscribers will appear here."}
           />
         }
       />
 
       {data.totalPages > 1 && (
-        <Pagination
-          currentPage={data.page}
-          totalPages={data.totalPages}
-          baseUrl={buildUrl({ page: 1 })}
-        />
+        <Pagination page={data.page} totalPages={data.totalPages} />
       )}
     </div>
   );

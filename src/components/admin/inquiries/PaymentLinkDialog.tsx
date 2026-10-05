@@ -58,30 +58,18 @@ export function PaymentLinkDialog({
 
       if (!res.ok) {
         setError(res.message || "Failed to create payment link");
-        toast({
-          title: "Link Creation Failed",
-          description: res.message || "Could not generate Razorpay payment link",
-          tone: "danger",
-        });
+        toast.err(res.message || "Could not generate Razorpay payment link");
         return;
       }
 
-      toast({
-        title: "Payment Link Created",
-        description: `Link generated for ₹${parsedAmount}`,
-        tone: "ok",
-      });
+      toast.ok(`Link generated for ₹${parsedAmount}`);
 
       onSuccess(res.data);
       onClose();
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Error creating link";
       setError(msg);
-      toast({
-        title: "Error",
-        description: msg,
-        tone: "danger",
-      });
+      toast.err(msg);
     } finally {
       setLoading(false);
     }

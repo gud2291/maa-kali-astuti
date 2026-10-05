@@ -167,32 +167,27 @@ export async function confirmUpload(
   let valid = variants.length > 0;
 
   if (valid) {
-    for (const v of variants) {
-      try {
-        const head = await headObject(r2Bucket, v.key);
-        if (!head) {
-          valid = false;
-          break;
+    // HEAD every variant in parallel — one R2 round trip instead of one per size.
+    const checks = await Promise.all(
+      variants.map(async (v) => {
+        try {
+          const head = await headObject(r2Bucket, v.key);
+          return (
+            !!head &&
+            head.size > 0 &&
+            head.size <= maxBytesPerFile &&
+            head.contentType === row.mime
+          );
+        } catch {
+          return false;
         }
-        if (head.size <= 0 || head.size > maxBytesPerFile) {
-          valid = false;
-          break;
-        }
-        if (head.contentType !== row.mime) {
-          valid = false;
-          break;
-        }
-      } catch {
-        valid = false;
-        break;
-      }
-    }
+      }),
+    );
+    valid = checks.every(Boolean);
   }
 
   if (!valid) {
-    for (const v of variants) {
-      await deleteObject(r2Bucket, v.key).catch(() => {});
-    }
+    await Promise.all(variants.map((v) => deleteObject(r2Bucket, v.key).catch(() => {})));
     await db.delete(media).where(eq(media.id, mediaId));
     throw new AppError("UPLOAD_INVALID");
   }

@@ -31,12 +31,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, service } = await params;
   const s = await getService(service, locale);
   if (!s) return {};
-  const t = await getTranslations({ locale, namespace: "consult.detail" });
   return pageMeta({
     locale,
     path: `/consultations/${s.slug}`,
     title: s.name,
-    description: t(`copy.${s.key}.long`),
+    description: s.line,
   });
 }
 
@@ -56,7 +55,7 @@ export default async function ServicePage({ params }: Props) {
   const serviceData = serviceSchema(
     {
       name: s.name,
-      description: t(`copy.${s.key}.long`),
+      description: s.line,
       serviceType: "Astrology & Spiritual Consultation",
       tiers: s.tiers.map((tier) => ({
         name: tier.t,

@@ -78,7 +78,7 @@ export default async function AdminReviewsPage({
         <EmptyState
           icon="star"
           title={`No ${currentStatus === "all" ? "" : currentStatus} reviews`}
-          description={
+          body={
             currentStatus === "pending"
               ? "All submitted reviews have been moderated. New customer reviews will appear here."
               : `There are currently no ${currentStatus} reviews to display.`
@@ -94,12 +94,7 @@ export default async function AdminReviewsPage({
 
       {data.totalPages > 1 && (
         <div className="pt-2">
-          <Pagination
-            page={data.page}
-            totalPages={data.totalPages}
-            totalItems={data.total}
-            pageSize={data.pageSize}
-          />
+          <Pagination page={data.page} totalPages={data.totalPages} total={data.total} pageSize={data.pageSize} />
         </div>
       )}
     </div>

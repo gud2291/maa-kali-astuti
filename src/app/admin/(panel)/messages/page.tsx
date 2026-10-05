@@ -69,11 +69,7 @@ export default async function AdminMessagesPage({
       </div>
 
       {data.totalPages > 1 && (
-        <Pagination
-          currentPage={data.page}
-          totalPages={data.totalPages}
-          baseUrl={buildUrl({ page: 1 })}
-        />
+        <Pagination page={data.page} totalPages={data.totalPages} />
       )}
     </div>
   );

@@ -340,9 +340,9 @@ export function RashifalEditor({
                       }
                       className="cursor-pointer"
                     >
-                      <StatusBadge
-                        status={card.status === "published" ? "published" : "draft"}
-                      />
+                      <StatusBadge tone={card.status === "published" ? "ok" : "muted"}>
+                        {card.status === "published" ? "Published" : "Draft"}
+                      </StatusBadge>
                     </button>
                   </div>
                 </div>

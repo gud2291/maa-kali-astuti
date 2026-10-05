@@ -119,8 +119,8 @@ export function KundaliForm({ f, err, today, set, onPlace, onPick, onSubmit }: P
             onPlace(val);
           }}
           onSelect={(p) => {
+            // onPick sets the label itself; calling onPlace here would clear the picked place.
             onPick(p);
-            onPlace(p.region ? `${p.name}, ${p.region}` : p.name);
           }}
           placeholder={t("placeHint")}
           icon={<Icon name="pin" />}

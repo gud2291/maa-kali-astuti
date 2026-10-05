@@ -19,11 +19,7 @@ export function ExportButton({ filters, disabled }: ExportButtonProps): React.JS
       setLoading(true);
       const res = await exportOrdersCsvAction(filters);
       if (!res.ok) {
-        toast({
-          title: "Export Failed",
-          description: res.message || "Could not export orders CSV",
-          tone: "danger",
-        });
+        toast.err(res.message || "Could not export orders CSV");
         return;
       }
 
@@ -38,17 +34,9 @@ export function ExportButton({ filters, disabled }: ExportButtonProps): React.JS
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      toast({
-        title: "Export Successful",
-        description: `Downloaded ${filename}`,
-        tone: "ok",
-      });
+      toast.ok(`Downloaded ${filename}`);
     } catch (err) {
-      toast({
-        title: "Export Error",
-        description: err instanceof Error ? err.message : "Export failed",
-        tone: "danger",
-      });
+      toast.err(err instanceof Error ? err.message : "Export failed");
     } finally {
       setLoading(false);
     }

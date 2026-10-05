@@ -65,15 +65,11 @@ export function InquiryDetail({
     try {
       const res = await setInquiryStatusAction(inquiry.id, newStatus);
       if (!res.ok) {
-        toast({
-          title: "Update Failed",
-          description: res.message || "Failed to update status",
-          tone: "danger",
-        });
+        toast.err(res.message || "Failed to update status");
         setSelectedStatus(inquiry.status);
         return;
       }
-      toast({ title: "Status Updated", tone: "ok" });
+      toast.ok("Status Updated");
       router.refresh();
     } finally {
       setSavingStatus(false);
@@ -87,15 +83,11 @@ export function InquiryDetail({
     try {
       const res = await assignInquiryAction(inquiry.id, userId);
       if (!res.ok) {
-        toast({
-          title: "Assign Failed",
-          description: res.message || "Could not assign inquiry",
-          tone: "danger",
-        });
+        toast.err(res.message || "Could not assign inquiry");
         setSelectedAssignee(inquiry.assignedTo ? String(inquiry.assignedTo) : "");
         return;
       }
-      toast({ title: "Assignee Updated", tone: "ok" });
+      toast.ok("Assignee Updated");
       router.refresh();
     } finally {
       setSavingAssignee(false);
@@ -108,14 +100,10 @@ export function InquiryDetail({
     try {
       const res = await setNextActionAction(inquiry.id, val ? new Date(val).toISOString() : null);
       if (!res.ok) {
-        toast({
-          title: "Update Failed",
-          description: res.message || "Could not set next action date",
-          tone: "danger",
-        });
+        toast.err(res.message || "Could not set next action date");
         return;
       }
-      toast({ title: "Next Action Scheduled", tone: "ok" });
+      toast.ok("Next Action Scheduled");
       router.refresh();
     } finally {
       setSavingNextAction(false);
@@ -128,14 +116,10 @@ export function InquiryDetail({
     try {
       const res = await setFeeAction(inquiry.id, parsedFee);
       if (!res.ok) {
-        toast({
-          title: "Fee Update Failed",
-          description: res.message || "Could not update fee",
-          tone: "danger",
-        });
+        toast.err(res.message || "Could not update fee");
         return;
       }
-      toast({ title: "Fee Saved", tone: "ok" });
+      toast.ok("Fee Saved");
       setIsEditingFee(false);
       router.refresh();
     } finally {
@@ -146,9 +130,9 @@ export function InquiryDetail({
   const copyToClipboard = async (text: string): Promise<void> => {
     try {
       await navigator.clipboard.writeText(text);
-      toast({ title: "Copied to Clipboard", tone: "ok" });
+      toast.ok("Copied to Clipboard");
     } catch {
-      toast({ title: "Failed to Copy", tone: "danger" });
+      toast.err("Failed to Copy");
     }
   };
 

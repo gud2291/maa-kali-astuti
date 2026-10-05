@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { AdminIcon } from "@/components/admin/AdminIcon";
-import { addDaysKey, formatIst } from "@/lib/core/ist";
+import { addDaysKey, formatIst, istWallToUtc } from "@/lib/core/ist";
 import type { WeekCalendarResult, WeekCalendarBooking } from "@/server/bookings/admin";
 import type { BookingStatus } from "@/lib/domain/enums";
 
@@ -136,8 +136,8 @@ export function WeekCalendar({ data }: WeekCalendarProps): React.JSX.Element {
           </button>
 
           <span className="ml-2 font-display text-[15px] font-semibold text-ink">
-            {formatIst(data.days[0]!, { date: true })} –{" "}
-            {formatIst(data.days[6]!, { date: true })}
+            {formatIst(istWallToUtc(data.days[0]!, "12:00"), { date: true })} –{" "}
+            {formatIst(istWallToUtc(data.days[6]!, "12:00"), { date: true })}
           </span>
         </div>
 

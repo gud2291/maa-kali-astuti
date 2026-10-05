@@ -255,7 +255,8 @@ export async function generateKundaliReport(
       throw new AppError("NOT_CONFIGURED", "R2 private bucket is not configured");
     }
 
-    await putObject(env.R2_BUCKET_PRIVATE, key, pdfBuffer, "application/pdf");
+    // Copy into a plain ArrayBuffer-backed view so it is a valid fetch BodyInit.
+    await putObject(env.R2_BUCKET_PRIVATE, key, new Uint8Array(pdfBuffer), "application/pdf");
 
     const [mediaRow] = await db
       .insert(media)

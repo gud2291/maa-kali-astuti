@@ -1,8 +1,10 @@
 /* Rashi helpers ported from mka-astro.js 33–65. */
 import rashiData from "@/lib/data/rashi.json";
+import type { RashiKey } from "@/lib/domain/enums";
 
-export type Rashi = (typeof rashiData)[number];
-export type RashiKey = Rashi["key"];
+/* JSON imports widen `key` to string; narrow it to the 12 known rashi keys. */
+export type Rashi = Omit<(typeof rashiData)[number], "key"> & { key: RashiKey };
+export type { RashiKey };
 
 export const RASHI = rashiData as readonly Rashi[];
 

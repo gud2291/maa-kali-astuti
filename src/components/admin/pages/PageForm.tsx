@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { Card, CardHeader, CardBody } from "@/components/admin/ui/Card";
-import { TextField } from "@/components/admin/form/TextField";
+import { PlainText } from "@/components/admin/form/plain";
 import { LocaleTabs } from "@/components/admin/form/LocaleTabs";
 import { FormBar } from "@/components/admin/form/FormBar";
 import { toast } from "@/components/admin/ui/toast";
@@ -30,7 +30,6 @@ export type PageFormProps = {
 export function PageForm({ initialData, mediaBase }: PageFormProps): React.JSX.Element {
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
-  const [activeTab, setActiveTab] = useState<"en" | "hi">("en");
 
   const [titleEn, setTitleEn] = useState(initialData.titleEn);
   const [titleHi, setTitleHi] = useState(initialData.titleHi);
@@ -38,6 +37,13 @@ export function PageForm({ initialData, mediaBase }: PageFormProps): React.JSX.E
   const [bodyHi, setBodyHi] = useState<RichDoc | null>(initialData.bodyHi);
 
   const [error, setError] = useState<string | null>(null);
+  const [dirty, setDirty] = useState(false);
+  const edit =
+    <V,>(set: (v: V) => void) =>
+    (v: V): void => {
+      set(v);
+      setDirty(true);
+    };
 
   const handleSubmit = (e: React.FormEvent): void => {
     e.preventDefault();
@@ -58,6 +64,7 @@ export function PageForm({ initialData, mediaBase }: PageFormProps): React.JSX.E
 
       if (res.ok) {
         toast.ok("Policy page updated successfully");
+        setDirty(false);
         router.refresh();
       } else {
         toast.err(res.message || "Failed to update page");
@@ -75,62 +82,64 @@ export function PageForm({ initialData, mediaBase }: PageFormProps): React.JSX.E
               /policies/{initialData.slug}
             </span>
           </div>
-          <LocaleTabs value={activeTab} onChange={setActiveTab} />
         </CardHeader>
-        <CardBody className="space-y-5">
-          {activeTab === "en" ? (
-            <>
-              <TextField
-                label="Page Title (English)"
-                value={titleEn}
-                onChange={setTitleEn}
-                error={error || undefined}
-                required
-                maxLength={140}
-              />
-
-              <div>
-                <label className="block font-sans text-[13px] font-medium text-ink6 mb-1.5">
-                  Policy Content (English)
-                </label>
-                <RichEditor
-                  value={bodyEn}
-                  onChange={setBodyEn}
-                  mediaBase={mediaBase}
-                  disabled={isPending}
+        <CardBody>
+          <LocaleTabs
+            hiEmpty={!titleHi.trim()}
+            en={
+              <div className="space-y-5">
+                <PlainText
+                  label="Page Title (English)"
+                  value={titleEn}
+                  onChange={edit(setTitleEn)}
+                  error={error ?? undefined}
+                  required
+                  maxLength={140}
                 />
+                <div>
+                  <label className="block font-sans text-[13px] font-medium text-ink6 mb-1.5">
+                    Policy Content (English)
+                  </label>
+                  <RichEditor
+                    value={bodyEn}
+                    onChange={edit(setBodyEn)}
+                    mediaBase={mediaBase}
+                    disabled={isPending}
+                  />
+                </div>
               </div>
-            </>
-          ) : (
-            <>
-              <TextField
-                label="Page Title (Hindi)"
-                value={titleHi}
-                onChange={setTitleHi}
-                maxLength={140}
-                placeholder="नीति का शीर्षक हिंदी में दर्ज करें"
-              />
-
-              <div>
-                <label className="block font-sans text-[13px] font-medium text-ink6 mb-1.5">
-                  Policy Content (Hindi)
-                </label>
-                <RichEditor
-                  value={bodyHi || { type: "doc", content: [] }}
-                  onChange={setBodyHi}
-                  mediaBase={mediaBase}
-                  disabled={isPending}
+            }
+            hi={
+              <div className="space-y-5">
+                <PlainText
+                  label="Page Title (Hindi)"
+                  value={titleHi}
+                  onChange={edit(setTitleHi)}
+                  placeholder="नीति का शीर्षक हिंदी में दर्ज करें"
+                  maxLength={140}
                 />
+                <div>
+                  <label className="block font-sans text-[13px] font-medium text-ink6 mb-1.5">
+                    Policy Content (Hindi)
+                  </label>
+                  <RichEditor
+                    value={bodyHi || { type: "doc", content: [] }}
+                    onChange={edit<RichDoc | null>(setBodyHi)}
+                    mediaBase={mediaBase}
+                    disabled={isPending}
+                  />
+                </div>
               </div>
-            </>
-          )}
+            }
+          />
         </CardBody>
       </Card>
 
       <FormBar
         saveLabel="Save Policy"
-        isPending={isPending}
-        onCancel={() => router.push("/admin/content/pages")}
+        pending={isPending}
+        dirty={dirty}
+        cancelHref="/admin/content/pages"
       />
     </form>
   );

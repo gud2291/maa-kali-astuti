@@ -119,7 +119,7 @@ export function TrackOrderForm(): React.JSX.Element {
           </label>
           <div className="relative">
             <span className="pointer-events-none absolute left-3.5 top-1/2 -translate-y-1/2 text-g5">
-              <Icon name="customer" className="size-4" />
+              <Icon name="user" className="size-4" />
             </span>
             <input
               id="track-contact"

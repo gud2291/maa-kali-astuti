@@ -11,6 +11,7 @@ import { StatusBadge } from "@/components/admin/ui/StatusBadge";
 import { EmptyState } from "@/components/admin/ui/EmptyState";
 import { AdminIcon } from "@/components/admin/AdminIcon";
 import { productThumb } from "@/components/admin/products/productThumb";
+import { ProductRowMenu } from "@/components/admin/products/ProductRowMenu";
 import { CATEGORY_KEYS, type CategoryKey, type ProductStatus } from "@/lib/domain/enums";
 
 const CATEGORY_LABELS: Record<CategoryKey, string> = {
@@ -156,6 +157,13 @@ export default async function ProductsPage(props: {
         return <StatusBadge tone="danger">Archived</StatusBadge>;
       },
     },
+    {
+      key: "actions",
+      header: "Actions",
+      mobile: "meta",
+      className: "w-[96px] text-right",
+      cell: (row) => <ProductRowMenu product={row} canEdit={canEdit} />,
+    },
   ];
 
   return (
@@ -230,18 +238,7 @@ export default async function ProductsPage(props: {
 
       {/* Pagination */}
       {total > 20 && (
-        <Pagination
-          page={page}
-          pageSize={20}
-          total={total}
-          pathname="/admin/products"
-          params={{
-            ...(search ? { q: search } : {}),
-            ...(category ? { category } : {}),
-            ...(status ? { status } : {}),
-            ...(stock ? { stock } : {}),
-          }}
-        />
+        <Pagination page={page} pageSize={20} total={total} />
       )}
     </div>
   );

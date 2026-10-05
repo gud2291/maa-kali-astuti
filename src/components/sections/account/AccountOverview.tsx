@@ -3,7 +3,7 @@ import type { AccountOverview as AccountOverviewType } from "@/server/account/qu
 import type { Locale } from "@/lib/domain/enums";
 import { OrderTimeline } from "@/components/sections/order/OrderTimeline";
 import { Icon } from "@/components/icons/Icon";
-import { Badge } from "@/components/ui/Badge";
+import { BadgePill } from "@/components/ui/Badge";
 import { fmt } from "@/lib/core/format";
 import { formatIst } from "@/lib/core/ist";
 
@@ -170,9 +170,9 @@ export function AccountOverview({
               </div>
 
               <div className="flex items-center gap-2">
-                <Badge tone="gold" size="sm">
+                <BadgePill bg="#F3E7C4" fg="#7A5C1C">
                   {latestOrder.status.replace("_", " ")}
-                </Badge>
+                </BadgePill>
                 <Link
                   href={`/account/orders/${latestOrder.number}`}
                   className="rounded-btn bg-em7 px-3 py-1.5 font-sans text-xs font-semibold text-iv hover:bg-em9 transition-colors"

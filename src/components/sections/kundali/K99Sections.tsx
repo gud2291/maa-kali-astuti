@@ -9,6 +9,7 @@ import { Stars } from "@/components/ui/Rating";
 import { REPORT_PAGE_K99_SVG } from "@/lib/art/report-pages";
 import { routes, serviceHref } from "@/lib/routes";
 import { waLinkTo } from "@/lib/core/commerce";
+import { fmt } from "@/lib/core/format";
 import { getSetting } from "@/server/settings/queries";
 import { cn } from "@/lib/utils/cn";
 import { K99_CONTENTS, K99_SAMPLES } from "./k99-data";

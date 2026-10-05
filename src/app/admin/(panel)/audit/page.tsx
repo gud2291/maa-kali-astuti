@@ -128,7 +128,7 @@ export default async function AdminAuditPage({
 
       {/* Pagination */}
       {data.totalPages > 1 && (
-        <Pagination currentPage={data.page} totalPages={data.totalPages} />
+        <Pagination page={data.page} totalPages={data.totalPages} />
       )}
     </div>
   );

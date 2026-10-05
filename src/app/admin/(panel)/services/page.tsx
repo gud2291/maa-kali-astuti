@@ -31,7 +31,7 @@ export default async function AdminServicesPage(): Promise<React.JSX.Element> {
                     /{svc.slug}
                   </span>
                   {svc.guarantee && (
-                    <StatusBadge tone="accent">Guarantee</StatusBadge>
+                    <StatusBadge tone="info">Guarantee</StatusBadge>
                   )}
                 </div>
                 <StatusBadge tone={svc.visible ? "ok" : "muted"}>

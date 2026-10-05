@@ -6,7 +6,10 @@ import { buttonClass } from "@/components/ui/Button";
 import { cn } from "@/lib/utils/cn";
 
 export type ConfirmDialogProps = {
-  trigger: ReactNode;
+  /** Omit when opening from elsewhere (e.g. a dropdown item) and pass `open`/`onOpenChange`. */
+  trigger?: ReactNode;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
   title: string;
   body: ReactNode;
   confirmLabel: string;
@@ -21,8 +24,15 @@ export function ConfirmDialog({
   confirmLabel,
   tone = "default",
   onConfirm,
+  open: openProp,
+  onOpenChange,
 }: ConfirmDialogProps): React.JSX.Element {
-  const [open, setOpen] = useState(false);
+  const [openState, setOpenState] = useState(false);
+  const open = openProp ?? openState;
+  const setOpen = (v: boolean): void => {
+    setOpenState(v);
+    onOpenChange?.(v);
+  };
   const [pending, setPending] = useState(false);
 
   const handleConfirm = async (): Promise<void> => {
@@ -44,7 +54,7 @@ export function ConfirmDialog({
 
   return (
     <AlertDialog.Root open={open} onOpenChange={setOpen}>
-      <AlertDialog.Trigger asChild>{trigger}</AlertDialog.Trigger>
+      {trigger && <AlertDialog.Trigger asChild>{trigger}</AlertDialog.Trigger>}
       <AlertDialog.Portal>
         <AlertDialog.Overlay className="fixed inset-0 z-50 bg-n9/60 backdrop-blur-xs transition-opacity" />
         <AlertDialog.Content className="fixed left-1/2 top-1/2 z-50 w-[calc(100vw-32px)] max-w-md -translate-x-1/2 -translate-y-1/2 rounded-btn bg-cream p-6 shadow-card border border-s2 outline-none">

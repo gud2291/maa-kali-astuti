@@ -96,14 +96,10 @@ export async function listProducts(
 
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
-  const [totalRes] = await db
-    .select({ count: count() })
-    .from(products)
-    .where(whereClause);
-
-  const total = totalRes?.count ?? 0;
-
-  const productRows = await db
+  // Count and page are independent — run them together (one round trip instead of two).
+  const [[totalRes], productRows] = await Promise.all([
+    db.select({ count: count() }).from(products).where(whereClause),
+    db
     .select({
       id: products.id,
       slug: products.slug,
@@ -124,7 +120,10 @@ export async function listProducts(
     .where(whereClause)
     .orderBy(asc(products.sort), desc(products.createdAt))
     .limit(pageSize)
-    .offset(offset);
+    .offset(offset),
+  ]);
+
+  const total = totalRes?.count ?? 0;
 
   const productIds = productRows.map((p) => p.id);
   const mediaByProductId = new Map<string, MediaRef[]>();
@@ -453,9 +452,7 @@ export async function updateProduct(
 
   if (removedMediaIds.length > 0) {
     after(async () => {
-      for (const mId of removedMediaIds) {
-        await deleteMedia(mId).catch(() => {});
-      }
+      await Promise.all(removedMediaIds.map((mId) => deleteMedia(mId).catch(() => {})));
     });
   }
 

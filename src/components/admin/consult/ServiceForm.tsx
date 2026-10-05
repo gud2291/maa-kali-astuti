@@ -29,7 +29,7 @@ const MODE_LABELS: Record<ModeKey, string> = {
 export function ServiceForm({ service }: ServiceFormProps): React.JSX.Element {
   const [pending, setPending] = useState(false);
 
-  const form = useForm<ServiceAdminInput>({
+  const form = useForm({
     resolver: zodResolver(serviceAdminSchema),
     defaultValues: {
       nameEn: service.nameEn,
@@ -173,29 +173,9 @@ export function ServiceForm({ service }: ServiceFormProps): React.JSX.Element {
           </div>
 
           <div className="flex items-center gap-6 pt-5">
-            <Controller
-              control={form.control}
-              name="visible"
-              render={({ field }) => (
-                <SwitchField
-                  label="Visible"
-                  checked={field.value}
-                  onChange={field.onChange}
-                />
-              )}
-            />
+            <SwitchField name="visible" control={form.control} label="Visible" />
 
-            <Controller
-              control={form.control}
-              name="guarantee"
-              render={({ field }) => (
-                <SwitchField
-                  label="Guarantee Badge"
-                  checked={field.value}
-                  onChange={field.onChange}
-                />
-              )}
-            />
+            <SwitchField name="guarantee" control={form.control} label="Guarantee Badge" />
           </div>
         </div>
 

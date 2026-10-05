@@ -356,7 +356,7 @@ export function StepReview({
             />
             <div className="flex items-center gap-2">
               <span className="block size-4 text-g5">
-                <Icon name="sparkles" />
+                <Icon name="diya" />
               </span>
               <span className="font-sans text-[14px] font-semibold text-ink">
                 {t("giftWrapOption")}
@@ -469,7 +469,7 @@ export function StepReview({
         <button
           type="button"
           onClick={handlePlaceOrder}
-          disabled={placing || isBlocked}
+          disabled={placing || !!isBlocked}
           className="flex h-[52px] flex-1 items-center justify-center gap-2 rounded-btn bg-em7 sheen font-sans text-[15px] leading-none font-semibold tracking-[.03em] text-iv shadow-ring-gold hover:bg-em9 transition-colors cursor-pointer disabled:cursor-not-allowed disabled:opacity-50"
         >
           {placing ? (

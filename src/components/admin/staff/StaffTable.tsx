@@ -102,7 +102,7 @@ export function StaffTable({
       <EmptyState
         icon="user"
         title="No staff members found"
-        description="Invite administrative team members to help manage store operations."
+        body="Invite administrative team members to help manage store operations."
       />
     );
   }

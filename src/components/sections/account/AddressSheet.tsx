@@ -367,7 +367,7 @@ export function AddressSheet({
               type="button"
               onClick={onClose}
               disabled={isPending}
-              className={buttonClass("secondary", "md", "cursor-pointer")}
+              className={buttonClass("outline", "md", "cursor-pointer")}
             >
               {isHi ? "रद्द करें" : "Cancel"}
             </button>

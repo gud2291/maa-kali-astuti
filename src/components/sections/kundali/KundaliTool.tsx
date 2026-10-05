@@ -412,7 +412,7 @@ export function KundaliTool({
                   setCity(null);
                 }}
                 onPick={(c) => {
-                  set("place", `${c[0]}, ${c[1]}`);
+                  set("place", c.region ? `${c.name}, ${c.region}` : c.name);
                   setCity(c);
                 }}
                 onSubmit={submit}

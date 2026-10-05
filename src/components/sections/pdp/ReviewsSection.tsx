@@ -39,7 +39,7 @@ export function ReviewsSection({
           />
           {hasReviews && (
             <Button
-              variant="secondary"
+              variant="outline"
               size="sm"
               onClick={() => setFormOpen(true)}
               className="self-start sm:self-auto"

@@ -1670,7 +1670,8 @@
     },
     "line": "{west} · {dates} · Lord {lordHi} ({lord})",
     "meterAria": "{area}: {n} of 5",
-    "lucky": {
+    "lucky": "Lucky number",
+    "luckyCard": {
       "eyebrow": "02 — Lucky for {name}",
       "title": "Small things that <em>help.</em>",
       "num": "Lucky number",
@@ -2141,19 +2142,38 @@
     }
   },
   "auth": {
-    "title": "Sign in to your account",
-    "adminTitle": "Admin sign in",
+    "title": "Customer Sign In",
     "emailLabel": "Email address",
     "emailPlaceholder": "you@example.com",
-    "sendCode": "Send verification code",
+    "sendCode": "Send sign-in code",
     "sending": "Sending code…",
-    "enterCode": "Enter verification code",
+    "enterCode": "Enter 6-digit code",
     "codeSentTo": "We sent a 6-digit code to {email}",
-    "verify": "Verify & continue",
+    "verify": "Sign in to Account",
     "verifying": "Verifying…",
     "resendCode": "Resend code",
     "resendIn": "Resend code in {seconds}s",
-    "changeEmail": "Change email"
+    "changeEmail": "Change email",
+    "errors": {
+      "INTERNAL": "Something went wrong. Please try again.",
+      "UNAUTHENTICATED": "Please sign in to continue.",
+      "FORBIDDEN": "Access denied.",
+      "NOT_FOUND": "Item not found.",
+      "CONFLICT": "Record already exists.",
+      "VALIDATION": "Please check your input.",
+      "RATE_LIMITED": "Too many requests. Please wait a few minutes.",
+      "TURNSTILE_FAILED": "Security verification failed. Please try again.",
+      "OTP_EXPIRED": "This verification code has expired. Please request a new one.",
+      "OTP_INVALID": "Invalid verification code. Please check and try again.",
+      "OUT_OF_STOCK": "Item is out of stock.",
+      "SLOT_TAKEN": "This slot was just booked by another devotee.",
+      "PAYMENT_FAILED": "Payment could not be completed.",
+      "PAYMENT_MISMATCH": "Payment verification failed.",
+      "LIMIT_REACHED": "Limit reached.",
+      "FILE_TOO_LARGE": "Uploaded file is too large.",
+      "UNSUPPORTED_MEDIA": "Unsupported file format.",
+      "REFUND_FAILED": "Refund processing failed."
+    }
   },
   "pdp": {
     "crumbHome": "Home",
@@ -2263,40 +2283,6 @@
     "consultationRecommendation": "Consult Sadhak Pawan Pandey for personal astrological guidance and remedies.",
     "exploreConsultations": "Explore Consultations",
     "viewInvoice": "Download Invoice"
-  },
-  "auth": {
-    "title": "Customer Sign In",
-    "emailLabel": "Email address",
-    "emailPlaceholder": "you@example.com",
-    "sendCode": "Send sign-in code",
-    "sending": "Sending code…",
-    "enterCode": "Enter 6-digit code",
-    "codeSentTo": "We sent a 6-digit code to {email}",
-    "verify": "Sign in to Account",
-    "verifying": "Verifying…",
-    "resendCode": "Resend code",
-    "resendIn": "Resend code in {seconds}s",
-    "changeEmail": "Change email",
-    "errors": {
-      "INTERNAL": "Something went wrong. Please try again.",
-      "UNAUTHENTICATED": "Please sign in to continue.",
-      "FORBIDDEN": "Access denied.",
-      "NOT_FOUND": "Item not found.",
-      "CONFLICT": "Record already exists.",
-      "VALIDATION": "Please check your input.",
-      "RATE_LIMITED": "Too many requests. Please wait a few minutes.",
-      "TURNSTILE_FAILED": "Security verification failed. Please try again.",
-      "OTP_EXPIRED": "This verification code has expired. Please request a new one.",
-      "OTP_INVALID": "Invalid verification code. Please check and try again.",
-      "OUT_OF_STOCK": "Item is out of stock.",
-      "SLOT_TAKEN": "This slot was just booked by another devotee.",
-      "PAYMENT_FAILED": "Payment could not be completed.",
-      "PAYMENT_MISMATCH": "Payment verification failed.",
-      "LIMIT_REACHED": "Limit reached.",
-      "FILE_TOO_LARGE": "Uploaded file is too large.",
-      "UNSUPPORTED_MEDIA": "Unsupported file format.",
-      "REFUND_FAILED": "Refund processing failed."
-    }
   },
   "account": {
     "title": "My Account",
@@ -2635,5 +2621,3 @@
     "close": "Close"
   }
 }
-
-

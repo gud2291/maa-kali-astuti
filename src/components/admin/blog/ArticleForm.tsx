@@ -4,10 +4,12 @@ import { useState, useTransition } from "react";
 import dynamic from "next/dynamic";
 import { useRouter } from "next/navigation";
 import { Card, CardHeader, CardBody } from "@/components/admin/ui/Card";
-import { TextField } from "@/components/admin/form/TextField";
-import { TextArea } from "@/components/admin/form/TextArea";
-import { SelectField } from "@/components/admin/form/SelectField";
-import { NumberField } from "@/components/admin/form/NumberField";
+import {
+  PlainText,
+  PlainTextArea,
+  PlainSelect,
+  PlainNumber,
+} from "@/components/admin/form/plain";
 import { LocaleTabs } from "@/components/admin/form/LocaleTabs";
 import { FormBar } from "@/components/admin/form/FormBar";
 import { ConfirmDialog } from "@/components/admin/ui/ConfirmDialog";
@@ -81,7 +83,6 @@ export function ArticleForm({
   const isEditing = Boolean(initialData);
   const [isPending, startTransition] = useTransition();
 
-  const [activeTab, setActiveTab] = useState<"en" | "hi">("en");
 
   // Form State
   const [slug, setSlug] = useState(initialData?.slug ?? "");
@@ -240,14 +241,15 @@ export function ArticleForm({
         {/* Left Column (2 cols): Bilingual Content */}
         <div className="lg:col-span-2 space-y-6">
           <Card>
-            <CardHeader className="flex items-center justify-between">
+            <CardHeader>
               <span className="font-semibold text-ink">Article Content</span>
-              <LocaleTabs value={activeTab} onChange={setActiveTab} />
             </CardHeader>
             <CardBody className="space-y-5">
-              {activeTab === "en" ? (
-                <>
-                  <TextField
+              <LocaleTabs
+                hiEmpty={!titleHi.trim()}
+                en={
+                  <div className="space-y-5">
+                  <PlainText
                     label="Title (English)"
                     value={titleEn}
                     onChange={(v) => {
@@ -262,7 +264,7 @@ export function ArticleForm({
                     placeholder="Enter article title in English"
                   />
 
-                  <TextArea
+                  <PlainTextArea
                     label="Excerpt (English)"
                     value={excerptEn}
                     onChange={setExcerptEn}
@@ -284,10 +286,11 @@ export function ArticleForm({
                       disabled={isPending}
                     />
                   </div>
-                </>
-              ) : (
-                <>
-                  <TextField
+                  </div>
+                }
+                hi={
+                  <div className="space-y-5">
+                  <PlainText
                     label="Title (Hindi)"
                     value={titleHi}
                     onChange={setTitleHi}
@@ -296,7 +299,7 @@ export function ArticleForm({
                     placeholder="लेख का शीर्षक हिंदी में दर्ज करें"
                   />
 
-                  <TextArea
+                  <PlainTextArea
                     label="Excerpt (Hindi)"
                     value={excerptHi}
                     onChange={setExcerptHi}
@@ -317,8 +320,9 @@ export function ArticleForm({
                       disabled={isPending}
                     />
                   </div>
-                </>
-              )}
+                  </div>
+                }
+              />
             </CardBody>
           </Card>
 
@@ -365,13 +369,13 @@ export function ArticleForm({
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <TextField
+                      <PlainText
                         label="Question (EN)"
                         value={item.q.en}
                         onChange={(v) => handleFaqChange(index, "q", "en", v)}
                         placeholder="e.g. Which Rudraksha is best for meditation?"
                       />
-                      <TextField
+                      <PlainText
                         label="Question (HI)"
                         value={item.q.hi}
                         onChange={(v) => handleFaqChange(index, "q", "hi", v)}
@@ -380,14 +384,14 @@ export function ArticleForm({
                     </div>
 
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-                      <TextArea
+                      <PlainTextArea
                         label="Answer (EN)"
                         value={item.a.en}
                         onChange={(v) => handleFaqChange(index, "a", "en", v)}
                         rows={2}
                         placeholder="Answer in English"
                       />
-                      <TextArea
+                      <PlainTextArea
                         label="Answer (HI)"
                         value={item.a.hi}
                         onChange={(v) => handleFaqChange(index, "a", "hi", v)}
@@ -428,14 +432,14 @@ export function ArticleForm({
             </CardHeader>
             <CardBody className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <TextField
+                <PlainText
                   label="Meta Title (EN)"
                   value={seoTitleEn}
                   onChange={setSeoTitleEn}
                   maxLength={70}
                   placeholder="Defaults to article title"
                 />
-                <TextField
+                <PlainText
                   label="Meta Title (HI)"
                   value={seoTitleHi}
                   onChange={setSeoTitleHi}
@@ -445,7 +449,7 @@ export function ArticleForm({
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <TextArea
+                <PlainTextArea
                   label="Meta Description (EN)"
                   value={seoDescEn}
                   onChange={setSeoDescEn}
@@ -453,7 +457,7 @@ export function ArticleForm({
                   rows={2}
                   placeholder="Defaults to English excerpt"
                 />
-                <TextArea
+                <PlainTextArea
                   label="Meta Description (HI)"
                   value={seoDescHi}
                   onChange={setSeoDescHi}
@@ -473,14 +477,14 @@ export function ArticleForm({
               <span className="font-semibold text-ink">Publishing Settings</span>
             </CardHeader>
             <CardBody className="space-y-4">
-              <SelectField
+              <PlainSelect
                 label="Status"
                 value={status}
                 onChange={(v) => setStatus(v as ContentStatus)}
                 options={STATUS_OPTIONS}
               />
 
-              <SelectField
+              <PlainSelect
                 label="Category"
                 value={category}
                 onChange={(v) => setCategory(v as ArticleCategory)}
@@ -520,7 +524,7 @@ export function ArticleForm({
                 ) : null}
               </div>
 
-              <NumberField
+              <PlainNumber
                 label="Read Time (Minutes)"
                 value={readMins}
                 onChange={setReadMins}
@@ -594,8 +598,9 @@ export function ArticleForm({
 
       <FormBar
         saveLabel={isEditing ? "Save Changes" : "Create Article"}
-        isPending={isPending}
-        onCancel={() => router.push("/admin/content/blog")}
+        pending={isPending}
+        dirty
+        cancelHref="/admin/content/blog"
       />
     </form>
   );

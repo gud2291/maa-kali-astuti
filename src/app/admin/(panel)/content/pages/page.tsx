@@ -16,7 +16,7 @@ export default async function AdminPagesPage(): Promise<React.JSX.Element> {
     {
       key: "page",
       header: "Policy Page",
-      render: (row) => (
+      cell: (row) => (
         <div>
           <Link
             href={`/admin/content/pages/${row.slug}`}
@@ -33,27 +33,21 @@ export default async function AdminPagesPage(): Promise<React.JSX.Element> {
     {
       key: "hasBodyEn",
       header: "English Content",
-      render: (row) => (
-        <StatusBadge
-          status={row.hasBodyEn ? "active" : "draft"}
-          label={row.hasBodyEn ? "Drafted" : "Empty"}
-        />
+      cell: (row) => (
+        <StatusBadge tone={row.hasBodyEn ? "ok" : "muted"}>{row.hasBodyEn ? "Drafted" : "Empty"}</StatusBadge>
       ),
     },
     {
       key: "hasBodyHi",
       header: "Hindi Content",
-      render: (row) => (
-        <StatusBadge
-          status={row.hasBodyHi ? "active" : "draft"}
-          label={row.hasBodyHi ? "Drafted" : "Empty"}
-        />
+      cell: (row) => (
+        <StatusBadge tone={row.hasBodyHi ? "ok" : "muted"}>{row.hasBodyHi ? "Drafted" : "Empty"}</StatusBadge>
       ),
     },
     {
       key: "updatedAt",
       header: "Last Updated",
-      render: (row) => (
+      cell: (row) => (
         <span className="font-sans text-[12px] text-ink6 tabular">
           {row.updatedAt ? formatIst(row.updatedAt) : "Never"}
         </span>
@@ -63,7 +57,7 @@ export default async function AdminPagesPage(): Promise<React.JSX.Element> {
       key: "actions",
       header: "",
       className: "text-right",
-      render: (row) => (
+      cell: (row) => (
         <div className="flex items-center justify-end gap-2">
           <Link
             href={`/policies/${row.slug}`}
@@ -94,9 +88,9 @@ export default async function AdminPagesPage(): Promise<React.JSX.Element> {
 
       <DataTable
         columns={columns}
-        data={items}
-        keyExtractor={(item) => item.slug}
-      />
+        rows={items}
+            empty={null}
+          />
     </div>
   );
 }

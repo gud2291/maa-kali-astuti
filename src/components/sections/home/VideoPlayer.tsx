@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Icon } from "@/components/icons/Icon";
+import { isReduced } from "@/lib/hooks/useReducedMotion";
 import { ShortsViewer, type ShortItem } from "@/components/sections/videos/ShortsViewer";
 import { InlineArt } from "@/components/ui/InlineArt";
 import { secs } from "@/lib/core/format";
@@ -24,7 +25,7 @@ import { cn } from "@/lib/utils/cn";
    - "Up next" picks a video (back to idle). ≥1024 the list sits right of the player, 500px tall.
    - Mobile (<768) adds the Shorts stories row above; a story opens the ShortsViewer. */
 
-export type VideoItem = { id: string; en: string; desc: string; dur: string; date: string; cat: string };
+export type VideoItem = { id: string; en: string; desc: string; dur: string; date: string; cat: string; yt?: string };
 
 const clock = (s: number) => `${Math.floor(s / 60)}:${String(s % 60).padStart(2, "0")}`;
 

@@ -4,7 +4,7 @@ import { useTransition } from "react";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
 import { SearchBox } from "@/components/admin/ui/SearchBox";
 import { FilterSelect } from "@/components/admin/ui/FilterSelect";
-import { PAYMENT_METHODS, type PaymentMethod } from "@/lib/domain/enums";
+import { PAYMENT_METHODS } from "@/lib/domain/enums";
 
 export type OrderFiltersProps = {
   search?: string;
@@ -53,31 +53,19 @@ export function OrderFilters({
 
   const hasActiveFilters = Boolean(search || method || from || to);
 
-  const methodOptions = [
-    { value: "", label: "All Payment Methods" },
-    ...PAYMENT_METHODS.map((m) => ({
-      value: m,
-      label: m === "cod" ? "Cash on Delivery (COD)" : m.toUpperCase(),
-    })),
-  ];
+  const methodOptions = PAYMENT_METHODS.map((m) => ({
+    value: m,
+    label: m === "cod" ? "Cash on Delivery (COD)" : m.toUpperCase(),
+  }));
 
   return (
     <div className="flex flex-col gap-3 md:flex-row md:items-center md:flex-wrap">
       <div className="w-full sm:w-72">
-        <SearchBox
-          value={search}
-          placeholder="Search number, phone, email, name..."
-          onChange={(val) => updateParam("q", val)}
-        />
+        <SearchBox param="q" placeholder="Search number, phone, email, name..." />
       </div>
 
       <div className="w-full sm:w-48">
-        <FilterSelect
-          value={method || ""}
-          options={methodOptions}
-          onChange={(val) => updateParam("method", val || undefined)}
-          placeholder="Payment Method"
-        />
+        <FilterSelect param="method" label="All Payment Methods" options={methodOptions} />
       </div>
 
       {/* Date Range: From / To */}

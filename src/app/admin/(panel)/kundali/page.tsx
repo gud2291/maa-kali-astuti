@@ -179,13 +179,13 @@ export default async function AdminKundaliPage({
       {/* Search & Table */}
       <div className="flex flex-col gap-4">
         <div className="max-w-md">
-          <SearchBox placeholder="Search by ref, name, phone, email..." defaultValue={search} />
+          <SearchBox placeholder="Search by ref, name, phone, email..." />
         </div>
 
         {items.length === 0 ? (
           <EmptyState
             title="No Kundali orders found"
-            description={
+            body={
               search
                 ? `No orders matching "${search}"`
                 : "No orders found in this status category."
@@ -195,15 +195,10 @@ export default async function AdminKundaliPage({
           <>
             <DataTable
               columns={columns}
-              data={items}
-              keyExtractor={(r) => r.id}
-            />
-            <Pagination
-              currentPage={page}
-              totalPages={totalPages}
-              totalItems={total}
-              pageSize={20}
-            />
+              rows={items}
+            empty={null}
+          />
+            <Pagination page={page} totalPages={totalPages} total={total} pageSize={20} />
           </>
         )}
       </div>

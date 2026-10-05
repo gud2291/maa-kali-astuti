@@ -73,7 +73,7 @@ export const inquirySubmitSchema = values
     const baseResult = inquirySchema(f.kind).safeParse(f);
     if (!baseResult.success) {
       for (const issue of baseResult.error.issues) {
-        ctx.addIssue(issue);
+        ctx.addIssue({ code: "custom", message: issue.message, path: issue.path });
       }
     }
     if (f.kind === "course") {

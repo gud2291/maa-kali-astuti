@@ -34,25 +34,13 @@ export function AttentionBanner({
       setResolving(true);
       const res = await resolveAttentionAction(orderId);
       if (!res.ok) {
-        toast({
-          title: "Failed",
-          description: res.message || "Could not resolve attention flag",
-          tone: "danger",
-        });
+        toast.err(res.message || "Could not resolve attention flag");
         return;
       }
-      toast({
-        title: "Resolved",
-        description: "Attention flag has been cleared",
-        tone: "ok",
-      });
+      toast.ok("Attention flag has been cleared");
       router.refresh();
     } catch (err) {
-      toast({
-        title: "Error",
-        description: err instanceof Error ? err.message : "Action failed",
-        tone: "danger",
-      });
+      toast.err(err instanceof Error ? err.message : "Action failed");
     } finally {
       setResolving(false);
     }
@@ -62,7 +50,7 @@ export function AttentionBanner({
     <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 rounded-field border border-rose/40 bg-rose/15 p-4 text-sin">
       <div className="flex items-center gap-2.5">
         <div className="h-5 w-5 shrink-0 text-sin">
-          <AdminIcon name="shield-alert" sw={2} />
+          <AdminIcon name="alert" sw={2} />
         </div>
         <div>
           <h4 className="font-sans text-xs font-bold text-sin uppercase tracking-wider">
@@ -148,27 +136,15 @@ export function OrderActions({ order, canRefund }: OrderActionsProps): React.JSX
       });
 
       if (!res.ok) {
-        toast({
-          title: "Cancellation Failed",
-          description: res.message || "Could not cancel order",
-          tone: "danger",
-        });
+        toast.err(res.message || "Could not cancel order");
         return false;
       }
 
-      toast({
-        title: "Order Cancelled",
-        description: "Order cancelled and inventory restored where applicable",
-        tone: "ok",
-      });
+      toast.ok("Order cancelled and inventory restored where applicable");
       router.refresh();
       return true;
     } catch (err) {
-      toast({
-        title: "Error",
-        description: err instanceof Error ? err.message : "Cancellation failed",
-        tone: "danger",
-      });
+      toast.err(err instanceof Error ? err.message : "Cancellation failed");
       return false;
     }
   };
@@ -177,27 +153,15 @@ export function OrderActions({ order, canRefund }: OrderActionsProps): React.JSX
     try {
       const res = await markCodCollectedAction(order.id);
       if (!res.ok) {
-        toast({
-          title: "Action Failed",
-          description: res.message || "Could not mark COD collected",
-          tone: "danger",
-        });
+        toast.err(res.message || "Could not mark COD collected");
         return false;
       }
 
-      toast({
-        title: "Payment Collected",
-        description: `Marked ₹${order.totalInr} collected in cash`,
-        tone: "ok",
-      });
+      toast.ok(`Marked ₹${order.totalInr} collected in cash`);
       router.refresh();
       return true;
     } catch (err) {
-      toast({
-        title: "Error",
-        description: err instanceof Error ? err.message : "Failed to record COD collection",
-        tone: "danger",
-      });
+      toast.err(err instanceof Error ? err.message : "Failed to record COD collection");
       return false;
     }
   };
@@ -210,28 +174,16 @@ export function OrderActions({ order, canRefund }: OrderActionsProps): React.JSX
       setNotePending(true);
       const res = await addOrderNoteAction(order.id, { note: note.trim() });
       if (!res.ok) {
-        toast({
-          title: "Note Failed",
-          description: res.message || "Could not add note",
-          tone: "danger",
-        });
+        toast.err(res.message || "Could not add note");
         return;
       }
 
-      toast({
-        title: "Note Added",
-        description: "Internal note saved to timeline",
-        tone: "ok",
-      });
+      toast.ok("Internal note saved to timeline");
       setNote("");
       setShowNoteDialog(false);
       router.refresh();
     } catch (err) {
-      toast({
-        title: "Error",
-        description: err instanceof Error ? err.message : "Note failed",
-        tone: "danger",
-      });
+      toast.err(err instanceof Error ? err.message : "Note failed");
     } finally {
       setNotePending(false);
     }
@@ -240,11 +192,7 @@ export function OrderActions({ order, canRefund }: OrderActionsProps): React.JSX
   const handleUpdateTracking = async (e: React.FormEvent): Promise<void> => {
     e.preventDefault();
     if (!courier.trim() || !awb.trim()) {
-      toast({
-        title: "Validation Error",
-        description: "Courier and AWB are required",
-        tone: "warn",
-      });
+      toast.info("Courier and AWB are required");
       return;
     }
 
@@ -257,27 +205,15 @@ export function OrderActions({ order, canRefund }: OrderActionsProps): React.JSX
       });
 
       if (!res.ok) {
-        toast({
-          title: "Tracking Update Failed",
-          description: res.message || "Could not update tracking",
-          tone: "danger",
-        });
+        toast.err(res.message || "Could not update tracking");
         return;
       }
 
-      toast({
-        title: "Tracking Updated",
-        description: `${courier} (AWB: ${awb}) saved`,
-        tone: "ok",
-      });
+      toast.ok(`${courier} (AWB: ${awb}) saved`);
       setShowTrackingDialog(false);
       router.refresh();
     } catch (err) {
-      toast({
-        title: "Error",
-        description: err instanceof Error ? err.message : "Tracking update failed",
-        tone: "danger",
-      });
+      toast.err(err instanceof Error ? err.message : "Tracking update failed");
     } finally {
       setTrackingPending(false);
     }
@@ -361,7 +297,7 @@ export function OrderActions({ order, canRefund }: OrderActionsProps): React.JSX
                   className="inline-flex items-center gap-1.5 rounded-btn border border-ok/40 bg-em1 px-3 py-1.5 font-sans text-xs font-semibold text-ok hover:bg-ok hover:text-iv cursor-pointer transition-colors"
                 >
                   <div className="h-3.5 w-3.5">
-                    <AdminIcon name="credit-card" sw={2} />
+                    <AdminIcon name="card" sw={2} />
                   </div>
                   Mark COD Collected ({fmt(order.totalInr)})
                 </button>
@@ -377,7 +313,7 @@ export function OrderActions({ order, canRefund }: OrderActionsProps): React.JSX
               className="inline-flex items-center gap-1.5 rounded-btn border border-rose/40 bg-rose/10 px-3 py-1.5 font-sans text-xs font-semibold text-sin hover:bg-rose/20 cursor-pointer"
             >
               <div className="h-3.5 w-3.5">
-                <AdminIcon name="arrow-uturn-left" sw={2} />
+                <AdminIcon name="returns" sw={2} />
               </div>
               Issue Refund ({fmt(refundableBalance)} avail.)
             </button>

@@ -11,7 +11,7 @@ export const lineKey = (pid: string, variant?: string | null, energ?: Energizati
 export const clampQty = (q: number, max: number): number =>
   Math.max(1, Math.min(max, Math.round(q) || 1));
 
-export const cartCount = (lines: readonly CartLine[]): number => lines.reduce((a, l) => a + l.qty, 0);
+export const cartCount = (lines: readonly { qty: number }[]): number => lines.reduce((a, l) => a + l.qty, 0);
 
 /** Attach products; lines whose product no longer exists are dropped. */
 export function resolveLines(

@@ -29,7 +29,7 @@ export async function GET(): Promise<Response> {
   lines.push(`URL: ${SITE_URL}/shop`);
   for (const cat of catalog.categories) {
     const prodsInCat = catalog.products.filter((p) => p.cat === cat.key);
-    lines.push(`- **${cat.name.en}** (${SITE_URL}/shop/${cat.slug}): ${prodsInCat.length} items`);
+    lines.push(`- **${cat.name}** (${SITE_URL}/shop/${cat.slug}): ${prodsInCat.length} items`);
   }
   lines.push("");
 

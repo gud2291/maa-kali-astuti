@@ -5,11 +5,6 @@ import type {
   BadgeKey as ProductBadgeKey,
   StoneKey as ProductStoneKey,
 } from "@/types/product";
-import type {
-  ServiceKey as ConsultServiceKey,
-  TierKey as ConsultTierKey,
-  ModeKey as ConsultModeKey,
-} from "@/lib/api/consult";
 
 export const LOCALES = ["en", "hi"] as const;
 export type Locale = (typeof LOCALES)[number];
@@ -123,7 +118,7 @@ export const SERVICE_KEYS = [
   "palm",
   "tarot",
   "numerology",
-] as const satisfies readonly ConsultServiceKey[];
+] as const;
 export type ServiceKey = (typeof SERVICE_KEYS)[number];
 export type ServiceKeyEnum = ServiceKey;
 
@@ -131,7 +126,7 @@ export const TIER_KEYS = [
   "essential",
   "detailed",
   "premium",
-] as const satisfies readonly ConsultTierKey[];
+] as const;
 export type TierKey = (typeof TIER_KEYS)[number];
 export type TierKeyEnum = TierKey;
 
@@ -140,7 +135,7 @@ export const MODE_KEYS = [
   "video",
   "wa",
   "report",
-] as const satisfies readonly ConsultModeKey[];
+] as const;
 export type ModeKey = (typeof MODE_KEYS)[number];
 export type ModeKeyEnum = ModeKey;
 

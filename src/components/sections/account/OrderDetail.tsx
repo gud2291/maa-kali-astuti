@@ -4,7 +4,7 @@ import type { Locale } from "@/lib/domain/enums";
 import { OrderTimeline } from "@/components/sections/order/OrderTimeline";
 import { ReorderButton } from "./ReorderButton";
 import { Icon } from "@/components/icons/Icon";
-import { Badge } from "@/components/ui/Badge";
+import { BadgePill } from "@/components/ui/Badge";
 import { fmt } from "@/lib/core/format";
 import { formatIst } from "@/lib/core/ist";
 
@@ -33,9 +33,9 @@ export function OrderDetail({
             <h1 className="font-title text-2xl font-normal text-em9 sm:text-3xl">
               {isHi ? `ऑर्डर ${order.number}` : `Order ${order.number}`}
             </h1>
-            <Badge tone="gold" size="sm">
+            <BadgePill bg="#F3E7C4" fg="#7A5C1C">
               {order.status.replace("_", " ")}
-            </Badge>
+            </BadgePill>
           </div>
           <p className="mt-1 font-sans text-xs text-ink6">
             {isHi ? "दिनांक: " : "Placed on "}

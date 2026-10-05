@@ -55,30 +55,18 @@ export function RefundDialog({
 
       if (!res.ok) {
         setError(res.message || "Failed to process refund");
-        toast({
-          title: "Refund Failed",
-          description: res.message || "Could not process refund",
-          tone: "danger",
-        });
+        toast.err(res.message || "Could not process refund");
         return;
       }
 
-      toast({
-        title: "Refund Processed",
-        description: `Refund of ${fmt(parsedAmount)} initiated successfully (${res.data.status})`,
-        tone: "ok",
-      });
+      toast.ok(`Refund of ${fmt(parsedAmount)} initiated successfully (${res.data.status})`);
 
       onSuccess();
       onClose();
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Refund failed";
       setError(msg);
-      toast({
-        title: "Error",
-        description: msg,
-        tone: "danger",
-      });
+      toast.err(msg);
     } finally {
       setLoading(false);
     }
@@ -92,7 +80,7 @@ export function RefundDialog({
           <div className="flex items-center justify-between border-b border-s2 pb-3">
             <RadixDialog.Title className="font-serif text-lg font-bold text-sin flex items-center gap-2">
               <div className="h-4 w-4">
-                <AdminIcon name="arrow-uturn-left" sw={2} />
+                <AdminIcon name="returns" sw={2} />
               </div>
               Issue Refund
             </RadixDialog.Title>
@@ -103,7 +91,7 @@ export function RefundDialog({
                 aria-label="Close"
               >
                 <div className="h-4 w-4">
-                  <AdminIcon name="x" sw={2} />
+                  <AdminIcon name="close" sw={2} />
                 </div>
               </button>
             </RadixDialog.Close>

@@ -719,7 +719,7 @@ export async function adminDigest(now: Date): Promise<{ done: number }> {
       and(
         gte(bookings.startAt, startToday),
         lt(bookings.startAt, endToday),
-        inArray(bookings.status, ["confirmed", "in_progress", "completed"]),
+        inArray(bookings.status, ["confirmed", "completed"]),
       ),
     );
 

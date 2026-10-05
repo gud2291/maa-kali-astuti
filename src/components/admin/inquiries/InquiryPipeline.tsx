@@ -82,26 +82,14 @@ export function InquiryPipeline({
     try {
       const res = await setInquiryStatusAction(inquiryId, nextStatus);
       if (!res.ok) {
-        toast({
-          title: "Status Update Failed",
-          description: res.message || "Could not update status",
-          tone: "danger",
-        });
+        toast.err(res.message || "Could not update status");
         return;
       }
 
-      toast({
-        title: "Status Updated",
-        description: `Inquiry status changed to ${statusLabel(nextStatus)}`,
-        tone: "ok",
-      });
+      toast.ok(`Inquiry status changed to ${statusLabel(nextStatus)}`);
       router.refresh();
     } catch {
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        tone: "danger",
-      });
+      toast.err("An unexpected error occurred");
     } finally {
       setPending(false);
     }

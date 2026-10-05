@@ -31,11 +31,9 @@ export function ReorderButton({
     let addedCount = 0;
 
     for (const item of items) {
-      if (catalog && catalog.products) {
-        const prod = catalog.products.find((p) => p.id === item.productId);
-        if (prod && prod.stock <= 0) {
-          continue;
-        }
+      const prod = catalog.byId.get(item.productId);
+      if (prod && prod.stock <= 0) {
+        continue;
       }
 
       add(item.productId, {

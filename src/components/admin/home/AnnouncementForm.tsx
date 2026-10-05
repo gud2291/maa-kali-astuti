@@ -133,7 +133,7 @@ export function AnnouncementForm({
       <CardHeader
         title="Announcement Bar Messages"
         description="The top 32px banner rotates these messages across all pages. You can have between 1 and 5 messages."
-        action={
+        actions={
           <div className="flex items-center gap-2">
             <ConfirmDialog
               title="Reset to Default Announcements?"

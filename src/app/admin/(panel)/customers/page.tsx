@@ -245,10 +245,7 @@ export default async function AdminCustomersPage({
 
       {/* Pagination */}
       {currentData.totalPages > 1 && (
-        <Pagination
-          currentPage={currentData.page}
-          totalPages={currentData.totalPages}
-        />
+        <Pagination page={currentData.page} totalPages={currentData.totalPages} />
       )}
     </div>
   );

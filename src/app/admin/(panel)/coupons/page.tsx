@@ -183,15 +183,12 @@ export default async function CouponsListPage(props: {
         <div className="w-full sm:w-72">
           <SearchBox
             placeholder="Search code or note..."
-            defaultValue={search}
           />
         </div>
         <div className="flex items-center gap-2">
           <FilterSelect
-            paramName="status"
-            label="Status"
-            allLabel="All Statuses"
-            defaultValue={status}
+            param="status"
+            label="All Statuses"
             options={[
               { value: "active", label: "Active" },
               { value: "inactive", label: "Inactive" },
@@ -205,23 +202,24 @@ export default async function CouponsListPage(props: {
         <EmptyState
           icon="gift"
           title="No coupons found"
-          description="Create your first promotional discount code to reward customers."
-          actionHref="/admin/coupons/new"
-          actionLabel="Create Coupon"
+          body="Create your first promotional discount code to reward customers."
+          action={
+            <Link
+              href="/admin/coupons/new"
+              className="inline-flex h-9 items-center gap-1.5 rounded-btn bg-em7 px-3.5 font-sans text-[13px] font-semibold text-iv shadow-sm transition-colors hover:bg-em9"
+            >
+              Create Coupon
+            </Link>
+          }
         />
       ) : (
         <>
           <DataTable
-            data={rows}
+            rows={rows}
             columns={columns}
-            keyField="id"
+            empty={null}
           />
-          <Pagination
-            currentPage={page}
-            totalPages={totalPages}
-            totalItems={total}
-            pageSize={20}
-          />
+          <Pagination page={page} totalPages={totalPages} total={total} pageSize={20} />
         </>
       )}
     </div>

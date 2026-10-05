@@ -104,11 +104,6 @@ export function BookingManage({
           label: t("status.cancelled"),
           cls: "bg-red-50 text-red-800 border-red-200",
         };
-      case "refunded":
-        return {
-          label: t("status.refunded"),
-          cls: "bg-purple-50 text-purple-800 border-purple-200",
-        };
       default:
         return {
           label: t("status.pending_payment"),
@@ -315,7 +310,7 @@ export function BookingManage({
           <div className="rounded-btn border border-s2 bg-iv p-5 md:p-6 shadow-ring-sand">
             <div className="flex items-center gap-2.5 mb-2.5">
               <span className="grid size-8 place-items-center rounded-pill bg-cream text-em7">
-                <Icon name="wa" className="size-4" />
+                <Icon name="whatsapp" className="size-4" />
               </span>
               <h3 className="font-title text-[17px] font-normal text-em9">
                 {t("help.title")}
@@ -331,7 +326,7 @@ export function BookingManage({
                 rel="noopener noreferrer"
                 className="flex h-10 w-full items-center justify-center gap-2 rounded-btn bg-[#25D366] px-4 font-sans text-[13.5px] font-semibold text-white transition-opacity hover:opacity-90"
               >
-                <Icon name="wa" className="size-4" />
+                <Icon name="whatsapp" className="size-4" />
                 <span>{t("help.whatsapp")}</span>
               </a>
             )}

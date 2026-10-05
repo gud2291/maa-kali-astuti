@@ -60,8 +60,9 @@ async function fetchSetting<K extends SettingsKey>(key: K): Promise<SettingsMap[
   return val as SettingsMap[K];
 }
 
-export const getSetting: <K extends SettingsKey>(key: K) => Promise<SettingsMap[K]> = cached(
+// `cached` cannot carry the generic key through, so the per-key return type is restored here.
+export const getSetting = cached<[SettingsKey], SettingsMap[SettingsKey]>(
   "setting",
   fetchSetting,
   () => [TAG.settings],
-);
+) as <K extends SettingsKey>(key: K) => Promise<SettingsMap[K]>;

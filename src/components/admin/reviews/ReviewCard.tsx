@@ -217,7 +217,7 @@ export function ReviewCard({ review }: Props) {
 
           {review.status !== "rejected" && (
             <Button
-              variant="secondary"
+              variant="outline"
               size="xs"
               onClick={handleReject}
               disabled={isPending}
@@ -231,7 +231,7 @@ export function ReviewCard({ review }: Props) {
 
           {review.status === "approved" && (
             <Button
-              variant={review.showOnHome ? "primary" : "secondary"}
+              variant={review.showOnHome ? "primary" : "outline"}
               size="xs"
               onClick={handleToggleHome}
               disabled={isPending}
@@ -247,7 +247,7 @@ export function ReviewCard({ review }: Props) {
         <ConfirmDialog
           trigger={
             <Button
-              variant="ghost"
+              variant="outline"
               size="xs"
               disabled={isPending}
               className="text-sin hover:bg-rose/40"

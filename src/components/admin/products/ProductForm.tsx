@@ -34,6 +34,7 @@ import {
   type IntentKey,
   type WristSize,
   type BadgeKey,
+  type StoneKey,
 } from "@/lib/domain/enums";
 import type { MediaRef } from "@/lib/domain/media";
 import type { ProductEditData } from "@/server/catalog/admin";

@@ -43,7 +43,7 @@ export function RitualUpsell() {
     <div className="mt-8 rounded-btn border border-s2 bg-iv p-5 md:p-6">
       <div className="flex items-center gap-2">
         <span className="block size-4 text-g5">
-          <Icon name="sparkles" />
+          <Icon name="diya" />
         </span>
         <h2 className="m-0 font-title text-[18px] md:text-[20px] leading-tight font-normal text-em9">
           {t("upsellTitle")}

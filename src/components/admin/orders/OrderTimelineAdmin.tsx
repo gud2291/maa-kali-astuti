@@ -11,7 +11,7 @@ function getEventIcon(type: string): { name: AdminIconName; color: string } {
     case "created":
       return { name: "package", color: "text-em7" };
     case "paid":
-      return { name: "credit-card", color: "text-ok" };
+      return { name: "card", color: "text-ok" };
     case "status":
       return { name: "truck", color: "text-g7" };
     case "tracking":
@@ -19,9 +19,9 @@ function getEventIcon(type: string): { name: AdminIconName; color: string } {
     case "note":
       return { name: "tag", color: "text-ink6" };
     case "refund":
-      return { name: "arrow-uturn-left", color: "text-sin" };
+      return { name: "returns", color: "text-sin" };
     case "attention":
-      return { name: "shield-alert", color: "text-sin" };
+      return { name: "alert", color: "text-sin" };
     default:
       return { name: "grid", color: "text-ink6" };
   }

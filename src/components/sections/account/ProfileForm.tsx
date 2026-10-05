@@ -138,12 +138,12 @@ export function ProfileForm({
           onClick={handleSignOut}
           disabled={isSigningOut}
           className={buttonClass(
-            "secondary",
+            "outline",
             "sm",
             "cursor-pointer flex items-center gap-1.5 self-start sm:self-auto text-sin border-sin/30 hover:bg-sin/10",
           )}
         >
-          <Icon name="logout" className="size-4" />
+          <Icon name="arrowR" className="size-4" />
           <span>{isSigningOut ? "Signing out..." : isHi ? "लॉग आउट करें" : "Sign Out"}</span>
         </button>
       </div>

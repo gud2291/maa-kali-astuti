@@ -1,4 +1,3 @@
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import { requireAdminPage } from "@/server/auth/guards";
 import { listBookings, getWeek, type BookingAdminListItem } from "@/server/bookings/admin";
@@ -10,23 +9,11 @@ import { StatusBadge, type BadgeTone } from "@/components/admin/ui/StatusBadge";
 import { EmptyState } from "@/components/admin/ui/EmptyState";
 import { AdminIcon } from "@/components/admin/AdminIcon";
 import { DayList } from "@/components/admin/bookings/DayList";
+import { WeekCalendarLazy as WeekCalendar } from "@/components/admin/bookings/WeekCalendarLazy";
 import { fmt } from "@/lib/core/format";
 import { formatIst, istDayKey, weekdayOfKey, addDaysKey } from "@/lib/core/ist";
 import type { BookingStatus } from "@/lib/domain/enums";
 import type { BookingAdminView } from "@/lib/validation/consult-admin";
-
-const WeekCalendar = dynamic(
-  () =>
-    import("@/components/admin/bookings/WeekCalendar").then(
-      (m) => m.WeekCalendar,
-    ),
-  {
-    ssr: false,
-    loading: () => (
-      <div className="h-[600px] w-full rounded-btn border border-s2 bg-cream animate-pulse" />
-    ),
-  },
-);
 
 function getStatusBadge(status: BookingStatus): {
   tone: BadgeTone;
@@ -284,7 +271,7 @@ export default async function AdminBookingsPage({
               <EmptyState
                 icon="calendar"
                 title="No bookings found"
-                description={
+                body={
                   search
                     ? `No bookings matching "${search}".`
                     : "No bookings in this tab view."
@@ -295,10 +282,7 @@ export default async function AdminBookingsPage({
 
           {listData.totalPages > 1 && (
             <div className="flex justify-end pt-2">
-              <Pagination
-                page={listData.page}
-                totalPages={listData.totalPages}
-              />
+              <Pagination page={listData.page} totalPages={listData.totalPages} />
             </div>
           )}
         </div>

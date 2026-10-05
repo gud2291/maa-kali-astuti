@@ -91,7 +91,8 @@ export async function getMyProfile(userId: number): Promise<CustomerProfile | nu
 
   return {
     id: u.id,
-    email: u.email,
+    // Customers always sign in by email OTP, so a customer row has one.
+    email: u.email ?? "",
     name: u.name,
     phone: u.phone,
     birth: u.birth,

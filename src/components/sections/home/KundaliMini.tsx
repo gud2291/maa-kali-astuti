@@ -7,7 +7,6 @@ import {
   useSyncExternalStore,
   type ChangeEvent,
   type FormEvent,
-  type KeyboardEvent,
   type ReactNode,
 } from "react";
 import { useTranslations } from "next-intl";
@@ -16,7 +15,9 @@ import { Icon } from "@/components/icons/Icon";
 import { drawChart, onView, prime } from "@/components/motion/draw";
 import { stagger } from "@/components/motion/fx";
 import { KundaliChart } from "@/components/signature/KundaliChart";
-import { DEMO_K, type Kundali } from "@/lib/astro/kundali";
+import { Corner } from "@/components/ui/ornaments/Corner";
+import { MandalaG } from "@/components/ui/ornaments/Mandala";
+import { DEMO_K, type City, type Kundali } from "@/lib/astro/kundali";
 import { PlaceInput, type SelectedPlace } from "@/components/forms/PlaceInput";
 import { computeChartAction } from "@/server/kundali/actions";
 import { toKundali } from "@/lib/astro/from-snapshot";
@@ -125,7 +126,12 @@ export function KundaliMini({ buildNow }: { buildNow: number }) {
 
   const submit = (e: FormEvent) => {
     e.preventDefault();
-    const city = selectedPlace || (kf.place.trim() ? [kf.place, "", 0, 0] : null);
+    // checkKundali only needs to know a place was given; the real place is resolved below.
+    const city: City | null = selectedPlace
+      ? [selectedPlace.name, "", selectedPlace.lat, selectedPlace.lon]
+      : kf.place.trim()
+        ? [kf.place, "", 0, 0]
+        : null;
     const errors = checkKundali({ ...kf, city }, today);
     if (Object.keys(errors).length) {
       setErr(errors);

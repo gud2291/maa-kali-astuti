@@ -1,41 +1,48 @@
+"use client";
+
 import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import { AdminIcon } from "../AdminIcon";
 import { cn } from "@/lib/utils/cn";
 
+/**
+ * Prev / next pager. Builds links from the current URL, so every filter in the query string is kept.
+ * Pass `total` + `pageSize` to show "Showing x–y of n"; `totalPages` alone is enough otherwise.
+ */
 export type PaginationProps = {
   page: number;
-  pageSize: number;
-  total: number;
-  pathname: string;
-  params: Record<string, string>;
+  totalPages?: number;
+  total?: number;
+  pageSize?: number;
   className?: string;
 };
 
 export function Pagination({
   page,
-  pageSize,
+  totalPages: totalPagesProp,
   total,
-  pathname,
-  params,
+  pageSize,
   className,
 }: PaginationProps): React.JSX.Element {
-  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
+
+  const totalPages = Math.max(
+    1,
+    totalPagesProp ?? (total !== undefined && pageSize ? Math.ceil(total / pageSize) : 1),
+  );
   const safePage = Math.min(Math.max(1, page), totalPages);
 
-  const from = total === 0 ? 0 : (safePage - 1) * pageSize + 1;
-  const to = Math.min(total, safePage * pageSize);
+  const showRange = total !== undefined && pageSize !== undefined;
+  const from = !showRange || total === 0 ? 0 : (safePage - 1) * pageSize + 1;
+  const to = showRange ? Math.min(total, safePage * pageSize) : 0;
 
   const buildHref = (targetPage: number): string => {
-    const sp = new URLSearchParams();
-    if (params) {
-      for (const [key, value] of Object.entries(params)) {
-        if (value !== undefined && value !== "" && key !== "page") {
-          sp.set(key, value);
-        }
-      }
-    }
+    const sp = new URLSearchParams(searchParams.toString());
     if (targetPage > 1) {
       sp.set("page", String(targetPage));
+    } else {
+      sp.delete("page");
     }
     const q = sp.toString();
     return q ? `${pathname}?${q}` : pathname;
@@ -51,11 +58,15 @@ export function Pagination({
         className,
       )}
     >
-      <p>
-        Showing <span className="font-semibold text-ink">{from}</span>–
-        <span className="font-semibold text-ink">{to}</span> of{" "}
-        <span className="font-semibold text-ink">{total}</span>
-      </p>
+      {showRange ? (
+        <p>
+          Showing <span className="font-semibold text-ink">{from}</span>–
+          <span className="font-semibold text-ink">{to}</span> of{" "}
+          <span className="font-semibold text-ink">{total}</span>
+        </p>
+      ) : (
+        <span />
+      )}
 
       <div className="flex items-center gap-2">
         {hasPrev ? (

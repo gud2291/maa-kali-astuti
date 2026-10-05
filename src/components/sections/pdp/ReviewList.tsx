@@ -177,7 +177,7 @@ export function ReviewList({
       {hasMore && selectedStar === null && (
         <div className="pt-4 flex justify-center">
           <Button
-            variant="secondary"
+            variant="outline"
             onClick={handleLoadMore}
             disabled={loading}
           >

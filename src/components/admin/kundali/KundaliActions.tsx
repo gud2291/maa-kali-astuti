@@ -7,7 +7,7 @@ import {
   regenerateKundaliAction,
   resendKundaliEmailAction,
 } from "@/server/kundali/admin-actions";
-import { useUi } from "@/stores/ui";
+import { toast } from "@/components/admin/ui/toast";
 
 type Props = {
   id: number;
@@ -30,13 +30,13 @@ export function KundaliActions({ id, status, refCode, hasEmail }: Props): React.
     try {
       const res = await regenerateKundaliAction({ id });
       if (res.ok) {
-        useUi.getState().toast({ msg: `Report status: ${res.data.status}`, tone: "ok" });
+        toast.ok(`Report status: ${res.data.status}`);
         router.refresh();
       } else {
-        useUi.getState().toast({ msg: `Regeneration failed: ${res.code}`, tone: "warn" });
+        toast.err(`Regeneration failed: ${res.code}`);
       }
     } catch {
-      useUi.getState().toast({ msg: "Regeneration error", tone: "warn" });
+      toast.err("Regeneration error");
     } finally {
       setIsRegenerating(false);
     }
@@ -47,13 +47,13 @@ export function KundaliActions({ id, status, refCode, hasEmail }: Props): React.
     try {
       const res = await resendKundaliEmailAction({ id });
       if (res.ok) {
-        useUi.getState().toast({ msg: "Ready email resent to customer", tone: "ok" });
+        toast.ok("Ready email resent to customer");
         router.refresh();
       } else {
-        useUi.getState().toast({ msg: `Failed to resend email: ${res.code}`, tone: "warn" });
+        toast.err(`Failed to resend email: ${res.code}`);
       }
     } catch {
-      useUi.getState().toast({ msg: "Error resending email", tone: "warn" });
+      toast.err("Error resending email");
     } finally {
       setIsResending(false);
     }

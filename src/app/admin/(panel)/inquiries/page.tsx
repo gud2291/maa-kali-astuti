@@ -181,7 +181,6 @@ export default async function AdminInquiriesPage({
         <div className="w-full sm:w-80">
           <SearchBox
             placeholder="Search by ref, name, phone, city…"
-            defaultValue={search}
           />
         </div>
 
@@ -225,7 +224,7 @@ export default async function AdminInquiriesPage({
           <EmptyState
             icon="chat"
             title="No inquiries found"
-            description={
+            body={
               search
                 ? `No inquiries matching "${search}".`
                 : "No inquiries currently in this status tab."
@@ -236,11 +235,7 @@ export default async function AdminInquiriesPage({
 
       {/* Pagination */}
       {data.totalPages > 1 && (
-        <Pagination
-          currentPage={data.page}
-          totalPages={data.totalPages}
-          baseUrl={buildUrl({ page: 1 })}
-        />
+        <Pagination page={data.page} totalPages={data.totalPages} />
       )}
     </div>
   );

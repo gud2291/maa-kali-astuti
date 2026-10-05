@@ -40,7 +40,7 @@ export function AvailabilityForm({
     "90": "",
   });
 
-  const form = useForm<ConsultSettingsAdminInput>({
+  const form = useForm({
     resolver: zodResolver(consultSettingsAdminSchema),
     defaultValues: {
       startTimes: {

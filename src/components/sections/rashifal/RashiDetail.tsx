@@ -287,7 +287,7 @@ export function RashiAreas({ r }: { r: Rashi }) {
 /** §3 Lucky trio + gemstone (87–110). Sand. 2 cols, 3 from 600, 3 + the gem card (1.6fr) from 1024;
  *  below 1024 the gem card spans the row. */
 export function RashiLucky({ r, gem }: { r: Rashi; gem: Product | null }) {
-  const t = useTranslations("rashifal.lucky");
+  const t = useTranslations("rashifal.luckyCard");
   const locale = useLocale();
   const { per, day } = useRashifal();
   const { entries } = useRashifalData(per);

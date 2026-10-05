@@ -17,7 +17,7 @@ export function BookingList({
   const now = Date.now();
 
   const isUpcoming = (b: BookingListItem) => {
-    if (b.status === "cancelled" || b.status === "refunded" || b.status === "completed") {
+    if (b.status === "cancelled" || b.status === "completed") {
       return false;
     }
     // Written report or future start

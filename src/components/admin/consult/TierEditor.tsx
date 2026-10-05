@@ -27,7 +27,7 @@ export function TierEditor({
 }: TierEditorProps): React.JSX.Element {
   const [pending, setPending] = useState(false);
 
-  const form = useForm<TierAdminInput>({
+  const form = useForm({
     resolver: zodResolver(tierAdminSchema),
     defaultValues: {
       titleEn: tier.titleEn,
@@ -67,7 +67,7 @@ export function TierEditor({
               {tier.tierKey} package
             </span>
             {form.watch("recommended") && (
-              <StatusBadge tone="accent">Recommended</StatusBadge>
+              <StatusBadge tone="info">Recommended</StatusBadge>
             )}
           </div>
           <p className="mt-0.5 font-sans text-[12.5px] text-ink6">
@@ -158,18 +158,7 @@ export function TierEditor({
         </div>
 
         <div className="flex items-center pt-5">
-          <Controller
-            control={form.control}
-            name="recommended"
-            render={({ field }) => (
-              <SwitchField
-                label="Recommended tier"
-                description="Mark as featured package"
-                checked={field.value}
-                onChange={field.onChange}
-              />
-            )}
-          />
+          <SwitchField name="recommended" control={form.control} label="Recommended tier" description="Mark as featured package" />
         </div>
       </div>
 

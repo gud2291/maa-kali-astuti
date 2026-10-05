@@ -49,27 +49,15 @@ export function InquiryNotes({ inquiryId, events }: InquiryNotesProps): React.JS
     try {
       const res = await addInquiryNoteAction(inquiryId, trimmed);
       if (!res.ok) {
-        toast({
-          title: "Failed to Add Note",
-          description: res.message || "Could not save note",
-          tone: "danger",
-        });
+        toast.err(res.message || "Could not save note");
         return;
       }
 
-      toast({
-        title: "Note Added",
-        description: "Your note was added to the timeline",
-        tone: "ok",
-      });
+      toast.ok("Your note was added to the timeline");
       setNote("");
       router.refresh();
     } catch {
-      toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        tone: "danger",
-      });
+      toast.err("An unexpected error occurred");
     } finally {
       setLoading(false);
     }

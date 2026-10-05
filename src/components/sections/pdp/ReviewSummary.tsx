@@ -44,7 +44,7 @@ export function ReviewSummary({
           {t("basedOn", { count })}
         </p>
         <Button
-          variant="secondary"
+          variant="outline"
           size="sm"
           onClick={onWriteReview}
           className="mt-2"

@@ -2,7 +2,7 @@ import Link from "next/link";
 import type { OrderSummaryItem } from "@/server/account/queries";
 import type { Locale } from "@/lib/domain/enums";
 import { Icon } from "@/components/icons/Icon";
-import { Badge } from "@/components/ui/Badge";
+import { BadgePill } from "@/components/ui/Badge";
 import { fmt } from "@/lib/core/format";
 import { formatIst } from "@/lib/core/ist";
 
@@ -96,9 +96,9 @@ export function OrderList({
                 </div>
 
                 <div className="flex items-center gap-2">
-                  <Badge tone="gold" size="sm">
+                  <BadgePill bg="#F3E7C4" fg="#7A5C1C">
                     {ord.status.replace("_", " ")}
-                  </Badge>
+                  </BadgePill>
                   <Link
                     href={`/account/orders/${ord.number}`}
                     className="rounded-btn bg-em7 px-3 py-1 font-sans text-xs font-semibold text-iv hover:bg-em9 transition-colors"

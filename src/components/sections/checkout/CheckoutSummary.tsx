@@ -190,7 +190,7 @@ export function CheckoutSummary({
             aria-expanded={mobileOpen}
           >
             <div className="flex items-center gap-2">
-              <Icon name="cart" className="size-4 text-em7" />
+              <Icon name="bag" className="size-4 text-em7" />
               <span className="font-sans text-[14px] font-semibold text-em9">
                 {mobileOpen ? t("hideOrderSummary") : t("showOrderSummary")} ({itemsCount})
               </span>

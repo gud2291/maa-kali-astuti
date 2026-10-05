@@ -71,30 +71,18 @@ export function StatusDialog({
 
       if (!res.ok) {
         setError(res.message || "Failed to update order status");
-        toast({
-          title: "Status Update Failed",
-          description: res.message || "Could not transition order status",
-          tone: "danger",
-        });
+        toast.err(res.message || "Could not transition order status");
         return;
       }
 
-      toast({
-        title: "Status Updated",
-        description: `Order moved to ${STATUS_LABELS[targetStatus]}`,
-        tone: "ok",
-      });
+      toast.ok(`Order moved to ${STATUS_LABELS[targetStatus]}`);
 
       onSuccess();
       onClose();
     } catch (err) {
       const msg = err instanceof Error ? err.message : "Update failed";
       setError(msg);
-      toast({
-        title: "Error",
-        description: msg,
-        tone: "danger",
-      });
+      toast.err(msg);
     } finally {
       setLoading(false);
     }
@@ -116,7 +104,7 @@ export function StatusDialog({
                 aria-label="Close"
               >
                 <div className="h-4 w-4">
-                  <AdminIcon name="x" sw={2} />
+                  <AdminIcon name="close" sw={2} />
                 </div>
               </button>
             </RadixDialog.Close>

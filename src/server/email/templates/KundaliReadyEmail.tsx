@@ -177,7 +177,7 @@ export function KundaliReadyEmail({
 
           {pdfUrl && (
             <div style={{ marginTop: "12px" }}>
-              <EmailButton href={pdfUrl} variant="secondary">
+              <EmailButton href={pdfUrl} style={{ backgroundColor: "#FFFFFF", color: "#1F4D3A", border: "1px solid #1F4D3A" }}>
                 {d.downloadPdf}
               </EmailButton>
             </div>

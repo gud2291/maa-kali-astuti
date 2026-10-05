@@ -52,18 +52,10 @@ export function CustomerCard({
     try {
       await navigator.clipboard.writeText(formattedAddress);
       setCopied(true);
-      toast({
-        title: "Address Copied",
-        description: "Delivery address copied to clipboard",
-        tone: "ok",
-      });
+      toast.ok("Delivery address copied to clipboard");
       setTimeout(() => setCopied(false), 2000);
     } catch {
-      toast({
-        title: "Copy Failed",
-        description: "Could not copy address",
-        tone: "danger",
-      });
+      toast.err("Could not copy address");
     }
   };
 

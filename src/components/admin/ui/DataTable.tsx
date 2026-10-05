@@ -2,6 +2,9 @@ import type { ReactNode } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/utils/cn";
 
+const ROW_CLICK_THROUGH =
+  "pointer-events-none [&_a]:pointer-events-auto [&_button]:pointer-events-auto [&_input]:pointer-events-auto [&_select]:pointer-events-auto";
+
 export type DataTableColumn<T> = {
   key: string;
   header: string;
@@ -79,7 +82,13 @@ export function DataTable<T>({
                           tabIndex={-1}
                         />
                       )}
-                      <div className="relative z-20 inline-block w-full">
+                      {/* Plain cell content lets clicks fall through to the row link; links, buttons and inputs stay clickable. */}
+                      <div
+                        className={cn(
+                          "relative z-20 inline-block w-full",
+                          href && ROW_CLICK_THROUGH,
+                        )}
+                      >
                         {col.cell(row)}
                       </div>
                     </td>
@@ -113,18 +122,18 @@ export function DataTable<T>({
               <div className="flex items-start justify-between gap-3">
                 <div className="min-w-0 flex-1">
                   {titleCol ? (
-                    <div className="relative z-20 font-sans text-[15px] font-semibold text-ink">
+                    <div className={cn("relative z-20 font-sans text-[15px] font-semibold text-ink", href && ROW_CLICK_THROUGH)}>
                       {titleCol.cell(row)}
                     </div>
                   ) : (
-                    <div className="relative z-20 font-sans text-[15px] font-semibold text-ink">
+                    <div className={cn("relative z-20 font-sans text-[15px] font-semibold text-ink", href && ROW_CLICK_THROUGH)}>
                       {columns[0]?.cell(row)}
                     </div>
                   )}
                 </div>
 
                 {badgeCol && (
-                  <div className="relative z-20 flex-none">
+                  <div className={cn("relative z-20 flex-none", href && ROW_CLICK_THROUGH)}>
                     {badgeCol.cell(row)}
                   </div>
                 )}
@@ -139,7 +148,7 @@ export function DataTable<T>({
                       className="flex items-center justify-between gap-2 font-sans text-[13px]"
                     >
                       <span className="font-medium text-ink6">{col.header}</span>
-                      <span className="relative z-20 font-normal text-ink">
+                      <span className={cn("relative z-20 font-normal text-ink", href && ROW_CLICK_THROUGH)}>
                         {col.cell(row)}
                       </span>
                     </div>

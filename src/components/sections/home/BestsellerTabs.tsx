@@ -3,6 +3,7 @@ import { useEffect, useLayoutEffect, useRef, useState, type KeyboardEvent, type 
 import { useTranslations } from "next-intl";
 import { Link } from "@/i18n/navigation";
 import { Icon } from "@/components/icons/Icon";
+import { isReduced } from "@/lib/hooks/useReducedMotion";
 import { ProductCard } from "@/components/commerce/ProductCard";
 import { InlineArt } from "@/components/ui/InlineArt";
 import { EASE } from "@/components/motion/easing";

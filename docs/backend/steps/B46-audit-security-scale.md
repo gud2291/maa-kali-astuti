@@ -21,7 +21,7 @@ Modify: `docs/backend/AUDIT-REPORT.md` (part 2), `docs/backend/GO-LIVE.md` (if n
 - [x] T5. Privacy: no PII in logs, palm-photo lifecycle, private bucket only via signed URLs, data the privacy policy promises vs what the code does. — claude
 - [x] T6. Dependencies: `pnpm audit --prod`; upgrade within the same major only when safe, else note it. — claude
 - [x] T7. Write AUDIT-REPORT part 2 (findings, fixes, residual risks, scale numbers) and update GO-LIVE if anything changed. — claude
-- [ ] T8. Ask the user to run `pnpm build` and paste errors; fix them in this session if any (Fix-list otherwise).
+- [x] T8. Ask the user to run `pnpm build` and paste errors; fix them in this session if any (Fix-list otherwise). — claude
 - [ ] T9. Finish per AGENTS.md §1 step 8: phase B complete.
 
 ## Must not
@@ -30,7 +30,7 @@ Modify: `docs/backend/AUDIT-REPORT.md` (part 2), `docs/backend/GO-LIVE.md` (if n
 ## Done-notes
 _(Claude: ≤ 12 lines)_
 
-Paused at T8: waiting for the user's `pnpm build` output (T1–T7 done, report part 2 written).
+T8 done: `pnpm build` passes (type errors from B-steps fixed: enums cycle, rashi key type, admin UI-kit prop misuse, RHF fields used without a form, toast calls, icons, i18n keys). T9 open.
 
 ## Manual QA (user)
 Full pass: storefront (EN/HI, 390 + 1440 px), checkout COD + online, booking, Kundali ₹99, inquiries, admin on phone + laptop; `pnpm build`; deploy a Vercel preview; follow GO-LIVE.md.

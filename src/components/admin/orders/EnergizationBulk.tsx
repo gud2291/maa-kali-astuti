@@ -20,11 +20,7 @@ export function EnergizationBulk({ placedCount }: EnergizationBulkProps): React.
 
   const handleApply = async (): Promise<void> => {
     if (!date) {
-      toast({
-        title: "Date Required",
-        description: "Please select an energization date",
-        tone: "warn",
-      });
+      toast.info("Please select an energization date");
       return;
     }
 
@@ -32,28 +28,16 @@ export function EnergizationBulk({ placedCount }: EnergizationBulkProps): React.
       setLoading(true);
       const res = await setEnergizationDateAction({ date, scope: "placed" });
       if (!res.ok) {
-        toast({
-          title: "Update Failed",
-          description: res.message || "Could not schedule energization",
-          tone: "danger",
-        });
+        toast.err(res.message || "Could not schedule energization");
         return;
       }
 
-      toast({
-        title: "Energization Scheduled",
-        description: `Scheduled Mahapuja on ${date} for ${res.data.count} new orders`,
-        tone: "ok",
-      });
+      toast.ok(`Scheduled Mahapuja on ${date} for ${res.data.count} new orders`);
       setShowConfirm(false);
       setDate("");
       router.refresh();
     } catch (err) {
-      toast({
-        title: "Error",
-        description: err instanceof Error ? err.message : "Action failed",
-        tone: "danger",
-      });
+      toast.err(err instanceof Error ? err.message : "Action failed");
     } finally {
       setLoading(false);
     }
@@ -64,7 +48,7 @@ export function EnergizationBulk({ placedCount }: EnergizationBulkProps): React.
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex items-center gap-2.5">
           <div className="h-5 w-5 text-g7 shrink-0">
-            <AdminIcon name="sparkles" sw={2} />
+            <AdminIcon name="flame" sw={2} />
           </div>
           <div>
             <h4 className="font-sans text-xs font-bold text-ink">

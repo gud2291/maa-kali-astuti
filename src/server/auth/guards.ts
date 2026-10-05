@@ -75,7 +75,7 @@ export async function requireCustomerPage(
   const customer = await getCustomer();
   if (!customer) {
     const href = `/account?next=${encodeURIComponent(path)}`;
-    localeRedirect({ href, locale });
+    return localeRedirect({ href, locale });
   }
   return customer;
 }

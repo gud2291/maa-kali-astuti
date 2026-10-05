@@ -91,7 +91,7 @@ export default async function OrdersPage(props: {
     {
       key: "number",
       header: "Order Number",
-      render: (o) => (
+      cell: (o) => (
         <div className="flex items-center gap-2">
           <Link
             href={`/admin/orders/${o.id}`}
@@ -113,7 +113,7 @@ export default async function OrdersPage(props: {
     {
       key: "customer",
       header: "Customer",
-      render: (o) => (
+      cell: (o) => (
         <div>
           <div className="font-sans text-xs font-semibold text-ink">{o.name}</div>
           <div className="font-mono text-[11px] text-ink6">{o.phone}</div>
@@ -123,14 +123,14 @@ export default async function OrdersPage(props: {
     {
       key: "items",
       header: "Items",
-      render: (o) => (
+      cell: (o) => (
         <span className="font-sans text-xs text-ink6">{o.itemsCount} units</span>
       ),
     },
     {
       key: "total",
       header: "Total",
-      render: (o) => (
+      cell: (o) => (
         <span className="font-sans text-xs font-bold text-ink">
           {fmt(o.totalInr)}
         </span>
@@ -139,7 +139,7 @@ export default async function OrdersPage(props: {
     {
       key: "payment",
       header: "Payment",
-      render: (o) => {
+      cell: (o) => {
         const pb = getPaymentBadge(o.paymentStatus);
         return (
           <div className="flex flex-col items-start gap-1">
@@ -154,7 +154,7 @@ export default async function OrdersPage(props: {
     {
       key: "status",
       header: "Order Status",
-      render: (o) => {
+      cell: (o) => {
         const sb = getStatusBadge(o.status);
         return <StatusBadge tone={sb.tone}>{sb.label}</StatusBadge>;
       },
@@ -162,7 +162,7 @@ export default async function OrdersPage(props: {
     {
       key: "date",
       header: "Date (IST)",
-      render: (o) => (
+      cell: (o) => (
         <span className="font-sans text-[11px] text-ink6 whitespace-nowrap">
           {formatIst(o.createdAt, { time: true })}
         </span>
@@ -187,7 +187,7 @@ export default async function OrdersPage(props: {
       {rows.length === 0 ? (
         <EmptyState
           title="No orders found"
-          description={
+          body={
             search || method || from || to
               ? "Try adjusting your search filters."
               : "No orders are currently in this pipeline tab."
@@ -198,7 +198,9 @@ export default async function OrdersPage(props: {
         <div className="space-y-4">
           {/* Desktop / Tablet Table */}
           <div className="hidden md:block">
-            <DataTable columns={columns} data={rows} keyField="id" />
+            <DataTable columns={columns} rows={rows}
+            empty={null}
+          />
           </div>
 
           {/* Mobile Card List */}
@@ -259,12 +261,7 @@ export default async function OrdersPage(props: {
             })}
           </div>
 
-          <Pagination
-            currentPage={page}
-            totalPages={totalPages}
-            totalItems={total}
-            pageSize={20}
-          />
+          <Pagination page={page} totalPages={totalPages} total={total} pageSize={20} />
         </div>
       )}
     </div>

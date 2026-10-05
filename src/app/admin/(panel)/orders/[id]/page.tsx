@@ -154,7 +154,7 @@ export default async function OrderDetailPage(props: {
               {order.energizationOn && (
                 <span className="inline-flex items-center gap-1 text-xs text-g7 font-semibold">
                   <div className="h-3.5 w-3.5">
-                    <AdminIcon name="sparkles" sw={2} />
+                    <AdminIcon name="flame" sw={2} />
                   </div>
                   Energization Date: {order.energizationOn}
                 </span>
@@ -209,7 +209,7 @@ export default async function OrderDetailPage(props: {
                     {(it.energName || it.energGotra) && (
                       <div className="mt-2 rounded-field bg-g1/40 border border-g3/30 p-2 text-xs text-g7 flex items-center gap-1.5">
                         <div className="h-3.5 w-3.5 shrink-0 text-g7">
-                          <AdminIcon name="sparkles" sw={2} />
+                          <AdminIcon name="flame" sw={2} />
                         </div>
                         <div>
                           <strong>Vedic Energization (Pran-Pratishtha):</strong>{" "}

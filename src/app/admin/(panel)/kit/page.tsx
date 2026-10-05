@@ -436,13 +436,7 @@ export default async function AdminKitPage({
           }
         />
 
-        <Pagination
-          page={pageNum}
-          pageSize={5}
-          total={sampleRows.length}
-          pathname="/admin/kit"
-          params={stringParams}
-        />
+        <Pagination page={pageNum} pageSize={5} total={sampleRows.length} />
       </section>
 
       {/* 6. Form Kit with useActionForm */}

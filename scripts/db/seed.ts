@@ -234,12 +234,12 @@ export async function main(): Promise<void> {
       deliver: L(s.deliver),
       get: L(s.get),
       modesLine: L(s.modesLine),
-      covered: s.covered.map(([icon, t, d]: [string, string, string]) => ({
+      covered: s.covered.map(([icon, t, d]) => ({
         icon,
         t: L(t),
         d: L(d),
       })),
-      samples: (s.samples ?? []).map(([kind, cap]: [string, string]) => ({
+      samples: (s.samples ?? []).map(([kind, cap]) => ({
         kind,
         cap: L(cap),
       })),
@@ -326,7 +326,7 @@ export async function main(): Promise<void> {
     console.info("seed: rituals +0");
   } else {
     const ritualsStmts = ritualsData.rituals.map(
-      ([icon, en, hi, line]: [string, string, string, string], index: number) =>
+      ([icon, en, hi, line], index) =>
         db
           .insert(schema.rituals)
           .values({

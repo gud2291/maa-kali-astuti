@@ -7,6 +7,7 @@ import { ProductCard } from "@/components/commerce/ProductCard";
 import { ProductImage } from "@/components/commerce/ProductImage";
 import { Starfield } from "@/components/signature/Starfield";
 import { MandalaG } from "@/components/ui/ornaments/Mandala";
+import { shimmer } from "@/components/motion/fx";
 import { routes } from "@/lib/routes";
 import { waLinkTo } from "@/lib/core/commerce";
 import { useSiteSettings } from "@/components/layout/SiteSettingsProvider";
