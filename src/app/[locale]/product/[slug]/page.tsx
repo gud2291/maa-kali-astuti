@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
-import { routes } from "@/lib/routes";
+import { categoryHref, routes } from "@/lib/routes";
 import { getProductDetail, getCatalog } from "@/server/catalog/queries";
 import { getSetting } from "@/server/settings/queries";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -25,7 +25,7 @@ type Props = { params: Promise<{ locale: string; slug: string }> };
 
 export const dynamicParams = true;
 
-export async function generateStaticParams() {
+export async function generateStaticParams(): Promise<{ slug: string }[]> {
   const { products } = await getCatalog();
   return products.map((p) => ({ slug: p.slug }));
 }
@@ -48,9 +48,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const description = descCandidate;
 
-  const firstImage = product.images?.[0]
-    ? product.images[0].variants?.[0]?.key || ""
-    : product.photo || `/svg/products/${product.id}-main.svg`;
+  const firstImage =
+    product.images?.[0]?.src || product.photo || `/svg/products/${product.id}-main.svg`;
 
   return pageMeta({
     locale,
@@ -75,14 +74,12 @@ export default async function Page({ params }: Props) {
   const isHi = locale === "hi";
 
   const productName = isHi ? product.hi || product.name : product.name;
-  const productCategoryName = isHi ? product.catHi || product.catName : product.catName;
+  const productCategoryName = product.catName;
   const productDesc = isHi
     ? product.seoDescHi || content.description?.hi || content.description?.en || ""
     : product.seoDescEn || content.description?.en || content.description?.hi || "";
 
-  const imageList = (product.images || [])
-    .map((img) => img.variants?.[0]?.key || "")
-    .filter(Boolean);
+  const imageList = (product.images || []).map((img) => img.src).filter(Boolean);
   if (imageList.length === 0 && product.photo) {
     imageList.push(product.photo);
   }
@@ -90,7 +87,7 @@ export default async function Page({ params }: Props) {
   const breadcrumbData = breadcrumbs([
     { name: isHi ? "होम" : "Home", url: "/" },
     { name: isHi ? "दुकान" : "Shop", url: "/shop" },
-    { name: productCategoryName, url: `/shop/${product.cat}` },
+    { name: productCategoryName, url: categoryHref(product.cat) },
     { name: productName, url: `/product/${product.slug}` },
   ]);
 
@@ -104,16 +101,16 @@ export default async function Page({ params }: Props) {
       mrpInr: product.mrp,
       stock: product.stock,
       ratingAvg: product.rating,
-      ratingCount: product.ratingCount,
+      ratingCount: product.reviews,
     },
     {
       url: `/product/${product.slug}`,
       images: imageList,
-      reviews: reviewsData.reviews.map((r) => ({
-        author: r.author,
+      reviews: reviewsData.items.map((r) => ({
+        author: r.name,
         rating: r.rating,
         body: r.body,
-        date: r.date,
+        date: new Date(r.date).toISOString().slice(0, 10),
       })),
     }
   );

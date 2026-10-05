@@ -45,7 +45,7 @@ const DICT = {
       "An updated calendar invite (.ics) has been attached to this email reflecting your new appointment time.",
   },
   hi: {
-    subject: (ref: string, svc: string) => `परामर्श समय परिवर्तन: ${svc} (${ref}) — माँ काली स्तुति`,
+    subject: (ref: string, svc: string) => `परामर्श समय परिवर्तन: ${svc} (${ref}) — माँ काली अस्तुति`,
     preview: (ref: string) => `आपका परामर्श ${ref} नए समय पर निर्धारित कर दिया गया है।`,
     heading: "परामर्श का समय बदला गया",
     greeting: (name: string) => `नमस्ते ${name},`,

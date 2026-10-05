@@ -25,7 +25,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const isHi = locale === "hi";
   const fallbackTitle = POLICIES[slug];
   const title = (isHi && page?.titleHi) || page?.titleEn || fallbackTitle;
-  const siteName = isHi ? "माँ काली स्तुति" : "Maa Kali Astuti";
+  const siteName = isHi ? "माँ काली अस्तुति" : "Maa Kali Astuti";
   const description = `${title} — ${siteName}`;
 
   return pageMeta({

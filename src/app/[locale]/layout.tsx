@@ -35,7 +35,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
   const defaultTitle = loc(seo.title, locale) || t("title");
   const defaultDesc = loc(seo.description, locale) || t("description");
-  const siteName = t("siteName") || (locale === "hi" ? "माँ काली स्तुति" : "Maa Kali Astuti");
+  const siteName = t("siteName") || (locale === "hi" ? "माँ काली अस्तुति" : "Maa Kali Astuti");
 
   const base = pageMeta({
     locale,
@@ -75,7 +75,7 @@ export default async function LocaleLayout({
   ]);
 
   const orgJsonLd = organization({
-    siteName: locale === "hi" ? "माँ काली स्तुति" : "Maa Kali Astuti",
+    siteName: locale === "hi" ? "माँ काली अस्तुति" : "Maa Kali Astuti",
     phone: contact.phoneTel || contact.phoneDisplay,
     email: contact.email,
     social,

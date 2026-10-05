@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { setRequestLocale } from "next-intl/server";
+import { getTranslations, setRequestLocale } from "next-intl/server";
 import { AboutTeaser } from "@/components/sections/home/AboutTeaser";
 import { AstroTools } from "@/components/sections/home/AstroTools";
 import { Bestsellers } from "@/components/sections/home/Bestsellers";
@@ -28,6 +28,7 @@ import {
 } from "@/lib/api/content";
 import { getSetting } from "@/server/settings/queries";
 import { pageMeta } from "@/lib/seo/meta";
+import { loc } from "@/lib/domain/loc";
 
 /* Home (design/Home.dc.html). F5 built §1–5 (hero → 12 Nag spotlight), F6 §6–9 (rashifal wheel →
    floating stones), F7 §10–17 (courses → newsletter). The footer's newsletter is off on Home. */
@@ -41,24 +42,15 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>;
 }): Promise<Metadata> {
   const { locale } = await params;
-  const seo = await getSetting("seo");
-  const isHi = locale === "hi";
-  const title =
-    (isHi ? seo.metaTitleHi : seo.metaTitleEn) ||
-    (isHi
-      ? "माँ काली स्तुति — साधक पवन पाण्डेय"
-      : "Maa Kali Astuti — Sadhak Pawan Pandey");
-  const description =
-    (isHi ? seo.metaDescHi : seo.metaDescEn) ||
-    (isHi
-      ? "प्रामाणिक रुद्राक्ष, रत्न, सिद्ध यंत्र एवं साधक पवन पाण्डेय जी से वैदिक परामर्श।"
-      : "Authentic rudraksha, energized gemstones, yantras and Vedic consultations with Sadhak Pawan Pandey.");
+  const [seo, t] = await Promise.all([getSetting("seo"), getTranslations({ locale, namespace: "meta" })]);
+  // settings.seo (B14) is { title: Loc, description: Loc, ogMediaId }; empty → the messages copy.
+  const title = loc(seo.title, locale) || t("title");
+  const description = loc(seo.description, locale) || t("description");
   return pageMeta({
     locale,
     path: "/",
     title,
     description,
-    image: seo.ogImage,
   });
 }
 

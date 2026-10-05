@@ -59,13 +59,13 @@ export default async function ServicePage({ params }: Props) {
       description: t(`copy.${s.key}.long`),
       serviceType: "Astrology & Spiritual Consultation",
       tiers: s.tiers.map((tier) => ({
-        name: tier.name,
+        name: tier.t,
         priceInr: tier.price,
       })),
     },
     `/consultations/${s.slug}`
   );
-  const faqData = faqPage(faq.map((item) => ({ q: item.q, a: item.a })));
+  const faqData = faqPage(faq.map(([q, a]) => ({ q, a })));
 
   return (
     <>

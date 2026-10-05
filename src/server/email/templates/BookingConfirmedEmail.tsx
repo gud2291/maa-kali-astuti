@@ -50,7 +50,7 @@ const DICT = {
     attachmentNotice: "A calendar invite (.ics) has been attached to this email so you can add this session to your calendar.",
   },
   hi: {
-    subject: (ref: string, svc: string) => `परामर्श निश्चित: ${svc} (${ref}) — माँ काली स्तुति`,
+    subject: (ref: string, svc: string) => `परामर्श निश्चित: ${svc} (${ref}) — माँ काली अस्तुति`,
     preview: (ref: string) => `आपका परामर्श ${ref} निश्चित हो गया है।`,
     heading: "परामर्श निश्चित हुआ",
     greeting: (name: string) => `नमस्ते ${name},`,

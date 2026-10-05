@@ -26,9 +26,9 @@ const DICT = {
     ignore: "If you did not request this code, you can safely ignore this email. No action is required.",
   },
   hi: {
-    subject: "आपका सत्यापन कोड — माँ काली स्तुति",
+    subject: "आपका सत्यापन कोड — माँ काली अस्तुति",
     preview: (code: string) => `आपका सत्यापन कोड ${code} है`,
-    titleCustomer: "माँ काली स्तुति में साइन-इन करें",
+    titleCustomer: "माँ काली अस्तुति में साइन-इन करें",
     titleAdmin: "एडमिन साइन-इन",
     body: "अपना साइन-इन पूरा करने के लिए नीचे दिए गए 6 अंकों के सत्यापन कोड का उपयोग करें:",
     expires: "यह कोड 10 मिनट में निष्प्रभावी हो जाएगा।",

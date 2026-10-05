@@ -72,7 +72,7 @@ const DICT = {
   hi: {
     meeting_link: {
       subject: (ref: string, svc: string) =>
-        `मीटिंग लिंक उपलब्ध: ${svc} (${ref}) — माँ काली स्तुति`,
+        `मीटिंग लिंक उपलब्ध: ${svc} (${ref}) — माँ काली अस्तुति`,
       preview: (ref: string) =>
         `आपके परामर्श ${ref} का मीटिंग लिंक तैयार है।`,
       heading: "परामर्श लिंक तैयार है",
@@ -82,7 +82,7 @@ const DICT = {
     },
     report_ready: {
       subject: (ref: string, svc: string) =>
-        `रिपोर्ट तैयार है: ${svc} (${ref}) — माँ काली स्तुति`,
+        `रिपोर्ट तैयार है: ${svc} (${ref}) — माँ काली अस्तुति`,
       preview: (ref: string) =>
         `आपके परामर्श ${ref} की लिखित रिपोर्ट तैयार है।`,
       heading: "आपकी रिपोर्ट तैयार है",
@@ -92,7 +92,7 @@ const DICT = {
     },
     cancelled: {
       subject: (ref: string, svc: string) =>
-        `बुकिंग रद्द: ${svc} (${ref}) — माँ काली स्तुति`,
+        `बुकिंग रद्द: ${svc} (${ref}) — माँ काली अस्तुति`,
       preview: (ref: string) =>
         `आपका परामर्श ${ref} रद्द कर दिया गया है।`,
       heading: "परामर्श रद्द हुआ",

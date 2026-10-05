@@ -107,7 +107,7 @@ export async function createInquiry(
             to: targetEmail,
             subject:
               input.locale === "hi"
-                ? `पूछताछ प्राप्त हुई: ${courseOrArea} (${inquiryRef}) — माँ काली स्तुति`
+                ? `पूछताछ प्राप्त हुई: ${courseOrArea} (${inquiryRef}) — माँ काली अस्तुति`
                 : `Inquiry Received: ${courseOrArea} (${inquiryRef}) — Maa Kali Astuti`,
             react: createElement(InquiryReceivedEmail, {
               locale: input.locale,

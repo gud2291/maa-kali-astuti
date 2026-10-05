@@ -43,7 +43,7 @@ export function pageMeta({
     ogImageUrl = `${SITE_URL}/opengraph-image`;
   }
 
-  const siteName = locale === "hi" ? "माँ काली स्तुति" : "Maa Kali Astuti";
+  const siteName = locale === "hi" ? "माँ काली अस्तुति" : "Maa Kali Astuti";
   const ogLocale = locale === "hi" ? "hi_IN" : "en_IN";
 
   return {

@@ -149,8 +149,13 @@ Two throw-away scripts (not committed) were run over `src/`: (1) every local imp
   - **M** `expireBookingHolds` selected ids and then updated them **without re-checking the status** → a booking confirmed by a payment between the two statements was flipped to `expired`. The update now also requires `status = "pending_payment"`. (`src/server/cron/jobs.ts`)
   - **M** reminders, review requests, abandoned-checkout emails and order expiry awaited each row one by one (up to 100 × 8 s email timeouts) inside a 60 s route, and `retryKundali` ran up to five 45 s PDF renders serially. They now run through a small `inChunks` helper (10 at a time; Kundali retries 5 in parallel) — RULES §5. (same file)
   - L logs carried raw `Error` objects (serialise to `{}`) and one carried the checkout-draft **token**; they now log the message and the draft id. Route errors `UNAUTHORIZED` → `UNAUTHENTICATED` (ARCH §12). (`src/server/cron/jobs.ts`, `daily.ts`, `frequent.ts`, `src/app/api/cron/{daily,frequent}/route.ts`)
-- [ ] B42 SEO foundation
-- [ ] B43 SEO pages
+- [x] **B42 SEO foundation** — `pageMeta` (canonical, hreflang en/hi/x-default, OG 1200×630, robots), pure JSON-LD builders, `JsonLd` escaping `<`, layout defaults from `settings.seo` + Organization/WebSite, sitemap (both locales, `lastModified`), robots (private areas in both locales), `llms.txt`, OG images. Finding:
+  - M the brand's Hindi name was misspelt **"माँ काली स्तुति"** (missing "अ") in OG `siteName`, page titles and 13 customer email subjects/bodies; messages use "माँ काली अस्तुति". Corrected everywhere (14 files: `src/lib/seo/meta.ts`, `src/app/[locale]/layout.tsx`, `src/app/[locale]/policies/[slug]/page.tsx`, the Hindi copy in `src/server/email/templates/*.tsx`, `src/server/inquiries/service.ts`).
+- [x] **B43 Per-page metadata & JSON-LD** — `pageMeta` on every listed page, noindex on private pages, JSON-LD per page type. Findings (all **H — type errors that break `pnpm build`**, several also wrong at runtime):
+  - Home `generateMetadata` read `seo.metaTitleEn/metaTitleHi/metaDescEn/metaDescHi/ogImage`, none of which exist (`seo` = `{ title: Loc, description: Loc, ogMediaId }`), and its Hindi fallback was misspelt → rewritten like the layout: `loc(seo.title)` / `loc(seo.description)` with the `meta` messages as fallback. (`src/app/[locale]/page.tsx`)
+  - Product page: `MediaRef.variants` (it has `src`), `product.catHi` (no such field), `product.ratingCount` (it is `reviews`), `reviewsData.reviews` / `r.author` (it is `items` / `name`, date in ms) → fixed; the breadcrumb category URL used the key (`/shop/rudraksha`) instead of the route slug → `categoryHref()`. (`src/app/[locale]/product/[slug]/page.tsx`)
+  - Article page: `coverMedia.variants` → `coverMedia.src`; `legacyArt` (a product id) was used as an image URL → `/svg/products/<id>-main.svg`. (`src/app/[locale]/blog/[slug]/page.tsx`)
+  - Service, Kundali-99 and course pages mapped `getFaq()` rows as `{ q, a }` objects, but they are `[q, a]` tuples → FAQPage JSON-LD had `undefined` questions; the service page also read `tier.name` (it is `t`). Fixed. (`src/app/[locale]/consultations/[service]/page.tsx`, `src/app/[locale]/kundali-99/page.tsx`, `src/app/[locale]/sadhana-courses/[slug]/page.tsx`)
 - [ ] B44 Hardening & go-live
 
 ## Files changed by this audit
@@ -181,6 +186,8 @@ Two throw-away scripts (not committed) were run over `src/`: (1) every local imp
 - `src/server/reviews/service.ts`, `src/server/reviews/queries.ts` (B38)
 - `src/server/kundali/actions.ts` (B30), `src/server/kundali/content/hi/planet-in-house.ts` (B28)
 - `src/server/health.ts`, `src/server/customers/admin.ts`, `src/app/admin/(panel)/health/page.tsx` (B40)
+- B42 Hindi brand name: `src/lib/seo/meta.ts`, `src/app/[locale]/layout.tsx`, `src/app/[locale]/policies/[slug]/page.tsx`, `src/server/email/templates/{AbandonedCheckout,BookingConfirmed,BookingReminder,BookingRescheduled,BookingUpdate,InquiryReceived,OrderPlaced,Otp,ReviewRequest,…}Email.tsx`, `src/server/inquiries/service.ts`
+- B43: `src/app/[locale]/page.tsx`, `src/app/[locale]/product/[slug]/page.tsx`, `src/app/[locale]/blog/[slug]/page.tsx`, `src/app/[locale]/consultations/[service]/page.tsx`, `src/app/[locale]/kundali-99/page.tsx`, `src/app/[locale]/sadhana-courses/[slug]/page.tsx`
 - `src/server/cron/jobs.ts`, `src/server/cron/daily.ts`, `src/server/cron/frequent.ts`, `src/app/api/cron/daily/route.ts`, `src/app/api/cron/frequent/route.ts` (B41), `src/server/email/templates/BookingReminderEmail.tsx` (B41)
 - JSX → `createElement` (B09 finding): `src/server/orders/emails.ts`, `src/server/bookings/emails.ts`, `src/server/kundali/emails.ts`, `src/server/inquiries/service.ts`, `src/server/messages/actions.ts`, `src/server/cron/jobs.ts`
 

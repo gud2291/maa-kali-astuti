@@ -61,7 +61,7 @@ export default async function Kundali99Page({ params }: Props) {
     },
     "/kundali-99"
   );
-  const faqData = faqPage(faq.map((item) => ({ q: item.q, a: item.a })));
+  const faqData = faqPage(faq.map(([q, a]) => ({ q, a })));
 
   return (
     <>

@@ -74,7 +74,7 @@ export default async function CoursePage({ params }: Props) {
     `/sadhana-courses/${c.slug}`,
     courseFee
   );
-  const faqData = faqPage(faq.map((item) => ({ q: item.q, a: item.a })));
+  const faqData = faqPage(faq.map(([q, a]) => ({ q, a })));
 
   return (
     <>

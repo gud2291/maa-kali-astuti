@@ -68,7 +68,7 @@ const DICT = {
     viewOrder: "View Order Details",
   },
   hi: {
-    subject: (num: string) => `ऑर्डर कन्फर्म: ${num} — माँ काली स्तुति`,
+    subject: (num: string) => `ऑर्डर कन्फर्म: ${num} — माँ काली अस्तुति`,
     preview: (num: string) => `आपके ऑर्डर ${num} के लिए धन्यवाद। आपकी वस्तुएं तैयार की जा रही हैं।`,
     heading: "ऑर्डर कन्फर्म हुआ",
     greeting: (name: string) => `नमस्ते ${name},`,

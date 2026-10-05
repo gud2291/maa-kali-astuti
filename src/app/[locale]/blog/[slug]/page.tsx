@@ -39,7 +39,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     article.excerptEn ||
     "";
 
-  const image = article.coverMedia?.variants?.[0]?.key || article.legacyArt || null;
+  // MediaRef has `src`; `legacyArt` is a product id whose art the card shows.
+  const image =
+    article.coverMedia?.src || (article.legacyArt ? `/svg/products/${article.legacyArt}-main.svg` : null);
 
   return pageMeta({
     locale,
@@ -78,7 +80,9 @@ export default async function ArticleDetailPage({
   const isHi = locale === "hi";
   const articleTitle = isHi ? article.titleHi || article.titleEn : article.titleEn;
   const articleDesc = isHi ? article.excerptHi || article.excerptEn : article.excerptEn;
-  const coverUrl = article.coverMedia?.variants?.[0]?.key || article.legacyArt || undefined;
+  const coverUrl =
+    article.coverMedia?.src ||
+    (article.legacyArt ? `/svg/products/${article.legacyArt}-main.svg` : undefined);
 
   const breadcrumbData = breadcrumbs([
     { name: isHi ? "होम" : "Home", url: "/" },
