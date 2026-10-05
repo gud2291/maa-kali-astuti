@@ -114,22 +114,28 @@ export async function writeSetting<K extends SettingsKey>(
     }
   }
 
-  await db
-    .insert(settings)
-    .values({
-      key,
-      value: parsed,
-      updatedAt: new Date(),
-      updatedBy: effectiveActor.id,
-    })
-    .onConflictDoUpdate({
-      target: settings.key,
-      set: {
+  // null = back to the default (announcement, home hero): settings.value is NOT NULL, and a
+  // missing row already reads as the default.
+  if (parsed === null) {
+    await db.delete(settings).where(eq(settings.key, key));
+  } else {
+    await db
+      .insert(settings)
+      .values({
+        key,
         value: parsed,
         updatedAt: new Date(),
         updatedBy: effectiveActor.id,
-      },
-    });
+      })
+      .onConflictDoUpdate({
+        target: settings.key,
+        set: {
+          value: parsed,
+          updatedAt: new Date(),
+          updatedBy: effectiveActor.id,
+        },
+      });
+  }
 
   await audit({
     actorId: effectiveActor.id,
@@ -144,9 +150,8 @@ export async function writeSetting<K extends SettingsKey>(
 export async function updateSetting<K extends SettingsKey>(
   key: K,
   value: unknown,
-  actor?: AdminUser,
 ): Promise<void> {
-  const admin = actor ?? (await requireAdmin("settings.edit"));
+  const admin = await requireAdmin("settings.edit");
 
   if (!ADMIN_SETTINGS_KEYS.includes(key as AdminSettingsKey)) {
     throw new AppError("FORBIDDEN");

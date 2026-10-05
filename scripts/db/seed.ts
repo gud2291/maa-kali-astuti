@@ -105,21 +105,22 @@ export async function main(): Promise<void> {
   const seedOwnerName = process.env.SEED_OWNER_NAME?.trim() || "Owner";
 
   /* 1. settings */
-  const settingsStmts = Object.entries(SETTINGS_DEFAULTS).map(([key, val]) => {
-    let valToSave = val;
-    if (key === "notify" && seedOwnerEmail) {
-      valToSave = {
-        ...(val as typeof SETTINGS_DEFAULTS.notify),
-        adminEmails: [seedOwnerEmail],
-      };
-    }
-    return db
-      .insert(schema.settings)
-      .values({
-        key,
-        value: valToSave,
-      })
-      .onConflictDoNothing();
+  const settingsStmts = Object.entries(SETTINGS_DEFAULTS).flatMap(([key, val]) => {
+    // A null default (announcement) means "no row": settings.value is NOT NULL.
+    if (val === null) return [];
+    const valToSave =
+      key === "notify" && seedOwnerEmail
+        ? { ...(val as typeof SETTINGS_DEFAULTS.notify), adminEmails: [seedOwnerEmail] }
+        : val;
+    return [
+      db
+        .insert(schema.settings)
+        .values({
+          key,
+          value: valToSave,
+        })
+        .onConflictDoNothing(),
+    ];
   });
   const settingsInserted = await runBatch(settingsStmts);
   console.info(`seed: settings +${settingsInserted}`);
