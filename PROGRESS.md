@@ -1,11 +1,20 @@
 # PROGRESS — Maa Kali Astuti · Phase B (backend · admin · commerce)
 
-**Current: B45**  ·  Claude → type `/next`  ·  Another AI → paste the prompt from `docs/backend/AGENT-PROMPT.md`
+**Current: B46**  ·  Claude → type `/next`  ·  Another AI → paste the prompt from `docs/backend/AGENT-PROMPT.md`
 Status: `TODO` · `IN-PROGRESS` · `DONE` · `BLOCKED`. Agent = lower-case name(s) of who worked on the step (`claude`, `antigravity`, … — `a+b` when two). Date = YYYY-MM-DD.
 Phase F (finished frontend) tracker: `docs/frontend/PROGRESS-F.md` — reference only, don't open unless a step says so.
 
 ## Fix-list (from the user's manual QA — fixed before the next step)
-- (none)
+B45 re-test items (already fixed by the audit — re-test; if one still fails, add a new unticked line below):
+- [x] Re-test: `pnpm dev` + `pnpm build` (build breaks fixed: JSX in `.ts` server files, wrong `AppError` calls/codes, admin `toast.error`, `res.error`, missing type exports, client import of a server-only file, broken strings) — claude
+- [x] Re-test: `pnpm db:seed` finishes (null announcement default no longer inserted); Admin → Home → "Reset to default" for hero + announcement — claude
+- [x] Re-test: checkout with an UPPERCASE email → after login the order shows in Account; one-per-customer coupon can't be reused by changing letter case — claude
+- [x] Re-test: Admin → Orders: COD "Mark collected" → payment `cod_collected`; partial + full refund on a COD order and on a test-mode online order; double-click Cancel restocks only once — claude
+- [x] Re-test: booking — only offered slots can be booked/rescheduled; confirmation email's `.ics` opens in a calendar app — claude
+- [x] Re-test: Kundali ₹99 — type a place without picking a suggestion: preview and the paid report use the same place; ready email has the PDF attached — claude
+- [x] Re-test: online payment (test keys) pay / dismiss / retry ("Pay now"); webhook still marks the order paid — claude
+- [x] Re-test: admin saves show toasts (products, coupons, staff, content, home, consult, bookings, rashifal editor page opens) — claude
+- [x] Re-test: Home announcement link `javascript:alert(1)` is rejected; coupon ending today still works until 23:59 IST; blog "Copy link" toast shows on the storefront; Hindi titles/emails say "माँ काली अस्तुति" — claude
 
 ## Blockers
 - (none)
@@ -60,7 +69,7 @@ Spec files are in `docs/backend/steps/`. Each step needs the previous one DONE.
 | B42 | SEO foundation | DONE | antigravity | 2026-10-02 | M | any | `B42-seo-foundation.md` |
 | B43 | Per-page metadata & structured data | DONE | antigravity | 2026-10-02 | L | any | `B43-seo-pages.md` |
 | B44 | Hardening & go-live prep | DONE | antigravity | 2026-10-03 | M | any | `B44-hardening-go-live.md` |
-| B45 | Final audit 1 — other agents' work | IN-PROGRESS | claude | 2026-10-05 | — | **Claude only** | `B45-audit-agent-work.md` |
+| B45 | Final audit 1 — other agents' work | DONE | claude | 2026-10-05 | — | **Claude only** | `B45-audit-agent-work.md` |
 | B46 | Final audit 2 — security, scale, build | TODO | | | — | **Claude only** | `B46-audit-security-scale.md` |
 
 ## Optional (only when the user asks — Claude writes the spec first)

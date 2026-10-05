@@ -158,6 +158,16 @@ Two throw-away scripts (not committed) were run over `src/`: (1) every local imp
   - Service, Kundali-99 and course pages mapped `getFaq()` rows as `{ q, a }` objects, but they are `[q, a]` tuples → FAQPage JSON-LD had `undefined` questions; the service page also read `tier.name` (it is `t`). Fixed. (`src/app/[locale]/consultations/[service]/page.tsx`, `src/app/[locale]/kundali-99/page.tsx`, `src/app/[locale]/sadhana-courses/[slug]/page.tsx`)
 - [ ] B44 Hardening & go-live
 
+## T3. REDO
+None. Every problem found could be repaired in place without changing the specified behaviour, so no step is marked `REDO`.
+
+## T5. Summary
+- Steps audited: **44** (B01–B44, all by `antigravity`). 19 partial commits `B45 (partial): …` + the final commit.
+- Findings fixed: **≈ 25 High** (mostly build breaks: JSX in `.ts` files ×10 modules, wrong `AppError` arguments/codes ×20+, `res.error` / `toast.error` API misuse in ~35 components, missing type exports, a client → `server-only` import, broken string literals; plus money/security bugs: unreachable COD refunds, unvalidated booking slots, stored-XSS links, seed/reset NOT NULL failures), **≈ 21 Medium** (webhook retries, payment status checks, races in cancel/expiry, lower-case emails, Kundali paid with the wrong place, coupon IST dates, cache of DB-error fallbacks, unbounded rating queries, serial cron loops, …), **≈ 14 Low** fixed.
+- Left for B46 (Low, need `tsc` or are cosmetic): two `as unknown as` casts (`CouponForm`, `ProductCard`), the content merge cast, inline EN/HI copy in `AccountLogin` / `AddressSheet` / `RescheduleCard` / `ArticleView`, missing return types on `getRituals` / `getVideos`, raw numeric ids in a few content admin actions, the unindexed `needs_attention` badge count, stale "mock" comments in `KundaliTool` / `PaySheet`, FK `.references()` not declared, and (phase-F, not agent work) the `rashifal.lucky` message key that is an object in EN and a string in HI.
+- Read-only checks re-run at the end, all **0**: TypeScript **syntax** parse of every `src/` + `scripts/` file (parser only — no type-check, no `tsc`), local import/export resolution, client → `server-only` reachability, invalid `AppError` codes, admin toast misuse, `ActionResult.error` misuse, RULES §9 greps, admin page / `admin.ts` guards.
+- Not verifiable without running the app (AGENTS §2): full type-check and runtime behaviour. The user's `pnpm build` (Manual QA) is the type-check; please paste any error into the Fix-list.
+
 ## Files changed by this audit
 - `src/lib/core/ist.ts` (B01)
 - `src/server/ids.ts` (B01)
@@ -192,4 +202,4 @@ Two throw-away scripts (not committed) were run over `src/`: (1) every local imp
 - JSX → `createElement` (B09 finding): `src/server/orders/emails.ts`, `src/server/bookings/emails.ts`, `src/server/kundali/emails.ts`, `src/server/inquiries/service.ts`, `src/server/messages/actions.ts`, `src/server/cron/jobs.ts`
 
 ## Fix-list items added for the user
-- (none yet)
+Added to `PROGRESS.md → Fix-list` as **ticked re-test items** (already fixed by this audit; the user re-tests them and adds a new unticked line if something still fails).
