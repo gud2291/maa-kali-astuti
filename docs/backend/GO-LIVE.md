@@ -220,3 +220,11 @@ Log in to `/admin` using your owner email OTP and update:
     ```
 - [ ] **Live Logging**:
   - Monitor runtime logs in Vercel Dashboard → Functions to ensure zero unhandled exceptions.
+
+---
+
+## 14. Daily Operations (added in B46)
+
+- [ ] **Mark finished consultations "Completed"** in `/admin/bookings`: palm photos are deleted 30 days after a completed / cancelled / no-show booking (privacy-policy promise). A booking left "confirmed" keeps its photos.
+- [ ] **Check "Needs attention" orders and booking admin notes daily**: extra or late payments (paid after cancel, double payment, amount mismatch) are recorded there and must be refunded by hand.
+- [ ] **Email quota**: Resend's free plan sends 3,000 emails/month — move to a paid plan before about 1,500 orders/bookings a month.

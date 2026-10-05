@@ -546,6 +546,9 @@ export async function deleteOldPalmPhotos(now: Date): Promise<{ done: number }> 
     .where(
       and(
         inArray(bookings.status, ["completed", "cancelled", "no_show", "expired"]),
+        // Only rows that still hold photos: cleaned rows would otherwise fill the 100-row page
+        // forever and newer palm photos would never be deleted.
+        sql`json_array_length(${bookings.palmMediaIds}) > 0`,
         or(
           and(sql`${bookings.endAt} IS NOT NULL`, lt(bookings.endAt, cutoff)),
           and(sql`${bookings.endAt} IS NULL`, lt(bookings.createdAt, cutoff)),

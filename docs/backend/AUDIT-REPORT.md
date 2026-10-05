@@ -203,3 +203,78 @@ None. Every problem found could be repaired in place without changing the specif
 
 ## Fix-list items added for the user
 Added to `PROGRESS.md → Fix-list` as **ticked re-test items** (already fixed by this audit; the user re-tests them and adds a new unticked line if something still fails).
+
+---
+
+# AUDIT-REPORT — B46 Final audit 2 (security, scale, build readiness)
+
+Auditor: claude · 2026-10-05. Range: `99dd23e^..HEAD` (phase B, ≈ 592 files / 80k lines under `src/`). Severity as in part 1.
+
+## T1. Security review (OWASP-style)
+The `security-review` skill could not run (it diffs against `origin/HEAD`; this repo has no remote), so the same review was done by hand over the attack surface: every public/customer Server Action, every `/api/*` route, auth (sessions, OTP, guards), payments (checkout confirm, webhook, refunds), uploads, cron, CSP/headers, DB-driven `href`s.
+Verified OK: hashed session tokens, `__Host-` cookies, role re-checked on every request (role change / block takes effect at once), OTP (HMAC, 10 min, atomic attempts ≤ 5, per-email + per-IP limits, no admin-email probing), Turnstile on the listed forms, rate limits on every public mutation, open-redirect guard on `next`, HMAC access keys compared with `safeEqualHex` on every key-or-owner read (order, invoice, booking, Kundali report/PDF/generate), webhook raw-body HMAC before parse + event dedupe, checkout signature + payment-status check, cron secret compared by hash, upload type/size/bucket rules, private files only via 10-min signed URLs, no SQL string building, strict CSP (`frame-ancestors 'none'`, `object-src 'none'`), HSTS, admin `no-store` + noindex, Server Actions protected by Next's Origin check. `x-forwarded-for` is trusted for rate limits — correct on Vercel (it overwrites the header).
+Findings fixed:
+- **H — stored XSS:** the order **tracking URL** (staff with `orders.update`) used `z.string().url()`, which accepts `javascript:alert(1)` (checked); it is rendered as `<a href>` on the customer's order page and the track-order result. Now only `http(s)://…`. (`src/lib/validation/order-admin.ts`)
+- **H — money:** `markOrderPaid` guarded with `paymentStatus <> 'paid'`, so replaying a valid checkout confirm on a **partially refunded** order (Razorpay still reports the payment `captured`) flipped it back to `paid` and re-ran fulfilment (stock and coupon taken again). Now only `unpaid` / `failed` orders can become paid. (`src/server/orders/service.ts`)
+
+## T2. Code review (high effort) — 10 candidates, each verified against the code
+- **H** `markOrderPaid` committed "paid" in one transaction and finalised (stock, coupon, invoice no.) in a second: if the second failed, the webhook retry found the order already paid and skipped it → paid order with no stock taken, no invoice, no email. Now one transaction. (`src/server/orders/service.ts`)
+- **M** cancel restock was keyed on `paymentStatus = paid | cod_pending`: an amount-mismatch or paid-after-cancel order (stock never taken) **added** phantom stock on cancel, and a partially refunded paid order never returned its stock. Restock now only when stock was really taken (`invoiceNo` set — issued only by `finalizePlacement`) and the order is `paid` / `partially_refunded` / `cod_pending`. (`src/server/orders/admin.ts`)
+- **M** a captured payment for an already cancelled booking was dropped silently (no payments row, no note → never refunded). Now recorded, with an admin note "Payment received while cancelled — refund it" (also for a second payment). Orders: an extra payment on an already-processed order is recorded and flagged **needs attention**. (`src/server/bookings/service.ts`, `src/server/orders/service.ts`)
+- **M** `recordPaymentFailure` inserted on the unique `rzp_payment_id` → a late `payment.failed` for a known payment threw, the webhook answered 500 and Razorpay retried forever. Now `onConflictDoNothing`. (`src/server/orders/service.ts`)
+- **M** `markLinkPaid` set the link `paid` before recording the payment, outside a transaction (and stored `''` as payment id when the event had none → unique clash next time) → money could stay unrecorded. Now one transaction, empty id → `NULL`, insert idempotent. (`src/server/inquiries/links.ts`)
+- **M** a customer reschedule kept `reminder_day_at` / `reminder_hour_at` → no reminder for the new time if the old one had been sent. Cleared in the atomic reschedule. (`src/server/bookings/service.ts`)
+- L online refunds ignored refunds still `pending` (not yet in `refundedInr`) when computing the maximum → a double click could refund twice (Razorpay caps at the captured amount). Pending refunds now count. (`src/server/orders/refunds.ts`)
+- L the Kundali "final failure" alert added 1 to a value `returning()` had already incremented → alert one attempt early and again at the end. Now once, at attempt 5; error logs carry the message. (`src/server/kundali/service.ts`)
+- Residual (L, not changed): a `refund.processed` webhook arriving before our `refunds` row is inserted (milliseconds after the Razorpay call) is logged as `unknown_refund` and dropped; the refund then stays "pending" in admin. Razorpay normally sends it much later; if seen, check the refund in the Razorpay dashboard.
+
+## T3. Concurrency — atomic patterns
+| Item | Result |
+|---|---|
+| Stock | `UPDATE … stock - qty WHERE stock >= qty RETURNING` per line inside the placement transaction; COD (strict) → `OUT_OF_STOCK` rolls back; paid → oversold flag. OK |
+| Slot claims | `INSERT … SELECT … WHERE NOT EXISTS (overlap)` with bound values + exact offered-slot check; reschedule = `UPDATE … WHERE NOT EXISTS`. OK |
+| Coupon limits | `used_count + 1 WHERE used_count < usage_limit` (strict); paid orders count unconditionally (money taken). Per-customer / first-order limits are read checks → two parallel orders from one email can both pass (L, accepted). |
+| OTP attempts | `attempts + 1 RETURNING`, > 5 consumes the code. OK |
+| Invoice counter | `INSERT … ON CONFLICT DO UPDATE value + 1 RETURNING` per fiscal year, inside the finalize transaction. OK |
+| First-time paid | orders `payment_status IN (unpaid, failed)` (B46), bookings `status IN (pending_payment, expired)`, Kundali `status = pending_payment`, links `status = created` — all conditional `UPDATE … RETURNING`. OK |
+| Webhook dedupe | `INSERT webhook_events ON CONFLICT DO NOTHING RETURNING`; on failure the row is deleted and 500 returned → the retry is processed. OK |
+| Payment retry | reuses the same Razorpay order; confirm + webhook both idempotent; extra payments recorded (T2). OK |
+| Kundali lock | `UPDATE … generating, attempts + 1 WHERE attempts < 5 AND (paid/failed OR stale generating) RETURNING`. OK |
+| Order cancel / status | conditional on the validated status (B45). OK |
+
+## T4. Scale
+| Path | Function invocations | DB per call |
+|---|---|---|
+| Storefront pages | none — static HTML on the CDN, regenerated only after an admin save (tags) | 0 |
+| `/api/catalog` | ≤ 1 per CDN region per minute (`s-maxage=60, swr=600`) | 0 (data cache); 3 reads after a catalog save |
+| `/api/places` | CDN 24 h; bundled 737 KB dataset | 0 |
+| `/api/rashifal` | CDN 10 min | 0–1 (cached by tag) |
+| `/api/pincode/[pin]` | CDN 1 h per pin; India Post fetch (8 s) | settings (cached) |
+| `/api/slots` | every call (`no-store`) | cached settings + 1 overlap read on `bookings_start_idx` |
+| quote / coupon | every call (debounced) | 1 rate-limit write + products by id (+ 1–2 coupon reads) |
+| place order | 1 | ≈ 3 rate-limit writes, Turnstile, re-quote reads, 1 transaction ≈ 4 + 2 × lines writes |
+| OTP request / verify | 1 each | 2–3 / 3–5 writes |
+Indexes: every list/filter query uses a DATA-MODEL index, except the admin "needs attention" badge (`orders.needs_attention`, not in DATA-MODEL → not invented; a scan of `orders`, fine below ~50k orders; next step: add that index in a schema step). Payloads: catalog snapshot is lite; article list has no bodies (B45); ratings are aggregates. Ephemeral tables (sessions, OTP, rate limits, webhook events) are cleaned daily.
+Estimates (4 pages/visit, 30 % open cart/checkout, 2 % order, 1 % book/Kundali):
+| Monthly visitors | Vercel invocations | Turso rows read | Turso rows written |
+|---|---|---|---|
+| 10k | ≈ 25–40k | ≈ 1–2 M | ≈ 30–50k |
+| 100k | ≈ 250–400k | ≈ 10–20 M | ≈ 300–500k |
+Limits: Vercel Pro includes 1 M invocations/month; Turso's free tier allows hundreds of millions of reads and ~10 M writes — both comfortable at 100k. First limit to hit: Resend's free plan (3,000 emails/month ≈ 1,500 orders/bookings). Next upgrade steps: Resend paid plan → Turso paid tier → at > 1 M visitors a short CDN cache on `/api/slots`.
+
+## T5. Privacy
+- Logs: no tokens, codes, signatures or full addresses. Fixed: the newsletter-duplicate log had the raw email → `maskEmail`; Turnstile failures logged the visitor IP → removed. (`src/server/messages/service.ts`, `src/server/auth/turnstile.ts`) The dev-only email fallback logs recipient + OTP by design (RULES §2).
+- Palm photos: private bucket, JPEG re-encoded (EXIF/GPS stripped), 10-min signed URLs only after key/owner/admin checks, unclaimed uploads deleted after 24 h. **M fixed:** the 30-day deletion job also selected bookings whose photos were already deleted, so once 100 such bookings existed its 100-row page stayed full and **newer palm photos were never deleted** (breaks the privacy policy). Now only rows that still hold photos. (`src/server/cron/jobs.ts`)
+- Policy vs code: the policy promises deletion 30 days after the final report; the code deletes 30 days after a completed / cancelled / no-show / expired booking ended. A booking left `confirmed` keeps its photos → staff must mark finished consultations **Completed** (added to GO-LIVE §14). Profile export/deletion "on request" is a manual admin task — matches the policy wording.
+- Residual (L): customer review photos sit in the **public** bucket from upload until cleanup (24 h if unclaimed), rate-limited 20/h per IP.
+
+## T6. Dependencies
+`pnpm audit --prod` → **No known vulnerabilities found**. No upgrades made.
+
+## Other
+- Fixed (L): stale "mock" wording in the `KundaliTool.tsx` / `PaySheet.tsx` header comments.
+- Still open (L, need a type-check run, which this workflow does not allow): `as unknown as` casts in `CouponForm` / `ProductCard` / `kundali/content/index.ts`, missing return types on `getRituals` / `getVideos`, inline EN/HI copy in `AccountLogin` / `AddressSheet` / `RescheduleCard` / `ArticleView`, raw numeric ids in some content admin actions (admin-only, checked by the DB lookup), the `rashifal.lucky` message shape (phase F), FK `.references()` not declared.
+- Accepted residual risks: CSP keeps `script-src 'unsafe-inline'` (static pages, no nonce — by design); a booking holds its slot for 10 min before payment (`booking:ip` 10 per 10 min limits abuse); a pending customer upload can be confirmed by anyone who knows its numeric id (attaching still needs the claim key); coupon per-customer race (T3).
+
+## Files changed by B46
+`src/lib/validation/order-admin.ts`, `src/server/orders/{service,admin,refunds}.ts`, `src/server/bookings/service.ts`, `src/server/inquiries/links.ts`, `src/server/kundali/service.ts`, `src/server/cron/jobs.ts`, `src/server/messages/service.ts`, `src/server/auth/turnstile.ts`, `src/components/sections/kundali/{KundaliTool,PaySheet}.tsx`, `docs/backend/GO-LIVE.md`.

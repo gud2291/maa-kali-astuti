@@ -3,7 +3,7 @@ import { eq } from "drizzle-orm";
 import { db } from "@/server/db/client";
 import { messages, subscribers } from "@/server/db/schema/crm";
 import { randomToken } from "@/server/ids";
-import { log } from "@/server/log";
+import { log, maskEmail } from "@/server/log";
 import { AppError } from "@/server/result";
 import type { ContactInput } from "@/lib/validation/contact";
 import type { Locale, MessageTopic } from "@/lib/domain/enums";
@@ -71,7 +71,7 @@ export async function subscribe(
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
     if (msg.includes("UNIQUE") || msg.includes("unique") || msg.includes("constraint")) {
-      log.warn("subscriber.duplicate", { email: normalizedEmail });
+      log.warn("subscriber.duplicate", { email: maskEmail(normalizedEmail) });
       return;
     }
     throw err;

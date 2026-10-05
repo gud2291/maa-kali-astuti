@@ -10,7 +10,7 @@ import { waLinkTo } from "@/lib/site";
 import { useSiteSettings } from "@/components/layout/SiteSettingsProvider";
 import { cn } from "@/lib/utils/cn";
 
-/* Kundali ₹99 mock payment (Kundali-99.dc.html 342–389). A bottom sheet below 768 (radius 8 8 0 0,
+/* Kundali ₹99 payment sheet (Kundali-99.dc.html 342–389). A bottom sheet below 768 (radius 8 8 0 0,
    rises 40px) and a centred 440px dialog above (rises 16px), 380 ms EASE, over a 62% night scrim.
    Idle: 4 app tiles (Google Pay selected) + "Pay ₹99". Processing (1.8 s): the chakra (outer 6 s,
    inner −4 s) and "Waiting for your bank". Failed: "No money was taken…" + Try again / Get help.

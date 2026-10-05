@@ -35,7 +35,7 @@ import { PaySheet, type PayApp, type PayState } from "./PaySheet";
 /* Kundali ₹99 tool (Kundali-99.dc.html 32–259 + 331–389, script 392–497). State machine:
      form → gen (chakra ramp S7 + 7 messages, 820 ms each; result after 5.3 s)
           → preview (the #preview section appears; the page scrolls to it)
-          → pay sheet (1.8 s mock) → done (success band + Download) | failed (retry keeps the chart)
+          → pay sheet (Razorpay checkout) → done (success band + Download) | failed (retry keeps the chart)
    "Edit details" returns to the form and drops the chart. Night hero: intro / card / facts as
    grid areas (card on the right from 1024). Below 768 in preview a fixed "Pay ₹99" bar shows.
    QA-only demo states (INV §C): ?demo=generating|preview|success and ?pay=fail. */

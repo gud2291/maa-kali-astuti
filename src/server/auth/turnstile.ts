@@ -45,7 +45,7 @@ export async function verifyTurnstile(
     };
 
     if (data.success !== true) {
-      log.warn("turnstile.failed", { errors: data["error-codes"], ip });
+      log.warn("turnstile.failed", { errors: data["error-codes"] });
       throw new AppError("BOT_CHECK_FAILED");
     }
   } catch (err: unknown) {
