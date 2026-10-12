@@ -48,6 +48,9 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
     ...base,
     title: { default: defaultTitle, template: `%s · ${siteName}` },
     applicationName: siteName,
+     verification: {
+      google: "H2m6msPW4AL31wqiHVvScNs-gbf5dDvPAMR38oLU7IA",
+    },
   };
 }
 
