@@ -6,12 +6,11 @@ import { SITE_URL } from "@/lib/site";
 import { fmt } from "@/lib/core/format";
 
 export async function GET(): Promise<Response> {
-  const [catalog, consultData, courseData, contact, kundali] = await Promise.all([
+  const [catalog, consultData, courseData, contact] = await Promise.all([
     getCatalog(),
     getConsultRows(),
     getCourseRows(),
     getSetting("contact"),
-    getSetting("kundali"),
   ]);
 
   const lines: string[] = [];
@@ -49,7 +48,7 @@ export async function GET(): Promise<Response> {
   lines.push("### Comprehensive Vedic Kundali Report");
   lines.push(`URL: ${SITE_URL}/kundali-99`);
   lines.push(
-    `- Instant ₹${kundali.priceInr} comprehensive 28-page computerized astrological birth chart analysis, planetary strengths, dasha timelines, and personalized remedial measures delivered in PDF format.\n`,
+    `- Free, instant comprehensive 28-page computerized astrological birth chart analysis, planetary strengths, dasha timelines, and personalized remedial measures delivered in PDF format.\n`,
   );
 
   // 4. Sadhana Courses
@@ -70,7 +69,7 @@ export async function GET(): Promise<Response> {
   lines.push(`- Home: ${SITE_URL}`);
   lines.push(`- Shop: ${SITE_URL}/shop`);
   lines.push(`- Personal Consultations: ${SITE_URL}/consultations`);
-  lines.push(`- Vedic Kundali (₹99): ${SITE_URL}/kundali-99`);
+  lines.push(`- Vedic Kundali (free): ${SITE_URL}/kundali-99`);
   lines.push(`- Daily Rashifal (Horoscope): ${SITE_URL}/rashifal`);
   lines.push(`- Kundali Milan / Love Compatibility: ${SITE_URL}/love-calculator`);
   lines.push(`- Sadhana Courses: ${SITE_URL}/sadhana-courses`);

@@ -9,14 +9,11 @@ import { chartInputSchema, kundaliOrderSchema } from "@/lib/validation/kundali";
 import { computeChart } from "@/server/kundali/engine";
 import type { ChartSnapshot } from "@/lib/domain/kundali";
 import { createKundaliOrder } from "./service";
-import { createRzpOrder } from "@/server/payments/razorpay";
-import type { RazorpayCheckoutData } from "@/server/payments/actions";
 import { getCustomer } from "@/server/auth/guards";
 import { safeEqualHex, sha256Hex } from "@/server/ids";
 import { signedPrivateUrl } from "@/server/media/service";
 import { db } from "@/server/db/client";
 import { kundaliOrders } from "@/server/db/schema/consult";
-import { env, isConfigured } from "@/server/env";
 
 export async function computeChartAction(
   input: unknown,
@@ -43,9 +40,9 @@ export async function computeChartAction(
 export type CreateKundaliOrderResult = {
   ref: string;
   accessKey: string;
-  rzp: RazorpayCheckoutData;
 };
 
+/** The full report is free: creates the order and starts PDF generation (no payment step). */
 export async function createKundaliOrderAction(
   input: unknown,
 ): Promise<ActionResult<CreateKundaliOrderResult>> {
@@ -54,44 +51,17 @@ export async function createKundaliOrderAction(
 
     const ip = await clientIp();
     await rateLimit("k99:ip", ip, 10, 600);
-
-    // Check before creating the row, so an unconfigured store never leaves pending orders.
-    if (!isConfigured("razorpay") || !env.RAZORPAY_KEY_ID) {
-      throw new AppError("NOT_CONFIGURED", "Razorpay is not configured");
-    }
+    // The report is free: at most 3 reports per phone number per day.
+    await rateLimit("k99:phone", data.phone, 3, 86400);
 
     const customer = await getCustomer();
     const order = await createKundaliOrder(data, {
       userId: customer?.id ?? null,
     });
 
-    const rzpOrder = await createRzpOrder({
-      amountInr: order.priceInr,
-      receipt: order.ref,
-      notes: { entity: "kundali", id: String(order.id) },
-    });
-
-    await db
-      .update(kundaliOrders)
-      .set({ razorpayOrderId: rzpOrder.id })
-      .where(eq(kundaliOrders.id, order.id));
-
     return {
       ref: order.ref,
       accessKey: order.accessKey,
-      rzp: {
-        key: env.RAZORPAY_KEY_ID,
-        orderId: rzpOrder.id,
-        amountPaise: Math.round(order.priceInr * 100),
-        name: "Maa Kali Astuti",
-        description: "Janam Kundali Report",
-        prefill: {
-          name: data.name,
-          email: data.email ?? "",
-          contact: data.phone,
-          method: data.payPref,
-        },
-      },
     };
   });
 }

@@ -16,8 +16,9 @@ import { pageMeta } from "@/lib/seo/meta";
 import { service as serviceSchema, faqPage } from "@/lib/seo/jsonld";
 import { JsonLd } from "@/components/seo/JsonLd";
 
-/* Janam Kundali ₹99 (design/Kundali-99.dc.html): night tool hero (form → generating → ready),
-   the free preview with the ₹99 payment, then what's inside, sample pages, reviews and FAQ.
+/* Free Janam Kundali (design/Kundali-99.dc.html): night tool hero (form → generating → ready),
+   the free preview and the free full report, then what's inside, sample pages, reviews and FAQ.
+   The URL stays /kundali-99 so existing links and search results keep working.
    Static; every state is client-side in KundaliTool. QA-only: ?demo=generating|preview|success,
    ?pay=fail (INV §C). Chrome: active "kundali" (chrome-config). */
 type Props = { params: Promise<{ locale: string }> };
@@ -47,7 +48,7 @@ export default async function Kundali99Page({ params }: Props) {
   const isHi = locale === "hi";
   const serviceData = serviceSchema(
     {
-      name: isHi ? `वैदिक जन्मपत्री ₹${kundaliSetting.priceInr}` : `Vedic Janam Kundali Report ₹${kundaliSetting.priceInr}`,
+      name: isHi ? "मुफ़्त वैदिक जन्मपत्री" : "Free Vedic Janam Kundali Report",
       description: isHi
         ? "साधक पवन पाण्डेय द्वारा विस्तृत वैदिक जन्मपत्री विश्लेषण।"
         : "Complete computerized Vedic birth chart and comprehensive planetary life analysis.",
@@ -55,7 +56,7 @@ export default async function Kundali99Page({ params }: Props) {
       tiers: [
         {
           name: isHi ? "सम्पूर्ण जन्मपत्री" : "Complete Kundali Report",
-          priceInr: kundaliSetting.priceInr,
+          priceInr: 0,
         },
       ],
     },
@@ -69,10 +70,9 @@ export default async function Kundali99Page({ params }: Props) {
       <JsonLd data={faqData} />
       <KundaliTool
         buildNow={BUILD_NOW}
-        priceInr={kundaliSetting.priceInr}
         mrpInr={kundaliSetting.mrpInr}
         enabled={kundaliSetting.enabled}
-        intro={<K99Intro priceInr={kundaliSetting.priceInr} mrpInr={kundaliSetting.mrpInr} />}
+        intro={<K99Intro mrpInr={kundaliSetting.mrpInr} />}
         facts={<K99Facts />}
       />
       <K99Contents />

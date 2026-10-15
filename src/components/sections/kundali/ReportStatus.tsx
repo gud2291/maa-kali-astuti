@@ -177,8 +177,8 @@ export function ReportStatus({ refCode, accessKey, name, hi = false }: Props): R
           </h3>
           <p className="font-sans text-[13.5px] leading-relaxed text-ink6">
             {hi
-              ? "आपका भुगतान प्राप्त हो गया है। हमारी प्रणाली प्रतिवेदन तैयार कर रही है। यह जल्द ही आपकी ईमेल पर पहुंच जाएगा।"
-              : "Your payment was confirmed. The engine is finalizing your detailed charts. It will be emailed to you shortly, or you can find it under My Kundali."}
+              ? "हमारी प्रणाली आपका प्रतिवेदन तैयार कर रही है। यह जल्द ही आपकी ईमेल पर पहुंच जाएगा।"
+              : "The engine is finalizing your detailed charts. It will be emailed to you shortly, or you can find it under My Kundali."}
           </p>
         </div>
 

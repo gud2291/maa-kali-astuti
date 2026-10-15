@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { LOCALES, PAY_PREFS } from "@/lib/domain/enums";
+import { LOCALES } from "@/lib/domain/enums";
 
 export const placeSchema = z.object({
   name: z.string().trim().min(1).max(120),
@@ -68,7 +68,6 @@ export const kundaliOrderSchema = z
       z.string().trim().toLowerCase().email({ error: "emailBad" }).max(120).optional(),
     ),
     locale: z.enum(LOCALES),
-    payPref: z.enum(PAY_PREFS),
   })
   .superRefine((data, ctx) => {
     if (!data.tobUnknown && !data.tob) {

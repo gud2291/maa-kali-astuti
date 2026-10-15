@@ -20,8 +20,27 @@ import { absoluteUrl } from "@/server/request";
 import { alertKundaliGenerationFailed, sendKundaliReady } from "./emails";
 import type { KundaliOrderInput } from "@/lib/validation/kundali";
 
+/** Asks the generate route to build the PDF, after the response is sent. */
+function triggerGeneration(id: number, ref: string): void {
+  after(async () => {
+    try {
+      const genUrl = absoluteUrl(`/api/kundali/${ref}/generate`);
+      await fetch(genUrl, {
+        method: "POST",
+        headers: {
+          "x-internal-key": hmacHex("gen:" + ref),
+        },
+        signal: AbortSignal.timeout(2000),
+      }).catch(() => {});
+    } catch (err) {
+      log.error("kundali.trigger_generation_failed", { orderId: id, err });
+    }
+  });
+}
+
 /**
- * Creates a pending Kundali order with computed chart snapshot.
+ * Creates a free Kundali order with computed chart snapshot. The report is free, so the order
+ * starts as "paid" (price 0) and PDF generation is triggered right away.
  */
 export async function createKundaliOrder(
   input: KundaliOrderInput,
@@ -30,7 +49,6 @@ export async function createKundaliOrder(
   id: number;
   ref: string;
   accessKey: string;
-  priceInr: number;
 }> {
   const settings = await getSetting("kundali");
   if (!settings.enabled) {
@@ -48,6 +66,7 @@ export async function createKundaliOrder(
     tz: input.place.tz,
   });
 
+  const now = new Date();
   let chosenRef = "";
   let chosenAccessKey = "";
   let orderId = 0;
@@ -76,8 +95,9 @@ export async function createKundaliOrder(
           tz: input.place.tz,
           phone: input.phone,
           email: input.email ?? null,
-          priceInr: settings.priceInr,
-          status: "pending_payment",
+          priceInr: 0,
+          status: "paid",
+          paidAt: now,
           chart,
         })
         .returning({ id: kundaliOrders.id });
@@ -97,15 +117,17 @@ export async function createKundaliOrder(
     throw new AppError("INTERNAL", "Could not generate a unique Kundali order reference");
   }
 
+  triggerGeneration(orderId, chosenRef);
+
   return {
     id: orderId,
     ref: chosenRef,
     accessKey: chosenAccessKey,
-    priceInr: settings.priceInr,
   };
 }
 
 /**
+ * Legacy: orders created while the report cost ₹99 can still be confirmed by Razorpay.
  * Marks a Kundali order as paid (idempotent, first-time update pattern)
  * and triggers report generation in after().
  */
@@ -162,20 +184,7 @@ export async function markKundaliPaid(opts: {
     method: opts.method ?? null,
   });
 
-  after(async () => {
-    try {
-      const genUrl = absoluteUrl(`/api/kundali/${updated.ref}/generate`);
-      await fetch(genUrl, {
-        method: "POST",
-        headers: {
-          "x-internal-key": hmacHex("gen:" + updated.ref),
-        },
-        signal: AbortSignal.timeout(2000),
-      }).catch(() => {});
-    } catch (err) {
-      log.error("kundali.trigger_generation_failed", { orderId: updated.id, err });
-    }
-  });
+  triggerGeneration(updated.id, updated.ref);
 
   return { first: true, kundaliId: order.id };
 }

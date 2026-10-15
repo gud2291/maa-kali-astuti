@@ -1,6 +1,5 @@
 "use client";
 import {
-  useCallback,
   useEffect,
   useRef,
   useState,
@@ -19,8 +18,6 @@ import { MandalaG } from "@/components/ui/ornaments/Mandala";
 import type { Kundali } from "@/lib/astro/kundali";
 import type { SelectedPlace } from "@/components/forms/PlaceInput";
 import { computeChartAction, createKundaliOrderAction } from "@/server/kundali/actions";
-import { openRazorpay } from "@/lib/payments/razorpay-client";
-import { confirmPaymentAction } from "@/server/payments/actions";
 import { toKundali } from "@/lib/astro/from-snapshot";
 import { t12 } from "@/lib/astro/slots";
 import { MON, MONH } from "@/lib/core/dates";
@@ -30,14 +27,13 @@ import { checkKundali99, type K99Draft, type K99Errors } from "@/lib/validation/
 import { useUi } from "@/stores/ui";
 import { IS_DEV } from "@/lib/core/runtime";
 import { KundaliForm } from "./KundaliForm";
-import { PaySheet, type PayApp, type PayState } from "./PaySheet";
 
-/* Kundali ₹99 tool (Kundali-99.dc.html 32–259 + 331–389, script 392–497). State machine:
+/* Free Kundali tool (Kundali-99.dc.html 32–259 + 331–389, script 392–497). State machine:
      form → gen (chakra ramp S7 + 7 messages, 820 ms each; result after 5.3 s)
           → preview (the #preview section appears; the page scrolls to it)
-          → pay sheet (Razorpay checkout) → done (success band + Download) | failed (retry keeps the chart)
+          → "Get my free report" (creates the order, no payment) → done (report status + Download)
    "Edit details" returns to the form and drops the chart. Night hero: intro / card / facts as
-   grid areas (card on the right from 1024). Below 768 in preview a fixed "Pay ₹99" bar shows.
+   grid areas (card on the right from 1024). Below 768 in preview a fixed "free report" bar shows.
    QA-only demo states (INV §C): ?demo=generating|preview|success and ?pay=fail. */
 
 type Phase = "form" | "gen" | "preview" | "done";
@@ -75,7 +71,6 @@ type Props = {
   /** Server-rendered hero blocks (breadcrumb → price, and the facts list). */
   intro: ReactNode;
   facts: ReactNode;
-  priceInr?: number;
   mrpInr?: number;
   enabled?: boolean;
 };
@@ -84,7 +79,6 @@ export function KundaliTool({
   buildNow,
   intro,
   facts,
-  priceInr = 99,
   mrpInr = 499,
   enabled = true,
 }: Props) {
@@ -104,16 +98,13 @@ export function KundaliTool({
   const [tried, setTried] = useState(false);
   const [msg, setMsg] = useState(0);
   const [K, setK] = useState<Kundali | null>(null);
-  const [sheet, setSheet] = useState(false);
-  const [pay, setPay] = useState<PayState>("idle");
-  const [app, setApp] = useState<PayApp>("gpay");
+  const [busy, setBusy] = useState(false);
   const [orderRef, setOrderRef] = useState<string | null>(null);
   const [accessKey, setAccessKey] = useState<string | null>(null);
 
   const failPay = useRef(false);
   const msgTimer = useRef<ReturnType<typeof setInterval> | undefined>(undefined);
   const genTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
-  const payTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const scrollTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const formRef = useRef<HTMLDivElement>(null);
 
@@ -236,7 +227,6 @@ export function KundaliTool({
   useEffect(
     () => () => {
       stopGen();
-      clearTimeout(payTimer.current);
       clearTimeout(scrollTimer.current);
     },
     [],
@@ -259,10 +249,26 @@ export function KundaliTool({
   const edit = () => {
     setPhase("form");
     setK(null);
-    setPay("idle");
+    setBusy(false);
   };
 
-  const payNow = async () => {
+  const failReport = (limited = false) => {
+    setBusy(false);
+    useUi.getState().toast({
+      msg: limited
+        ? hiUi
+          ? "इस नंबर से आज की 3 मुफ़्त रिपोर्ट पूरी हो गईं। कृपया कल फिर कोशिश करें।"
+          : "This number has used today’s 3 free reports. Please try again tomorrow."
+        : hiUi
+          ? "रिपोर्ट शुरू नहीं हो सकी। कृपया फिर से कोशिश करें।"
+          : "Could not start your report. Please try again.",
+      tone: "err",
+    });
+  };
+
+  /** The full report is free: create the order (no payment) and show its status. */
+  const getReport = async () => {
+    if (busy) return;
     if (!enabled) {
       useUi.getState().toast({
         msg: hiUi ? "कुंडली सेवा वर्तमान में अनुपलब्ध है" : "Kundali orders are temporarily unavailable",
@@ -277,11 +283,11 @@ export function KundaliTool({
       return;
     }
 
-    setPay("processing");
+    setBusy(true);
 
     // QA ?pay=fail support (Task T6: The ?demo= params stay untouched)
     if (failPay.current) {
-      setTimeout(() => setPay("failed"), 1200);
+      setTimeout(() => failReport(), 1200);
       return;
     }
 
@@ -301,52 +307,22 @@ export function KundaliTool({
         phone: f.phone,
         email: f.email || undefined,
         locale: hiUi ? "hi" : "en",
-        payPref: app === "card" ? "card" : "upi",
       });
 
       if (!res.ok) {
-        setPay("failed");
-        return;
-      }
-
-      const rzpRes = await openRazorpay(res.data.rzp);
-      if (rzpRes.status === "dismissed") {
-        setPay("idle");
-        return;
-      }
-      if (rzpRes.status === "failed") {
-        setPay("failed");
-        return;
-      }
-
-      const confirmRes = await confirmPaymentAction({
-        entity: "kundali",
-        ref: res.data.ref,
-        razorpay_order_id: rzpRes.razorpay_order_id,
-        razorpay_payment_id: rzpRes.razorpay_payment_id,
-        razorpay_signature: rzpRes.razorpay_signature,
-      });
-
-      if (!confirmRes.ok) {
-        setPay("failed");
+        failReport(res.code === "RATE_LIMITED");
         return;
       }
 
       setOrderRef(res.data.ref);
       setAccessKey(res.data.accessKey);
-      setPay("idle");
-      setSheet(false);
+      setBusy(false);
       setPhase("done");
       toPreview();
     } catch {
-      setPay("failed");
+      failReport();
     }
   };
-
-  const closeSheet = useCallback(() => {
-    setSheet(false);
-    setPay("idle");
-  }, []);
 
   const first = f.name.trim().split(/\s+/)[0] || "";
   const d = f.dob ? new Date(`${f.dob}T12:00`) : null;
@@ -547,22 +523,19 @@ export function KundaliTool({
           phoneMask={phoneMask}
           orderRef={orderRef ?? undefined}
           accessKey={accessKey ?? undefined}
-          priceInr={priceInr}
           mrpInr={mrpInr}
-          onPay={() => {
-            setSheet(true);
-            setPay("idle");
-          }}
+          busy={busy}
+          onGet={getReport}
           onDownload={download}
         />
       )}
 
-      {phase === "preview" && !sheet && (
+      {phase === "preview" && (
         <div className="fixed inset-x-0 bottom-0 z-[58] bg-iv px-4 pt-3 pb-[calc(12px+env(safe-area-inset-bottom))] shadow-[inset_0_1px_0_#EAE0CA,0_-12px_32px_-18px_rgba(14,59,48,.3)] md:hidden">
           <div className="flex items-center justify-between gap-3">
             <span className="flex flex-col gap-1">
               <span className="flex items-baseline gap-2">
-                <span className="font-sans text-[20px] leading-none font-bold text-em9">₹{priceInr}</span>
+                <span className="font-sans text-[20px] leading-none font-bold text-em9">{t("bar.free")}</span>
                 <span className="font-sans text-[13px] leading-none font-medium text-ink6 line-through">
                   {fmt(mrpInr)}
                 </span>
@@ -571,34 +544,18 @@ export function KundaliTool({
             </span>
             <button
               type="button"
-              onClick={() => {
-                setSheet(true);
-                setPay("idle");
-              }}
-              className="inline-flex h-[52px] cursor-pointer items-center gap-2 rounded-btn border-none bg-em7 px-[22px] font-sans text-[15px] leading-none font-semibold text-iv shadow-[inset_0_0_0_1px_rgba(217,185,106,.55)]"
+              onClick={getReport}
+              disabled={busy}
+              aria-busy={busy}
+              className="inline-flex h-[52px] cursor-pointer items-center gap-2 rounded-btn border-none bg-em7 px-[22px] font-sans text-[15px] leading-none font-semibold text-iv shadow-[inset_0_0_0_1px_rgba(217,185,106,.55)] disabled:cursor-wait disabled:opacity-70"
             >
               <span className="block size-4">
-                <Icon name="lock" />
+                <Icon name="download" />
               </span>
-              {t("bar.pay")}
+              {busy ? t("bar.busy") : t("bar.get")}
             </button>
           </div>
         </div>
-      )}
-
-      {sheet && (
-        <PaySheet
-          name={f.name}
-          phoneMask={phoneMask}
-          priceInr={priceInr}
-          mrpInr={mrpInr}
-          pay={pay}
-          app={app}
-          onApp={setApp}
-          onPay={payNow}
-          onRetry={() => setPay("idle")}
-          onClose={closeSheet}
-        />
       )}
     </>
   );

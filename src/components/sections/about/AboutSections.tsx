@@ -4,12 +4,12 @@ import { Crumbs, EYEBROW, rich } from "@/components/sections/consult/ui";
 import { H2, H2N } from "@/components/sections/courses/CoursesSections";
 import { Starfield } from "@/components/signature/Starfield";
 import { InlineArt } from "@/components/ui/InlineArt";
+import { SadhakPhoto } from "@/components/ui/SadhakPhoto";
 import { MandalaG } from "@/components/ui/ornaments/Mandala";
 import { Link } from "@/i18n/navigation";
 import type { Book, Chapter, IconRow, Video } from "@/lib/api/content";
 import { BOOK_SVG } from "@/lib/art/books";
 import { CHAPTER_SVG } from "@/lib/art/chapters";
-import { PORTRAIT_BG_ABOUT_SVG } from "@/lib/art/portrait";
 import { VIDEO_THUMB_SVG } from "@/lib/art/thumbs";
 import { bookHref, routes, videoHref } from "@/lib/routes";
 import { waLinkTo } from "@/lib/core/commerce";
@@ -20,12 +20,6 @@ import { StoryChapters } from "./StoryChapters";
 /* About Sadhak Ji (design/About.dc.html 28–197). Copy rule on /hi (F9): Fraunces display text
    (h1/h2, chapter titles, pillar titles, book and video titles) and the story / pillar / book data
    stay English; Manrope UI text is translated. */
-
-const CHAKRA = [
-  { ring: "outer", amb: "spin:120" },
-  { ring: "middle", amb: "spin:-90" },
-  { ring: "inner", amb: "spin:60" },
-] as const;
 
 const CREDS: IconName[] = ["cert", "flame", "eye", "scroll"];
 
@@ -113,33 +107,8 @@ export async function AboutHero() {
               <path d="M2 404V162A160 160 0 0 1 322 162V404" opacity=".55" />
             </svg>
             <span className="absolute inset-0 block">
-              <InlineArt svg={PORTRAIT_BG_ABOUT_SVG} uid="ab" />
+              <SadhakPhoto alt={t("hero.portraitAlt")} sizes="(min-width: 768px) 430px, 300px" arch />
             </span>
-            <div
-              aria-hidden="true"
-              className="absolute top-[38.4%] left-1/2 aspect-square w-[74%] -translate-x-1/2 -translate-y-1/2 opacity-60"
-            >
-              {CHAKRA.map((c) => (
-                <span key={c.ring} data-amb={c.amb} className="absolute inset-0 block">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={`/svg/chakra/${c.ring}-d9b96a.svg`}
-                    alt=""
-                    width={320}
-                    height={320}
-                    className="block size-full"
-                  />
-                </span>
-              ))}
-            </div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/svg/portrait/fg.svg"
-              alt={t("hero.portraitAlt")}
-              width={300}
-              height={380}
-              className="absolute inset-0 block size-full"
-            />
           </div>
           <div className="absolute bottom-0 left-[-4px] flex max-w-[270px] flex-col gap-1.5 rounded-btn bg-iv px-[18px] py-3.5 shadow-[inset_0_0_0_1px_rgba(184,146,58,.55),0_18px_36px_-20px_rgba(14,59,48,.4)] md:left-[-36px]">
             <span lang="en" className="font-display text-[19px] leading-[1.15] font-normal text-em9">

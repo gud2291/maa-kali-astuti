@@ -227,12 +227,12 @@
     "ann": [
       "₹999 से अधिक के ऑर्डर पर मुफ़्त शिपिंग",
       "हर उत्पाद भेजने से पहले महापूजा में ऊर्जित",
-      "अपनी जन्म कुंडली डाउनलोड करें — ₹99"
+      "अपनी जन्म कुंडली पाएँ — मुफ़्त"
     ],
     "nav": {
       "shop": "शॉप",
       "consult": "परामर्श",
-      "kundali": "कुंडली ₹99",
+      "kundali": "मुफ़्त कुंडली",
       "rashifal": "राशिफल",
       "courses": "साधना कोर्स",
       "rituals": "अनुष्ठान",
@@ -344,7 +344,7 @@
       "palmistry": "हस्तरेखा",
       "tarot": "टैरो कार्ड",
       "numerology": "अंक ज्योतिष",
-      "kundali99": "कुंडली ₹99",
+      "kundali99": "मुफ़्त कुंडली",
       "love": "लव कैलकुलेटर",
       "rashifal": "राशिफल",
       "courses": "साधना कोर्स",
@@ -530,8 +530,8 @@
         "s3": {
           "eyebrow": "॥ जन्म कुंडली ॥",
           "l1": "आपकी संपूर्ण जन्म कुंडली",
-          "l2": "मात्र <em>₹99</em>",
-          "sub": "Your complete Janam Kundali — ₹99.",
+          "l2": "बिल्कुल <em>मुफ़्त</em>",
+          "sub": "Your complete Janam Kundali — free.",
           "body": "लग्न कुंडली, नवांश, दशा, मांगलिक जाँच, रत्न और उपाय। 28 पृष्ठों की रिपोर्ट, हिंदी या अंग्रेज़ी में।",
           "cta1": "मेरी कुंडली पाएँ",
           "cta2": "लव कैलकुलेटर"
@@ -549,7 +549,7 @@
       },
       "qaLabel": "त्वरित विकल्प",
       "qa": {
-        "kundali": "कुंडली ₹99",
+        "kundali": "मुफ़्त कुंडली",
         "love": "लव कैलकुलेटर",
         "rashi": "आज का राशिफल",
         "call": "कॉल बुक करें"
@@ -696,7 +696,7 @@
       "seeGems": "See gemstones",
       "remedy": "Remedy of the day",
       "full": "Read full Rashifal",
-      "kundali": "Get personal Kundali ₹99",
+      "kundali": "Get your personal Kundali free",
       "railAria": "Rashi cards. Swipe to turn the dial.",
       "readFull": "Read in full",
       "overall": "Overall {n} of 5"
@@ -705,13 +705,11 @@
       "eyebrow": "05 — Free astro tools",
       "title": "Begin with your <em>own chart.</em>",
       "deva": "अपनी कुंडली से शुरुआत करें",
-      "intro": "The Kundali preview is free. You pay ₹99 only to download the full report. The Love Calculator is a light reading for fun.",
+      "intro": "The Kundali preview and the full report are both free. The Love Calculator is a light reading for fun.",
       "k": {
         "eyebrow": "Janam Kundali · <d>जन्म कुंडली</d>",
-        "title": "Download your complete Janam Kundali — <em>₹99</em>",
+        "title": "Download your complete Janam Kundali — <em>free</em>",
         "mrp": "MRP ₹499",
-        "off": "80% OFF",
-        "tax": "incl. all taxes",
         "name": "Name",
         "dob": "Date of birth",
         "tob": "Time of birth",
@@ -728,7 +726,7 @@
         "moon": "Moon sign",
         "nak": "Nakshatra",
         "noon": "Calculated for 12:00 noon. Planet signs are reliable; the Lagna may differ.",
-        "report": "Get the 28-page report · ₹99",
+        "report": "Get the 28-page report · free",
         "idle": "A 28-page report: Lagna chart, Navamsa, Dasha periods, Manglik check, gemstones and remedies. The chart itself is drawn free from your details.",
         "err": {
           "nameShort": "Enter the name for the report",
@@ -737,7 +735,8 @@
           "tobEmpty": "Enter the time of birth, or tick “I don’t know”",
           "placeEmpty": "Enter your place of birth",
           "placePick": "Choose a town from the list"
-        }
+        },
+        "free": "Free"
       },
       "l": {
         "eyebrow": "Free tool · <d>प्रेम मिलान</d>",
@@ -1413,30 +1412,29 @@
   },
   "k99": {
     "meta": {
-      "title": "Janam Kundali ₹99",
-      "description": "आपकी संपूर्ण जन्म कुंडली, कुछ ही मिनटों में: लग्न चार्ट, ग्रह स्थिति और नक्षत्र मुफ़्त देखें, और 28 पेज की रिपोर्ट ₹99 में डाउनलोड करें।"
+      "title": "मुफ़्त जन्म कुंडली",
+      "description": "आपकी संपूर्ण जन्म कुंडली, कुछ ही मिनटों में: लग्न चार्ट, ग्रह स्थिति और नक्षत्र देखें, और पूरी 28 पेज की रिपोर्ट मुफ़्त डाउनलोड करें।"
     },
     "crumbs": {
       "aria": "ब्रेडक्रम्ब",
       "home": "होम",
-      "here": "कुंडली ₹99"
+      "here": "मुफ़्त कुंडली"
     },
     "hero": {
       "eyebrow": "Janam Kundali · <hi>जन्म कुंडली</hi>",
       "title": "Your complete Kundali, <em>ready in minutes.</em>",
-      "off": "{n}% छूट",
-      "tax": "सभी कर सहित",
-      "lead": "अपना लग्न चार्ट, ग्रह स्थिति और नक्षत्र यहीं मुफ़्त देखें। ₹99 तभी दें जब आपको पूरी 28 पेज की रिपोर्ट PDF में चाहिए, हिंदी या अंग्रेज़ी में।",
+      "lead": "अपना लग्न चार्ट, ग्रह स्थिति और नक्षत्र यहीं देखें, और पूरी 28 पेज की रिपोर्ट PDF में पाएँ, हिंदी या अंग्रेज़ी में। बिल्कुल मुफ़्त।",
       "facts": [
         "28 पेज: लग्न, नवांश, दशा, दोष, उपाय",
         "WhatsApp और ईमेल पर तुरंत PDF",
         "निरयण (लाहिड़ी) गणना, उत्तर भारतीय चार्ट शैली"
       ],
-      "rating": "3,400+ रिपोर्ट से 4.8"
+      "rating": "3,400+ रिपोर्ट से 4.8",
+      "free": "मुफ़्त"
     },
     "form": {
       "title": "अपना जन्म विवरण भरें",
-      "sub": "चार्ट की झलक मुफ़्त। भुगतान केवल डाउनलोड के लिए।",
+      "sub": "चार्ट की झलक और पूरी रिपोर्ट, दोनों मुफ़्त।",
       "name": "रिपोर्ट के लिए नाम",
       "dob": "जन्म तिथि",
       "tob": "जन्म समय",
@@ -1514,9 +1512,9 @@
       "retro": "वक्री",
       "insideTitle": "Inside the full report",
       "insideNote": "28 पेज · यहाँ छह दिखाए गए",
-      "locked": "भुगतान तक लॉक",
+      "locked": "मुफ़्त रिपोर्ट के साथ खुलेगा",
       "unlock": {
-        "eyebrow": "पूरी रिपोर्ट अनलॉक करें",
+        "eyebrow": "पूरी रिपोर्ट मुफ़्त पाएँ",
         "title": "All 28 pages, <em>yours to keep.</em>",
         "pdf": "सभी 28 पेज PDF में, {lang} में",
         "english": "अंग्रेज़ी",
@@ -1526,12 +1524,13 @@
           "2046 तक की दशाएँ, तिथियों सहित",
           "रत्न, रुद्राक्ष और मंत्र उपाय"
         ],
-        "save": "{n}% बचत",
-        "cta": "₹99 दें और डाउनलोड करें",
-        "note": "UPI, कार्ड और नेटबैंकिंग · Razorpay द्वारा सुरक्षित"
+        "cta": "मेरी मुफ़्त रिपोर्ट पाएँ",
+        "note": "कोई भुगतान नहीं · PDF WhatsApp और ईमेल पर भी आएगी",
+        "free": "मुफ़्त",
+        "busy": "रिपोर्ट तैयार हो रही है…"
       },
       "done": {
-        "eyebrow": "भुगतान प्राप्त · ₹99",
+        "eyebrow": "रिपोर्ट अनलॉक · मुफ़्त",
         "title": "Your Kundali is <em>ready.</em>",
         "line": "PDF WhatsApp {phone} पर भेजी जा रही है, और आपके अकाउंट में भी रहेगी।",
         "download": "अपनी रिपोर्ट डाउनलोड करें",
@@ -1539,31 +1538,11 @@
         "toast": "चार्ट पेज सेव हो गया। पूरी 28 पेज की PDF WhatsApp पर भेजी जा रही है।"
       }
     },
-    "sheet": {
-      "title": "जन्म कुंडली रिपोर्ट",
-      "sub": "{name} · 28 पेज की PDF",
-      "close": "भुगतान बंद करें",
-      "amount": "राशि",
-      "payWith": "भुगतान का तरीका",
-      "apps": {
-        "gpay": "Google Pay",
-        "phonepe": "PhonePe",
-        "paytm": "Paytm",
-        "card": "कार्ड"
-      },
-      "to": "रिपोर्ट और रसीद WhatsApp {phone} पर जाएगी।",
-      "pay": "₹99 दें",
-      "procT": "आपके बैंक की प्रतीक्षा",
-      "procD": "अपने UPI ऐप में अनुरोध स्वीकार करें। कृपया यह पेज खुला रखें।",
-      "failT": "भुगतान पूरा नहीं हुआ",
-      "failD": "कोई पैसा नहीं कटा। अगर बैंक में राशि कटी दिखे, तो 5–7 कार्यदिवसों में अपने आप लौट आएगी। आपका चार्ट सुरक्षित है, आप फिर से कोशिश कर सकते हैं।",
-      "retry": "फिर से कोशिश करें",
-      "help": "सहायता लें",
-      "secured": "Razorpay द्वारा सुरक्षित · 256-बिट एन्क्रिप्शन"
-    },
     "bar": {
       "sub": "पूरी रिपोर्ट · 28 पेज",
-      "pay": "₹99 दें"
+      "free": "मुफ़्त",
+      "get": "मुफ़्त रिपोर्ट पाएँ",
+      "busy": "तैयार हो रही है…"
     },
     "toc": {
       "eyebrow": "01 — इसमें क्या है",
@@ -1693,7 +1672,7 @@
       "pause": "अपने-आप घूमना रोकें",
       "resume": "अपने-आप घूमना फिर शुरू करें",
       "full": "{name} का पूरा राशिफल पढ़ें",
-      "kundali": "व्यक्तिगत कुंडली ₹99",
+      "kundali": "मुफ़्त व्यक्तिगत कुंडली",
       "railAria": "राशि कार्ड, चक्र घुमाने के लिए स्वाइप करें",
       "readFull": "पूरा पढ़ें"
     },
@@ -1761,7 +1740,7 @@
     "cta": {
       "eyebrow": "राशि से आगे",
       "lead": "राशिफल {name} राशि में जन्मे सभी लोगों के लिए लिखा जाता है। कुंडली आपके सटीक जन्म समय और स्थान से नौ ग्रहों को आपके अपने भावों में रखती है।",
-      "kundali": "अपनी कुंडली पाएँ · ₹99",
+      "kundali": "अपनी कुंडली पाएँ · मुफ़्त",
       "book": "रीडिंग बुक करें",
       "chartAria": "उत्तर भारतीय लग्न कुंडली का नमूना"
     }
@@ -2330,7 +2309,7 @@
     "kundali": {
       "title": "मेरी जन्मपत्री",
       "noKundali": "अभी तक कोई जन्मपत्री ऑर्डर नहीं की गई है",
-      "explore": "₹99 में जन्मपत्री प्राप्त करें",
+      "explore": "मुफ़्त जन्मपत्री प्राप्त करें",
       "viewOnline": "ऑनलाइन देखें",
       "downloadPdf": "PDF डाउनलोड करें"
     }
@@ -2572,7 +2551,7 @@
       "general": "सामान्य",
       "shop": "उत्पाद एवं रुद्राक्ष",
       "consult": "परामर्श",
-      "kundali99": "कुंडली ₹99",
+      "kundali99": "मुफ़्त कुंडली",
       "courses": "साधना दीक्षा",
       "rituals": "वैदिक अनुष्ठान"
     },

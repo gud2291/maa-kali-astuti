@@ -40,8 +40,8 @@ export const DEFAULT_HERO_SLIDES: Record<"s1" | "s2" | "s3", HeroSlideText> = {
   s3: {
     eyebrow: { en: "॥ JANAM KUNDALI ॥", hi: "॥ जन्म कुंडली ॥" },
     l1: { en: "Your complete", hi: "आपकी संपूर्ण जन्म कुंडली" },
-    l2: { en: "Janam Kundali — <em>₹99</em>.", hi: "मात्र <em>₹99</em>" },
-    sub: { en: "आपकी संपूर्ण जन्म कुंडली — मात्र ₹99", hi: "Your complete Janam Kundali — ₹99." },
+    l2: { en: "Janam Kundali — <em>free</em>.", hi: "बिल्कुल <em>मुफ़्त</em>" },
+    sub: { en: "आपकी संपूर्ण जन्म कुंडली — बिल्कुल मुफ़्त", hi: "Your complete Janam Kundali — free." },
     body: {
       en: "Lagna chart, Navamsa, dasha periods, Manglik check, gemstones and remedies. A 28-page report in English or Hindi.",
       hi: "लग्न कुंडली, नवांश, दशा, मांगलिक जाँच, रत्न और उपाय। 28 पृष्ठों की रिपोर्ट, हिंदी या अंग्रेज़ी में।",
@@ -62,7 +62,7 @@ const SLIDE_TITLES: Record<"s1" | "s2" | "s3", { title: string; subtitle: string
     subtitle: "Consultation guidance banner with booking options",
   },
   s3: {
-    title: "Slide 3: Janam Kundali ₹99",
+    title: "Slide 3: Free Janam Kundali",
     subtitle: "Automated birth chart report teaser and direct purchase",
   },
 };

@@ -75,7 +75,7 @@ const refundBody: RichDoc = doc(
   ]),
   ul([
     [b("Personalized Amulets & Tabeez: "), "Bhojpatra amulets hand-inscribed with your specific Name, Gotra, and astrological intentions cannot be resold or re-energized for another person."],
-    [b("Digital Kundali PDF Reports: "), "Because the ₹99 Kundali report is an instantly generated digital document calculated from your supplied birth parameters, it is strictly non-refundable once generated."],
+    [b("Digital Kundali PDF Reports: "), "The Janam Kundali report is free and generated instantly from your supplied birth parameters, so no payment or refund is involved."],
     [b("Completed Spiritual Consultations: "), "Astrological, palmistry, tarot, and numerology consultations represent dedicated professional advisory time and cannot be refunded once the session has transpired."],
   ]),
   h2("3. Return Request Process"),
@@ -174,7 +174,7 @@ const termsBody: RichDoc = doc(
   ]),
   h2("4. Digital Reports, Sadhana Courses, and Rituals"),
   p([
-    "Our digital Kundali reports (₹99) are generated using astronomical algorithms based upon the user-submitted birth data. The accuracy of the resulting report is strictly contingent upon the correctness of the birth parameters you provide.",
+    "Our free digital Kundali reports are generated using astronomical algorithms based upon the user-submitted birth data. The accuracy of the resulting report is strictly contingent upon the correctness of the birth parameters you provide.",
   ]),
   p([
     "Enrollment in Sacred Sadhana Courses (course fee ₹50,000) is reserved for sincere seekers who commit to traditional spiritual discipline (niyam) and ethical conduct. Admission into specialized rituals and sadhanas remains subject to spiritual evaluation by Sadhak Ji.",

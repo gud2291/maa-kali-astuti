@@ -44,7 +44,7 @@ export function KpiGrid({ kpis }: KpiGridProps): React.JSX.Element {
       <StatCard
         label="Kundali Sales (Month)"
         value={`${kpis.kundaliSalesCount} (${fmt(kpis.kundaliSalesInr)})`}
-        hint="₹99 reports this month"
+        hint="Free reports this month"
         icon="kundali"
         href="/admin/kundali"
       />

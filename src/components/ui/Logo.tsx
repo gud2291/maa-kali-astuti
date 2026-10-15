@@ -1,10 +1,32 @@
-import { LOGO_SVG } from "@/lib/art/logo";
-import { InlineArt } from "./InlineArt";
+import { LOGO_REPORT_DATA_URI } from "@/lib/art/brand-logo";
+import { cn } from "@/lib/utils/cn";
+
+type Props = {
+  /** Kept for existing call sites (the old inline SVG needed unique ids); unused now. */
+  uid?: string;
+  className?: string;
+  /** Rendered width hint for picking the 160 or 512 px file (largest site use is 112 px). */
+  sizes?: string;
+  /** Inline the logo as a data URI (Kundali PDF report: rendered off-site, cannot load /brand). */
+  inline?: boolean;
+};
 
 /**
- * The Maa Kali Astuti emblem (M.logo). Inline so its wordmark uses the loaded Fraunces /
- * Manrope / Tiro fonts. `uid` must be unique per instance (design: 'hdr', 'foot', …).
+ * The Maa Kali Astuti logo (client artwork, logo.pdf). The artwork contains raster leaves, so it
+ * ships as transparent WebP from /public/brand and fills its sized container.
  */
-export function Logo({ uid, className }: { uid: string; className?: string }) {
-  return <InlineArt svg={LOGO_SVG} uid={"lg" + uid} className={className} />;
+export function Logo({ className, sizes = "76px", inline = false }: Props) {
+  return (
+    // eslint-disable-next-line @next/next/no-img-element
+    <img
+      src={inline ? LOGO_REPORT_DATA_URI : "/brand/logo-512.webp"}
+      srcSet={inline ? undefined : "/brand/logo-160.webp 160w, /brand/logo-512.webp 512w"}
+      sizes={inline ? undefined : sizes}
+      width={512}
+      height={512}
+      alt="Maa Kali Astuti — Sadhak Pawan Pandey"
+      decoding="async"
+      className={cn("block size-full object-contain", className)}
+    />
+  );
 }

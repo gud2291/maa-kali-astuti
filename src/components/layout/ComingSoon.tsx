@@ -27,7 +27,7 @@ export async function ComingSoon({ title, lead, children }: { title: string; lea
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img src="/svg/chakra/middle-d9b96a.svg" alt="" width={144} height={144} className="size-full" />
         </div>
-        <Logo uid="soon" className="relative" />
+        <Logo uid="soon" className="relative" sizes="112px" />
       </div>
       <Eyebrow>{t("eyebrow")}</Eyebrow>
       <h1 className="m-0 font-display text-[clamp(32px,4vw,52px)] leading-[1.08] font-normal tracking-[-.02em] text-em9 font-soft hi:font-deva hi:leading-[1.35] hi:tracking-normal">

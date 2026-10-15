@@ -32,7 +32,7 @@ export function organization(settings?: OrganizationSettings): JsonLdObject {
     "@type": "Organization",
     name: settings?.siteName || "Maa Kali Astuti",
     url: SITE_URL,
-    logo: `${SITE_URL}/icon.png`,
+    logo: `${SITE_URL}/brand/logo-512.png`,
     sameAs: sameAs.length > 0 ? sameAs : undefined,
     contactPoint: {
       "@type": "ContactPoint",

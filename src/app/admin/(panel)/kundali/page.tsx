@@ -152,7 +152,7 @@ export default async function AdminKundaliPage({
     <div className="flex flex-col gap-6">
       <PageHeader
         title="Kundali Orders"
-        description="Janam Kundali ₹99 purchases, chart generation status, and report delivery."
+        description="Free Janam Kundali reports, chart generation status, and report delivery."
       />
 
       {/* Tabs */}

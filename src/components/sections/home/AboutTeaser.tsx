@@ -5,8 +5,8 @@ import { Icon } from "@/components/icons/Icon";
 import { CountGroup, Counter } from "@/components/motion/Counter";
 import { MaskLine, MaskText } from "@/components/motion/MaskText";
 import { InlineArt } from "@/components/ui/InlineArt";
+import { SadhakPhoto } from "@/components/ui/SadhakPhoto";
 import { BOOK_SVG } from "@/lib/art/books";
-import { PORTRAIT_HOME_SVG } from "@/lib/art/portrait";
 import about from "@/lib/data/about.json";
 import { routes } from "@/lib/routes";
 import { ABOUT_MINI, ABOUT_STATS } from "./home-data";
@@ -111,7 +111,7 @@ export async function AboutTeaser() {
               <path d="M2 404V162A160 160 0 0 1 322 162V404" opacity=".55" />
             </svg>
             <span className="absolute inset-0 block">
-              <InlineArt svg={PORTRAIT_HOME_SVG} uid="hmp" />
+              <SadhakPhoto alt="Sadhak Pawan Pandey" sizes="(min-width: 768px) 420px, 300px" arch />
             </span>
           </div>
           <figure

@@ -2,21 +2,14 @@ import { getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Icon } from "@/components/icons/Icon";
 import { AnchorLink } from "@/components/ui/AnchorLink";
-import { InlineArt } from "@/components/ui/InlineArt";
-import { PORTRAIT_BG_CONSULT_SVG } from "@/lib/art/portrait";
+import { SadhakPhoto } from "@/components/ui/SadhakPhoto";
 import { bookHref, routes } from "@/lib/routes";
 import { Crumbs, EYEBROW, rich } from "./ui";
 
 /* §1 Consultations hero (Consultations.dc.html 31–70). Ivory: a faint mandala top-left; copy with
    the breadcrumb, eyebrow, display h1, Devanagari line, intro, two CTAs and the trust row; the arch
-   portrait with the S7 chakra (spin 120 / −90 / 60 s) between the night sky and the silhouette, and
+   portrait (Sadhak Ji's photo, arch-clipped), and
    the name card overlapping its bottom-left. 2 columns from 980px; the arch is 300px wide <768. */
-
-const CHAKRA = [
-  { ring: "outer", amb: "spin:120" },
-  { ring: "middle", amb: "spin:-90" },
-  { ring: "inner", amb: "spin:60" },
-] as const;
 
 export async function ConsultHero() {
   const t = await getTranslations("consult");
@@ -101,33 +94,8 @@ export async function ConsultHero() {
               <path d="M2 404V162A160 160 0 0 1 322 162V404" opacity=".55" />
             </svg>
             <span className="absolute inset-0 block">
-              <InlineArt svg={PORTRAIT_BG_CONSULT_SVG} uid="cons" />
+              <SadhakPhoto alt={t("hero.portraitAlt")} sizes="(min-width: 768px) 440px, 300px" arch />
             </span>
-            <div
-              aria-hidden="true"
-              className="absolute top-[38.4%] left-1/2 aspect-square w-[74%] -translate-x-1/2 -translate-y-1/2 opacity-60"
-            >
-              {CHAKRA.map((c) => (
-                <span key={c.ring} data-amb={c.amb} className="absolute inset-0 block">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={`/svg/chakra/${c.ring}-d9b96a.svg`}
-                    alt=""
-                    width={320}
-                    height={320}
-                    className="block size-full"
-                  />
-                </span>
-              ))}
-            </div>
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src="/svg/portrait/fg.svg"
-              alt={t("hero.portraitAlt")}
-              width={300}
-              height={380}
-              className="absolute inset-0 block size-full"
-            />
           </div>
           <div className="absolute bottom-0 left-[-4px] flex max-w-[260px] flex-col gap-1.5 rounded-btn bg-iv px-[18px] py-3.5 shadow-[inset_0_0_0_1px_rgba(184,146,58,.55),0_18px_36px_-20px_rgba(14,59,48,.4)] md:left-[-36px]">
             <span lang="en" className="font-display text-[19px] leading-[1.15] font-normal text-em9">

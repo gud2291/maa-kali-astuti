@@ -4,13 +4,12 @@ import { getTranslations } from "next-intl/server";
 import { Icon, type IconName } from "@/components/icons/Icon";
 import { MandalaG } from "@/components/ui/ornaments/Mandala";
 import { ArchClip, ArchFrame } from "@/components/signature/ArchFrame";
-import { PanditJi } from "@/components/signature/PanditJi";
+import { SadhakPhoto } from "@/components/ui/SadhakPhoto";
 import { MediaImg } from "@/components/media/MediaImg";
 import { db } from "@/server/db/client";
 import { media } from "@/server/db/schema/core";
 import { getSetting } from "@/server/settings/queries";
 import { toMediaRef } from "@/server/media/refs";
-import { rng } from "@/lib/core/rng";
 import { loc } from "@/lib/domain/loc";
 import type { MediaRef } from "@/lib/domain/media";
 import { cn } from "@/lib/utils/cn";
@@ -54,31 +53,6 @@ const GEMS_DESK: Gem[] = [
   { k: "rudraksha", l: "-6%", t: "72%", w: "12%", px: 0.18, amb: "float:9:10:-5:.2" },
 ];
 
-/* M.stars(n, 400, 360, 'hm-sky'): 34 stars on desktop, 18 on mobile. The seeded sequence is the
-   same, so the mobile set is the first 18 of the desktop set. */
-function HeroSky() {
-  const R = rng("hm-sky");
-  const stars = Array.from({ length: 34 }, () => {
-    const r = R() < 0.15 ? 1.4 : R() < 0.5 ? 0.9 : 0.6;
-    return { cx: (R() * 400).toFixed(1), cy: (R() * 360).toFixed(1), r };
-  });
-  return (
-    <svg viewBox="0 0 400 360" width="100%" height="100%" preserveAspectRatio="xMidYMid slice" className="block">
-      {stars.map((s, i) => (
-        <circle
-          key={i}
-          cx={s.cx}
-          cy={s.cy}
-          r={s.r}
-          fill="#D9B96A"
-          data-amb="twinkle"
-          className={i >= 18 ? "max-md:hidden" : undefined}
-        />
-      ))}
-    </svg>
-  );
-}
-
 function GemLayer({ g, className }: { g: Gem; className?: string }) {
   return (
     <span
@@ -94,12 +68,6 @@ function GemLayer({ g, className }: { g: Gem; className?: string }) {
     </span>
   );
 }
-
-const CHAKRA = [
-  { ring: "outer", amb: "spin:120" },
-  { ring: "middle", amb: "spin:-90" },
-  { ring: "inner", amb: "spin:60" },
-] as const;
 
 export async function Hero({ locale, slides }: HeroProps = {}) {
   const t = await getTranslations("home.hero");
@@ -224,35 +192,11 @@ export async function Hero({ locale, slides }: HeroProps = {}) {
                   className="object-cover"
                 />
               ) : (
-                <>
-                  <span
-                    aria-hidden="true"
-                    className="absolute inset-0 block bg-[radial-gradient(58%_44%_at_50%_36%,#1C4A3D,rgba(10,31,26,0))]"
-                  />
-                  <span aria-hidden="true" data-px="0.1" className="absolute inset-x-0 top-[-6%] block h-[72%]">
-                    <HeroSky />
-                  </span>
-                  <div
-                    aria-hidden="true"
-                    className="absolute top-[35.2%] left-1/2 aspect-square w-[72%] -translate-x-1/2 -translate-y-1/2"
-                  >
-                    {CHAKRA.map((c) => (
-                      <span key={c.ring} data-amb={c.amb} className="absolute inset-0 block">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          src={`/svg/chakra/${c.ring}-d9b96a.svg`}
-                          alt=""
-                          width={400}
-                          height={400}
-                          className="block size-full"
-                        />
-                      </span>
-                    ))}
-                  </div>
-                  <span className="absolute inset-0 block">
-                    <PanditJi />
-                  </span>
-                </>
+                <SadhakPhoto
+                  alt="Sadhak Pawan Pandey"
+                  sizes="(min-width: 1024px) 384px, (min-width: 768px) 440px, 84vw"
+                  priority
+                />
               )}
             </div>
             <span aria-hidden="true" className="pointer-events-none absolute inset-0 block">

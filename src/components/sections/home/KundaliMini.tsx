@@ -249,14 +249,10 @@ export function KundaliMini({ buildNow }: { buildNow: number }) {
             {t.rich("title", { em: (c) => <em className="text-g3 italic">{c}</em> })}
           </h3>
           <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1.5">
-            <span className="font-sans text-[30px] leading-none font-bold text-iv tabular">₹99</span>
+            <span className="font-sans text-[30px] leading-none font-bold text-iv">{t("free")}</span>
             <span className="font-sans text-[16px] leading-none font-medium text-sg5 tabular line-through">
               {t("mrp")}
             </span>
-            <span className="inline-flex h-6 items-center rounded-pill bg-sin px-2.5 font-sans text-[11px] leading-none font-bold tracking-[.06em] text-iv">
-              {t("off")}
-            </span>
-            <span className="font-sans text-[12.5px] leading-none font-medium text-sg3">{t("tax")}</span>
           </div>
         </div>
 

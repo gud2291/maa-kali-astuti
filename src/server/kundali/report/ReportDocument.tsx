@@ -52,7 +52,7 @@ export function ReportDocument({ model }: Props) {
       <div className="page cover-page" id="page-1">
         <div className="cover-header">
           <div className="cover-emblem">
-            <Logo uid="reportcover" className="size-full" />
+            <Logo uid="reportcover" className="size-full" inline />
           </div>
           <div className="cover-title">
             {isHi ? "वैदिक जन्मपत्री प्रतिवेदन" : "Vedic Janampatri Report"}

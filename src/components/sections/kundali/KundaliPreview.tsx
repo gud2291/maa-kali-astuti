@@ -19,12 +19,12 @@ import { K99_PAGES } from "./k99-data";
 import { ReportStatus } from "./ReportStatus";
 import { UNDERLINE_LINK } from "./ui";
 
-/* Kundali ₹99 free preview (Kundali-99.dc.html 166–259), shown once a chart exists.
+/* Free Kundali preview (Kundali-99.dc.html 166–259), shown once a chart exists.
    Heading + birth line (+ the noon note when the time is unknown); the night Lagna chart, drawn
    when 25% visible (S12: lines 1200 ms, then planets pop); Lagna / Rashi / Nakshatra cards; the
    planet table (Nakshatra column from 1024, a sub-line below); "Inside the full report": 6 pages,
-   2 / 3 (600) / 6 (1024) per row, pages 2–6 blurred with a lock until paid (filter 800 ms).
-   Unpaid: the emerald unlock band. Paid: the sand "ready" band (ring 900 ms +100, tick 480 ms +820). */
+   2 / 3 (600) / 6 (1024) per row, pages 2–6 blurred with a lock until the free report is
+   requested (filter 800 ms). Before: the emerald "get it free" band. After: the report status. */
 
 type Props = {
   K: Kundali;
@@ -37,9 +37,10 @@ type Props = {
   phoneMask: string;
   orderRef?: string;
   accessKey?: string;
-  priceInr?: number;
   mrpInr?: number;
-  onPay: () => void;
+  /** True while the free report order is being created. */
+  busy?: boolean;
+  onGet: () => void;
   onDownload?: () => void;
 };
 
@@ -58,9 +59,9 @@ export function KundaliPreview({
   phoneMask,
   orderRef,
   accessKey,
-  priceInr = 99,
   mrpInr = 499,
-  onPay,
+  busy = false,
+  onGet,
   onDownload,
 }: Props) {
   const t = useTranslations("k99.preview");
@@ -68,7 +69,6 @@ export function KundaliPreview({
   const okRef = useRef<HTMLSpanElement>(null);
   const first = name.trim().split(/\s+/)[0] || "";
   const kkey = `${K.lagna}|${K.planets.map((p) => `${p.sign}:${p.house}`).join(",")}|${hiReport}`;
-  const off = mrpInr > priceInr ? Math.round(((mrpInr - priceInr) / mrpInr) * 100) : 0;
 
   // S12: prime before paint, draw once a quarter of the chart is visible; again for a new chart.
   useLayoutEffect(() => {
@@ -329,25 +329,22 @@ export function KundaliPreview({
             </div>
             <div className="flex min-w-0 flex-col gap-3">
               <span className="flex flex-wrap items-baseline gap-x-3 gap-y-1.5">
-                <span className="font-sans text-[40px] leading-none font-bold text-iv tabular">₹{priceInr}</span>
+                <span className="font-sans text-[40px] leading-none font-bold text-iv">{t("unlock.free")}</span>
                 <span className="font-sans text-[16px] leading-none font-medium text-sg5 line-through">
                   {fmt(mrpInr)}
                 </span>
-                {off > 0 && (
-                  <span className="font-sans text-[12px] leading-none font-bold tracking-[.06em] text-g3">
-                    {t("unlock.save", { n: off })}
-                  </span>
-                )}
               </span>
               <button
                 type="button"
-                onClick={onPay}
-                className="flex h-[54px] cursor-pointer items-center justify-center gap-2.5 rounded-btn border-none bg-g3 px-6 font-sans text-[15.5px] leading-none font-bold tracking-[.02em] text-n9 transition-[transform,background-color] duration-200 hover:-translate-y-px hover:bg-g4"
+                onClick={onGet}
+                disabled={busy}
+                aria-busy={busy}
+                className="flex h-[54px] cursor-pointer items-center justify-center gap-2.5 rounded-btn border-none bg-g3 px-6 font-sans text-[15.5px] leading-none font-bold tracking-[.02em] text-n9 transition-[transform,background-color] duration-200 hover:-translate-y-px hover:bg-g4 disabled:cursor-wait disabled:opacity-70 disabled:hover:translate-y-0"
               >
                 <span className="block size-[18px]">
-                  <Icon name="lock" />
+                  <Icon name="download" />
                 </span>
-                {t("unlock.cta")}
+                {busy ? t("unlock.busy") : t("unlock.cta")}
               </button>
               <span className="font-sans text-[12.5px] leading-[1.5] font-medium text-sg3">{t("unlock.note")}</span>
             </div>

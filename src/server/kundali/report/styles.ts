@@ -294,6 +294,13 @@ table.report-table tr:nth-child(even) td {
   margin-bottom: 24px;
 }
 
+.cover-emblem img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
 .cover-gold-rule {
   width: 140px;
   height: 1.5px;

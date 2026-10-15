@@ -32,7 +32,7 @@ export function KundaliList({
         };
       case "paid":
         return {
-          label: isHi ? "भुगतान प्राप्त" : "Paid",
+          label: isHi ? "कतार में" : "Queued",
           cls: "bg-blue-50 text-blue-800 border-blue-200",
         };
       case "failed":
@@ -81,7 +81,7 @@ export function KundaliList({
             href="/kundali-99"
             className="inline-flex h-[46px] items-center justify-center rounded-btn bg-em7 px-6 font-sans text-[14.5px] font-semibold text-iv no-underline shadow hover:bg-em5"
           >
-            {isHi ? "कुंडली बनवाएं (₹99)" : "Get Janam Kundali (₹99)"}
+            {isHi ? "मुफ़्त कुंडली बनवाएं" : "Get your free Janam Kundali"}
           </Link>
         </div>
       </div>

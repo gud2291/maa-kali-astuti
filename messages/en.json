@@ -227,12 +227,12 @@
     "ann": [
       "Free shipping on orders above ₹999",
       "Every product energized in Mahapuja before dispatch",
-      "Download your Janam Kundali — ₹99"
+      "Get your Janam Kundali — free"
     ],
     "nav": {
       "shop": "Shop",
       "consult": "Consultations",
-      "kundali": "Kundali ₹99",
+      "kundali": "Free Kundali",
       "rashifal": "Rashifal",
       "courses": "Sadhana Courses",
       "rituals": "Rituals",
@@ -344,7 +344,7 @@
       "palmistry": "Palmistry",
       "tarot": "Tarot Reading",
       "numerology": "Numerology",
-      "kundali99": "Kundali ₹99",
+      "kundali99": "Free Kundali",
       "love": "Love Calculator",
       "rashifal": "Rashifal",
       "courses": "Sadhana Courses",
@@ -530,8 +530,8 @@
         "s3": {
           "eyebrow": "॥ JANAM KUNDALI ॥",
           "l1": "Your complete",
-          "l2": "Janam Kundali — <em>₹99</em>.",
-          "sub": "आपकी संपूर्ण जन्म कुंडली — मात्र ₹99",
+          "l2": "Janam Kundali — <em>free</em>.",
+          "sub": "आपकी संपूर्ण जन्म कुंडली — बिल्कुल मुफ़्त",
           "body": "Lagna chart, Navamsa, dasha periods, Manglik check, gemstones and remedies. A 28-page report in English or Hindi.",
           "cta1": "Get My Kundali",
           "cta2": "Try Love Calculator"
@@ -549,7 +549,7 @@
       },
       "qaLabel": "Quick actions",
       "qa": {
-        "kundali": "Kundali ₹99",
+        "kundali": "Free Kundali",
         "love": "Love Calculator",
         "rashi": "Aaj ka Rashifal",
         "call": "Book a Call"
@@ -696,7 +696,7 @@
       "seeGems": "See gemstones",
       "remedy": "Remedy of the day",
       "full": "Read full Rashifal",
-      "kundali": "Get personal Kundali ₹99",
+      "kundali": "Get your personal Kundali free",
       "railAria": "Rashi cards. Swipe to turn the dial.",
       "readFull": "Read in full",
       "overall": "Overall {n} of 5"
@@ -705,13 +705,11 @@
       "eyebrow": "05 — Free astro tools",
       "title": "Begin with your <em>own chart.</em>",
       "deva": "अपनी कुंडली से शुरुआत करें",
-      "intro": "The Kundali preview is free. You pay ₹99 only to download the full report. The Love Calculator is a light reading for fun.",
+      "intro": "The Kundali preview and the full report are both free. The Love Calculator is a light reading for fun.",
       "k": {
         "eyebrow": "Janam Kundali",
-        "title": "Download your complete Janam Kundali — <em>₹99</em>",
+        "title": "Download your complete Janam Kundali — <em>free</em>",
         "mrp": "MRP ₹499",
-        "off": "80% OFF",
-        "tax": "incl. all taxes",
         "name": "Name",
         "dob": "Date of birth",
         "tob": "Time of birth",
@@ -728,7 +726,7 @@
         "moon": "Moon sign",
         "nak": "Nakshatra",
         "noon": "Calculated for 12:00 noon. Planet signs are reliable; the Lagna may differ.",
-        "report": "Get the 28-page report · ₹99",
+        "report": "Get the 28-page report · free",
         "idle": "A 28-page report: Lagna chart, Navamsa, Dasha periods, Manglik check, gemstones and remedies. The chart itself is drawn free from your details.",
         "err": {
           "nameShort": "Enter the name for the report",
@@ -737,7 +735,8 @@
           "tobEmpty": "Enter the time of birth, or tick “I don’t know”",
           "placeEmpty": "Enter your place of birth",
           "placePick": "Choose a town from the list"
-        }
+        },
+        "free": "Free"
       },
       "l": {
         "eyebrow": "Free tool",
@@ -1413,30 +1412,29 @@
   },
   "k99": {
     "meta": {
-      "title": "Janam Kundali ₹99",
-      "description": "Your complete Janam Kundali, ready in minutes: see the Lagna chart, planetary positions and nakshatra free, and download the 28-page report for ₹99."
+      "title": "Free Janam Kundali",
+      "description": "Your complete Janam Kundali, ready in minutes: see the Lagna chart, planetary positions and nakshatra, and download the full 28-page report free."
     },
     "crumbs": {
       "aria": "Breadcrumb",
       "home": "Home",
-      "here": "Kundali ₹99"
+      "here": "Free Kundali"
     },
     "hero": {
       "eyebrow": "Janam Kundali",
       "title": "Your complete Kundali, <em>ready in minutes.</em>",
-      "off": "{n}% OFF",
-      "tax": "incl. all taxes",
-      "lead": "See your Lagna chart, planetary positions and nakshatra free, right here. Pay ₹99 only if you want the full 28-page report as a PDF, in English or Hindi.",
+      "lead": "See your Lagna chart, planetary positions and nakshatra right here, and get the full 28-page report as a PDF, in English or Hindi. Completely free.",
       "facts": [
         "28 pages: Lagna, Navamsa, dasha, doshas, remedies",
         "Instant PDF on WhatsApp and email",
         "Sidereal (Lahiri) positions, North-Indian chart style"
       ],
-      "rating": "4.8 from 3,400+ reports"
+      "rating": "4.8 from 3,400+ reports",
+      "free": "Free"
     },
     "form": {
       "title": "Enter your birth details",
-      "sub": "Free chart preview. You pay only to download.",
+      "sub": "Free chart preview and free full report.",
       "name": "Name for the report",
       "dob": "Date of birth",
       "tob": "Time of birth",
@@ -1514,9 +1512,9 @@
       "retro": "Retrograde",
       "insideTitle": "Inside the full report",
       "insideNote": "28 pages · six shown here",
-      "locked": "locked until you pay",
+      "locked": "unlocks with your free report",
       "unlock": {
-        "eyebrow": "Unlock the full report",
+        "eyebrow": "Get the full report free",
         "title": "All 28 pages, <em>yours to keep.</em>",
         "pdf": "All 28 pages as a PDF, in {lang}",
         "english": "English",
@@ -1526,12 +1524,13 @@
           "Dasha periods to 2046 with dates",
           "Gemstone, rudraksha and mantra remedies"
         ],
-        "save": "SAVE {n}%",
-        "cta": "Pay ₹99 & download",
-        "note": "UPI, cards and netbanking · secured by Razorpay"
+        "cta": "Get my free report",
+        "note": "No payment needed · the PDF also comes to WhatsApp and email",
+        "free": "Free",
+        "busy": "Preparing your report…"
       },
       "done": {
-        "eyebrow": "Payment received · ₹99",
+        "eyebrow": "Report unlocked · free",
         "title": "Your Kundali is <em>ready.</em>",
         "line": "The PDF is on its way to WhatsApp {phone}, and stays in your account.",
         "download": "Download your report",
@@ -1539,31 +1538,11 @@
         "toast": "Chart page saved. The full 28-page PDF is on its way to WhatsApp."
       }
     },
-    "sheet": {
-      "title": "Janam Kundali report",
-      "sub": "{name} · 28-page PDF",
-      "close": "Close payment",
-      "amount": "Amount",
-      "payWith": "Pay with",
-      "apps": {
-        "gpay": "Google Pay",
-        "phonepe": "PhonePe",
-        "paytm": "Paytm",
-        "card": "Card"
-      },
-      "to": "Report and receipt go to WhatsApp {phone}.",
-      "pay": "Pay ₹99",
-      "procT": "Waiting for your bank",
-      "procD": "Approve the request in your UPI app. Please keep this page open.",
-      "failT": "The payment did not go through",
-      "failD": "No money was taken. If your bank shows a debit, it is refunded automatically within 5–7 working days. Your chart is saved, so you can try again.",
-      "retry": "Try again",
-      "help": "Get help",
-      "secured": "Secured by Razorpay · 256-bit encryption"
-    },
     "bar": {
       "sub": "Full report · 28 pages",
-      "pay": "Pay ₹99"
+      "free": "Free",
+      "get": "Get free report",
+      "busy": "Preparing…"
     },
     "toc": {
       "eyebrow": "01 — What’s inside",
@@ -1693,7 +1672,7 @@
       "pause": "Pause auto-rotation",
       "resume": "Resume auto-rotation",
       "full": "Read full {name} rashifal",
-      "kundali": "Personal Kundali ₹99",
+      "kundali": "Free personal Kundali",
       "railAria": "Rashi cards, swipe to turn the dial",
       "readFull": "Read in full"
     },
@@ -1761,7 +1740,7 @@
     "cta": {
       "eyebrow": "Beyond the rashi",
       "lead": "Rashifal is written for everyone born under {name}. A Kundali places all nine grahas in your own houses, from your exact time and place of birth.",
-      "kundali": "Get your Kundali · ₹99",
+      "kundali": "Get your Kundali · free",
       "book": "Book a reading",
       "chartAria": "Sample North Indian Lagna chart"
     }
@@ -2330,7 +2309,7 @@
     "kundali": {
       "title": "My Kundali",
       "noKundali": "No Kundali reports ordered yet",
-      "explore": "Get Janam Kundali for ₹99",
+      "explore": "Get your Janam Kundali free",
       "viewOnline": "View Online",
       "downloadPdf": "Download PDF"
     }
@@ -2572,7 +2551,7 @@
       "general": "General",
       "shop": "Shop & Products",
       "consult": "Consultations",
-      "kundali99": "Kundali ₹99",
+      "kundali99": "Free Kundali",
       "courses": "Sadhana Courses",
       "rituals": "Vedic Rituals"
     },

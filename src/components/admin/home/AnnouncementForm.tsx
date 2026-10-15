@@ -25,8 +25,8 @@ export const DEFAULT_ANNOUNCEMENT_ITEMS: { text: Loc; href: string | null }[] = 
   },
   {
     text: {
-      en: "Download your Janam Kundali — ₹99",
-      hi: "अपनी जन्म कुंडली डाउनलोड करें — ₹99",
+      en: "Get your Janam Kundali — free",
+      hi: "अपनी जन्म कुंडली पाएँ — मुफ़्त",
     },
     href: "/kundali-99",
   },
