@@ -1,11 +1,14 @@
 import {
   integer,
   text,
-  real,
-  sqliteTable,
   index,
   primaryKey,
-} from "drizzle-orm/sqlite-core";
+  pgTable,
+  timestamp,
+  boolean,
+  jsonb,
+  doublePrecision,
+} from "drizzle-orm/pg-core";
 import type { ProductContent } from "../../../lib/domain/types";
 import type { ProductArt } from "@/types/product";
 import {
@@ -19,7 +22,7 @@ import { EMPTY_PRODUCT_CONTENT } from "../../../lib/domain/types";
 
 /* ---------- categories ---------- */
 
-export const categories = sqliteTable("categories", {
+export const categories = pgTable("categories", {
   key: text("key", { enum: CATEGORY_KEYS }).primaryKey(),
   slug: text("slug").notNull().unique(),
   nameEn: text("name_en").notNull(),
@@ -33,8 +36,8 @@ export const categories = sqliteTable("categories", {
   seoDescEn: text("seo_desc_en"),
   seoDescHi: text("seo_desc_hi"),
   sort: integer("sort").notNull().default(0),
-  visible: integer("visible", { mode: "boolean" }).notNull().default(true),
-  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+  visible: boolean("visible").notNull().default(true),
+  updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
     .notNull()
     .$defaultFn(() => new Date())
     .$onUpdate(() => new Date()),
@@ -42,7 +45,7 @@ export const categories = sqliteTable("categories", {
 
 /* ---------- products ---------- */
 
-export const products = sqliteTable(
+export const products = pgTable(
   "products",
   {
     id: text("id").primaryKey(),
@@ -63,27 +66,27 @@ export const products = sqliteTable(
     mrpInr: integer("mrp_inr").notNull(),
     stock: integer("stock").notNull().default(0),
     lowStockAt: integer("low_stock_at").notNull().default(5),
-    sizes: text("sizes", { mode: "json" }).$type<WristSize[]>(),
-    badges: text("badges", { mode: "json" })
+    sizes: jsonb("sizes").$type<WristSize[]>(),
+    badges: jsonb("badges")
       .$type<BadgeKey[]>()
       .notNull()
       .$defaultFn(() => []),
-    ratingAvg: real("rating_avg").notNull().default(0),
+    ratingAvg: doublePrecision("rating_avg").notNull().default(0),
     ratingCount: integer("rating_count").notNull().default(0),
-    popularity: real("popularity").notNull().default(0),
-    art: text("art", { mode: "json" }).$type<ProductArt>(),
+    popularity: doublePrecision("popularity").notNull().default(0),
+    art: jsonb("art").$type<ProductArt>(),
     legacyPhoto: text("legacy_photo"),
     legacyPhoto2: text("legacy_photo2"),
-    content: text("content", { mode: "json" })
+    content: jsonb("content")
       .$type<ProductContent>()
       .notNull()
       .$defaultFn(() => JSON.parse(JSON.stringify(EMPTY_PRODUCT_CONTENT))),
-    relatedIds: text("related_ids", { mode: "json" })
+    relatedIds: jsonb("related_ids")
       .$type<string[]>()
       .notNull()
       .$defaultFn(() => []),
-    energizable: integer("energizable", { mode: "boolean" }).notNull().default(true),
-    gstRate: real("gst_rate"),
+    energizable: boolean("energizable").notNull().default(true),
+    gstRate: doublePrecision("gst_rate"),
     hsn: text("hsn"),
     weightG: integer("weight_g"),
     seoTitleEn: text("seo_title_en"),
@@ -91,13 +94,13 @@ export const products = sqliteTable(
     seoDescEn: text("seo_desc_en"),
     seoDescHi: text("seo_desc_hi"),
     status: text("status", { enum: PRODUCT_STATUS }).notNull().default("draft"),
-    featured: integer("featured", { mode: "boolean" }).notNull().default(false),
+    featured: boolean("featured").notNull().default(false),
     sort: integer("sort").notNull().default(0),
-    publishedAt: integer("published_at", { mode: "timestamp_ms" }),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    publishedAt: timestamp("published_at", { mode: "date", withTimezone: true }),
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
-    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date())
       .$onUpdate(() => new Date()),
@@ -111,7 +114,7 @@ export const products = sqliteTable(
 
 /* ---------- product_media ---------- */
 
-export const productMedia = sqliteTable(
+export const productMedia = pgTable(
   "product_media",
   {
     productId: text("product_id").notNull(),

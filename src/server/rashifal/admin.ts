@@ -75,8 +75,9 @@ export async function savePeriodEntries(
   const parsed = savePeriodEntriesSchema.parse({ period, startsOn, entries });
 
   const now = new Date();
-  const statements = parsed.entries.map((entry) =>
-    db
+  await db.transaction(async (tx) => {
+    for (const entry of parsed.entries) {
+      await tx
       .insert(rashifalEntries)
       .values({
         rashi: entry.rashi,
@@ -105,12 +106,9 @@ export async function savePeriodEntries(
           updatedBy: admin.id,
           updatedAt: now,
         },
-      }),
-  );
-
-  if (statements.length > 0) {
-    await db.batch(statements as [typeof statements[0], ...typeof statements]);
-  }
+      });
+    }
+  });
 
   await audit({
     actorId: admin.id,
@@ -134,7 +132,7 @@ export async function coverage(
     .select({
       period: rashifalEntries.period,
       startsOn: rashifalEntries.startsOn,
-      count: sql<number>`count(distinct ${rashifalEntries.rashi})`,
+      count: sql<number>`count(distinct ${rashifalEntries.rashi})`.mapWith(Number),
     })
     .from(rashifalEntries)
     .where(

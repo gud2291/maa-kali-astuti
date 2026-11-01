@@ -29,7 +29,7 @@ export async function createFaq(input: unknown): Promise<{ id: number }> {
   const data = faqSchema.parse(input);
 
   const [maxRow] = await db
-    .select({ maxSort: sql<number | null>`max(${faqs.sort})` })
+    .select({ maxSort: sql<number | null>`max(${faqs.sort})`.mapWith(Number) })
     .from(faqs)
     .where(eq(faqs.setKey, data.setKey));
 

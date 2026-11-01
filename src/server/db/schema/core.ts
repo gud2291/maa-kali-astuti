@@ -1,11 +1,14 @@
 import {
   integer,
   text,
-  real,
-  sqliteTable,
   index,
   uniqueIndex,
-} from "drizzle-orm/sqlite-core";
+  pgTable,
+  serial,
+  timestamp,
+  boolean,
+  jsonb,
+} from "drizzle-orm/pg-core";
 import type { BirthProfile, MediaVariant } from "../../../lib/domain/types";
 import {
   ROLES,
@@ -21,10 +24,10 @@ import {
 
 /* ---------- settings ---------- */
 
-export const settings = sqliteTable("settings", {
+export const settings = pgTable("settings", {
   key: text("key").primaryKey(),
-  value: text("value", { mode: "json" }).$type<unknown>().notNull(),
-  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+  value: jsonb("value").$type<unknown>().notNull(),
+  updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
     .notNull()
     .$defaultFn(() => new Date())
     .$onUpdate(() => new Date()),
@@ -33,24 +36,24 @@ export const settings = sqliteTable("settings", {
 
 /* ---------- users ---------- */
 
-export const users = sqliteTable(
+export const users = pgTable(
   "users",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     email: text("email").unique(),
     phone: text("phone"),
     name: text("name"),
     role: text("role", { enum: ROLES }).notNull().default("customer"),
     status: text("status", { enum: USER_STATUS }).notNull().default("active"),
-    emailVerifiedAt: integer("email_verified_at", { mode: "timestamp_ms" }),
-    phoneVerifiedAt: integer("phone_verified_at", { mode: "timestamp_ms" }),
-    birth: text("birth", { mode: "json" }).$type<BirthProfile>(),
-    marketingOptIn: integer("marketing_opt_in", { mode: "boolean" }).notNull().default(false),
-    lastLoginAt: integer("last_login_at", { mode: "timestamp_ms" }),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    emailVerifiedAt: timestamp("email_verified_at", { mode: "date", withTimezone: true }),
+    phoneVerifiedAt: timestamp("phone_verified_at", { mode: "date", withTimezone: true }),
+    birth: jsonb("birth").$type<BirthProfile>(),
+    marketingOptIn: boolean("marketing_opt_in").notNull().default(false),
+    lastLoginAt: timestamp("last_login_at", { mode: "date", withTimezone: true }),
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
-    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date())
       .$onUpdate(() => new Date()),
@@ -63,16 +66,16 @@ export const users = sqliteTable(
 
 /* ---------- sessions ---------- */
 
-export const sessions = sqliteTable(
+export const sessions = pgTable(
   "sessions",
   {
     id: text("id").primaryKey(),
     userId: integer("user_id").notNull(),
     kind: text("kind", { enum: SESSION_KINDS }).notNull(),
-    expiresAt: integer("expires_at", { mode: "timestamp_ms" }).notNull(),
+    expiresAt: timestamp("expires_at", { mode: "date", withTimezone: true }).notNull(),
     ip: text("ip"),
     userAgent: text("user_agent"),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
   },
@@ -84,19 +87,19 @@ export const sessions = sqliteTable(
 
 /* ---------- otp_codes ---------- */
 
-export const otpCodes = sqliteTable(
+export const otpCodes = pgTable(
   "otp_codes",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     purpose: text("purpose", { enum: OTP_PURPOSES }).notNull(),
     channel: text("channel", { enum: OTP_CHANNELS }).notNull().default("email"),
     identifier: text("identifier").notNull(),
     codeHash: text("code_hash").notNull(),
     attempts: integer("attempts").notNull().default(0),
-    expiresAt: integer("expires_at", { mode: "timestamp_ms" }).notNull(),
-    consumedAt: integer("consumed_at", { mode: "timestamp_ms" }),
+    expiresAt: timestamp("expires_at", { mode: "date", withTimezone: true }).notNull(),
+    consumedAt: timestamp("consumed_at", { mode: "date", withTimezone: true }),
     ip: text("ip"),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
   },
@@ -107,7 +110,7 @@ export const otpCodes = sqliteTable(
 
 /* ---------- rate_limits ---------- */
 
-export const rateLimits = sqliteTable(
+export const rateLimits = pgTable(
   "rate_limits",
   {
     key: text("key").primaryKey(),
@@ -121,18 +124,18 @@ export const rateLimits = sqliteTable(
 
 /* ---------- audit_logs ---------- */
 
-export const auditLogs = sqliteTable(
+export const auditLogs = pgTable(
   "audit_logs",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     actorId: integer("actor_id"),
     action: text("action").notNull(),
     entity: text("entity").notNull(),
     entityId: text("entity_id").notNull(),
     summary: text("summary").notNull(),
-    diff: text("diff", { mode: "json" }).$type<Record<string, [unknown, unknown]>>(),
+    diff: jsonb("diff").$type<Record<string, [unknown, unknown]>>(),
     ip: text("ip"),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
   },
@@ -144,22 +147,22 @@ export const auditLogs = sqliteTable(
 
 /* ---------- counters ---------- */
 
-export const counters = sqliteTable("counters", {
+export const counters = pgTable("counters", {
   key: text("key").primaryKey(),
   value: integer("value").notNull().default(0),
 });
 
 /* ---------- media ---------- */
 
-export const media = sqliteTable(
+export const media = pgTable(
   "media",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     kind: text("kind", { enum: MEDIA_KINDS }).notNull(),
     bucket: text("bucket", { enum: MEDIA_BUCKETS }).notNull(),
     purpose: text("purpose", { enum: MEDIA_PURPOSES }).notNull(),
     status: text("status", { enum: MEDIA_STATUS }).notNull().default("pending"),
-    variants: text("variants", { mode: "json" }).$type<MediaVariant[]>().notNull(),
+    variants: jsonb("variants").$type<MediaVariant[]>().notNull(),
     width: integer("width"),
     height: integer("height"),
     blur: text("blur"),
@@ -170,7 +173,7 @@ export const media = sqliteTable(
     ownerId: text("owner_id"),
     claimHash: text("claim_hash"),
     uploadedBy: integer("uploaded_by"),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
   },
@@ -182,12 +185,12 @@ export const media = sqliteTable(
 
 /* ---------- webhook_events ---------- */
 
-export const webhookEvents = sqliteTable("webhook_events", {
+export const webhookEvents = pgTable("webhook_events", {
   id: text("id").primaryKey(),
   provider: text("provider").notNull(),
   type: text("type").notNull(),
-  receivedAt: integer("received_at", { mode: "timestamp_ms" })
+  receivedAt: timestamp("received_at", { mode: "date", withTimezone: true })
     .notNull()
     .$defaultFn(() => new Date()),
-  processedAt: integer("processed_at", { mode: "timestamp_ms" }),
+  processedAt: timestamp("processed_at", { mode: "date", withTimezone: true }),
 });

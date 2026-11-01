@@ -60,12 +60,12 @@ export async function createBookingAction(
       notes: { entity: "booking", id: String(bookingId) },
     });
 
-    await db.batch([
-      db
+    await db.transaction(async (tx) => {
+      await tx
         .update(bookings)
         .set({ razorpayOrderId: rzpOrder.id })
-        .where(eq(bookings.id, bookingId)),
-      db.insert(payments).values({
+        .where(eq(bookings.id, bookingId));
+      await tx.insert(payments).values({
         entity: "booking",
         entityId: bookingId,
         provider: "razorpay",
@@ -73,8 +73,8 @@ export async function createBookingAction(
         amountInr: priceInr,
         status: "created",
         method: data.payPref ?? null,
-      }),
-    ]);
+      });
+    });
 
     return {
       ref,

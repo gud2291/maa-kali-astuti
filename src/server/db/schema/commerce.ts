@@ -1,10 +1,14 @@
 import {
   integer,
   text,
-  real,
-  sqliteTable,
   index,
-} from "drizzle-orm/sqlite-core";
+  pgTable,
+  serial,
+  timestamp,
+  boolean,
+  jsonb,
+  doublePrecision,
+} from "drizzle-orm/pg-core";
 import type { ShipAddress, CartLineInput } from "../../../lib/domain/types";
 import {
   COUPON_KINDS,
@@ -24,10 +28,10 @@ import {
 
 /* ---------- addresses ---------- */
 
-export const addresses = sqliteTable(
+export const addresses = pgTable(
   "addresses",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     userId: integer("user_id").notNull(),
     name: text("name").notNull(),
     phone: text("phone").notNull(),
@@ -37,11 +41,11 @@ export const addresses = sqliteTable(
     city: text("city").notNull(),
     state: text("state").notNull(),
     pincode: text("pincode").notNull(),
-    isDefault: integer("is_default", { mode: "boolean" }).notNull().default(false),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    isDefault: boolean("is_default").notNull().default(false),
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
-    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date())
       .$onUpdate(() => new Date()),
@@ -53,25 +57,25 @@ export const addresses = sqliteTable(
 
 /* ---------- coupons ---------- */
 
-export const coupons = sqliteTable("coupons", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const coupons = pgTable("coupons", {
+  id: serial("id").primaryKey(),
   code: text("code").notNull().unique(),
   kind: text("kind", { enum: COUPON_KINDS }).notNull(),
   value: integer("value").notNull(),
   minCartInr: integer("min_cart_inr").notNull().default(0),
   maxDiscountInr: integer("max_discount_inr"),
-  startsAt: integer("starts_at", { mode: "timestamp_ms" }),
-  endsAt: integer("ends_at", { mode: "timestamp_ms" }),
+  startsAt: timestamp("starts_at", { mode: "date", withTimezone: true }),
+  endsAt: timestamp("ends_at", { mode: "date", withTimezone: true }),
   usageLimit: integer("usage_limit"),
   perCustomerLimit: integer("per_customer_limit"),
-  firstOrderOnly: integer("first_order_only", { mode: "boolean" }).notNull().default(false),
-  active: integer("active", { mode: "boolean" }).notNull().default(true),
+  firstOrderOnly: boolean("first_order_only").notNull().default(false),
+  active: boolean("active").notNull().default(true),
   usedCount: integer("used_count").notNull().default(0),
   note: text("note"),
-  createdAt: integer("created_at", { mode: "timestamp_ms" })
+  createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
     .notNull()
     .$defaultFn(() => new Date()),
-  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+  updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
     .notNull()
     .$defaultFn(() => new Date())
     .$onUpdate(() => new Date()),
@@ -79,10 +83,10 @@ export const coupons = sqliteTable("coupons", {
 
 /* ---------- orders ---------- */
 
-export const orders = sqliteTable(
+export const orders = pgTable(
   "orders",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     number: text("number").notNull().unique(),
     accessHash: text("access_hash").notNull(),
     userId: integer("user_id"),
@@ -90,7 +94,7 @@ export const orders = sqliteTable(
     name: text("name").notNull(),
     email: text("email").notNull(),
     phone: text("phone").notNull(),
-    shipAddress: text("ship_address", { mode: "json" }).$type<ShipAddress>().notNull(),
+    shipAddress: jsonb("ship_address").$type<ShipAddress>().notNull(),
     status: text("status", { enum: ORDER_STATUS }).notNull(),
     paymentMethod: text("payment_method", { enum: PAYMENT_METHODS }).notNull(),
     paymentStatus: text("payment_status", { enum: PAYMENT_STATUS }).notNull(),
@@ -107,7 +111,7 @@ export const orders = sqliteTable(
     totalInr: integer("total_inr").notNull(),
     refundedInr: integer("refunded_inr").notNull().default(0),
     couponCode: text("coupon_code"),
-    gift: integer("gift", { mode: "boolean" }).notNull().default(false),
+    gift: boolean("gift").notNull().default(false),
     giftMessage: text("gift_message"),
     customerNote: text("customer_note"),
     energizationOn: text("energization_on"),
@@ -116,19 +120,19 @@ export const orders = sqliteTable(
     trackingUrl: text("tracking_url"),
     invoiceNo: text("invoice_no").unique(),
     razorpayOrderId: text("razorpay_order_id").unique(),
-    needsAttention: integer("needs_attention", { mode: "boolean" }).notNull().default(false),
+    needsAttention: boolean("needs_attention").notNull().default(false),
     attentionReason: text("attention_reason"),
     adminNote: text("admin_note"),
     ip: text("ip"),
-    placedAt: integer("placed_at", { mode: "timestamp_ms" }),
-    paidAt: integer("paid_at", { mode: "timestamp_ms" }),
-    shippedAt: integer("shipped_at", { mode: "timestamp_ms" }),
-    deliveredAt: integer("delivered_at", { mode: "timestamp_ms" }),
-    cancelledAt: integer("cancelled_at", { mode: "timestamp_ms" }),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    placedAt: timestamp("placed_at", { mode: "date", withTimezone: true }),
+    paidAt: timestamp("paid_at", { mode: "date", withTimezone: true }),
+    shippedAt: timestamp("shipped_at", { mode: "date", withTimezone: true }),
+    deliveredAt: timestamp("delivered_at", { mode: "date", withTimezone: true }),
+    cancelledAt: timestamp("cancelled_at", { mode: "date", withTimezone: true }),
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
-    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date())
       .$onUpdate(() => new Date()),
@@ -144,10 +148,10 @@ export const orders = sqliteTable(
 
 /* ---------- order_items ---------- */
 
-export const orderItems = sqliteTable(
+export const orderItems = pgTable(
   "order_items",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     orderId: integer("order_id").notNull(),
     productId: text("product_id").notNull(),
     nameEn: text("name_en").notNull(),
@@ -162,7 +166,7 @@ export const orderItems = sqliteTable(
     energName: text("energ_name"),
     energGotra: text("energ_gotra"),
     lineTotalInr: integer("line_total_inr").notNull(),
-    gstRate: real("gst_rate"),
+    gstRate: doublePrecision("gst_rate"),
     hsn: text("hsn"),
   },
   (t) => [
@@ -173,18 +177,18 @@ export const orderItems = sqliteTable(
 
 /* ---------- order_events ---------- */
 
-export const orderEvents = sqliteTable(
+export const orderEvents = pgTable(
   "order_events",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     orderId: integer("order_id").notNull(),
     type: text("type").notNull(),
     fromStatus: text("from_status"),
     toStatus: text("to_status"),
     message: text("message"),
-    public: integer("public", { mode: "boolean" }).notNull().default(false),
+    public: boolean("public").notNull().default(false),
     actorId: integer("actor_id"),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
   },
@@ -195,10 +199,10 @@ export const orderEvents = sqliteTable(
 
 /* ---------- payments ---------- */
 
-export const payments = sqliteTable(
+export const payments = pgTable(
   "payments",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     entity: text("entity", { enum: PAY_ENTITIES }).notNull(),
     entityId: integer("entity_id").notNull(),
     provider: text("provider", { enum: PAY_PROVIDERS }).notNull(),
@@ -208,10 +212,10 @@ export const payments = sqliteTable(
     status: text("status", { enum: PAYMENT_ROW_STATUS }).notNull(),
     method: text("method"),
     error: text("error"),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
-    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date())
       .$onUpdate(() => new Date()),
@@ -224,10 +228,10 @@ export const payments = sqliteTable(
 
 /* ---------- refunds ---------- */
 
-export const refunds = sqliteTable(
+export const refunds = pgTable(
   "refunds",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     paymentId: integer("payment_id").notNull(),
     entity: text("entity", { enum: PAY_ENTITIES }).notNull(),
     entityId: integer("entity_id").notNull(),
@@ -236,10 +240,10 @@ export const refunds = sqliteTable(
     reason: text("reason"),
     status: text("status", { enum: REFUND_STATUS }).notNull().default("pending"),
     actorId: integer("actor_id"),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
-    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date())
       .$onUpdate(() => new Date()),
@@ -251,15 +255,15 @@ export const refunds = sqliteTable(
 
 /* ---------- coupon_redemptions ---------- */
 
-export const couponRedemptions = sqliteTable(
+export const couponRedemptions = pgTable(
   "coupon_redemptions",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     couponId: integer("coupon_id").notNull(),
     orderId: integer("order_id").notNull().unique(),
     email: text("email").notNull(),
     discountInr: integer("discount_inr").notNull(),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
   },
@@ -270,23 +274,23 @@ export const couponRedemptions = sqliteTable(
 
 /* ---------- checkout_drafts ---------- */
 
-export const checkoutDrafts = sqliteTable(
+export const checkoutDrafts = pgTable(
   "checkout_drafts",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     token: text("token").notNull().unique(),
     email: text("email").notNull(),
     phone: text("phone"),
     name: text("name"),
     locale: text("locale", { enum: LOCALES }).notNull(),
-    lines: text("lines", { mode: "json" }).$type<CartLineInput[]>().notNull(),
+    lines: jsonb("lines").$type<CartLineInput[]>().notNull(),
     totalInr: integer("total_inr").notNull(),
-    remindedAt: integer("reminded_at", { mode: "timestamp_ms" }),
+    remindedAt: timestamp("reminded_at", { mode: "date", withTimezone: true }),
     orderId: integer("order_id"),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
-    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date())
       .$onUpdate(() => new Date()),
@@ -298,10 +302,10 @@ export const checkoutDrafts = sqliteTable(
 
 /* ---------- reviews ---------- */
 
-export const reviews = sqliteTable(
+export const reviews = pgTable(
   "reviews",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     productId: text("product_id").notNull(),
     orderId: integer("order_id"),
     userId: integer("user_id"),
@@ -310,15 +314,15 @@ export const reviews = sqliteTable(
     rating: integer("rating").notNull(),
     title: text("title"),
     body: text("body").notNull(),
-    mediaIds: text("media_ids", { mode: "json" }).$type<number[]>().notNull().$defaultFn(() => []),
-    verified: integer("verified", { mode: "boolean" }).notNull().default(false),
+    mediaIds: jsonb("media_ids").$type<number[]>().notNull().$defaultFn(() => []),
+    verified: boolean("verified").notNull().default(false),
     status: text("status", { enum: REVIEW_STATUS }).notNull().default("pending"),
-    showOnHome: integer("show_on_home", { mode: "boolean" }).notNull().default(false),
+    showOnHome: boolean("show_on_home").notNull().default(false),
     legacyDate: text("legacy_date"),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
-    approvedAt: integer("approved_at", { mode: "timestamp_ms" }),
+    approvedAt: timestamp("approved_at", { mode: "date", withTimezone: true }),
   },
   (t) => [
     index("reviews_product_idx").on(t.productId, t.status, t.createdAt),

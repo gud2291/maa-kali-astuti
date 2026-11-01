@@ -23,7 +23,7 @@ export async function createRitual(input: unknown): Promise<{ id: number }> {
   const data = ritualSchema.parse(input);
 
   const [maxRow] = await db
-    .select({ maxSort: sql<number | null>`max(${rituals.sort})` })
+    .select({ maxSort: sql<number | null>`max(${rituals.sort})`.mapWith(Number) })
     .from(rituals);
 
   const nextSort = (maxRow?.maxSort ?? -1) + 1;

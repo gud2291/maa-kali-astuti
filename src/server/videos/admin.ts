@@ -83,7 +83,7 @@ export async function createVideo(input: unknown): Promise<{ id: number }> {
   const data = videoSchema.parse(input);
 
   const [maxRow] = await db
-    .select({ maxSort: sql<number | null>`max(${videos.sort})` })
+    .select({ maxSort: sql<number | null>`max(${videos.sort})`.mapWith(Number) })
     .from(videos)
     .where(eq(videos.kind, data.kind));
 

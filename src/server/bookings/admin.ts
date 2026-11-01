@@ -1,6 +1,6 @@
 import "server-only";
 import { after } from "next/server";
-import { and, asc, desc, eq, gte, ilike, lte, or, sql } from "drizzle-orm";
+import { and, asc, desc, eq, gte, ilike, lt, lte, or, sql } from "drizzle-orm";
 import { db } from "@/server/db/client";
 import { bookings } from "@/server/db/schema/consult";
 import { payments, refunds } from "@/server/db/schema/commerce";
@@ -90,7 +90,7 @@ export async function listBookings(
         eq(bookings.status, "no_show"),
         eq(bookings.status, "cancelled"),
         eq(bookings.status, "expired"),
-        and(eq(bookings.status, "confirmed"), sql`${bookings.startAt} < ${now.getTime()}`),
+        and(eq(bookings.status, "confirmed"), lt(bookings.startAt, now)),
       ),
     );
   }
@@ -111,7 +111,7 @@ export async function listBookings(
   const whereClause = conditions.length > 0 ? and(...conditions) : undefined;
 
   const countResult = await db
-    .select({ count: sql<number>`count(*)` })
+    .select({ count: sql<number>`count(*)`.mapWith(Number) })
     .from(bookings)
     .where(whereClause);
 

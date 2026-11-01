@@ -72,7 +72,7 @@ export async function refundOrder(
     // Refunds still waiting for their webhook are not in refundedInr yet: count them too, so a
     // second click cannot refund the same money twice.
     const [pending] = await db
-      .select({ total: sql<number>`coalesce(sum(${refunds.amountInr}), 0)` })
+      .select({ total: sql<number>`coalesce(sum(${refunds.amountInr}), 0)`.mapWith(Number) })
       .from(refunds)
       .where(
         and(eq(refunds.entity, "order"), eq(refunds.entityId, id), eq(refunds.status, "pending")),

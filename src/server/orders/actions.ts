@@ -59,12 +59,12 @@ export async function placeOrderAction(
         notes: { entity: "order", id: String(orderId) },
       });
 
-      await db.batch([
-        db
+      await db.transaction(async (tx) => {
+        await tx
           .update(orders)
           .set({ razorpayOrderId: rzpOrder.id })
-          .where(eq(orders.id, orderId)),
-        db.insert(payments).values({
+          .where(eq(orders.id, orderId));
+        await tx.insert(payments).values({
           entity: "order",
           entityId: orderId,
           provider: "razorpay",
@@ -72,8 +72,8 @@ export async function placeOrderAction(
           amountInr: totalInr,
           status: "created",
           method: data.payPref ?? null,
-        }),
-      ]);
+        });
+      });
 
       return {
         number,

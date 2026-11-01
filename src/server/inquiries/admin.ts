@@ -1,5 +1,5 @@
 import "server-only";
-import { and, count, desc, eq, inArray, or, sql } from "drizzle-orm";
+import { and, count, desc, eq, ilike, inArray, or } from "drizzle-orm";
 import { db } from "@/server/db/client";
 import { inquiries, inquiryEvents, paymentLinks } from "@/server/db/schema/crm";
 import { users } from "@/server/db/schema/core";
@@ -90,10 +90,10 @@ export async function listInquiries(opts: {
     const s = `%${opts.search.trim()}%`;
     conditions.push(
       or(
-        sql`${inquiries.ref} LIKE ${s}`,
-        sql`${inquiries.name} LIKE ${s}`,
-        sql`${inquiries.phone} LIKE ${s}`,
-        sql`${inquiries.city} LIKE ${s}`,
+        ilike(inquiries.ref, s),
+        ilike(inquiries.name, s),
+        ilike(inquiries.phone, s),
+        ilike(inquiries.city, s),
       ),
     );
   }

@@ -155,8 +155,8 @@ export async function recomputeProductRating(
   // One aggregate row instead of loading every approved rating.
   const [agg] = await db
     .select({
-      count: sql<number>`count(*)`,
-      sum: sql<number>`coalesce(sum(${reviews.rating}), 0)`,
+      count: sql<number>`count(*)`.mapWith(Number),
+      sum: sql<number>`coalesce(sum(${reviews.rating}), 0)`.mapWith(Number),
     })
     .from(reviews)
     .where(and(eq(reviews.productId, productId), eq(reviews.status, "approved")));

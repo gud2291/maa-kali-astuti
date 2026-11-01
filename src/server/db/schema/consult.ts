@@ -1,10 +1,14 @@
 import {
   integer,
   text,
-  real,
-  sqliteTable,
   index,
-} from "drizzle-orm/sqlite-core";
+  pgTable,
+  serial,
+  timestamp,
+  boolean,
+  jsonb,
+  doublePrecision,
+} from "drizzle-orm/pg-core";
 import type { BookingDetailsRecord } from "../../../lib/domain/types";
 import type { ChartSnapshot } from "../../../lib/domain/kundali";
 import {
@@ -19,10 +23,10 @@ import {
 
 /* ---------- bookings ---------- */
 
-export const bookings = sqliteTable(
+export const bookings = pgTable(
   "bookings",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     ref: text("ref").notNull().unique(),
     accessHash: text("access_hash").notNull(),
     userId: integer("user_id"),
@@ -30,30 +34,30 @@ export const bookings = sqliteTable(
     serviceKey: text("service_key", { enum: SERVICE_KEYS }).notNull(),
     tierKey: text("tier_key", { enum: TIER_KEYS }).notNull(),
     mode: text("mode", { enum: MODE_KEYS }).notNull(),
-    startAt: integer("start_at", { mode: "timestamp_ms" }),
-    endAt: integer("end_at", { mode: "timestamp_ms" }),
+    startAt: timestamp("start_at", { mode: "date", withTimezone: true }),
+    endAt: timestamp("end_at", { mode: "date", withTimezone: true }),
     priceInr: integer("price_inr").notNull(),
     payPref: text("pay_pref", { enum: PAY_PREFS }),
     status: text("status", { enum: BOOKING_STATUS }).notNull(),
-    holdExpiresAt: integer("hold_expires_at", { mode: "timestamp_ms" }),
+    holdExpiresAt: timestamp("hold_expires_at", { mode: "date", withTimezone: true }),
     name: text("name").notNull(),
     phone: text("phone").notNull(),
     email: text("email"),
-    details: text("details", { mode: "json" }).$type<BookingDetailsRecord>().notNull(),
-    palmMediaIds: text("palm_media_ids", { mode: "json" }).$type<number[]>().notNull().$defaultFn(() => []),
+    details: jsonb("details").$type<BookingDetailsRecord>().notNull(),
+    palmMediaIds: jsonb("palm_media_ids").$type<number[]>().notNull().$defaultFn(() => []),
     meetingLink: text("meeting_link"),
     reportMediaId: integer("report_media_id"),
     rescheduleCount: integer("reschedule_count").notNull().default(0),
     adminNote: text("admin_note"),
-    reminderDayAt: integer("reminder_day_at", { mode: "timestamp_ms" }),
-    reminderHourAt: integer("reminder_hour_at", { mode: "timestamp_ms" }),
+    reminderDayAt: timestamp("reminder_day_at", { mode: "date", withTimezone: true }),
+    reminderHourAt: timestamp("reminder_hour_at", { mode: "date", withTimezone: true }),
     razorpayOrderId: text("razorpay_order_id").unique(),
-    paidAt: integer("paid_at", { mode: "timestamp_ms" }),
-    cancelledAt: integer("cancelled_at", { mode: "timestamp_ms" }),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    paidAt: timestamp("paid_at", { mode: "date", withTimezone: true }),
+    cancelledAt: timestamp("cancelled_at", { mode: "date", withTimezone: true }),
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
-    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date())
       .$onUpdate(() => new Date()),
@@ -69,10 +73,10 @@ export const bookings = sqliteTable(
 
 /* ---------- kundali_orders ---------- */
 
-export const kundaliOrders = sqliteTable(
+export const kundaliOrders = pgTable(
   "kundali_orders",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     ref: text("ref").notNull().unique(),
     accessHash: text("access_hash").notNull(),
     userId: integer("user_id"),
@@ -81,27 +85,27 @@ export const kundaliOrders = sqliteTable(
     name: text("name").notNull(),
     dob: text("dob").notNull(),
     tob: text("tob"),
-    tobUnknown: integer("tob_unknown", { mode: "boolean" }).notNull().default(false),
+    tobUnknown: boolean("tob_unknown").notNull().default(false),
     place: text("place").notNull(),
-    lat: real("lat").notNull(),
-    lon: real("lon").notNull(),
+    lat: doublePrecision("lat").notNull(),
+    lon: doublePrecision("lon").notNull(),
     tz: text("tz").notNull(),
     phone: text("phone").notNull(),
     email: text("email"),
     priceInr: integer("price_inr").notNull(),
     status: text("status", { enum: KUNDALI_STATUS }).notNull(),
-    chart: text("chart", { mode: "json" }).$type<ChartSnapshot>(),
+    chart: jsonb("chart").$type<ChartSnapshot>(),
     pdfMediaId: integer("pdf_media_id"),
-    emailedAt: integer("emailed_at", { mode: "timestamp_ms" }),
-    genStartedAt: integer("gen_started_at", { mode: "timestamp_ms" }),
+    emailedAt: timestamp("emailed_at", { mode: "date", withTimezone: true }),
+    genStartedAt: timestamp("gen_started_at", { mode: "date", withTimezone: true }),
     genAttempts: integer("gen_attempts").notNull().default(0),
     error: text("error"),
     razorpayOrderId: text("razorpay_order_id").unique(),
-    paidAt: integer("paid_at", { mode: "timestamp_ms" }),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    paidAt: timestamp("paid_at", { mode: "date", withTimezone: true }),
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
-    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date())
       .$onUpdate(() => new Date()),

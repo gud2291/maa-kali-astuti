@@ -1,6 +1,7 @@
 import "server-only";
 import { after } from "next/server";
-import { and, eq, gt, inArray, lt, ne, sql } from "drizzle-orm";
+import { and, eq, gt, inArray, lt, ne, or, sql } from "drizzle-orm";
+import { isUniqueViolation } from "@/server/db/errors";
 import { db } from "@/server/db/client";
 import { bookings } from "@/server/db/schema/consult";
 import { payments } from "@/server/db/schema/commerce";
@@ -15,6 +16,9 @@ import { getDaySlots } from "./availability";
 import type { BookingCreateInput } from "@/lib/validation/booking";
 import type { BookingDetailsRecord } from "@/lib/domain/types";
 import { sendBookingConfirmed, sendBookingRescheduled } from "./emails";
+
+/** Postgres advisory-lock key that serialises slot claims (booking insert / reschedule). */
+const SLOT_LOCK_KEY = 7_265_001;
 
 /** The start must be one of the day's offered, free start times (open day, window, lead time, not blocked). */
 async function assertOfferedSlot(
@@ -143,36 +147,58 @@ export async function createBooking(
         const startAt = new Date(input.start);
         const endAt = new Date(startAt.getTime() + tier.mins * 60_000);
 
-        // Atomic slot-claim insert pattern (ARCHITECTURE §5)
-        const rows = await db.all<{ id: number }>(sql`
-          INSERT INTO bookings (
-            ref, access_hash, user_id, locale, service_key, tier_key, mode,
-            start_at, end_at, price_inr, pay_pref, status, hold_expires_at,
-            name, phone, email, details, palm_media_ids, reschedule_count,
-            created_at, updated_at
-          )
-          SELECT
-            ${ref}, ${accessHash}, ${ctx.userId}, ${input.locale}, ${input.serviceKey}, ${input.tierKey}, ${input.mode},
-            ${startAt.getTime()}, ${endAt.getTime()}, ${tier.priceInr}, ${input.payPref}, 'pending_payment', ${holdExpiresAt!.getTime()},
-            ${input.details.name.trim()}, ${input.details.phone.trim()}, ${emailVal}, ${JSON.stringify(detailsRecord)}, ${JSON.stringify(palmMediaIds)}, 0,
-            ${now.getTime()}, ${now.getTime()}
-          WHERE NOT EXISTS (
-            SELECT 1 FROM bookings
-            WHERE start_at < ${endAt.getTime()}
-              AND end_at > ${startAt.getTime()}
-              AND (
-                status = 'confirmed'
-                OR (status = 'pending_payment' AND hold_expires_at > ${now.getTime()})
-              )
-          )
-          RETURNING id
-        `);
+        // Atomic slot-claim: serialise on an advisory lock, check for overlap, then insert.
+        const claimedId = await db.transaction(async (tx) => {
+          await tx.execute(sql`SELECT pg_advisory_xact_lock(${SLOT_LOCK_KEY})`);
+          const [clash] = await tx
+            .select({ id: bookings.id })
+            .from(bookings)
+            .where(
+              and(
+                lt(bookings.startAt, endAt),
+                gt(bookings.endAt, startAt),
+                or(
+                  eq(bookings.status, "confirmed"),
+                  and(eq(bookings.status, "pending_payment"), gt(bookings.holdExpiresAt, now)),
+                ),
+              ),
+            )
+            .limit(1);
+          if (clash) return null;
+          const [row] = await tx
+            .insert(bookings)
+            .values({
+              ref,
+              accessHash,
+              userId: ctx.userId,
+              locale: input.locale,
+              serviceKey: input.serviceKey,
+              tierKey: input.tierKey,
+              mode: input.mode,
+              startAt,
+              endAt,
+              priceInr: tier.priceInr,
+              payPref: input.payPref,
+              status: "pending_payment",
+              holdExpiresAt: holdExpiresAt!,
+              name: input.details.name.trim(),
+              phone: input.details.phone.trim(),
+              email: emailVal,
+              details: detailsRecord,
+              palmMediaIds,
+              rescheduleCount: 0,
+              createdAt: now,
+              updatedAt: now,
+            })
+            .returning({ id: bookings.id });
+          return row?.id ?? null;
+        });
 
-        if (rows.length === 0 || !rows[0]?.id) {
+        if (!claimedId) {
           throw new AppError("SLOT_TAKEN", "The selected slot is no longer available");
         }
 
-        bookingId = rows[0].id;
+        bookingId = claimedId;
         chosenRef = ref;
         chosenAccessKey = accessKey;
         break;
@@ -181,8 +207,7 @@ export async function createBooking(
       if (err instanceof AppError && err.code === "SLOT_TAKEN") {
         throw err;
       }
-      const errMsg = err instanceof Error ? err.message : String(err);
-      if (errMsg.includes("UNIQUE") || errMsg.includes("constraint")) {
+      if (isUniqueViolation(err)) {
         continue;
       }
       throw err;
@@ -422,27 +447,38 @@ export async function rescheduleBooking(opts: {
   }
 
   // Atomic update: reschedule only if no overlapping confirmed/held booking
-  const updated = await db.all<{ id: number }>(sql`
-    UPDATE bookings
-    SET start_at = ${newStart.getTime()},
-        end_at = ${newEnd.getTime()},
-        reschedule_count = reschedule_count + 1,
-        reminder_day_at = NULL,
-        reminder_hour_at = NULL,
-        updated_at = ${now}
-    WHERE id = ${opts.bookingId}
-      AND NOT EXISTS (
-        SELECT 1 FROM bookings b2
-        WHERE b2.id != ${opts.bookingId}
-          AND b2.start_at < ${newEnd.getTime()}
-          AND b2.end_at > ${newStart.getTime()}
-          AND (
-            b2.status = 'confirmed'
-            OR (b2.status = 'pending_payment' AND b2.hold_expires_at > ${now})
-          )
+  const nowDate = new Date(now);
+  const updated = await db.transaction(async (tx) => {
+    await tx.execute(sql`SELECT pg_advisory_xact_lock(${SLOT_LOCK_KEY})`);
+    const [clash] = await tx
+      .select({ id: bookings.id })
+      .from(bookings)
+      .where(
+        and(
+          ne(bookings.id, opts.bookingId),
+          lt(bookings.startAt, newEnd),
+          gt(bookings.endAt, newStart),
+          or(
+            eq(bookings.status, "confirmed"),
+            and(eq(bookings.status, "pending_payment"), gt(bookings.holdExpiresAt, nowDate)),
+          ),
+        ),
       )
-    RETURNING id
-  `);
+      .limit(1);
+    if (clash) return [];
+    return tx
+      .update(bookings)
+      .set({
+        startAt: newStart,
+        endAt: newEnd,
+        rescheduleCount: sql`${bookings.rescheduleCount} + 1`,
+        reminderDayAt: null,
+        reminderHourAt: null,
+        updatedAt: nowDate,
+      })
+      .where(eq(bookings.id, opts.bookingId))
+      .returning({ id: bookings.id });
+  });
 
   if (updated.length === 0) {
     throw new AppError("SLOT_TAKEN", "The selected slot is no longer available");

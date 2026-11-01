@@ -1,10 +1,14 @@
 import {
   integer,
   text,
-  sqliteTable,
   index,
   uniqueIndex,
-} from "drizzle-orm/sqlite-core";
+  pgTable,
+  serial,
+  timestamp,
+  boolean,
+  jsonb,
+} from "drizzle-orm/pg-core";
 import type { Loc } from "../../../lib/domain/loc";
 import type {
   ServiceContent,
@@ -29,18 +33,18 @@ import type { ModeKey } from "../../../lib/domain/enums";
 
 /* ---------- services ---------- */
 
-export const services = sqliteTable("services", {
+export const services = pgTable("services", {
   key: text("key", { enum: SERVICE_KEYS }).primaryKey(),
   slug: text("slug").notNull().unique(),
   nameEn: text("name_en").notNull(),
   nameHi: text("name_hi").notNull(),
   icon: text("icon").notNull(),
-  modes: text("modes", { mode: "json" }).$type<ModeKey[]>().notNull(),
-  guarantee: integer("guarantee", { mode: "boolean" }).notNull().default(false),
-  content: text("content", { mode: "json" }).$type<ServiceContent>().notNull(),
+  modes: jsonb("modes").$type<ModeKey[]>().notNull(),
+  guarantee: boolean("guarantee").notNull().default(false),
+  content: jsonb("content").$type<ServiceContent>().notNull(),
   sort: integer("sort").notNull().default(0),
-  visible: integer("visible", { mode: "boolean" }).notNull().default(true),
-  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+  visible: boolean("visible").notNull().default(true),
+  updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
     .notNull()
     .$defaultFn(() => new Date())
     .$onUpdate(() => new Date()),
@@ -48,18 +52,18 @@ export const services = sqliteTable("services", {
 
 /* ---------- service_tiers ---------- */
 
-export const serviceTiers = sqliteTable(
+export const serviceTiers = pgTable(
   "service_tiers",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     serviceKey: text("service_key", { enum: SERVICE_KEYS }).notNull(),
     tierKey: text("tier_key", { enum: TIER_KEYS }).notNull(),
     titleEn: text("title_en").notNull(),
     titleHi: text("title_hi").notNull().default(""),
     priceInr: integer("price_inr").notNull(),
     mins: integer("mins").notNull(),
-    recommended: integer("recommended", { mode: "boolean" }).notNull().default(false),
-    inclusions: text("inclusions", { mode: "json" })
+    recommended: boolean("recommended").notNull().default(false),
+    inclusions: jsonb("inclusions")
       .$type<Loc[]>()
       .notNull()
       .$defaultFn(() => []),
@@ -71,7 +75,7 @@ export const serviceTiers = sqliteTable(
 
 /* ---------- courses ---------- */
 
-export const courses = sqliteTable("courses", {
+export const courses = pgTable("courses", {
   key: text("key", { enum: COURSE_KEYS }).primaryKey(),
   slug: text("slug").notNull().unique(),
   nameEn: text("name_en").notNull(),
@@ -79,11 +83,11 @@ export const courses = sqliteTable("courses", {
   deity: text("deity").notNull(),
   icon: text("icon").notNull(),
   days: integer("days").notNull(),
-  content: text("content", { mode: "json" }).$type<CourseContent>().notNull(),
+  content: jsonb("content").$type<CourseContent>().notNull(),
   feeInr: integer("fee_inr"),
   sort: integer("sort").notNull().default(0),
-  visible: integer("visible", { mode: "boolean" }).notNull().default(true),
-  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+  visible: boolean("visible").notNull().default(true),
+  updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
     .notNull()
     .$defaultFn(() => new Date())
     .$onUpdate(() => new Date()),
@@ -91,16 +95,16 @@ export const courses = sqliteTable("courses", {
 
 /* ---------- rituals ---------- */
 
-export const rituals = sqliteTable("rituals", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const rituals = pgTable("rituals", {
+  id: serial("id").primaryKey(),
   icon: text("icon").notNull(),
   nameEn: text("name_en").notNull(),
   nameHi: text("name_hi").notNull(),
   lineEn: text("line_en").notNull(),
   lineHi: text("line_hi").notNull().default(""),
   sort: integer("sort").notNull().default(0),
-  visible: integer("visible", { mode: "boolean" }).notNull().default(true),
-  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+  visible: boolean("visible").notNull().default(true),
+  updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
     .notNull()
     .$defaultFn(() => new Date())
     .$onUpdate(() => new Date()),
@@ -108,10 +112,10 @@ export const rituals = sqliteTable("rituals", {
 
 /* ---------- videos ---------- */
 
-export const videos = sqliteTable(
+export const videos = pgTable(
   "videos",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     kind: text("kind", { enum: VIDEO_KINDS }).notNull(),
     youtubeId: text("youtube_id").unique(),
     legacyKey: text("legacy_key"),
@@ -123,13 +127,13 @@ export const videos = sqliteTable(
     duration: text("duration").notNull(),
     publishedOn: text("published_on"),
     motif: text("motif"),
-    featured: integer("featured", { mode: "boolean" }).notNull().default(false),
+    featured: boolean("featured").notNull().default(false),
     sort: integer("sort").notNull().default(0),
-    visible: integer("visible", { mode: "boolean" }).notNull().default(true),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    visible: boolean("visible").notNull().default(true),
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
-    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date())
       .$onUpdate(() => new Date()),
@@ -141,8 +145,8 @@ export const videos = sqliteTable(
 
 /* ---------- testimonials ---------- */
 
-export const testimonials = sqliteTable("testimonials", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const testimonials = pgTable("testimonials", {
+  id: serial("id").primaryKey(),
   kind: text("kind", { enum: TESTIMONIAL_KINDS }).notNull().default("text"),
   quoteEn: text("quote_en").notNull(),
   quoteHi: text("quote_hi").notNull().default(""),
@@ -152,13 +156,13 @@ export const testimonials = sqliteTable("testimonials", {
   rating: integer("rating"),
   youtubeId: text("youtube_id"),
   mediaId: integer("media_id"),
-  featured: integer("featured", { mode: "boolean" }).notNull().default(false),
+  featured: boolean("featured").notNull().default(false),
   sort: integer("sort").notNull().default(0),
-  visible: integer("visible", { mode: "boolean" }).notNull().default(true),
-  createdAt: integer("created_at", { mode: "timestamp_ms" })
+  visible: boolean("visible").notNull().default(true),
+  createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
     .notNull()
     .$defaultFn(() => new Date()),
-  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+  updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
     .notNull()
     .$defaultFn(() => new Date())
     .$onUpdate(() => new Date()),
@@ -166,18 +170,18 @@ export const testimonials = sqliteTable("testimonials", {
 
 /* ---------- faqs ---------- */
 
-export const faqs = sqliteTable(
+export const faqs = pgTable(
   "faqs",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     setKey: text("set_key", { enum: FAQ_SETS }).notNull(),
     qEn: text("q_en").notNull(),
     qHi: text("q_hi").notNull().default(""),
     aEn: text("a_en").notNull(),
     aHi: text("a_hi").notNull().default(""),
     sort: integer("sort").notNull().default(0),
-    visible: integer("visible", { mode: "boolean" }).notNull().default(true),
-    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    visible: boolean("visible").notNull().default(true),
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date())
       .$onUpdate(() => new Date()),
@@ -189,39 +193,39 @@ export const faqs = sqliteTable(
 
 /* ---------- articles ---------- */
 
-export const articles = sqliteTable(
+export const articles = pgTable(
   "articles",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     slug: text("slug").notNull().unique(),
     category: text("category", { enum: ARTICLE_CATEGORIES }).notNull(),
     titleEn: text("title_en").notNull(),
     titleHi: text("title_hi").notNull().default(""),
     excerptEn: text("excerpt_en").notNull(),
     excerptHi: text("excerpt_hi").notNull().default(""),
-    bodyEn: text("body_en", { mode: "json" }).$type<RichDoc>().notNull(),
-    bodyHi: text("body_hi", { mode: "json" }).$type<RichDoc>(),
+    bodyEn: jsonb("body_en").$type<RichDoc>().notNull(),
+    bodyHi: jsonb("body_hi").$type<RichDoc>(),
     coverMediaId: integer("cover_media_id"),
     legacyArt: text("legacy_art"),
     readMins: integer("read_mins").notNull().default(5),
-    faq: text("faq", { mode: "json" })
+    faq: jsonb("faq")
       .$type<{ q: Loc; a: Loc }[]>()
       .notNull()
       .$defaultFn(() => []),
-    productIds: text("product_ids", { mode: "json" })
+    productIds: jsonb("product_ids")
       .$type<string[]>()
       .notNull()
       .$defaultFn(() => []),
     status: text("status", { enum: CONTENT_STATUS }).notNull().default("draft"),
-    publishedAt: integer("published_at", { mode: "timestamp_ms" }),
+    publishedAt: timestamp("published_at", { mode: "date", withTimezone: true }),
     seoTitleEn: text("seo_title_en"),
     seoTitleHi: text("seo_title_hi"),
     seoDescEn: text("seo_desc_en"),
     seoDescHi: text("seo_desc_hi"),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
-    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date())
       .$onUpdate(() => new Date()),
@@ -233,28 +237,28 @@ export const articles = sqliteTable(
 
 /* ---------- rashifal_entries ---------- */
 
-export const rashifalEntries = sqliteTable(
+export const rashifalEntries = pgTable(
   "rashifal_entries",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     rashi: text("rashi", { enum: RASHI_KEYS }).notNull(),
     period: text("period", { enum: RASHIFAL_PERIODS }).notNull(),
     startsOn: text("starts_on").notNull(),
     textEn: text("text_en").notNull(),
     textHi: text("text_hi").notNull().default(""),
-    scores: text("scores", { mode: "json" }).$type<{
+    scores: jsonb("scores").$type<{
       love: number;
       career: number;
       health: number;
       finance: number;
     }>(),
-    lucky: text("lucky", { mode: "json" }).$type<{
+    lucky: jsonb("lucky").$type<{
       number: number;
       colour: Loc;
     }>(),
     status: text("status", { enum: CONTENT_STATUS }).notNull().default("published"),
     updatedBy: integer("updated_by"),
-    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date())
       .$onUpdate(() => new Date()),
@@ -266,14 +270,14 @@ export const rashifalEntries = sqliteTable(
 
 /* ---------- pages ---------- */
 
-export const pages = sqliteTable("pages", {
+export const pages = pgTable("pages", {
   slug: text("slug", { enum: POLICY_SLUGS }).primaryKey(),
   titleEn: text("title_en").notNull(),
   titleHi: text("title_hi").notNull().default(""),
-  bodyEn: text("body_en", { mode: "json" }).$type<RichDoc>().notNull(),
-  bodyHi: text("body_hi", { mode: "json" }).$type<RichDoc>(),
+  bodyEn: jsonb("body_en").$type<RichDoc>().notNull(),
+  bodyHi: jsonb("body_hi").$type<RichDoc>(),
   updatedBy: integer("updated_by"),
-  updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+  updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
     .notNull()
     .$defaultFn(() => new Date())
     .$onUpdate(() => new Date()),

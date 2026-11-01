@@ -205,7 +205,7 @@ export async function listOrders(
   const itemsCountRows = await db
     .select({
       orderId: orderItems.orderId,
-      sumQty: sql<number>`SUM(${orderItems.qty})`,
+      sumQty: sql<number>`SUM(${orderItems.qty})`.mapWith(Number),
     })
     .from(orderItems)
     .where(inArray(orderItems.orderId, orderIds))

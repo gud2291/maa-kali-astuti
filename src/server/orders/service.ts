@@ -1,5 +1,6 @@
 import "server-only";
 import { and, count, eq, gte, inArray, lt, sql } from "drizzle-orm";
+import { isUniqueViolation } from "@/server/db/errors";
 import { db } from "@/server/db/client";
 import {
   orders,
@@ -323,8 +324,7 @@ export async function placeOrder(
     } catch (err: unknown) {
       if (err instanceof AppError) throw err;
       if (attempt === 2) throw err;
-      const msg = err instanceof Error ? err.message : String(err);
-      if (!msg.includes("UNIQUE") && !msg.includes("orders.number")) {
+      if (!isUniqueViolation(err)) {
         throw err;
       }
     }
@@ -377,7 +377,7 @@ export async function markOrderPaid({
         paymentStatus: "paid",
         paidAt: now,
         status: sql`CASE WHEN ${orders.status} = 'pending_payment' THEN 'placed' ELSE ${orders.status} END`,
-        placedAt: sql`CASE WHEN ${orders.placedAt} IS NULL THEN ${now.getTime()} ELSE ${orders.placedAt} END`,
+        placedAt: sql`CASE WHEN ${orders.placedAt} IS NULL THEN ${now}::timestamptz ELSE ${orders.placedAt} END`,
         razorpayOrderId: rzpOrderId ? rzpOrderId : orders.razorpayOrderId,
       })
       // Only an unpaid order can become paid: a replayed confirm or a late webhook must never

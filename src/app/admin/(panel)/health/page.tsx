@@ -120,7 +120,7 @@ export default async function AdminHealthPage(): Promise<React.JSX.Element> {
               Database Diagnostics
             </h3>
             <p className="font-sans text-[12px] text-ink6">
-              Turso SQLite connection latency & table sizes
+              PostgreSQL connection latency & table sizes
             </p>
           </div>
 

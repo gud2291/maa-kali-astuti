@@ -1,10 +1,10 @@
 import { defineConfig } from "drizzle-kit";
-if (!process.env.TURSO_DATABASE_URL) {
+if (!process.env.DATABASE_URL) {
   try { process.loadEnvFile(".env.local"); } catch { /* no .env.local: `db:generate` still works */ }
 }
 export default defineConfig({
-  dialect: "turso",
+  dialect: "postgresql",
   schema: "./src/server/db/schema/index.ts",
   out: "./drizzle",
-  dbCredentials: { url: process.env.TURSO_DATABASE_URL ?? "", authToken: process.env.TURSO_AUTH_TOKEN },
+  dbCredentials: { url: process.env.DATABASE_URL ?? "" },
 });

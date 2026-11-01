@@ -157,8 +157,8 @@ export async function listRegistered(opts: {
         status: users.status,
         createdAt: users.createdAt,
         lastLoginAt: users.lastLoginAt,
-        ordersCount: sql<number>`count(${orders.id})`,
-        totalSpentInr: sql<number>`coalesce(sum(${orders.totalInr}), 0)`,
+        ordersCount: sql<number>`count(${orders.id})`.mapWith(Number),
+        totalSpentInr: sql<number>`coalesce(sum(${orders.totalInr}), 0)`.mapWith(Number),
       })
       .from(users)
       .leftJoin(
@@ -227,7 +227,7 @@ export async function listGuests(opts: {
 
   const [totalRes, rows] = await Promise.all([
     db
-      .select({ count: sql<number>`count(distinct ${orders.email})` })
+      .select({ count: sql<number>`count(distinct ${orders.email})`.mapWith(Number) })
       .from(orders)
       .where(whereClause),
     db
@@ -236,8 +236,8 @@ export async function listGuests(opts: {
         name: sql<string>`max(${orders.name})`,
         phone: sql<string>`max(${orders.phone})`,
         ordersCount: count(),
-        totalSpentInr: sql<number>`coalesce(sum(${orders.totalInr}), 0)`,
-        lastOrderAt: sql<Date>`max(${orders.createdAt})`,
+        totalSpentInr: sql<number>`coalesce(sum(${orders.totalInr}), 0)`.mapWith(Number),
+        lastOrderAt: sql<Date>`max(${orders.createdAt})`.mapWith(orders.createdAt),
       })
       .from(orders)
       .where(whereClause)
@@ -598,8 +598,8 @@ export async function exportCustomersCsv(): Promise<string> {
       status: users.status,
       createdAt: users.createdAt,
       lastLoginAt: users.lastLoginAt,
-      ordersCount: sql<number>`count(${orders.id})`,
-      totalSpentInr: sql<number>`coalesce(sum(${orders.totalInr}), 0)`,
+      ordersCount: sql<number>`count(${orders.id})`.mapWith(Number),
+      totalSpentInr: sql<number>`coalesce(sum(${orders.totalInr}), 0)`.mapWith(Number),
     })
     .from(users)
     .leftJoin(

@@ -113,7 +113,7 @@ export async function getHealth(): Promise<SystemHealthData> {
 
   // Measure DB roundtrip latency
   const t0 = performance.now();
-  await db.run(sql`SELECT 1`);
+  await db.execute(sql`SELECT 1`);
   const latencyMs = Math.round(performance.now() - t0);
 
   const twentyFourHoursAgo = new Date(Date.now() - 24 * 60 * 60 * 1000);

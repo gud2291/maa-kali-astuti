@@ -1,6 +1,7 @@
 import "server-only";
 import { createElement } from "react";
 import { after } from "next/server";
+import { isUniqueViolation } from "@/server/db/errors";
 import { db } from "@/server/db/client";
 import { inquiries, inquiryEvents } from "@/server/db/schema/crm";
 import { randomDigits } from "@/server/ids";
@@ -58,7 +59,7 @@ export async function createInquiry(
       }
     } catch (err: unknown) {
       const msg = err instanceof Error ? err.message : String(err);
-      if (msg.includes("UNIQUE") || msg.includes("unique") || msg.includes("constraint")) {
+      if (isUniqueViolation(err)) {
         log.warn("inquiry.ref_collision", { attempt, candidateRef });
         continue;
       }

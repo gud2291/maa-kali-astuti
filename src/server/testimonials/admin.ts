@@ -54,7 +54,7 @@ export async function createTestimonial(input: unknown): Promise<{ id: number }>
   const data = testimonialSchema.parse(input);
 
   const [maxRow] = await db
-    .select({ maxSort: sql<number | null>`max(${testimonials.sort})` })
+    .select({ maxSort: sql<number | null>`max(${testimonials.sort})`.mapWith(Number) })
     .from(testimonials);
 
   const nextSort = (maxRow?.maxSort ?? -1) + 1;

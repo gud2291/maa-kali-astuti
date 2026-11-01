@@ -1,8 +1,8 @@
-import { createClient } from "@libsql/client/http";
-import { drizzle } from "drizzle-orm/libsql/http";
+import { Pool } from "pg";
+import { drizzle } from "drizzle-orm/node-postgres";
 import * as schema from "../../src/server/db/schema/index";
 
-if (!process.env.TURSO_DATABASE_URL) {
+if (!process.env.DATABASE_URL) {
   try {
     process.loadEnvFile(".env.local");
   } catch {
@@ -10,21 +10,14 @@ if (!process.env.TURSO_DATABASE_URL) {
   }
 }
 
-const url = process.env.TURSO_DATABASE_URL;
-const authToken = process.env.TURSO_AUTH_TOKEN;
+const connectionString = process.env.DATABASE_URL;
 
-if (!url) {
-  throw new Error("Missing TURSO_DATABASE_URL. Please set it in .env.local or the environment.");
+if (!connectionString) {
+  throw new Error("Missing DATABASE_URL. Please set it in .env.local or the environment.");
 }
 
-if (!authToken && !url.startsWith("file:")) {
-  throw new Error("Missing TURSO_AUTH_TOKEN. Please set it in .env.local or the environment.");
-}
+const pool = new Pool({ connectionString, max: 4 });
 
-const client = createClient({
-  url,
-  authToken,
-});
-
-export const db = drizzle({ client, schema });
+export const db = drizzle({ client: pool, schema });
 export type Db = typeof db;
+export const closeDb = (): Promise<void> => pool.end();

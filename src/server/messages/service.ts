@@ -1,5 +1,6 @@
 import "server-only";
 import { eq } from "drizzle-orm";
+import { isUniqueViolation } from "@/server/db/errors";
 import { db } from "@/server/db/client";
 import { messages, subscribers } from "@/server/db/schema/crm";
 import { randomToken } from "@/server/ids";
@@ -70,7 +71,7 @@ export async function subscribe(
     });
   } catch (err: unknown) {
     const msg = err instanceof Error ? err.message : String(err);
-    if (msg.includes("UNIQUE") || msg.includes("unique") || msg.includes("constraint")) {
+    if (isUniqueViolation(err)) {
       log.warn("subscriber.duplicate", { email: maskEmail(normalizedEmail) });
       return;
     }

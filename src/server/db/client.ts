@@ -1,13 +1,17 @@
 import "server-only";
-import { createClient } from "@libsql/client/http";
-import { drizzle } from "drizzle-orm/libsql/http";
+import { Pool } from "pg";
+import { drizzle } from "drizzle-orm/node-postgres";
 import { env } from "@/server/env";
 import * as schema from "./schema";
 
-const client = createClient({
-  url: env.TURSO_DATABASE_URL,
-  authToken: env.TURSO_AUTH_TOKEN,
-});
+/* One pool per server process; reused across hot reloads in dev. */
+const globalForPool = globalThis as unknown as { __mkaPgPool?: Pool };
 
-export const db = drizzle({ client, schema });
+const pool =
+  globalForPool.__mkaPgPool ??
+  new Pool({ connectionString: env.DATABASE_URL, max: 10 });
+
+if (env.NODE_ENV !== "production") globalForPool.__mkaPgPool = pool;
+
+export const db = drizzle({ client: pool, schema });
 export type Db = typeof db;

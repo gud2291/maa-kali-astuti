@@ -1,5 +1,5 @@
 import { eq } from "drizzle-orm";
-import { db } from "./client";
+import { db, closeDb } from "./client";
 import * as schema from "../../src/server/db/schema/index";
 import { SETTINGS_DEFAULTS } from "../../src/lib/validation/settings";
 import { POLICIES } from "../../src/lib/routes";
@@ -79,22 +79,15 @@ const ARTICLE_CAT_MAP: Record<string, ArticleCategory> = {
   Astrology: "astrology",
 };
 
-type BatchStatement = Parameters<typeof db.batch>[0][number];
+type BatchStatement = PromiseLike<{ rowCount: number | null }>;
 
+/** Runs the statements in order; returns the number of rows written. */
 async function runBatch(statements: BatchStatement[]): Promise<number> {
   if (statements.length === 0) return 0;
   let inserted = 0;
-  for (let i = 0; i < statements.length; i += 50) {
-    const chunk = statements.slice(i, i + 50);
-    const first = chunk[0];
-    if (!first) continue;
-    const batchTuple: [BatchStatement, ...BatchStatement[]] = [first, ...chunk.slice(1)];
-    const results = await db.batch(batchTuple);
-    for (const res of results) {
-      if (res && typeof res.rowsAffected === "number") {
-        inserted += res.rowsAffected;
-      }
-    }
+  for (const stmt of statements) {
+    const res = await stmt;
+    inserted += res.rowCount ?? 0;
   }
   return inserted;
 }
@@ -647,7 +640,9 @@ export async function main(): Promise<void> {
   console.info(`seed: policies content +${policiesUpdated}`);
 }
 
-main().catch((err: unknown) => {
-  console.error("Seed error:", err);
-  process.exitCode = 1;
-});
+main()
+  .catch((err: unknown) => {
+    console.error("Seed error:", err);
+    process.exitCode = 1;
+  })
+  .finally(() => closeDb());

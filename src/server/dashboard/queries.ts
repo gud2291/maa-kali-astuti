@@ -128,7 +128,7 @@ export async function getKpis(): Promise<DashboardKpis> {
     attentionRes,
   ] = await Promise.all([
     db
-      .select({ revenue: sql<number>`coalesce(sum(${orders.totalInr}), 0)` })
+      .select({ revenue: sql<number>`coalesce(sum(${orders.totalInr}), 0)`.mapWith(Number) })
       .from(orders)
       .where(
         and(
@@ -138,7 +138,7 @@ export async function getKpis(): Promise<DashboardKpis> {
         ),
       ),
     db
-      .select({ revenue: sql<number>`coalesce(sum(${orders.totalInr}), 0)` })
+      .select({ revenue: sql<number>`coalesce(sum(${orders.totalInr}), 0)`.mapWith(Number) })
       .from(orders)
       .where(
         and(
@@ -173,7 +173,7 @@ export async function getKpis(): Promise<DashboardKpis> {
     db
       .select({
         count: count(),
-        totalInr: sql<number>`coalesce(sum(${kundaliOrders.priceInr}), 0)`,
+        totalInr: sql<number>`coalesce(sum(${kundaliOrders.priceInr}), 0)`.mapWith(Number),
       })
       .from(kundaliOrders)
       .where(
@@ -230,12 +230,12 @@ export async function getRevenueSeries(days = 30): Promise<RevenueSeriesDay[]> {
   const startUtc = istWallToUtc(startDayKey, "00:00");
   const endUtc = istWallToUtc(addDaysKey(todayKey, 1), "00:00");
 
-  const dayCol = sql<string>`date(${orders.createdAt} / 1000, 'unixepoch', '+330 minutes')`;
+  const dayCol = sql<string>`to_char(${orders.createdAt} AT TIME ZONE 'Asia/Kolkata', 'YYYY-MM-DD')`;
 
   const dbRows = await db
     .select({
       day: dayCol,
-      revenue: sql<number>`coalesce(sum(${orders.totalInr}), 0)`,
+      revenue: sql<number>`coalesce(sum(${orders.totalInr}), 0)`.mapWith(Number),
       ordersCount: count(),
     })
     .from(orders)
@@ -297,8 +297,8 @@ export async function getTopProducts(days = 30, limit = 5): Promise<TopProductIt
       nameHi: orderItems.nameHi,
       slug: orderItems.slug,
       image: orderItems.image,
-      totalQty: sql<number>`coalesce(sum(${orderItems.qty}), 0)`,
-      totalRevenue: sql<number>`coalesce(sum(${orderItems.lineTotalInr}), 0)`,
+      totalQty: sql<number>`coalesce(sum(${orderItems.qty}), 0)`.mapWith(Number),
+      totalRevenue: sql<number>`coalesce(sum(${orderItems.lineTotalInr}), 0)`.mapWith(Number),
     })
     .from(orderItems)
     .innerJoin(orders, eq(orderItems.orderId, orders.id))

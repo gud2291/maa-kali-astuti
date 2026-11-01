@@ -1,9 +1,12 @@
 import {
   integer,
   text,
-  sqliteTable,
   index,
-} from "drizzle-orm/sqlite-core";
+  pgTable,
+  serial,
+  timestamp,
+  jsonb,
+} from "drizzle-orm/pg-core";
 import {
   INQUIRY_KINDS,
   COURSE_KEYS,
@@ -18,10 +21,10 @@ import {
 
 /* ---------- inquiries ---------- */
 
-export const inquiries = sqliteTable(
+export const inquiries = pgTable(
   "inquiries",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     ref: text("ref").notNull().unique(),
     kind: text("kind", { enum: INQUIRY_KINDS }).notNull(),
     courseKey: text("course_key", { enum: COURSE_KEYS }),
@@ -36,15 +39,15 @@ export const inquiries = sqliteTable(
     why: text("why").notNull(),
     status: text("status", { enum: INQUIRY_STATUS }).notNull().default("new"),
     assignedTo: integer("assigned_to"),
-    nextActionAt: integer("next_action_at", { mode: "timestamp_ms" }),
+    nextActionAt: timestamp("next_action_at", { mode: "date", withTimezone: true }),
     feeInr: integer("fee_inr"),
     paidInr: integer("paid_inr").notNull().default(0),
     userId: integer("user_id"),
     ip: text("ip"),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
-    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date())
       .$onUpdate(() => new Date()),
@@ -58,17 +61,17 @@ export const inquiries = sqliteTable(
 
 /* ---------- inquiry_events ---------- */
 
-export const inquiryEvents = sqliteTable(
+export const inquiryEvents = pgTable(
   "inquiry_events",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     inquiryId: integer("inquiry_id").notNull(),
     type: text("type").notNull(),
     fromStatus: text("from_status"),
     toStatus: text("to_status"),
     message: text("message"),
     actorId: integer("actor_id"),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
   },
@@ -79,10 +82,10 @@ export const inquiryEvents = sqliteTable(
 
 /* ---------- payment_links ---------- */
 
-export const paymentLinks = sqliteTable(
+export const paymentLinks = pgTable(
   "payment_links",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     rzpLinkId: text("rzp_link_id").notNull().unique(),
     entity: text("entity", { enum: LINK_ENTITIES }).notNull(),
     entityId: integer("entity_id"),
@@ -90,15 +93,15 @@ export const paymentLinks = sqliteTable(
     purpose: text("purpose").notNull(),
     shortUrl: text("short_url").notNull(),
     status: text("status", { enum: LINK_STATUS }).notNull().default("created"),
-    customer: text("customer", { mode: "json" })
+    customer: jsonb("customer")
       .$type<{ name: string; phone: string; email: string | null }>()
       .notNull(),
     createdBy: integer("created_by"),
-    paidAt: integer("paid_at", { mode: "timestamp_ms" }),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    paidAt: timestamp("paid_at", { mode: "date", withTimezone: true }),
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
-    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date())
       .$onUpdate(() => new Date()),
@@ -110,10 +113,10 @@ export const paymentLinks = sqliteTable(
 
 /* ---------- messages ---------- */
 
-export const messages = sqliteTable(
+export const messages = pgTable(
   "messages",
   {
-    id: integer("id").primaryKey({ autoIncrement: true }),
+    id: serial("id").primaryKey(),
     name: text("name").notNull(),
     phone: text("phone"),
     email: text("email"),
@@ -122,10 +125,10 @@ export const messages = sqliteTable(
     locale: text("locale", { enum: LOCALES }).notNull(),
     status: text("status", { enum: MESSAGE_STATUS }).notNull().default("new"),
     ip: text("ip"),
-    createdAt: integer("created_at", { mode: "timestamp_ms" })
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date()),
-    updatedAt: integer("updated_at", { mode: "timestamp_ms" })
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
       .notNull()
       .$defaultFn(() => new Date())
       .$onUpdate(() => new Date()),
@@ -137,15 +140,15 @@ export const messages = sqliteTable(
 
 /* ---------- subscribers ---------- */
 
-export const subscribers = sqliteTable("subscribers", {
-  id: integer("id").primaryKey({ autoIncrement: true }),
+export const subscribers = pgTable("subscribers", {
+  id: serial("id").primaryKey(),
   email: text("email").notNull().unique(),
   locale: text("locale", { enum: LOCALES }).notNull(),
   source: text("source").notNull(),
   status: text("status", { enum: SUBSCRIBER_STATUS }).notNull().default("subscribed"),
   unsubToken: text("unsub_token").notNull().unique(),
-  createdAt: integer("created_at", { mode: "timestamp_ms" })
+  createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
     .notNull()
     .$defaultFn(() => new Date()),
-  unsubscribedAt: integer("unsubscribed_at", { mode: "timestamp_ms" }),
+  unsubscribedAt: timestamp("unsubscribed_at", { mode: "date", withTimezone: true }),
 });

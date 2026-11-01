@@ -431,20 +431,18 @@ export async function updateProduct(
     (mId) => !existingMediaIds.includes(mId),
   );
 
-  await db.batch([
-    db.delete(productMedia).where(eq(productMedia.productId, id)),
-    ...(newMediaIds.length > 0
-      ? [
-          db.insert(productMedia).values(
-            newMediaIds.map((mediaId, idx) => ({
-              productId: id,
-              mediaId,
-              sort: idx,
-            })),
-          ),
-        ]
-      : []),
-  ]);
+  await db.transaction(async (tx) => {
+    await tx.delete(productMedia).where(eq(productMedia.productId, id));
+    if (newMediaIds.length > 0) {
+      await tx.insert(productMedia).values(
+        newMediaIds.map((mediaId, idx) => ({
+          productId: id,
+          mediaId,
+          sort: idx,
+        })),
+      );
+    }
+  });
 
   if (addedMediaIds.length > 0) {
     await attachMedia(addedMediaIds, { type: "product", id });
@@ -582,7 +580,7 @@ export async function adjustStock(
   const updatedRows = await db
     .update(products)
     .set({
-      stock: sql`max(0, ${products.stock} + ${delta})`,
+      stock: sql`GREATEST(0, ${products.stock} + ${delta})`,
       updatedAt: now,
     })
     .where(eq(products.id, id))
@@ -633,10 +631,10 @@ export async function deleteProduct(
 
   const mediaIds = mediaRows.map((r) => r.mediaId);
 
-  await db.batch([
-    db.delete(productMedia).where(eq(productMedia.productId, id)),
-    db.delete(products).where(eq(products.id, id)),
-  ]);
+  await db.transaction(async (tx) => {
+    await tx.delete(productMedia).where(eq(productMedia.productId, id));
+    await tx.delete(products).where(eq(products.id, id));
+  });
 
   if (mediaIds.length > 0) {
     after(async () => {

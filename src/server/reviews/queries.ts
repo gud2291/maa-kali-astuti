@@ -142,7 +142,7 @@ export async function fetchReviewItemsByProduct(
 async function fetchProductReviews(productId: string): Promise<ProductReviewsData> {
   // Distribution from one GROUP BY (at most 5 rows), not every rating row.
   const byRating = await db
-    .select({ rating: reviews.rating, n: sql<number>`count(*)` })
+    .select({ rating: reviews.rating, n: sql<number>`count(*)`.mapWith(Number) })
     .from(reviews)
     .where(and(eq(reviews.productId, productId), eq(reviews.status, "approved")))
     .groupBy(reviews.rating);

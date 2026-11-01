@@ -12,8 +12,7 @@ const envSchema = z.object({
   AUTH_SECRET: z.string().min(32),
 
   /* Database */
-  TURSO_DATABASE_URL: z.string().min(1),
-  TURSO_AUTH_TOKEN: z.string().min(1),
+  DATABASE_URL: z.string().min(1),
 
   /* Seed */
   SEED_OWNER_EMAIL: opt,
