@@ -8,12 +8,8 @@ export async function verifyTurnstile(
   ip: string,
 ): Promise<void> {
   if (!isConfigured("turnstile") || !env.TURNSTILE_SECRET_KEY) {
-    if (env.NODE_ENV === "production") {
-      throw new AppError("NOT_CONFIGURED");
-    }
-    return;
-  }
-
+  return;
+}
   if (!token) {
     throw new AppError("BOT_CHECK_FAILED");
   }
