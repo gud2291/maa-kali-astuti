@@ -39,6 +39,12 @@ const envSchema = z.object({
   RAZORPAY_KEY_SECRET: opt,
   RAZORPAY_WEBHOOK_SECRET: opt,
 
+  /* Shipping (Shiprocket) */
+  SHIPROCKET_EMAIL: opt,
+  SHIPROCKET_PASSWORD: opt,
+  SHIPROCKET_PICKUP_LOCATION: opt,
+  SHIPROCKET_WEBHOOK_TOKEN: opt,
+
   /* Cron */
   CRON_SECRET: opt,
 });
@@ -52,7 +58,7 @@ if (!parsed.success) {
 export const env = parsed.data;
 
 export function isConfigured(
-  f: "r2" | "turnstile" | "email" | "razorpay" | "pdf" | "cron",
+  f: "r2" | "turnstile" | "email" | "razorpay" | "pdf" | "cron" | "shiprocket",
 ): boolean {
   switch (f) {
     case "r2":
@@ -74,5 +80,7 @@ export function isConfigured(
       return !!(env.CF_ACCOUNT_ID && env.CF_BROWSER_TOKEN);
     case "cron":
       return !!env.CRON_SECRET;
+    case "shiprocket":
+      return !!(env.SHIPROCKET_EMAIL && env.SHIPROCKET_PASSWORD);
   }
 }

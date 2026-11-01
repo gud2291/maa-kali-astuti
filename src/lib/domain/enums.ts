@@ -245,6 +245,18 @@ export const ORDER_STATUS = [
 ] as const;
 export type OrderStatus = (typeof ORDER_STATUS)[number];
 
+export const SHIPMENT_STATUS = [
+  "creating",
+  "created",
+  "awb_assigned",
+  "in_transit",
+  "delivered",
+  "rto",
+  "cancelled",
+  "failed",
+] as const;
+export type ShipmentStatus = (typeof SHIPMENT_STATUS)[number];
+
 export const PAYMENT_STATUS = [
   "unpaid",
   "paid",

@@ -16,6 +16,7 @@ import {
   ORDER_STATUS,
   PAYMENT_METHODS,
   PAYMENT_STATUS,
+  SHIPMENT_STATUS,
   PAY_PREFS,
   DELIVERY_OPTIONS,
   WRIST_SIZES,
@@ -328,4 +329,35 @@ export const reviews = pgTable(
     index("reviews_product_idx").on(t.productId, t.status, t.createdAt),
     index("reviews_status_idx").on(t.status, t.createdAt),
   ],
+);
+
+/* ---------- shipments (Shiprocket) ---------- */
+
+export const shipments = pgTable(
+  "shipments",
+  {
+    id: serial("id").primaryKey(),
+    orderId: integer("order_id").notNull().unique(),
+    provider: text("provider").notNull().default("shiprocket"),
+    status: text("status", { enum: SHIPMENT_STATUS }).notNull().default("creating"),
+    providerOrderId: text("provider_order_id"),
+    shipmentId: text("shipment_id"),
+    awb: text("awb"),
+    courier: text("courier"),
+    providerStatus: text("provider_status"),
+    labelUrl: text("label_url"),
+    lastError: text("last_error"),
+    weightKg: doublePrecision("weight_kg"),
+    lengthCm: integer("length_cm"),
+    breadthCm: integer("breadth_cm"),
+    heightCm: integer("height_cm"),
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
+      .notNull()
+      .$defaultFn(() => new Date()),
+    updatedAt: timestamp("updated_at", { mode: "date", withTimezone: true })
+      .notNull()
+      .$defaultFn(() => new Date())
+      .$onUpdate(() => new Date()),
+  },
+  (t) => [index("shipments_awb_idx").on(t.awb)],
 );

@@ -8,6 +8,13 @@
       "when": 1793530265661,
       "tag": "0000_ordinary_jack_power",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1793538584615,
+      "tag": "0001_lying_toad_men",
+      "breakpoints": true
     }
   ]
 }

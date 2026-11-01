@@ -17,6 +17,7 @@ import { z } from "zod";
 import { placeOrder } from "./service";
 import { lookupOrderForTracking, type OrderTrackingView } from "./queries";
 import { sendOrderPlacedEmails } from "./emails";
+import { autoCreateShipment } from "@/server/shipping/service";
 import { invalidateLater, TAG } from "@/server/cache";
 import { log } from "@/server/log";
 
@@ -103,6 +104,8 @@ export async function placeOrderAction(
           error: err instanceof Error ? err.message : String(err),
         });
       }
+
+      await autoCreateShipment(orderId);
 
       try {
         const itemIds = Array.from(new Set(data.lines.map((l) => l.pid)));

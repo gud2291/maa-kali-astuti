@@ -16,6 +16,7 @@ import { AppError } from "@/server/result";
 import { canMove, ORDER_FLOW } from "@/lib/domain/flows";
 import { formatIst } from "@/lib/core/ist";
 import { sendOrderStatusEmail } from "./emails";
+import { cancelShipment } from "@/server/shipping/service";
 import { after } from "next/server";
 import { toCsv } from "@/server/csv";
 import type {
@@ -385,6 +386,22 @@ export async function transitionOrder(
     summary: `Order ${order.number} transitioned from ${order.status} to ${input.to}`,
     diff: { status: [order.status, input.to] },
   });
+
+  if (input.to === "cancelled") {
+    try {
+      await cancelShipment(id, actor.id);
+    } catch (e) {
+      const message = e instanceof Error ? e.message : String(e);
+      log.error("shipping.cancel_failed", { orderId: id, error: message });
+      await db.insert(orderEvents).values({
+        orderId: id,
+        type: "shipping",
+        message: `Order cancelled, but the Shiprocket shipment could not be cancelled: ${message}`,
+        public: false,
+        actorId: actor.id,
+      });
+    }
+  }
 
   if (input.notify) {
     after(() => {
