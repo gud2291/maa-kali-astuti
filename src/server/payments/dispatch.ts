@@ -10,6 +10,7 @@ import { db } from "@/server/db/client";
 import { orderItems } from "@/server/db/schema/commerce";
 import { eq } from "drizzle-orm";
 import { log } from "@/server/log";
+import { autoCreateShipment } from "@/server/shipping/service";
 
 export async function dispatchPaid(opts: {
   entity: string;
@@ -38,6 +39,8 @@ export async function dispatchPaid(opts: {
             error: err instanceof Error ? err.message : String(err),
           });
         }
+
+        await autoCreateShipment(opts.entityId);
 
         try {
           const items = await db

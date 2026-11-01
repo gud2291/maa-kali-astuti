@@ -8,6 +8,9 @@ import { AdminIcon } from "@/components/admin/AdminIcon";
 import { CustomerCard } from "@/components/admin/orders/CustomerCard";
 import { OrderActions, AttentionBanner } from "@/components/admin/orders/OrderActions";
 import { OrderTimelineAdmin } from "@/components/admin/orders/OrderTimelineAdmin";
+import { ShippingCard } from "@/components/admin/orders/ShippingCard";
+import { getShipment } from "@/server/shipping/service";
+import { shiprocketStatus } from "@/server/shipping/shiprocket";
 import { fmt } from "@/lib/core/format";
 import { formatIst } from "@/lib/core/ist";
 import type { OrderStatus, PaymentStatus } from "@/lib/domain/enums";
@@ -74,6 +77,11 @@ export default async function OrderDetailPage(props: {
   const { order, items, events, payments, refunds } = detail;
   const sb = getStatusBadge(order.status);
   const pb = getPaymentBadge(order.paymentStatus);
+  const shipment = await getShipment(order.id);
+  const sr = shiprocketStatus();
+  const canShip =
+    ["placed", "energizing", "packed"].includes(order.status) &&
+    ["paid", "partially_refunded", "cod_pending", "cod_collected"].includes(order.paymentStatus);
 
   return (
     <div className="space-y-6 max-w-6xl mx-auto pb-12">
@@ -447,6 +455,34 @@ export default async function OrderDetailPage(props: {
             courier={order.courier}
             awb={order.awb}
             trackingUrl={order.trackingUrl}
+          />
+
+          <ShippingCard
+            orderId={order.id}
+            orderStatus={order.status}
+            paymentMethod={order.paymentMethod}
+            connected={sr.enabled}
+            missing={sr.missing}
+            webhookTokenSet={sr.webhookTokenSet}
+            trackingUrl={order.trackingUrl}
+            canShip={canShip}
+            shipment={
+              shipment
+                ? {
+                    status: shipment.status,
+                    awb: shipment.awb,
+                    courier: shipment.courier,
+                    providerStatus: shipment.providerStatus,
+                    labelUrl: shipment.labelUrl,
+                    lastError: shipment.lastError,
+                    weightKg: shipment.weightKg,
+                    lengthCm: shipment.lengthCm,
+                    breadthCm: shipment.breadthCm,
+                    heightCm: shipment.heightCm,
+                    updatedAt: shipment.updatedAt.toISOString(),
+                  }
+                : null
+            }
           />
 
           <OrderActions
