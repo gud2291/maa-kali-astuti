@@ -7,9 +7,12 @@ export async function verifyTurnstile(
   token: string | undefined,
   ip: string,
 ): Promise<void> {
+  // Bot check is optional: with no Turnstile keys set, skip it (rate limits still apply).
+  // To turn it back on, set NEXT_PUBLIC_TURNSTILE_SITE_KEY (build time) and TURNSTILE_SECRET_KEY.
   if (!isConfigured("turnstile") || !env.TURNSTILE_SECRET_KEY) {
-  return;
-}
+    return;
+  }
+
   if (!token) {
     throw new AppError("BOT_CHECK_FAILED");
   }
