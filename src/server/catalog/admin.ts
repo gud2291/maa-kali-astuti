@@ -21,6 +21,7 @@ import { requireAdmin } from "@/server/auth/guards";
 import { audit, diffOf } from "@/server/audit";
 import { newProductId } from "@/server/ids";
 import { AppError } from "@/server/result";
+import { logStockMovement } from "@/server/inventory/movements";
 import { attachMedia, deleteMedia } from "@/server/media/service";
 import { toMediaRef } from "@/server/media/refs";
 import type { ProductInput } from "@/lib/validation/product";
@@ -304,6 +305,16 @@ export async function createProduct(
     updatedAt: now,
   });
 
+  if (input.stock > 0) {
+    await logStockMovement(db, {
+      productId: id,
+      delta: input.stock,
+      balanceAfter: input.stock,
+      reason: "initial",
+      actorId: actor.id,
+    });
+  }
+
   if (input.mediaIds && input.mediaIds.length > 0) {
     await db.insert(productMedia).values(
       input.mediaIds.map((mediaId, idx) => ({
@@ -416,6 +427,17 @@ export async function updateProduct(
       updatedAt: now,
     })
     .where(eq(products.id, id));
+
+  if (input.stock !== existing.stock) {
+    await logStockMovement(db, {
+      productId: id,
+      delta: input.stock - existing.stock,
+      balanceAfter: input.stock,
+      reason: "edit",
+      note: "Stock changed in the product form",
+      actorId: actor.id,
+    });
+  }
 
   const existingMediaRows = await db
     .select({ mediaId: productMedia.mediaId })
@@ -588,6 +610,14 @@ export async function adjustStock(
 
   const updated = updatedRows[0];
   const newStock = updated ? updated.stock : Math.max(0, existing.stock + delta);
+  await logStockMovement(db, {
+    productId: id,
+    delta: newStock - existing.stock,
+    balanceAfter: newStock,
+    reason: "manual",
+    note: reason,
+    actorId: actor.id,
+  });
 
   await audit({
     actorId: actor.id,

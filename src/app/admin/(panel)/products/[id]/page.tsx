@@ -6,6 +6,8 @@ import { PageHeader } from "@/components/admin/ui/PageHeader";
 import { ProductForm } from "@/components/admin/products/ProductForm";
 import { ProductActions } from "@/components/admin/products/ProductActions";
 import { StockAdjust } from "@/components/admin/products/StockAdjust";
+import { StockHistory } from "@/components/admin/products/StockHistory";
+import { listStockMovements } from "@/server/inventory/movements";
 import { formatIst } from "@/lib/core/ist";
 import type { ProductStatus } from "@/lib/domain/enums";
 
@@ -17,9 +19,10 @@ export default async function ProductDetailPage(props: {
 
   const { id } = await props.params;
 
-  const [productData, productOptions] = await Promise.all([
+  const [productData, productOptions, movements] = await Promise.all([
     getProductForEdit(id),
     listProductOptions(),
+    listStockMovements(id),
   ]);
 
   if (!productData) {
@@ -66,6 +69,8 @@ export default async function ProductDetailPage(props: {
         productOptions={productOptions}
         canEdit={canEdit}
       />
+
+      <StockHistory rows={movements} />
     </div>
   );
 }

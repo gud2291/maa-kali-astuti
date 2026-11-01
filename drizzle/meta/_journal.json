@@ -15,6 +15,13 @@
       "when": 1793538584615,
       "tag": "0001_lying_toad_men",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793542361141,
+      "tag": "0002_foamy_turbo",
+      "breakpoints": true
     }
   ]
 }

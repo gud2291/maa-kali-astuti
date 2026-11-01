@@ -20,6 +20,7 @@ import { nextInvoiceNo } from "./numbers";
 import { istDayKey } from "@/lib/core/ist";
 import { muhurat } from "@/lib/core/dates";
 import { AppError } from "@/server/result";
+import { logStockMovement } from "@/server/inventory/movements";
 import type { CheckoutInput } from "@/lib/validation/checkout";
 import type { ShipAddress } from "@/lib/domain/types";
 
@@ -61,14 +62,35 @@ export async function finalizePlacement(
       )
       .returning({ stock: products.stock });
 
-    if (res.length === 0) {
+    if (res.length > 0) {
+      await logStockMovement(tx, {
+        productId: item.productId,
+        delta: -item.qty,
+        balanceAfter: res[0]!.stock,
+        reason: "order",
+        orderId,
+      });
+    } else {
       if (mode === "strict") {
         throw new AppError("OUT_OF_STOCK");
       } else {
+        const [before] = await tx
+          .select({ stock: products.stock })
+          .from(products)
+          .where(eq(products.id, item.productId))
+          .limit(1);
         await tx
           .update(products)
           .set({ stock: 0 })
           .where(eq(products.id, item.productId));
+        await logStockMovement(tx, {
+          productId: item.productId,
+          delta: -(before?.stock ?? 0),
+          balanceAfter: 0,
+          reason: "oversold",
+          orderId,
+          note: "Paid for " + item.qty + ", only " + (before?.stock ?? 0) + " in stock",
+        });
         oversoldIds.push(item.productId);
       }
     }

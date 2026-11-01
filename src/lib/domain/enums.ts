@@ -245,6 +245,16 @@ export const ORDER_STATUS = [
 ] as const;
 export type OrderStatus = (typeof ORDER_STATUS)[number];
 
+export const STOCK_REASON = [
+  "initial",
+  "order",
+  "oversold",
+  "cancel_restock",
+  "manual",
+  "edit",
+] as const;
+export type StockReason = (typeof STOCK_REASON)[number];
+
 export const SHIPMENT_STATUS = [
   "creating",
   "created",

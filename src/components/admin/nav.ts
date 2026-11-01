@@ -41,6 +41,20 @@ export const NAV: NavItem[] = [
     badge: "orders",
   },
   {
+    href: "/admin/payments",
+    label: "Payments",
+    icon: "tag",
+    perm: "orders.view",
+    group: "Sales",
+  },
+  {
+    href: "/admin/reports",
+    label: "Reports & CA Export",
+    icon: "report",
+    perm: "exports.run",
+    group: "Sales",
+  },
+  {
     href: "/admin/coupons",
     label: "Coupons",
     icon: "gift",

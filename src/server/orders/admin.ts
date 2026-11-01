@@ -17,6 +17,7 @@ import { canMove, ORDER_FLOW } from "@/lib/domain/flows";
 import { formatIst } from "@/lib/core/ist";
 import { sendOrderStatusEmail } from "./emails";
 import { cancelShipment } from "@/server/shipping/service";
+import { logStockMovement } from "@/server/inventory/movements";
 import { after } from "next/server";
 import { toCsv } from "@/server/csv";
 import type {
@@ -355,10 +356,21 @@ export async function transitionOrder(
       restockedProductIds = items.map((it) => it.productId);
 
       for (const item of items) {
-        await tx
+        const [back] = await tx
           .update(products)
           .set({ stock: sql`${products.stock} + ${item.qty}` })
-          .where(eq(products.id, item.productId));
+          .where(eq(products.id, item.productId))
+          .returning({ stock: products.stock });
+        if (back) {
+          await logStockMovement(tx, {
+            productId: item.productId,
+            delta: item.qty,
+            balanceAfter: back.stock,
+            reason: "cancel_restock",
+            orderId: id,
+            actorId: actor.id,
+          });
+        }
       }
       restocked = true;
     }

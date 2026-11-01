@@ -4,6 +4,7 @@ import {
   index,
   primaryKey,
   pgTable,
+  serial,
   timestamp,
   boolean,
   jsonb,
@@ -16,6 +17,7 @@ import {
   STONE_KEYS,
   INTENT_KEYS,
   PRODUCT_STATUS,
+  STOCK_REASON,
 } from "../../../lib/domain/enums";
 import type { WristSize, BadgeKey } from "../../../lib/domain/enums";
 import { EMPTY_PRODUCT_CONTENT } from "../../../lib/domain/types";
@@ -125,4 +127,25 @@ export const productMedia = pgTable(
     primaryKey({ columns: [t.productId, t.mediaId] }),
     index("product_media_sort_idx").on(t.productId, t.sort),
   ],
+);
+
+/* ---------- stock_movements (inventory history) ---------- */
+
+export const stockMovements = pgTable(
+  "stock_movements",
+  {
+    id: serial("id").primaryKey(),
+    productId: text("product_id").notNull(),
+    /** Signed change: negative = stock went out, positive = stock came in. */
+    delta: integer("delta").notNull(),
+    balanceAfter: integer("balance_after").notNull(),
+    reason: text("reason", { enum: STOCK_REASON }).notNull(),
+    orderId: integer("order_id"),
+    note: text("note"),
+    actorId: integer("actor_id"),
+    createdAt: timestamp("created_at", { mode: "date", withTimezone: true })
+      .notNull()
+      .$defaultFn(() => new Date()),
+  },
+  (t) => [index("stock_movements_product_idx").on(t.productId, t.createdAt)],
 );
