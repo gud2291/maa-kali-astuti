@@ -124,14 +124,14 @@ export function ContactForm({
                 name="phoneDisplay"
                 control={contactForm.form.control}
                 label="Phone Display Text"
-                hint="Formatted for readability (e.g. +91 90000 12345)"
+                hint="Formatted for readability (e.g. +91 93553 19051)"
                 required
               />
               <TextField
                 name="phoneTel"
                 control={contactForm.form.control}
                 label="Phone Dial URL"
-                hint="Standard tel format (e.g. +919000012345)"
+                hint="Standard tel format (e.g. +919355319051)"
                 required
               />
             </div>
@@ -141,14 +141,14 @@ export function ContactForm({
                 name="whatsapp"
                 control={contactForm.form.control}
                 label="WhatsApp Number"
-                hint="Without + or spaces (e.g. 919000012345)"
+                hint="Without + or spaces (e.g. 919355319051)"
                 required
               />
               <TextField
                 name="email"
                 control={contactForm.form.control}
                 label="Official Email Address"
-                hint="Customer care address (e.g. care@sadhakpawanpandey.com)"
+                hint="Customer care address (e.g. support@sadhakpawanpandey.com)"
                 required
               />
             </div>

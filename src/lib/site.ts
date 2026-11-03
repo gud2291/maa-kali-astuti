@@ -6,10 +6,10 @@ export { WHATSAPP_DISPLAY, waLink, waLinkTo } from "@/lib/core/commerce";
 export const SITE_URL = "https://sadhakpawanpandey.com";
 
 /** Fallback telephone URL (tel:+...) */
-export const PHONE_TEL = "tel:+919000012345";
+export const PHONE_TEL = "tel:+919355319051";
 
 /** Fallback customer care email */
-export const EMAIL = "care@sadhakpawanpandey.com";
+export const EMAIL = "support@sadhakpawanpandey.com";
 
 /** Fallback social profiles. `null` = not confirmed yet: the footer shows a "coming soon" toast instead. */
 export const SOCIAL: { key: "youtube" | "instagram" | "facebook" | "whatsapp"; name: string; url: string | null }[] = [

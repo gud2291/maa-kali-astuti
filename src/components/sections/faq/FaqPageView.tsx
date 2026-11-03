@@ -6,6 +6,7 @@ import { Link } from "@/i18n/navigation";
 import { FaqList } from "@/components/ui/FaqList";
 import { Icon } from "@/components/icons/Icon";
 import { cn } from "@/lib/utils/cn";
+import { waLink } from "@/lib/site";
 import type { FaqRow } from "@/server/faqs/queries";
 
 export type FaqPageViewProps = {
@@ -184,7 +185,7 @@ export function FaqPageView({ faqsBySet }: FaqPageViewProps): React.JSX.Element 
             {t("contactUs")}
           </Link>
           <a
-            href="https://wa.me/919999999999"
+            href={waLink()}
             target="_blank"
             rel="noopener noreferrer"
             className="h-10 px-5 rounded-btn border border-s2 bg-cream text-ink hover:text-em5 hover:border-em5 font-sans text-[13.5px] font-semibold transition-colors inline-flex items-center gap-1.5 shadow-xs"

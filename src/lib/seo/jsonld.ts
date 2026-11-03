@@ -36,11 +36,11 @@ export function organization(settings?: OrganizationSettings): JsonLdObject {
     sameAs: sameAs.length > 0 ? sameAs : undefined,
     contactPoint: {
       "@type": "ContactPoint",
-      telephone: settings?.phone || "+919000012345",
+      telephone: settings?.phone || "+919355319051",
       contactType: "customer service",
       areaServed: "IN",
       availableLanguage: ["en", "hi"],
-      email: settings?.email || "care@sadhakpawanpandey.com",
+      email: settings?.email || "support@sadhakpawanpandey.com",
     },
   };
 }

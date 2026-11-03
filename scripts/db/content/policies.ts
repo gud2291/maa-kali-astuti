@@ -47,7 +47,7 @@ const shippingBody: RichDoc = doc(
   ]),
   p([
     "If an outer parcel appears visibly damaged, crushed, or tampered with at the time of delivery, please take clear photographs before signing and notify our support desk at ",
-    a("care@sadhakpawanpandey.com", "mailto:care@sadhakpawanpandey.com"),
+    a("support@sadhakpawanpandey.com", "mailto:support@sadhakpawanpandey.com"),
     " within 48 hours for immediate assistance.",
   ]),
 );
@@ -83,7 +83,7 @@ const refundBody: RichDoc = doc(
     "Initiating a return is simple, transparent, and respectful:",
   ]),
   ol([
-    [b("Submit notification: "), "Send an email to ", a("care@sadhakpawanpandey.com", "mailto:care@sadhakpawanpandey.com"), " or contact our care desk via WhatsApp within 7 calendar days of delivery, quoting your Order Number."],
+    [b("Submit notification: "), "Send an email to ", a("support@sadhakpawanpandey.com", "mailto:support@sadhakpawanpandey.com"), " or contact our care desk via WhatsApp within 7 calendar days of delivery, quoting your Order Number."],
     [b("Provide documentation: "), "Include clear photographs or a short video demonstrating the reported defect or damage along with the parcel label."],
     [b("Reverse courier arrangement: "), "Upon approval, our support team will schedule a complimentary reverse pickup from your registered address via our courier partner."],
   ]),
@@ -140,7 +140,7 @@ const privacyBody: RichDoc = doc(
   h2("5. Your Rights as a Data Principal and Grievance Redressal"),
   p([
     "Under the DPDP Act 2023, you enjoy comprehensive rights concerning your personal data, including the right to access a summary of your data, the right to request correction or updating of inaccurate information, and the right to request erasure of your profile. For any privacy inquiries, requests, or grievances, you may contact our designated Grievance Officer directly at ",
-    a("care@sadhakpawanpandey.com", "mailto:care@sadhakpawanpandey.com"),
+    a("support@sadhakpawanpandey.com", "mailto:support@sadhakpawanpandey.com"),
     ".",
   ]),
 );

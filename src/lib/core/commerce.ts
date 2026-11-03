@@ -13,8 +13,8 @@ export type Fees = CatalogSnapshot["fees"];
  */
 export const DEMO_SEED: boolean = IS_DEV;
 
-export const WHATSAPP_NUMBER = "919000012345"; // [client-confirm] fallback +91 90000 12345
-export const WHATSAPP_DISPLAY = "+91 90000 12345"; // [client-confirm] fallback
+export const WHATSAPP_NUMBER = "919355319051"; // fallback +91 93553 19051
+export const WHATSAPP_DISPLAY = "+91 93553 19051";
 
 export function waLinkTo(number: string, text?: string): string {
   const clean = number.replace(/\D/g, "");
