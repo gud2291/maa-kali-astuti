@@ -185,8 +185,8 @@ export async function Hero({ locale, slides }: HeroProps = {}) {
             src="/images/hero/banner-2.webp"
             alt=""
             fill
-            sizes="100vw"
-            className="object-cover opacity-0 transition-opacity duration-700 motion-reduce:transition-none group-data-[slide=1]/hero:opacity-100"
+            sizes="(min-width: 1024px) 100vw, 2083px"
+            className="object-cover object-[80%_50%] opacity-0 transition-opacity duration-700 motion-reduce:transition-none group-data-[slide=1]/hero:opacity-100 lg:object-right"
           />
         )}
         {s3Slide?.media ? (
@@ -202,8 +202,8 @@ export async function Hero({ locale, slides }: HeroProps = {}) {
             src="/images/hero/banner-3.webp"
             alt=""
             fill
-            sizes="100vw"
-            className="object-cover opacity-0 transition-opacity duration-700 motion-reduce:transition-none group-data-[slide=2]/hero:opacity-100"
+            sizes="(min-width: 1024px) 100vw, 2083px"
+            className="object-cover object-[69%_50%] opacity-0 transition-opacity duration-700 motion-reduce:transition-none group-data-[slide=2]/hero:opacity-100 lg:object-right"
           />
         )}
         <span className="absolute inset-0 block bg-[linear-gradient(180deg,rgba(10,31,26,.12)_0%,rgba(10,31,26,.5)_36%,rgba(10,31,26,.9)_58%)] lg:bg-[linear-gradient(90deg,rgba(10,31,26,.9)_0%,rgba(10,31,26,.66)_46%,rgba(10,31,26,.1)_100%)]" />
