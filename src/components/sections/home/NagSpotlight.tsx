@@ -27,7 +27,7 @@ import type { Product } from "@/types/product";
    locales, as in the design. */
 
 const PHOTOS = [
-  "/images/p-12-nag.webp",
+  "/images/products/copper-12-nag-set.webp",
   "/images/p-12-nag-2.webp",
   "/images/p-12-nag-3.webp",
   "/images/p-12-nag-wide.webp",
