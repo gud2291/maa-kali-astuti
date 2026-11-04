@@ -42,7 +42,7 @@ export function ProductGallery({ product, certificate, youtubeId }: Props) {
       if (product.photo2 || product.cat === "amulets") {
         list.push({ kind: "legacy", slot: "alt", label: `${product.name} view 2` });
       }
-      if (product.art) {
+      if (product.art && !product.photo) {
         list.push({ kind: "legacy", slot: "detail", label: `${product.name} detail` });
       }
     }

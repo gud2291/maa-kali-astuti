@@ -417,7 +417,8 @@
     "date": 4,
     "pop": 1494.6000000000001,
     "catName": "Crystal Bracelets",
-    "slug": "pyrite-bracelet"
+    "slug": "pyrite-bracelet",
+    "photo": "/images/products/pyrite-bracelet.webp"
   },
   {
     "id": "b-citrine",
@@ -566,7 +567,8 @@
     "date": 6,
     "pop": 979.1999999999999,
     "catName": "Crystal Bracelets",
-    "slug": "rose-quartz-bracelet"
+    "slug": "rose-quartz-bracelet",
+    "photo": "/images/products/rose-quartz-bracelet.webp"
   },
   {
     "id": "b-amethyst",
@@ -857,7 +859,8 @@
     "date": 5,
     "pop": 470.40000000000003,
     "catName": "Sacred Amulets on Bhojpatra",
-    "slug": "maa-baglamukhi-amulet"
+    "slug": "maa-baglamukhi-amulet",
+    "photo": "/images/products/maa-baglamukhi-amulet.webp"
   },
   {
     "id": "a-hanuman",

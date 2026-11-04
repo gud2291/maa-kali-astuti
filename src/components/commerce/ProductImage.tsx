@@ -15,7 +15,8 @@ export function productImageSrc(p: Product, slot: ProductImageSlot = "main"): { 
   if (slot === "main")
     return p.photo ? { src: p.photo, raster: true } : { src: `/svg/products/${p.id}-main.svg`, raster: false };
   if (slot === "alt") {
-    const photo = p.photo2 ?? (p.cat === "amulets" ? TABIZ : null);
+    // A photographed product never swaps to its generated art on hover.
+    const photo = p.photo2 ?? (p.cat === "amulets" ? TABIZ : (p.photo ?? null));
     if (photo) return { src: photo, raster: true };
   }
   if (p.art) return { src: `/svg/products/${p.id}-detail.svg`, raster: false };

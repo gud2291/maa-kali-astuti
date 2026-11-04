@@ -29,6 +29,13 @@
       "when": 1793545961141,
       "tag": "0003_update_contact_details",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793792586729,
+      "tag": "0004_product_photos",
+      "breakpoints": true
     }
   ]
 }
