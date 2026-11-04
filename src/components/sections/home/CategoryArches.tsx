@@ -93,16 +93,23 @@ export async function CategoryArches() {
                   />
                   <span
                     aria-hidden="true"
-                    className="absolute inset-[7px] block [border-radius:50%_50%_2px_2px/var(--rad-m)_var(--rad-m)_2px_2px] shadow-[inset_0_0_0_1px_rgba(184,146,58,.35)] transition-shadow duration-[400ms] group-hover:shadow-[inset_0_0_0_1px_rgba(217,185,106,.7)] group-focus:shadow-[inset_0_0_0_1px_rgba(217,185,106,.7)] md:[border-radius:50%_50%_2px_2px/var(--rad-d)_var(--rad-d)_2px_2px]"
+                    className="absolute inset-[7px] z-[1] block [border-radius:50%_50%_2px_2px/var(--rad-m)_var(--rad-m)_2px_2px] shadow-[inset_0_0_0_1px_rgba(184,146,58,.35)] transition-shadow duration-[400ms] group-hover:shadow-[inset_0_0_0_1px_rgba(217,185,106,.7)] group-focus:shadow-[inset_0_0_0_1px_rgba(217,185,106,.7)] md:[border-radius:50%_50%_2px_2px/var(--rad-d)_var(--rad-d)_2px_2px]"
                   />
-                  <span className="absolute top-[12%] right-[4%] bottom-[6%] left-[4%] block transition-transform duration-[650ms] ease-mka group-hover:-translate-y-2 group-focus:-translate-y-2">
+                  <span
+                    className={cn(
+                      "absolute block transition-transform duration-[650ms] ease-mka",
+                      c.photo
+                        ? "inset-0 group-hover:scale-[1.04] group-focus:scale-[1.04]"
+                        : "top-[12%] right-[4%] bottom-[6%] left-[4%] group-hover:-translate-y-2 group-focus:-translate-y-2",
+                    )}
+                  >
                     {c.photo ? (
                       <Image
                         src={c.photo}
                         alt={c.photoAlt ?? ""}
                         fill
                         sizes="(min-width: 768px) 20vw, 60vw"
-                        className="object-contain object-center p-[4%]"
+                        className="object-cover object-center"
                       />
                     ) : p ? (
                       <ProductImage p={p} alt="" sizes="(min-width: 768px) 20vw, 60vw" className="object-contain" />
@@ -135,6 +142,12 @@ export async function CategoryArches() {
                       />
                     </span>
                   </span>
+                  {c.photo && (
+                    <span
+                      aria-hidden="true"
+                      className="absolute inset-x-0 bottom-0 block h-[34%] bg-[linear-gradient(to_top,rgba(14,59,48,.86),rgba(14,59,48,0))] opacity-0 transition-opacity duration-[450ms] ease-mka group-hover:opacity-100 group-focus:opacity-100"
+                    />
+                  )}
                   <span
                     aria-hidden="true"
                     className="absolute inset-x-0 bottom-4 flex translate-y-2 justify-center opacity-0 transition-[opacity,transform] duration-[300ms,450ms] ease-mka group-hover:translate-y-0 group-hover:opacity-100 group-focus:translate-y-0 group-focus:opacity-100"
