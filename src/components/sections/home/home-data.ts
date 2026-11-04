@@ -8,6 +8,10 @@ export type HomeCat = {
   /** Product whose main image fills the arch, or a category artwork. */
   pid: string | null;
   art: "havan" | "copper" | null;
+  /** Photo shown in the arch (takes priority over `pid` / `art`). */
+  photo?: string;
+  /** Alt text for `photo`. */
+  photoAlt?: string;
   /** Gem that floats in on hover. */
   gem: string;
   name: LocalizedString;
@@ -21,6 +25,8 @@ export const HOME_CATS: HomeCat[] = [
     key: "rudraksha",
     pid: "r5",
     art: null,
+    photo: "/images/categories/rudraksha.webp",
+    photoAlt: "Rudraksha mala resting on a wooden stand",
     gem: "amethyst",
     name: { en: "Rudraksha & Malas", hi: "रुद्राक्ष एवं माला" },
     count: { en: "2 to 14 Mukhi · 2 malas", hi: "2 से 14 मुखी · 2 माला" },
@@ -30,6 +36,8 @@ export const HOME_CATS: HomeCat[] = [
     key: "bracelets",
     pid: "b-pyrite",
     art: null,
+    photo: "/images/categories/bracelets.webp",
+    photoAlt: "Multi-stone natural crystal bracelet",
     gem: "rose",
     name: { en: "Crystal Bracelets", hi: "क्रिस्टल ब्रेसलेट" },
     count: { en: "15 natural stones", hi: "15 प्राकृतिक रत्न" },
@@ -39,6 +47,8 @@ export const HOME_CATS: HomeCat[] = [
     key: "amulets",
     pid: "a-bagla",
     art: null,
+    photo: "/images/categories/amulets.webp",
+    photoAlt: "Copper tabiz amulet on a black cord",
     gem: "citrine",
     name: { en: "Sacred Amulets on Bhojpatra", hi: "भोजपत्र कवच" },
     count: { en: "7 kavach in copper tabiz", hi: "तांबे के ताबीज़ में 7 कवच" },
@@ -48,6 +58,8 @@ export const HOME_CATS: HomeCat[] = [
     key: "havan",
     pid: null,
     art: "havan",
+    photo: "/images/categories/havan.webp",
+    photoAlt: "Bitter havan samagri in a glass bowl",
     gem: "garnet",
     name: { en: "Havan Samagri", hi: "हवन सामग्री" },
     count: { en: "Bitter Havan · 100 g", hi: "कड़वा हवन · 100 ग्राम" },
@@ -57,6 +69,8 @@ export const HOME_CATS: HomeCat[] = [
     key: "copper",
     pid: null,
     art: "copper",
+    photo: "/images/categories/copper.webp",
+    photoAlt: "Copper Shri Guru Yantra beside a brass lamp and flowers",
     gem: "pyrite",
     name: { en: "Energized Copper", hi: "ऊर्जित ताम्र" },
     count: { en: "Copper 12 Nag set", hi: "12 नाग सेट" },

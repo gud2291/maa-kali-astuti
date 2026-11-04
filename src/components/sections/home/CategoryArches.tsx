@@ -1,4 +1,5 @@
 import type { CSSProperties, ReactNode } from "react";
+import Image from "next/image";
 import { getLocale, getTranslations } from "next-intl/server";
 import { Link } from "@/i18n/navigation";
 import { Icon } from "@/components/icons/Icon";
@@ -95,7 +96,15 @@ export async function CategoryArches() {
                     className="absolute inset-[7px] block [border-radius:50%_50%_2px_2px/var(--rad-m)_var(--rad-m)_2px_2px] shadow-[inset_0_0_0_1px_rgba(184,146,58,.35)] transition-shadow duration-[400ms] group-hover:shadow-[inset_0_0_0_1px_rgba(217,185,106,.7)] group-focus:shadow-[inset_0_0_0_1px_rgba(217,185,106,.7)] md:[border-radius:50%_50%_2px_2px/var(--rad-d)_var(--rad-d)_2px_2px]"
                   />
                   <span className="absolute top-[12%] right-[4%] bottom-[6%] left-[4%] block transition-transform duration-[650ms] ease-mka group-hover:-translate-y-2 group-focus:-translate-y-2">
-                    {p ? (
+                    {c.photo ? (
+                      <Image
+                        src={c.photo}
+                        alt={c.photoAlt ?? ""}
+                        fill
+                        sizes="(min-width: 768px) 20vw, 60vw"
+                        className="object-contain object-center p-[4%]"
+                      />
+                    ) : p ? (
                       <ProductImage p={p} alt="" sizes="(min-width: 768px) 20vw, 60vw" className="object-contain" />
                     ) : (
                       // eslint-disable-next-line @next/next/no-img-element
