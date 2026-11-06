@@ -50,6 +50,13 @@
       "when": 1793900000000,
       "tag": "0006_amulet_products",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1794000000000,
+      "tag": "0007_product_photos_new",
+      "breakpoints": true
     }
   ]
 }

@@ -102,7 +102,8 @@
     "date": 15,
     "pop": 604.8,
     "catName": "Rudraksha & Malas",
-    "slug": "5-mukhi-rudraksha"
+    "slug": "5-mukhi-rudraksha",
+    "photo": "/images/products/5-mukhi-rudraksha.webp"
   },
   {
     "id": "r6",
@@ -418,7 +419,8 @@
     "pop": 1494.6000000000001,
     "catName": "Crystal Bracelets",
     "slug": "pyrite-bracelet",
-    "photo": "/images/products/pyrite-bracelet.webp"
+    "photo": "/images/products/pyrite-bracelet-natural-stone.webp",
+    "photo2": "/images/products/pyrite-bracelet.webp"
   },
   {
     "id": "b-citrine",
@@ -860,7 +862,8 @@
     "pop": 470.40000000000003,
     "catName": "Sacred Amulets on Bhojpatra",
     "slug": "maa-baglamukhi-amulet",
-    "photo": "/images/products/maa-baglamukhi-amulet.webp"
+    "photo": "/images/products/maa-baglamukhi-amulet-yellow-thread.webp",
+    "photo2": "/images/products/maa-baglamukhi-amulet.webp"
   },
   {
     "id": "a-hanuman",

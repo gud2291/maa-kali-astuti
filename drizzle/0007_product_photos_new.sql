@@ -1,0 +1,3 @@
+UPDATE "products" SET "legacy_photo" = '/images/products/5-mukhi-rudraksha.webp' WHERE "id" = 'r5' AND "legacy_photo" IS NULL;--> statement-breakpoint
+UPDATE "products" SET "legacy_photo" = '/images/products/maa-baglamukhi-amulet-yellow-thread.webp', "legacy_photo2" = '/images/products/maa-baglamukhi-amulet.webp' WHERE "id" = 'a-bagla' AND "legacy_photo" = '/images/products/maa-baglamukhi-amulet.webp';--> statement-breakpoint
+UPDATE "products" SET "legacy_photo" = '/images/products/pyrite-bracelet-natural-stone.webp', "legacy_photo2" = '/images/products/pyrite-bracelet.webp' WHERE "id" = 'b-pyrite' AND "legacy_photo" = '/images/products/pyrite-bracelet.webp';
