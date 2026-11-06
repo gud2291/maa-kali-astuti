@@ -4,6 +4,7 @@ import * as schema from "../../src/server/db/schema/index";
 import { SETTINGS_DEFAULTS } from "../../src/lib/validation/settings";
 import { POLICIES } from "../../src/lib/routes";
 import { productContentFor } from "./seed-content";
+import { AMULET_COPY } from "./amulet-content";
 import type { RudrakshaInfo } from "./seed-content";
 import { SEEDED_ARTICLES } from "./content/articles";
 import { SEEDED_POLICIES } from "./content/policies";
@@ -206,6 +207,8 @@ export async function main(): Promise<void> {
         ratingCount: p.reviews ?? 0,
         popularity: p.pop ?? 0,
         art: (p.art as ProductArt) ?? null,
+        seoTitleEn: AMULET_COPY[p.id]?.seoTitle ?? null,
+        seoDescEn: AMULET_COPY[p.id]?.seoDesc ?? null,
         legacyPhoto: p.photo ?? null,
         legacyPhoto2: p.photo2 ?? null,
         content,
