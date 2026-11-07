@@ -155,7 +155,8 @@
     "date": 13,
     "pop": 754.4,
     "catName": "Rudraksha & Malas",
-    "slug": "7-mukhi-rudraksha"
+    "slug": "7-mukhi-rudraksha",
+    "photo": "/images/products/7-mukhi-rudraksha.webp"
   },
   {
     "id": "r8",
@@ -207,7 +208,8 @@
     "date": 11,
     "pop": 193.2,
     "catName": "Rudraksha & Malas",
-    "slug": "9-mukhi-rudraksha"
+    "slug": "9-mukhi-rudraksha",
+    "photo": "/images/products/9-mukhi-rudraksha.webp"
   },
   {
     "id": "r10",
