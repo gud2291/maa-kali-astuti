@@ -913,7 +913,8 @@
     "date": 14,
     "pop": 481.5,
     "catName": "Sacred Amulets on Bhojpatra",
-    "slug": "hanuman-amulet"
+    "slug": "hanuman-amulet",
+    "photo": "/images/products/red-thread-amulet.webp"
   },
   {
     "id": "a-durga",
@@ -937,7 +938,8 @@
     "date": 21,
     "pop": 715.5,
     "catName": "Sacred Amulets on Bhojpatra",
-    "slug": "durga-amulet"
+    "slug": "durga-amulet",
+    "photo": "/images/products/red-thread-amulet.webp"
   },
   {
     "id": "a-kali",
@@ -1009,7 +1011,8 @@
     "date": 16,
     "pop": 229.99999999999997,
     "catName": "Sacred Amulets on Bhojpatra",
-    "slug": "bhairav-amulet"
+    "slug": "bhairav-amulet",
+    "photo": "/images/products/black-thread-amulet.webp"
   },
   {
     "id": "a-child",
@@ -1033,7 +1036,8 @@
     "date": 10,
     "pop": 774.2,
     "catName": "Sacred Amulets on Bhojpatra",
-    "slug": "child-evil-eye-protection-amulet"
+    "slug": "child-evil-eye-protection-amulet",
+    "photo": "/images/products/black-thread-amulet.webp"
   },
   {
     "id": "havan",
