@@ -99,6 +99,13 @@
       "when": 1794600000000,
       "tag": "0013_attar_creative_photos",
       "breakpoints": true
+    },
+    {
+      "idx": 14,
+      "version": "7",
+      "when": 1794700000000,
+      "tag": "0014_product_photos_last_bracelets",
+      "breakpoints": true
     }
   ]
 }

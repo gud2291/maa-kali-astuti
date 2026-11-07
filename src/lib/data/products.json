@@ -464,7 +464,8 @@
     "date": 12,
     "pop": 108.10000000000001,
     "catName": "Crystal Bracelets",
-    "slug": "citrine-bracelet"
+    "slug": "citrine-bracelet",
+    "photo": "/images/products/citrine-bracelet.webp"
   },
   {
     "id": "b-jade",
@@ -650,7 +651,8 @@
     "date": 2,
     "pop": 225.39999999999998,
     "catName": "Crystal Bracelets",
-    "slug": "seven-chakra-bracelet"
+    "slug": "seven-chakra-bracelet",
+    "photo": "/images/products/seven-chakra-bracelet.webp"
   },
   {
     "id": "b-quartz",
@@ -679,7 +681,8 @@
     "date": 26,
     "pop": 181.3,
     "catName": "Crystal Bracelets",
-    "slug": "clear-quartz-bracelet"
+    "slug": "clear-quartz-bracelet",
+    "photo": "/images/products/clear-quartz-bracelet.webp"
   },
   {
     "id": "b-lapis",
