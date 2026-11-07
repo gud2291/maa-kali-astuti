@@ -64,6 +64,13 @@
       "when": 1794100000000,
       "tag": "0008_product_photos_7_9_mukhi",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1794200000000,
+      "tag": "0009_product_photos_rudraksha_set",
+      "breakpoints": true
     }
   ]
 }

@@ -23,7 +23,8 @@
     "date": 18,
     "pop": 441.59999999999997,
     "catName": "Rudraksha & Malas",
-    "slug": "2-mukhi-rudraksha"
+    "slug": "2-mukhi-rudraksha",
+    "photo": "/images/products/2-mukhi-rudraksha.webp"
   },
   {
     "id": "r3",
@@ -49,7 +50,8 @@
     "date": 17,
     "pop": 505.99999999999994,
     "catName": "Rudraksha & Malas",
-    "slug": "3-mukhi-rudraksha"
+    "slug": "3-mukhi-rudraksha",
+    "photo": "/images/products/3-mukhi-rudraksha.webp"
   },
   {
     "id": "r4",
@@ -75,7 +77,8 @@
     "date": 16,
     "pop": 565.8,
     "catName": "Rudraksha & Malas",
-    "slug": "4-mukhi-rudraksha"
+    "slug": "4-mukhi-rudraksha",
+    "photo": "/images/products/4-mukhi-rudraksha.webp"
   },
   {
     "id": "r5",
@@ -103,7 +106,8 @@
     "pop": 604.8,
     "catName": "Rudraksha & Malas",
     "slug": "5-mukhi-rudraksha",
-    "photo": "/images/products/5-mukhi-rudraksha.webp"
+    "photo": "/images/products/5-mukhi-rudraksha-bead.webp",
+    "photo2": "/images/products/5-mukhi-rudraksha.webp"
   },
   {
     "id": "r6",
@@ -129,7 +133,8 @@
     "date": 14,
     "pop": 694.5999999999999,
     "catName": "Rudraksha & Malas",
-    "slug": "6-mukhi-rudraksha"
+    "slug": "6-mukhi-rudraksha",
+    "photo": "/images/products/6-mukhi-rudraksha.webp"
   },
   {
     "id": "r7",
@@ -182,7 +187,8 @@
     "date": 12,
     "pop": 128.79999999999998,
     "catName": "Rudraksha & Malas",
-    "slug": "8-mukhi-rudraksha"
+    "slug": "8-mukhi-rudraksha",
+    "photo": "/images/products/8-mukhi-rudraksha.webp"
   },
   {
     "id": "r9",
@@ -235,7 +241,8 @@
     "date": 10,
     "pop": 391.5,
     "catName": "Rudraksha & Malas",
-    "slug": "10-mukhi-rudraksha"
+    "slug": "10-mukhi-rudraksha",
+    "photo": "/images/products/10-mukhi-rudraksha.webp"
   },
   {
     "id": "r11",
@@ -261,7 +268,8 @@
     "date": 9,
     "pop": 454.5,
     "catName": "Rudraksha & Malas",
-    "slug": "11-mukhi-rudraksha"
+    "slug": "11-mukhi-rudraksha",
+    "photo": "/images/products/11-mukhi-rudraksha.webp"
   },
   {
     "id": "r12",
@@ -287,7 +295,8 @@
     "date": 8,
     "pop": 513,
     "catName": "Rudraksha & Malas",
-    "slug": "12-mukhi-rudraksha"
+    "slug": "12-mukhi-rudraksha",
+    "photo": "/images/products/12-mukhi-rudraksha.webp"
   },
   {
     "id": "r13",
@@ -313,7 +322,8 @@
     "date": 7,
     "pop": 576,
     "catName": "Rudraksha & Malas",
-    "slug": "13-mukhi-rudraksha"
+    "slug": "13-mukhi-rudraksha",
+    "photo": "/images/products/13-mukhi-rudraksha.webp"
   },
   {
     "id": "r14",
@@ -339,7 +349,8 @@
     "date": 6,
     "pop": 634.5,
     "catName": "Rudraksha & Malas",
-    "slug": "14-mukhi-rudraksha"
+    "slug": "14-mukhi-rudraksha",
+    "photo": "/images/products/14-mukhi-rudraksha.webp"
   },
   {
     "id": "m5",
@@ -364,7 +375,8 @@
     "date": 9,
     "pop": 1017.5999999999999,
     "catName": "Rudraksha & Malas",
-    "slug": "5-mukhi-rudraksha-mala"
+    "slug": "5-mukhi-rudraksha-mala",
+    "photo": "/images/products/5-mukhi-rudraksha-mala.webp"
   },
   {
     "id": "m7",
@@ -389,7 +401,8 @@
     "date": 30,
     "pop": 313.6,
     "catName": "Rudraksha & Malas",
-    "slug": "7-mukhi-rudraksha-mala"
+    "slug": "7-mukhi-rudraksha-mala",
+    "photo": "/images/products/7-mukhi-rudraksha-mala.webp"
   },
   {
     "id": "b-pyrite",
