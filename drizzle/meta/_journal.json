@@ -71,6 +71,13 @@
       "when": 1794200000000,
       "tag": "0009_product_photos_rudraksha_set",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1794300000000,
+      "tag": "0010_product_photos_bracelets",
+      "breakpoints": true
     }
   ]
 }

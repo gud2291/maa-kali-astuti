@@ -434,7 +434,7 @@
     "pop": 1494.6000000000001,
     "catName": "Crystal Bracelets",
     "slug": "pyrite-bracelet",
-    "photo": "/images/products/pyrite-bracelet-natural-stone.webp",
+    "photo": "/images/products/pyrite-bracelet-1.webp",
     "photo2": "/images/products/pyrite-bracelet.webp"
   },
   {
@@ -493,7 +493,8 @@
     "date": 18,
     "pop": 270,
     "catName": "Crystal Bracelets",
-    "slug": "green-jade-bracelet"
+    "slug": "green-jade-bracelet",
+    "photo": "/images/products/jade-bracelet.webp"
   },
   {
     "id": "b-tourmaline",
@@ -524,7 +525,8 @@
     "date": 7,
     "pop": 897.6,
     "catName": "Crystal Bracelets",
-    "slug": "black-tourmaline-bracelet"
+    "slug": "black-tourmaline-bracelet",
+    "photo": "/images/products/black-tourmaline-bracelet.webp"
   },
   {
     "id": "b-tiger",
@@ -553,7 +555,8 @@
     "date": 22,
     "pop": 726.8,
     "catName": "Crystal Bracelets",
-    "slug": "tiger-eye-bracelet"
+    "slug": "tiger-eye-bracelet",
+    "photo": "/images/products/tiger-eye-bracelet.webp"
   },
   {
     "id": "b-rose",
@@ -585,7 +588,8 @@
     "pop": 979.1999999999999,
     "catName": "Crystal Bracelets",
     "slug": "rose-quartz-bracelet",
-    "photo": "/images/products/rose-quartz-bracelet.webp"
+    "photo": "/images/products/rose-quartz-bracelet-sanctuary.webp",
+    "photo2": "/images/products/rose-quartz-bracelet.webp"
   },
   {
     "id": "b-amethyst",
@@ -614,7 +618,8 @@
     "date": 15,
     "pop": 297.59999999999997,
     "catName": "Crystal Bracelets",
-    "slug": "amethyst-bracelet"
+    "slug": "amethyst-bracelet",
+    "photo": "/images/products/amethyst-bracelet.webp"
   },
   {
     "id": "b-chakra",
@@ -703,7 +708,8 @@
     "date": 11,
     "pop": 720.3000000000001,
     "catName": "Crystal Bracelets",
-    "slug": "lapis-lazuli-bracelet"
+    "slug": "lapis-lazuli-bracelet",
+    "photo": "/images/products/lapis-lazuli-bracelet.webp"
   },
   {
     "id": "b-moon",
@@ -734,7 +740,8 @@
     "date": 3,
     "pop": 639,
     "catName": "Crystal Bracelets",
-    "slug": "moonstone-bracelet"
+    "slug": "moonstone-bracelet",
+    "photo": "/images/products/moonlit-moonstone-bracelet.webp"
   },
   {
     "id": "b-garnet",
@@ -763,7 +770,8 @@
     "date": 19,
     "pop": 676.1999999999999,
     "catName": "Crystal Bracelets",
-    "slug": "garnet-bracelet"
+    "slug": "garnet-bracelet",
+    "photo": "/images/products/garnet-bracelet.webp"
   },
   {
     "id": "b-blood",
@@ -792,7 +800,8 @@
     "date": 24,
     "pop": 507.6,
     "catName": "Crystal Bracelets",
-    "slug": "bloodstone-bracelet"
+    "slug": "bloodstone-bracelet",
+    "photo": "/images/products/bloodstone-bracelet.webp"
   },
   {
     "id": "b-jasper",
@@ -821,7 +830,8 @@
     "date": 28,
     "pop": 460.6,
     "catName": "Crystal Bracelets",
-    "slug": "red-jasper-bracelet"
+    "slug": "red-jasper-bracelet",
+    "photo": "/images/products/red-jasper-bracelet.webp"
   },
   {
     "id": "b-malachite",
@@ -852,7 +862,8 @@
     "date": 1,
     "pop": 609.6,
     "catName": "Crystal Bracelets",
-    "slug": "malachite-bracelet"
+    "slug": "malachite-bracelet",
+    "photo": "/images/products/emerald-malachite-bracelet.webp"
   },
   {
     "id": "a-bagla",
