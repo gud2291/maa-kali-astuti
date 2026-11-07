@@ -84,7 +84,7 @@ export const HOME_CATS: HomeCat[] = [
     photoAlt: "Natural Oud Attar (Fragrance Oil) gift box with oud wood, a bottle and a brass incense burner",
     gem: "citrine",
     name: { en: "Attar & Fragrance Oils", hi: "अत्तर एवं सुगंधित तेल" },
-    count: { en: "Oud · Sandal · 12 ml & 50 ml", hi: "ऊद · चंदन · 12 मि.ली. और 50 मि.ली." },
+    count: { en: "Oud · Sandal · 6 ml", hi: "ऊद · चंदन · 6 मि.ली." },
     ar: 1.36,
   },
 ];

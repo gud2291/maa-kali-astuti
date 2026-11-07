@@ -15,20 +15,20 @@ type AttarCopy = {
 
 export const ATTAR_COPY: Record<string, AttarCopy> = {
   "attar-oud": {
-    size: "50 ml",
+    size: "6 ml",
     description:
-      "Natural Oud Attar is a fragrance oil product presented in a convenient 50ml bottle. Explore its distinctive oud-inspired fragrance in a compact, easy-to-use format.",
+      "Natural Oud Attar is a fragrance oil product presented in a convenient 6ml bottle. Explore its distinctive oud-inspired fragrance in a compact, easy-to-use format.",
     seoTitle: "Natural Oud Attar (Fragrance Oil) | Maa Kali Astuti",
     seoDesc:
-      "Natural Oud Attar (Fragrance Oil) in a 50 ml bottle: an oud-inspired fragrance oil in a compact, easy-to-use format. Order online from Maa Kali Astuti.",
+      "Natural Oud Attar (Fragrance Oil) in a 6 ml bottle: an oud-inspired fragrance oil in a compact, easy-to-use format. Order online from Maa Kali Astuti.",
   },
   "attar-sandal": {
-    size: "12 ml",
+    size: "6 ml",
     description:
-      "Natural Sandal Attar is a fragrance oil product presented in a 12ml bottle. Discover its sandalwood-inspired fragrance in a compact format.",
+      "Natural Sandal Attar is a fragrance oil product presented in a 6ml bottle. Discover its sandalwood-inspired fragrance in a compact format.",
     seoTitle: "Natural Sandal Attar (Fragrance Oil) | Maa Kali Astuti",
     seoDesc:
-      "Natural Sandal Attar (Fragrance Oil) in a 12 ml bottle: a sandalwood-inspired fragrance oil in a compact format. Order online from Maa Kali Astuti.",
+      "Natural Sandal Attar (Fragrance Oil) in a 6 ml bottle: a sandalwood-inspired fragrance oil in a compact format. Order online from Maa Kali Astuti.",
   },
 };
 
