@@ -3,7 +3,7 @@ import type badges from "@/lib/data/badges.json";
 import type stones from "@/lib/data/stones.json";
 import type { MediaRef } from "@/lib/domain/media";
 
-export type CategoryKey = "rudraksha" | "bracelets" | "amulets" | "havan" | "copper";
+export type CategoryKey = "rudraksha" | "bracelets" | "amulets" | "havan" | "copper" | "attar";
 export type IntentKey = "wealth" | "protection" | "love" | "peace" | "health" | "courage" | "clarity";
 export type BadgeKey = keyof typeof badges;
 export type StoneKey = keyof typeof stones;

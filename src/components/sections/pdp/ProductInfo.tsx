@@ -229,7 +229,7 @@ export function ProductInfo({ product }: Props) {
             value={qty}
             onChange={setQty}
             min={1}
-            max={fees.maxLineQty || 10}
+            max={Math.max(1, Math.min(fees.maxLineQty || 10, product.stock))}
             labels={{ dec: "Decrease quantity", inc: "Increase quantity" }}
           />
 

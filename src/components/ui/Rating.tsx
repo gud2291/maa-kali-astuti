@@ -52,6 +52,7 @@ export function Rating({
   hi?: boolean;
   className?: string;
 }) {
+  if (reviews === 0) return null;
   const r = rating.toFixed(1);
   const label = hi
     ? `रेटिंग ${r}/5${reviews != null ? `, ${reviews} समीक्षाएँ` : ""}`

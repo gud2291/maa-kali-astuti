@@ -76,6 +76,17 @@ export const HOME_CATS: HomeCat[] = [
     count: { en: "Copper 12 Nag set", hi: "12 नाग सेट" },
     ar: 1.3,
   },
+  {
+    key: "attar",
+    pid: "attar-oud",
+    art: null,
+    photo: "/images/categories/attar.webp",
+    photoAlt: "Natural Oud Attar fragrance oil bottle beside its wooden gift box",
+    gem: "citrine",
+    name: { en: "Attar & Fragrance Oils", hi: "अत्तर एवं सुगंधित तेल" },
+    count: { en: "Oud · Sandal · 12 ml & 50 ml", hi: "ऊद · चंदन · 12 मि.ली. और 50 मि.ली." },
+    ar: 1.36,
+  },
 ];
 
 export type BestTab = "best" | "new" | "rud" | "br" | "am";

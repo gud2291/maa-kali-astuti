@@ -1084,5 +1084,43 @@
     "slug": "copper-12-nag",
     "photo": "/images/products/copper-12-nag-set.webp",
     "photo2": "/images/p-12-nag-2.webp"
+  },
+  {
+    "id": "attar-oud",
+    "cat": "attar",
+    "name": "Natural Oud Attar (Fragrance Oil)",
+    "hi": "नेचुरल ऊद अत्तर",
+    "price": 299,
+    "mrp": 450,
+    "rating": 0,
+    "reviews": 0,
+    "intent": "Fragrance Oil · 50 ml",
+    "ik": "peace",
+    "badges": [],
+    "stock": 5,
+    "date": 0,
+    "pop": 0,
+    "catName": "Attar & Fragrance Oils",
+    "slug": "natural-oud-attar",
+    "photo": "/images/products/natural-oud-attar.webp"
+  },
+  {
+    "id": "attar-sandal",
+    "cat": "attar",
+    "name": "Natural Sandal Attar (Fragrance Oil)",
+    "hi": "नेचुरल चंदन अत्तर",
+    "price": 265,
+    "mrp": 420,
+    "rating": 0,
+    "reviews": 0,
+    "intent": "Fragrance Oil · 12 ml",
+    "ik": "peace",
+    "badges": [],
+    "stock": 100,
+    "date": 0,
+    "pop": 0,
+    "catName": "Attar & Fragrance Oils",
+    "slug": "natural-sandal-attar",
+    "photo": "/images/products/natural-sandal-attar.webp"
   }
 ]

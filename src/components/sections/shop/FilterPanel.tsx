@@ -106,7 +106,7 @@ export function FilterPanel(props: FilterPanelProps) {
             key={i.key}
             on={f.intents.includes(i.key)}
             label={`${i.en} · ${i.hi}`}
-            count={base.filter((p) => p.ik === i.key).length}
+            count={base.filter((p) => p.cat !== "attar" && p.ik === i.key).length}
             onPick={() => toggleIn("intents", i.key as IntentKey)}
           />
         )),

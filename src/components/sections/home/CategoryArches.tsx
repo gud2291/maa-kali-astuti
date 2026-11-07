@@ -11,7 +11,7 @@ import { cn } from "@/lib/utils/cn";
 import { HOME_CATS } from "./home-data";
 
 /* §3 Shop by category (Home.dc.html 197–239, vCats 1426–1448).
-   Five arches in a crescent rhythm (aspect 1:1.3 → 1:1.43 → 1:1.3) on ≥768; below 768 a snap rail
+   Six arches (three per row on tablet) in a crescent rhythm (aspect 1:1.3 → 1:1.43 → 1:1.3) on ≥768; below 768 a snap rail
    of 62%-wide arches, all 1:1.3. Hover or focus: emerald fill rises from the bottom (650 ms), the
    art lifts 8px, a gem floats in (800 ms) and "Shop now" slides up (450 ms). */
 
@@ -70,7 +70,7 @@ export async function CategoryArches() {
           </div>
         </div>
 
-        <div className="-mx-4 no-scrollbar flex snap-x snap-mandatory items-end gap-[clamp(12px,1.6vw,24px)] overflow-x-auto px-4 pb-2 md:mx-0 md:grid md:snap-none md:grid-cols-5 md:overflow-x-visible md:px-0 md:pb-0">
+        <div className="-mx-4 no-scrollbar flex snap-x snap-mandatory items-end gap-[clamp(12px,1.6vw,24px)] overflow-x-auto px-4 pb-2 md:mx-0 md:grid md:snap-none md:grid-cols-3 md:overflow-x-visible lg:grid-cols-6 md:px-0 md:pb-0">
           {HOME_CATS.map((c, i) => {
             const p = c.pid ? byId.get(c.pid) : undefined;
             const vars = {

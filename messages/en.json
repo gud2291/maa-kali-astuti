@@ -302,6 +302,7 @@
     "remove": "Remove",
     "removed": "{name} removed",
     "max": "Maximum 10 per order line",
+    "maxStock": "Only {n} in stock",
     "complete": "Complete your ritual",
     "addAria": "Add {name}",
     "couponLink": "Have a coupon code?",
@@ -339,6 +340,7 @@
       "amulets": "Sacred Amulets",
       "havan": "Havan Samagri",
       "copper": "Energized Copper",
+      "attar": "Attar & Fragrance Oils",
       "wishlist": "Wishlist",
       "kundaliReading": "Kundali Reading",
       "palmistry": "Palmistry",
@@ -402,7 +404,7 @@
     "allA": "All sacred ",
     "allI": "offerings",
     "allHi": "अनुष्ठान से ऊर्जित, श्रद्धा से आप तक",
-    "allDesc": "Rudraksha, crystal bracelets, Bhojpatra kavach, havan samagri and copper — every piece energized in Mahapuja on an auspicious muhurat before it ships.",
+    "allDesc": "Rudraksha, crystal bracelets, Bhojpatra kavach, havan samagri and copper, plus attar and fragrance oils. Our sacred pieces are energized in Mahapuja on an auspicious muhurat before they ship.",
     "offerings": "{n, plural, one {# offering} other {# offerings}}",
     "energized": "Energized in Mahapuja before dispatch",
     "tabsLabel": "Categories",
@@ -569,10 +571,10 @@
     },
     "cats": {
       "eyebrow": "01 — Shop by category",
-      "title": "Five sacred <em>offerings</em>",
-      "sub": "पाँच पवित्र अर्पण",
-      "intro": "Every piece is energized during Mahapuja at an auspicious muhurat and ships with a printed vidhi card for wearing or placing it.",
-      "all": "Shop all 39 offerings",
+      "title": "Six sacred <em>offerings</em>",
+      "sub": "छह पवित्र अर्पण",
+      "intro": "Every Rudraksha, bracelet, kavach, havan and copper piece is energized during Mahapuja at an auspicious muhurat and ships with a printed vidhi card for wearing or placing it.",
+      "all": "Shop all 41 offerings",
       "cta": "Shop now"
     },
     "best": {
@@ -588,8 +590,8 @@
         "am": "Amulets"
       },
       "all": {
-        "best": "View all 39 offerings",
-        "new": "View all 39 offerings",
+        "best": "View all 41 offerings",
+        "new": "View all 41 offerings",
         "rud": "All Rudraksha & Malas",
         "br": "All 15 bracelets",
         "am": "All sacred amulets"
@@ -2198,6 +2200,7 @@
     "accordionSpecs": "Specifications",
     "accordionShipping": "Shipping & returns",
     "accordionShippingText": "Orders are energized in Mahapuja and ship within 24–48 hours. Standard delivery reaches most locations in {min}–{max} days. Free delivery on orders above ₹{freeShipping}. Easy 7-day return policy for unused sacred items.",
+    "accordionShippingTextPlain": "Standard delivery reaches most locations in {min}–{max} days. Free delivery on orders above ₹{freeShipping}. See our Shipping and Refund & Returns policies for details.",
     "accordionAuth": "Authenticity & Lab Certificate",
     "accordionAuthText": "Every Rudraksha and gemstone offering is tested for authenticity and backed by a laboratory report. Consecrated with Vedic rites by Sadhak Pawan Pandey.",
     "placementEyebrow": "Sacred Placement",

@@ -17,6 +17,8 @@ type Props = {
     authenticity: string;
     authenticityText: string;
   };
+  /** Omit the "Authenticity & certification" item (third-party products). */
+  hideAuthenticity?: boolean;
 };
 
 type AccordionItem = {
@@ -24,7 +26,7 @@ type AccordionItem = {
   content: React.ReactNode;
 };
 
-export function ProductAccordions({ content, locale, store, labels }: Props) {
+export function ProductAccordions({ content, locale, store, labels, hideAuthenticity }: Props) {
   const isHi = locale === "hi";
   const items: AccordionItem[] = [];
 
@@ -103,10 +105,11 @@ export function ProductAccordions({ content, locale, store, labels }: Props) {
   });
 
   // 6. Authenticity
-  items.push({
-    title: labels.authenticity,
-    content: <p className="m-0 leading-[1.7]">{labels.authenticityText}</p>,
-  });
+  if (!hideAuthenticity)
+    items.push({
+      title: labels.authenticity,
+      content: <p className="m-0 leading-[1.7]">{labels.authenticityText}</p>,
+    });
 
   return (
     <div className="flex flex-col border-t border-s2">

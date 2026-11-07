@@ -20,7 +20,7 @@ export function queryProducts(list: readonly Product[], q: ProductQuery = {}): P
     (p) =>
       (cat === "all" || p.cat === cat) &&
       (!sub || (sub === "malas" ? p.sub === "malas" : String(p.mukhi) === sub)) &&
-      (!intents?.length || intents.includes(p.ik)) &&
+      (!intents?.length || (p.cat !== "attar" && intents.includes(p.ik))) &&
       (!mukhi?.length || (p.mukhi != null && mukhi.includes(p.mukhi))) &&
       (!stones?.length || (p.stone != null && stones.includes(p.stone))) &&
       (!inStock || p.stock > 0) &&

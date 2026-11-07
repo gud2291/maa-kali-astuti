@@ -44,8 +44,10 @@ function CartLineItem({ l, readonly }: { l: ResolvedLine; readonly?: boolean }) 
     setQty(l.qty - 1, -1);
   };
   const inc = () => {
-    if (l.qty >= fees.maxLineQty) {
-      useUi.getState().toast({ msg: t("max"), tone: "info" });
+    // Never above the units in stock (the server re-checks at checkout).
+    const cap = l.p.stock > 0 ? Math.min(fees.maxLineQty, l.p.stock) : fees.maxLineQty;
+    if (l.qty >= cap) {
+      useUi.getState().toast({ msg: cap < fees.maxLineQty ? t("maxStock", { n: cap }) : t("max"), tone: "info" });
       return;
     }
     setQty(l.qty + 1, 1);

@@ -43,5 +43,14 @@
     "desc": "Pure copper offerings, hand-energized through traditional ritual for the home temple, tijori and office.",
     "deshi": "शुद्ध तांबे की वस्तुएँ, पारंपरिक अनुष्ठान से ऊर्जित — मंदिर, तिजोरी और ऑफ़िस के लिए।",
     "slug": "energized-copper"
+  },
+  {
+    "key": "attar",
+    "name": "Attar & Fragrance Oils",
+    "hi": "अत्तर एवं सुगंधित तेल",
+    "short": "Attar",
+    "desc": "Attar and fragrance oils in compact bottles.",
+    "deshi": "कॉम्पैक्ट बोतलों में अत्तर और सुगंधित तेल।",
+    "slug": "attar-fragrance-oils"
   }
 ]

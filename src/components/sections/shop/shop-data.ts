@@ -59,6 +59,7 @@ export const HEADER_ART: Record<ShopCat, string[]> = {
   amulets: ["a-bagla"],
   havan: ["havan"],
   copper: ["nag12"],
+  attar: ["attar-sandal"],
 };
 
 /** Stone positions + float params for the header (312). One piece uses the first entry. */

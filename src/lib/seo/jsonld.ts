@@ -144,6 +144,17 @@ export function product(p: ProductInput, opts: ProductOpts): JsonLdObject {
       priceCurrency: "INR",
       price: p.priceInr,
       priceValidUntil: "2027-12-31",
+      // The struck-through MRP, when it is higher than the selling price.
+      ...(p.mrpInr && p.mrpInr > p.priceInr
+        ? {
+            priceSpecification: {
+              "@type": "UnitPriceSpecification",
+              priceType: "https://schema.org/ListPrice",
+              price: p.mrpInr,
+              priceCurrency: "INR",
+            },
+          }
+        : {}),
       availability: p.stock > 0 ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
       seller: {
         "@type": "Organization",

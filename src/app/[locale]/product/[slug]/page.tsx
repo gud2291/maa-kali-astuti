@@ -51,13 +51,16 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const firstImage =
     product.images?.[0]?.src || product.photo || `/svg/products/${product.id}-main.svg`;
 
-  return pageMeta({
+  const meta = pageMeta({
     locale,
     path: `/product/${slug}`,
     title,
     description,
     image: firstImage,
   });
+  // A stored SEO title that already ends in the site name is used as written (no second suffix).
+  if (/|s*(Maa Kali Astuti|माँ काली अस्तुति)s*$/.test(title)) meta.title = { absolute: title };
+  return meta;
 }
 
 export default async function Page({ params }: Props) {
@@ -75,6 +78,8 @@ export default async function Page({ params }: Props) {
 
   const productName = isHi ? product.hi || product.name : product.name;
   const productCategoryName = product.catName;
+  // Attar & fragrance oils are third-party products: no energization / consecration copy on their page.
+  const isAttar = product.cat === "attar";
   const productDesc = isHi
     ? product.seoDescHi || content.description?.hi || content.description?.en || ""
     : product.seoDescEn || content.description?.en || content.description?.hi || "";
@@ -172,7 +177,7 @@ export default async function Page({ params }: Props) {
             howToWear: t("accordionHowToWear"),
             specs: t("accordionSpecs"),
             shipping: t("accordionShipping"),
-            shippingText: t("accordionShippingText", {
+            shippingText: t(isAttar ? "accordionShippingTextPlain" : "accordionShippingText", {
               min: store.standardDays[0],
               max: store.standardDays[1],
               freeShipping: store.freeShippingInr,
@@ -180,6 +185,7 @@ export default async function Page({ params }: Props) {
             authenticity: t("accordionAuth"),
             authenticityText: t("accordionAuthText"),
           }}
+          hideAuthenticity={isAttar}
         />
       </div>
 
@@ -201,6 +207,7 @@ export default async function Page({ params }: Props) {
       )}
 
       {/* How we energize ritual band */}
+      {!isAttar && (
       <section className="mt-8 md:mt-12 flex flex-col gap-6 py-6 border-t border-s2">
         <SectionHeader
           eyebrow={t("ritualEyebrow")}
@@ -227,6 +234,7 @@ export default async function Page({ params }: Props) {
           />
         </div>
       </section>
+      )}
 
       {/* Product Reviews */}
       <ReviewsSection

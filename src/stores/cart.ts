@@ -53,6 +53,13 @@ const SEED: CartLine[] = [
   { key: lineKey("havan"), pid: "havan", variant: null, qty: 1, energ: null },
 ];
 
+/** Per-line quantity cap: the order-line limit, and never more than the units in stock. The server re-checks at checkout. */
+const lineCap = (pid: string): number => {
+  const max = getFees().maxLineQty;
+  const stock = useCatalog.getState().byId.get(pid)?.stock ?? 0;
+  return stock > 0 ? Math.min(max, stock) : max;
+};
+
 export const useCart = create<CartState>()(
   persist(
     (set, get) => ({
@@ -60,7 +67,7 @@ export const useCart = create<CartState>()(
       coupon: null,
       gift: false,
       add: (pid, o = {}) => {
-        const max = getFees().maxLineQty;
+        const max = lineCap(pid);
         const key = lineKey(pid, o.variant, o.energ);
         const lines = get().lines;
         const ex = lines.find((l) => l.key === key);
@@ -81,9 +88,8 @@ export const useCart = create<CartState>()(
         return key;
       },
       setQty: (key, qty) => {
-        const max = getFees().maxLineQty;
         set({
-          lines: get().lines.map((l) => (l.key === key ? { ...l, qty: clampQty(qty, max) } : l)),
+          lines: get().lines.map((l) => (l.key === key ? { ...l, qty: clampQty(qty, lineCap(l.pid)) } : l)),
         });
       },
       remove: (key) => {

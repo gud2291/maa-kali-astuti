@@ -5,6 +5,7 @@ import { SETTINGS_DEFAULTS } from "../../src/lib/validation/settings";
 import { POLICIES } from "../../src/lib/routes";
 import { productContentFor } from "./seed-content";
 import { AMULET_COPY } from "./amulet-content";
+import { ATTAR_COPY } from "./attar-content";
 import type { RudrakshaInfo } from "./seed-content";
 import { SEEDED_ARTICLES } from "./content/articles";
 import { SEEDED_POLICIES } from "./content/policies";
@@ -175,7 +176,7 @@ export async function main(): Promise<void> {
   /* 4. products */
   const productsStmts = productsData.map((p, index) => {
     const publishedAt = new Date(now.getTime() - (p.date ?? 0) * 86_400_000);
-    const featured = Array.isArray(p.badges) && p.badges.includes("featured" as BadgeKey);
+    const featured = Array.isArray(p.badges) && (p.badges as BadgeKey[]).includes("featured" as BadgeKey);
     const content = productContentFor(
       p as Product,
       rudrakshaData as Record<string, RudrakshaInfo>,
@@ -207,12 +208,12 @@ export async function main(): Promise<void> {
         ratingCount: p.reviews ?? 0,
         popularity: p.pop ?? 0,
         art: (p.art as ProductArt) ?? null,
-        seoTitleEn: AMULET_COPY[p.id]?.seoTitle ?? null,
-        seoDescEn: AMULET_COPY[p.id]?.seoDesc ?? null,
+        seoTitleEn: (AMULET_COPY[p.id] ?? ATTAR_COPY[p.id])?.seoTitle ?? null,
+        seoDescEn: (AMULET_COPY[p.id] ?? ATTAR_COPY[p.id])?.seoDesc ?? null,
         legacyPhoto: p.photo ?? null,
         legacyPhoto2: p.photo2 ?? null,
         content,
-        energizable: p.cat !== "havan",
+        energizable: p.cat !== "havan" && p.cat !== "attar",
         status: "active",
         featured,
         sort: index,

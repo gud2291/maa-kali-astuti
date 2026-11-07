@@ -76,6 +76,7 @@ export function MegaShop({ close, keep }: { close: () => void; keep: () => void 
   const products = useCatalog((s) => s.snap?.products ?? []);
   const nag = byId.get("nag12");
   const amulets = products.filter((p) => p.cat === "amulets");
+  const attars = products.filter((p) => p.cat === "attar");
 
   return (
     <Panel onEnter={keep}>
@@ -158,6 +159,13 @@ export function MegaShop({ close, keep }: { close: () => void; keep: () => void 
               Copper 12 Nag set
             </Link>
           )}
+          <span className={`${num} mt-3.5`}>06</span>
+          <CatLink cat="attar" name="Attar & Fragrance Oils" hi="अत्तर एवं सुगंधित तेल" close={close} />
+          {attars.map((p) => (
+            <Link key={p.id} href={productHref(p)} onClick={close} className={itemLink}>
+              {p.name.replace(" (Fragrance Oil)", "")}
+            </Link>
+          ))}
         </div>
 
         <div data-col="1" className="flex flex-col gap-[9px]">
