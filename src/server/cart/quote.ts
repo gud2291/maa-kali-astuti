@@ -78,6 +78,12 @@ export async function quoteCheckout(input: QuoteInput): Promise<Quote> {
       continue;
     }
 
+    // 1b. Sold elsewhere (external purchase link): never orderable here
+    if (row.externalUrl) {
+      issues.push({ code: "UNAVAILABLE", pid: rawLine.pid });
+      continue;
+    }
+
     // 2. Size validation
     const hasSizes = Array.isArray(row.sizes) && row.sizes.length > 0;
     if (hasSizes) {

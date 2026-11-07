@@ -3,7 +3,7 @@ import type badges from "@/lib/data/badges.json";
 import type stones from "@/lib/data/stones.json";
 import type { MediaRef } from "@/lib/domain/media";
 
-export type CategoryKey = "rudraksha" | "bracelets" | "amulets" | "havan" | "copper" | "attar";
+export type CategoryKey = "rudraksha" | "bracelets" | "amulets" | "havan" | "copper" | "attar" | "books";
 export type IntentKey = "wealth" | "protection" | "love" | "peace" | "health" | "courage" | "clarity";
 export type BadgeKey = keyof typeof badges;
 export type StoneKey = keyof typeof stones;
@@ -46,6 +46,8 @@ export type Product = {
   /** Raster photos in /images (only products that have real photography). */
   photo?: string;
   photo2?: string;
+  /** External purchase page (e.g. Flipkart). When set the item is not sold through our cart / checkout. */
+  buyUrl?: string;
   /** Sort key for "Newest": smaller is newer. */
   date: number;
   /** Popularity = reviews × rating. */

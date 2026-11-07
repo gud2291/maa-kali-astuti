@@ -20,7 +20,9 @@ export default async function Image({
 
   const title = p?.name ?? "Sacred Remedy";
   const price = p?.price ?? 0;
-  const mrp = p?.mrp ?? 0;
+  // Items sold elsewhere (books on Flipkart) carry no price here: the card shows none either.
+  const mrp = p?.buyUrl ? 0 : (p?.mrp ?? 0);
+  const showPrice = !p?.buyUrl;
   const catName = p?.catName ?? "Sacred Spiritual Item";
 
   let imageUrl: string | null = null;
@@ -169,17 +171,19 @@ export default async function Image({
                   marginBottom: 16,
                 }}
               >
-                <div
-                  style={{
-                    display: "flex",
-                    fontSize: 44,
-                    fontWeight: "bold",
-                    color: "#B8923A",
-                    marginRight: 16,
-                  }}
-                >
-                  ₹{price.toLocaleString("en-IN")}
-                </div>
+                {showPrice && (
+                  <div
+                    style={{
+                      display: "flex",
+                      fontSize: 44,
+                      fontWeight: "bold",
+                      color: "#B8923A",
+                      marginRight: 16,
+                    }}
+                  >
+                    ₹{price.toLocaleString("en-IN")}
+                  </div>
+                )}
 
                 {mrp > price && (
                   <div

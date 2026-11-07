@@ -326,7 +326,8 @@ export function ShopView({ products, categories, intents, initialCat }: Props) {
         ) : (
           f.cat !== "havan" &&
           f.cat !== "copper" &&
-          f.cat !== "attar" && (
+          f.cat !== "attar" &&
+          f.cat !== "books" && (
             <div className="no-scrollbar flex gap-2 overflow-x-auto pt-4 pb-1">
               {intents.map((i) => (
                 <Chip key={i.key} on={f.intents.includes(i.key)} onClick={() => toggleIn("intents", i.key)}>

@@ -100,6 +100,7 @@ export async function SiteFooter() {
         [l("havan"), categoryHref("havan")],
         [l("copper"), categoryHref("copper")],
         [l("attar"), categoryHref("attar")],
+        [l("books"), categoryHref("books")],
         [l("wishlist"), routes.wishlist],
       ],
     },

@@ -42,8 +42,11 @@ export function ProductInfo({ product }: Props) {
   const [phase, setPhase] = useState<"idle" | "loading" | "added">("idle");
   const buttonRef = useRef<HTMLButtonElement>(null);
 
-  const oos = product.stock === 0;
-  const sn = stockNote(product, hi);
+  // Sold on another site (a book on Flipkart): no price, stock, cart or checkout here.
+  const external = !!product.buyUrl;
+  const author = external ? product.long?.split(" by ")[1] : undefined;
+  const oos = product.stock === 0 && !external;
+  const sn = external ? null : stockNote(product, hi);
   const energFee = fees.energizationInr || 251;
 
   const buildEnerg = () => {
@@ -135,6 +138,9 @@ export function ProductInfo({ product }: Props) {
             {product.hi}
           </p>
         )}
+        {author && (
+          <p className="m-0 mt-1 font-deva text-[16px] leading-[1.4] font-medium text-em9">{t("byAuthor", { author })}</p>
+        )}
       </div>
 
       {/* Rating & reviews */}
@@ -144,15 +150,17 @@ export function ProductInfo({ product }: Props) {
         </a>
       </div>
 
-      {/* Price block */}
-      <div className="flex flex-col gap-1 border-y border-s2 py-3.5">
-        <div className="flex items-baseline gap-3">
-          <Price price={product.price} mrp={product.mrp} hi={hi} size="row" className="text-[24px]" />
+      {/* Price block (no price is shown for items sold elsewhere) */}
+      {!external && (
+        <div className="flex flex-col gap-1 border-y border-s2 py-3.5">
+          <div className="flex items-baseline gap-3">
+            <Price price={product.price} mrp={product.mrp} hi={hi} size="row" className="text-[24px]" />
+          </div>
+          <span className="font-sans text-[12px] text-ink6">
+            {t("inclTaxes")}
+          </span>
         </div>
-        <span className="font-sans text-[12px] text-ink6">
-          {t("inclTaxes")}
-        </span>
-      </div>
+      )}
 
       {/* Stock warning */}
       {sn && (
@@ -222,7 +230,25 @@ export function ProductInfo({ product }: Props) {
         />
       )}
 
+      {/* External purchase: one clear button to the Flipkart listing */}
+      {external && (
+        <div className="flex flex-col gap-2.5 border-y border-s2 py-4">
+          <a
+            id="pdp-flipkart-button"
+            href={product.buyUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex h-[54px] w-full items-center justify-center gap-2 rounded-btn bg-em7 font-sans text-[16px] font-semibold text-iv no-underline shadow-ring-gold transition-colors hover:bg-em5 hover:text-iv"
+          >
+            <span>{t("buyFlipkart")}</span>
+            <Icon name="arrowR" className="size-4" />
+          </a>
+          <span className="font-sans text-[12.5px] leading-[1.5] text-ink6">{t("flipkartNote")}</span>
+        </div>
+      )}
+
       {/* Quantity & Actions */}
+      {!external && (
       <div className="flex flex-col gap-3">
         <div className="flex items-center gap-3">
           <QtyStepper
@@ -267,11 +293,13 @@ export function ProductInfo({ product }: Props) {
           </button>
         )}
       </div>
+      )}
 
       {/* Delivery pincode checker */}
-      <PincodeCheck />
+      {!external && <PincodeCheck />}
 
       {/* Trust row */}
+      {!external && (
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 rounded-btn bg-s1/60 p-3 border border-s2/60 text-center">
         <div className="flex flex-col items-center gap-1">
           <Icon name="shield" className="size-4 text-em7" />
@@ -290,6 +318,7 @@ export function ProductInfo({ product }: Props) {
           <span className="font-sans text-[11px] leading-[1.3] font-medium text-ink6">{t("trustShipping")}</span>
         </div>
       </div>
+      )}
 
       {/* Share button */}
       <button

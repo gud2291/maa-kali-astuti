@@ -57,6 +57,7 @@ export const CATEGORY_KEYS = [
   "havan",
   "copper",
   "attar",
+  "books",
 ] as const satisfies readonly ProductCategoryKey[];
 export type CategoryKey = (typeof CATEGORY_KEYS)[number];
 export type CategoryKeyEnum = CategoryKey;

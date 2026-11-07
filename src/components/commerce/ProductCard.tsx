@@ -55,13 +55,26 @@ export function ProductCard({ product: p, size = "std", mode = "shop", sizes, pr
   const imgRef = useRef<HTMLSpanElement>(null);
   const heartRef = useRef<HTMLSpanElement>(null);
   const wished = useIsWished(p.id);
-  const { ph, oos, doAdd, add, addMobile, toggleWish, moveToCart, removeWish } = useProductActions(prod, imgRef);
+  const { ph, oos, external, doAdd, add, addMobile, toggleWish, moveToCart, removeWish } = useProductActions(prod, imgRef);
 
   const href = `/product/${p.slug}`;
   const title = hi ? p.hi : p.name;
   const catShort = p.catShort ?? "";
   const addAria = t("addAria", { name: p.name });
-  const sn = stockNote(p, hi);
+  const sn = external ? null : stockNote(p, hi);
+  const flipkart = (
+    <a
+      href={prod.buyUrl}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="inline-flex h-9 items-center gap-1.5 self-start rounded-btn border border-em7 bg-iv px-3 font-sans text-[12.5px] leading-none font-semibold text-em7 no-underline transition-colors duration-150 hover:bg-em1 hover:text-em7"
+    >
+      {t("buyFlipkart")}
+      <span className="block size-3.5">
+        <Icon name="arrowR" />
+      </span>
+    </a>
+  );
 
   if (size === "row") {
     return (
@@ -88,18 +101,36 @@ export function ProductCard({ product: p, size = "std", mode = "shop", sizes, pr
           <Link href={href} className="font-title text-[17px] leading-[1.25] font-normal text-em9 no-underline">
             {title}
           </Link>
-          <Price price={p.price} mrp={p.mrp} hi={hi} size="card" />
+          {external ? (
+            <span className="font-sans text-[12.5px] leading-[1.3] font-medium text-ink6">{t("onFlipkart")}</span>
+          ) : (
+            <Price price={p.price} mrp={p.mrp} hi={hi} size="card" />
+          )}
         </div>
-        <button
-          type="button"
-          onClick={add}
-          aria-label={addAria}
-          className="grid size-10 cursor-pointer place-items-center rounded-pill border border-em7 bg-iv text-em7 transition-colors duration-150 hover:bg-em1"
-        >
-          <span className="block size-[18px]">
-            <Icon name={ph === "added" ? "check" : "plus"} />
-          </span>
-        </button>
+        {external ? (
+          <a
+            href={prod.buyUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label={t("buyFlipkart")}
+            className="grid size-10 place-items-center rounded-pill border border-em7 bg-iv text-em7 transition-colors duration-150 hover:bg-em1"
+          >
+            <span className="block size-[18px]">
+              <Icon name="arrowR" />
+            </span>
+          </a>
+        ) : (
+          <button
+            type="button"
+            onClick={add}
+            aria-label={addAria}
+            className="grid size-10 cursor-pointer place-items-center rounded-pill border border-em7 bg-iv text-em7 transition-colors duration-150 hover:bg-em1"
+          >
+            <span className="block size-[18px]">
+              <Icon name={ph === "added" ? "check" : "plus"} />
+            </span>
+          </button>
+        )}
       </article>
     );
   }
@@ -165,7 +196,7 @@ export function ProductCard({ product: p, size = "std", mode = "shop", sizes, pr
         </button>
 
         {/* Desktop quick-add bar: slides up on hover, stays while adding */}
-        {mode === "shop" && (
+        {mode === "shop" && !external && (
           <div
             className={cn(
               "absolute right-2.5 bottom-2.5 left-2.5 hidden flex-col gap-1.5 md:flex",
@@ -207,7 +238,7 @@ export function ProductCard({ product: p, size = "std", mode = "shop", sizes, pr
         )}
 
         {/* Mobile "+" */}
-        {mode === "shop" && !oos && (
+        {mode === "shop" && !oos && !external && (
           <button
             type="button"
             onClick={addMobile}
@@ -241,7 +272,14 @@ export function ProductCard({ product: p, size = "std", mode = "shop", sizes, pr
         <span className="inline-block h-6 max-w-full self-start truncate rounded-pill bg-em1 px-2.5 font-sans text-[11.5px] leading-6 font-medium text-em7">
           {p.intent}
         </span>
-        <Price price={p.price} mrp={p.mrp} hi={hi} size="row" />
+        {external ? (
+          <>
+            <span className="font-sans text-[12.5px] leading-[1.3] font-medium text-ink6">{t("onFlipkart")}</span>
+            {flipkart}
+          </>
+        ) : (
+          <Price price={p.price} mrp={p.mrp} hi={hi} size="row" />
+        )}
         {sn && (
           <span className="inline-flex items-center gap-1.5 font-sans text-[12px] leading-[1.2] font-semibold text-sin">
             <span className="block size-1.5 rounded-pill bg-sin" />
@@ -250,13 +288,17 @@ export function ProductCard({ product: p, size = "std", mode = "shop", sizes, pr
         )}
         {mode === "wish" && (
           <div className="mt-1 flex gap-2">
-            <button
-              type="button"
-              onClick={moveToCart}
-              className="h-[42px] flex-1 cursor-pointer rounded-btn border-0 bg-em7 font-sans text-[13px] leading-none font-semibold tracking-[.03em] text-iv shadow-[inset_0_0_0_1px_rgba(217,185,106,.5)] transition-colors hover:bg-em5 hi:tracking-normal"
-            >
-              {t("move")}
-            </button>
+            {external ? (
+              <span className="flex-1" />
+            ) : (
+              <button
+                type="button"
+                onClick={moveToCart}
+                className="h-[42px] flex-1 cursor-pointer rounded-btn border-0 bg-em7 font-sans text-[13px] leading-none font-semibold tracking-[.03em] text-iv shadow-[inset_0_0_0_1px_rgba(217,185,106,.5)] transition-colors hover:bg-em5 hi:tracking-normal"
+              >
+                {t("move")}
+              </button>
+            )}
             <button
               type="button"
               onClick={removeWish}

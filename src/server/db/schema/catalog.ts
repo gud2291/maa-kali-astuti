@@ -79,6 +79,8 @@ export const products = pgTable(
     art: jsonb("art").$type<ProductArt>(),
     legacyPhoto: text("legacy_photo"),
     legacyPhoto2: text("legacy_photo2"),
+    /** Set for items sold elsewhere (e.g. a book on Flipkart): never purchasable through our cart / checkout. */
+    externalUrl: text("external_url"),
     content: jsonb("content")
       .$type<ProductContent>()
       .notNull()

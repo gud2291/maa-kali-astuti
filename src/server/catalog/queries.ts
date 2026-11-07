@@ -64,6 +64,7 @@ const PRODUCT_LIST_COLUMNS = {
   art: products.art,
   legacyPhoto: products.legacyPhoto,
   legacyPhoto2: products.legacyPhoto2,
+  externalUrl: products.externalUrl,
   publishedAt: products.publishedAt,
 };
 

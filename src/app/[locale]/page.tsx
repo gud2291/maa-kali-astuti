@@ -3,6 +3,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { AboutTeaser } from "@/components/sections/home/AboutTeaser";
 import { AstroTools } from "@/components/sections/home/AstroTools";
 import { Bestsellers } from "@/components/sections/home/Bestsellers";
+import { BookSpotlight } from "@/components/sections/home/BookSpotlight";
 import { CategoryArches } from "@/components/sections/home/CategoryArches";
 import { ConsultBento } from "@/components/sections/home/ConsultBento";
 import { CourseTrack } from "@/components/sections/home/CourseTrack";
@@ -61,6 +62,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   const [
     home,
     nag12,
+    praharBook,
     serviceCards,
     courses,
     faqItems,
@@ -72,6 +74,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
   ] = await Promise.all([
     getSetting("home"),
     getProduct("nag12"),
+    getProduct("prahar-book"),
     getServiceCards(locale),
     getCourses(locale),
     getFaq("home", locale),
@@ -90,6 +93,7 @@ export default async function HomePage({ params }: { params: Promise<{ locale: s
       {sections.trust && <TrustMarquee />}
       {sections.categories && <CategoryArches />}
       {sections.bestsellers && <Bestsellers />}
+      {sections.bestsellers && praharBook?.buyUrl && <BookSpotlight product={praharBook} />}
       {sections.nagSpotlight && nag12 && <NagSpotlight product={nag12} buildNow={BUILD_NOW} />}
       {sections.rashifal && <RashifalSection buildNow={BUILD_NOW} />}
       {sections.astroTools && <AstroTools buildNow={BUILD_NOW} />}

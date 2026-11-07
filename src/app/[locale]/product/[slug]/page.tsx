@@ -18,12 +18,21 @@ import { TrackView } from "@/components/sections/pdp/TrackView";
 import { ReviewsSection } from "@/components/sections/pdp/ReviewsSection";
 import { getProductReviews } from "@/server/reviews/queries";
 import { pageMeta } from "@/lib/seo/meta";
-import { breadcrumbs, product as productSchema } from "@/lib/seo/jsonld";
+import { book as bookSchema, breadcrumbs, product as productSchema } from "@/lib/seo/jsonld";
 import { JsonLd } from "@/components/seo/JsonLd";
 
 type Props = { params: Promise<{ locale: string; slug: string }> };
 
 export const dynamicParams = true;
+
+const MONTHS = ["january", "february", "march", "april", "may", "june", "july", "august", "september", "october", "november", "december"];
+
+/** "November 2026" → "2026-11" (undefined when it doesn't parse). */
+function monthYearToIso(s?: string): string | undefined {
+  const m = s?.trim().toLowerCase().match(/^([a-z]+)s+(d{4})$/);
+  const i = m ? MONTHS.indexOf(m[1]) : -1;
+  return m && i >= 0 ? `${m[2]}-${String(i + 1).padStart(2, "0")}` : undefined;
+}
 
 export async function generateStaticParams(): Promise<{ slug: string }[]> {
   const { products } = await getCatalog();
@@ -58,8 +67,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     description,
     image: firstImage,
   });
-  // A stored SEO title that already ends in the site name is used as written (no second suffix).
-  if (/|s*(Maa Kali Astuti|माँ काली अस्तुति)s*$/.test(title)) meta.title = { absolute: title };
+  // A stored SEO title that contains " | " (it already names the brand/author) is used as written, without the site suffix.
+  if (title.includes(" | ")) meta.title = { absolute: title };
   return meta;
 }
 
@@ -79,7 +88,8 @@ export default async function Page({ params }: Props) {
   const productName = isHi ? product.hi || product.name : product.name;
   const productCategoryName = product.catName;
   // Attar & fragrance oils are third-party products: no energization / consecration copy on their page.
-  const isAttar = product.cat === "attar";
+  const isExternal = !!product.buyUrl;
+  const isAttar = product.cat === "attar" || isExternal;
   const productDesc = isHi
     ? product.seoDescHi || content.description?.hi || content.description?.en || ""
     : product.seoDescEn || content.description?.en || content.description?.hi || "";
@@ -96,7 +106,21 @@ export default async function Page({ params }: Props) {
     { name: productName, url: `/product/${product.slug}` },
   ]);
 
-  const productData = productSchema(
+  const spec = (k: string) => content.specs?.find((s) => s.k.en === k)?.v.en;
+  const productData = isExternal
+    ? bookSchema({
+        name: product.long?.split(" by ")[0] ?? product.name,
+        description: productDesc,
+        image: imageList,
+        url: `/product/${product.slug}`,
+        author: spec("Author"),
+        publisher: spec("Publisher"),
+        isbn: spec("ISBN-13"),
+        language: spec("Language"),
+        format: spec("Format"),
+        datePublished: monthYearToIso(spec("Publication")),
+      })
+    : productSchema(
     {
       id: product.id,
       name: productName,
@@ -177,7 +201,7 @@ export default async function Page({ params }: Props) {
             howToWear: t("accordionHowToWear"),
             specs: t("accordionSpecs"),
             shipping: t("accordionShipping"),
-            shippingText: t(isAttar ? "accordionShippingTextPlain" : "accordionShippingText", {
+            shippingText: isExternal ? t("flipkartNote") : t(isAttar ? "accordionShippingTextPlain" : "accordionShippingText", {
               min: store.standardDays[0],
               max: store.standardDays[1],
               freeShipping: store.freeShippingInr,

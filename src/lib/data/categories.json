@@ -52,5 +52,14 @@
     "desc": "Attar and fragrance oils in compact bottles.",
     "deshi": "कॉम्पैक्ट बोतलों में अत्तर और सुगंधित तेल।",
     "slug": "attar-fragrance-oils"
+  },
+  {
+    "key": "books",
+    "name": "Spiritual Books",
+    "hi": "आध्यात्मिक पुस्तकें",
+    "short": "Books",
+    "desc": "Spiritual books by Sadhak Pawan Pandey, available on Flipkart.",
+    "deshi": "साधक पवन पाण्डेय की आध्यात्मिक पुस्तकें, फ्लिपकार्ट पर उपलब्ध।",
+    "slug": "spiritual-books"
   }
 ]

@@ -27,6 +27,7 @@ export async function buildSnapshot(): Promise<CatalogSnapshot> {
     art: p.art,
     photo: p.photo,
     photo2: p.photo2,
+    buyUrl: p.buyUrl,
     badges: p.badges,
     rating: p.rating,
     reviews: p.reviews,

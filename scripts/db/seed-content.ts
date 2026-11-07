@@ -3,6 +3,7 @@ import { EMPTY_PRODUCT_CONTENT } from "../../src/lib/domain/types";
 import type { Product } from "../../src/types/product";
 import { amuletContent } from "./amulet-content";
 import { attarContent } from "./attar-content";
+import { bookContent } from "./book-content";
 
 const L = (s: string): Loc => ({ en: s, hi: "" });
 
@@ -86,7 +87,7 @@ export function productContentFor(
     };
   }
 
-  const supplied = amuletContent(p.id) ?? attarContent(p.id);
+  const supplied = amuletContent(p.id) ?? attarContent(p.id) ?? bookContent(p.id);
   if (supplied) return supplied;
 
   if (p.id.startsWith("a-")) {

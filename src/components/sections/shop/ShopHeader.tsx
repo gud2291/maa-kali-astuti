@@ -95,7 +95,7 @@ export function ShopHeader({ cat, idx, count, art, hi, onAll }: Props) {
           </p>
           <div className="flex flex-wrap items-center gap-3 font-sans text-[13px] leading-none font-semibold text-ink">
             <span className="tabular">{t("offerings", { n: count })}</span>
-            {cat?.key !== "attar" && (
+            {cat?.key !== "attar" && cat?.key !== "books" && (
               <>
                 <span aria-hidden="true" className="size-1 rounded-pill bg-g5" />
                 <span className="flex items-center gap-1.5 font-medium text-ink6">

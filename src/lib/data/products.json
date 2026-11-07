@@ -1122,5 +1122,26 @@
     "catName": "Attar & Fragrance Oils",
     "slug": "natural-sandal-attar",
     "photo": "/images/products/natural-sandal-attar.webp"
+  },
+  {
+    "id": "prahar-book",
+    "cat": "books",
+    "name": "प्रहार",
+    "hi": "प्रहार – एक आधुनिक गृहस्थ साधक की सीधी ललकार",
+    "long": "प्रहार – एक आधुनिक गृहस्थ साधक की सीधी ललकार by साधक पवन पाण्डेय",
+    "price": 0,
+    "mrp": 0,
+    "rating": 0,
+    "reviews": 0,
+    "intent": "Prahar · सत्य • साधना • संघर्ष",
+    "ik": "clarity",
+    "badges": [],
+    "stock": 0,
+    "date": 0,
+    "pop": 0,
+    "catName": "Spiritual Books",
+    "slug": "prahar-book",
+    "photo": "/images/products/prahar-book-cover.webp",
+    "buyUrl": "https://dl.flipkart.com/s/MWqaLLNNNN"
   }
 ]

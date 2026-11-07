@@ -85,6 +85,13 @@
       "when": 1794400000000,
       "tag": "0011_product_photos_amulets",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1794500000000,
+      "tag": "0012_product_external_url",
+      "breakpoints": true
     }
   ]
 }

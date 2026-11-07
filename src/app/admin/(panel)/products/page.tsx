@@ -21,6 +21,7 @@ const CATEGORY_LABELS: Record<CategoryKey, string> = {
   havan: "Havan & Puja",
   copper: "Pure Copper",
   attar: "Attar & Fragrance Oils",
+  books: "Spiritual Books",
 };
 
 export default async function ProductsPage(props: {

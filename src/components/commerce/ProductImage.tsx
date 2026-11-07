@@ -59,7 +59,9 @@ export function ProductImage({
   }
 
   const { src, raster } = productImageSrc(p, slot);
-  const label = alt ?? p.name;
+  // External items (books) show the whole cover: never cropped, centred on the frame's background.
+  const whole = !!p.buyUrl;
+  const label = alt === "" ? "" : whole ? (p.long ?? p.name) : (alt ?? p.name);
   if (raster)
     return (
       <Image
@@ -69,7 +71,7 @@ export function ProductImage({
         sizes={sizes}
         priority={priority}
         draggable={false}
-        className={cn("block object-cover", className)}
+        className={cn("block", whole ? "object-contain" : "object-cover", className)}
       />
     );
   return (

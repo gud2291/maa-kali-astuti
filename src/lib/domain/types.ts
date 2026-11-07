@@ -166,4 +166,5 @@ export type ProductLite = Pick<
   | "stone"
   | "stoneName"
   | "catName"
+  | "buyUrl"
 > & { images: MediaRef[]; catShort: string };

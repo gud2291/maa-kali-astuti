@@ -73,7 +73,9 @@ const CATEGORY_OPTIONS = CATEGORY_KEYS.map((k) => ({
             ? "Havan & Puja"
             : k === "attar"
               ? "Attar & Fragrance Oils"
-              : "Pure Copper",
+              : k === "books"
+                ? "Spiritual Books"
+                : "Pure Copper",
 }));
 
 const INTENT_OPTIONS = INTENT_KEYS.map((k) => ({

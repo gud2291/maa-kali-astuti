@@ -45,6 +45,7 @@ export type ProductRow = {
   art?: ProductArt | null;
   legacyPhoto?: string | null;
   legacyPhoto2?: string | null;
+  externalUrl?: string | null;
   publishedAt?: Date | number | null;
 };
 
@@ -119,6 +120,7 @@ export function toProduct(
   if (row.art != null) p.art = row.art;
   if (row.legacyPhoto != null) p.photo = row.legacyPhoto;
   if (row.legacyPhoto2 != null) p.photo2 = row.legacyPhoto2;
+  if (row.externalUrl) p.buyUrl = row.externalUrl;
   if (images && images.length > 0) p.images = images;
 
   return p;

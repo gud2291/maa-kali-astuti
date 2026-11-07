@@ -18,7 +18,7 @@ export async function Intentions() {
     intents.map((i) => [
       i.key,
       all
-        .filter((p) => p.cat !== "attar" && (p.ik === i.key || INTENT_RX[i.key].test(p.intent)))
+        .filter((p) => p.cat !== "attar" && p.cat !== "books" && (p.ik === i.key || INTENT_RX[i.key].test(p.intent)))
         .sort((a, b) => b.pop - a.pop)
         .slice(0, 4),
     ]),

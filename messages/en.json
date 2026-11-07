@@ -16,6 +16,8 @@
     "searchPlace": "Search place of birth"
   },
   "product": {
+    "buyFlipkart": "Buy on Flipkart",
+    "onFlipkart": "Available on Flipkart",
     "wristSize": "Wrist size",
     "add": "Add to cart",
     "adding": "Adding…",
@@ -341,6 +343,7 @@
       "havan": "Havan Samagri",
       "copper": "Energized Copper",
       "attar": "Attar & Fragrance Oils",
+      "books": "Spiritual Books",
       "wishlist": "Wishlist",
       "kundaliReading": "Kundali Reading",
       "palmistry": "Palmistry",
@@ -569,12 +572,18 @@
         "Guided by Sadhak Pawan Pandey"
       ]
     },
+    "book": {
+      "eyebrow": "Featured book",
+      "buy": "Buy on Flipkart",
+      "details": "View details",
+      "note": "Opens Flipkart in a new tab."
+    },
     "cats": {
       "eyebrow": "01 — Shop by category",
       "title": "Six sacred <em>offerings</em>",
       "sub": "छह पवित्र अर्पण",
       "intro": "Every Rudraksha, bracelet, kavach, havan and copper piece is energized during Mahapuja at an auspicious muhurat and ships with a printed vidhi card for wearing or placing it.",
-      "all": "Shop all 41 offerings",
+      "all": "Shop all 42 offerings",
       "cta": "Shop now"
     },
     "best": {
@@ -590,8 +599,8 @@
         "am": "Amulets"
       },
       "all": {
-        "best": "View all 41 offerings",
-        "new": "View all 41 offerings",
+        "best": "View all 42 offerings",
+        "new": "View all 42 offerings",
         "rud": "All Rudraksha & Malas",
         "br": "All 15 bracelets",
         "am": "All sacred amulets"
@@ -2200,6 +2209,9 @@
     "accordionSpecs": "Specifications",
     "accordionShipping": "Shipping & returns",
     "accordionShippingText": "Orders are energized in Mahapuja and ship within 24–48 hours. Standard delivery reaches most locations in {min}–{max} days. Free delivery on orders above ₹{freeShipping}. Easy 7-day return policy for unused sacred items.",
+    "buyFlipkart": "Buy on Flipkart",
+    "flipkartNote": "Opens Flipkart in a new tab. Price, delivery and returns are as shown on Flipkart.",
+    "byAuthor": "by {author}",
     "accordionShippingTextPlain": "Standard delivery reaches most locations in {min}–{max} days. Free delivery on orders above ₹{freeShipping}. See our Shipping and Refund & Returns policies for details.",
     "accordionAuth": "Authenticity & Lab Certificate",
     "accordionAuthText": "Every Rudraksha and gemstone offering is tested for authenticity and backed by a laboratory report. Consecrated with Vedic rites by Sadhak Pawan Pandey.",

@@ -91,7 +91,7 @@ function SearchPanel() {
           img: <ProductImage p={{ ...p, date: 0, pop: 0 }} slot="main" sizes="56px" alt="" />,
           kicker: p.catName,
           title: hi ? p.hi : p.name,
-          right: fmt(p.price),
+          right: p.buyUrl ? "Flipkart" : fmt(p.price),
         }))
       : tab === "services"
         ? results.services.map((s) => ({

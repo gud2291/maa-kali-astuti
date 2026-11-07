@@ -32,12 +32,14 @@ export function useProductActions(p: Product, imgRef: RefObject<HTMLElement | nu
     return () => list.forEach(clearTimeout);
   }, []);
 
-  const oos = p.stock === 0;
+  // Items sold elsewhere (books on Flipkart) never enter our cart; "stock" does not apply to them.
+  const external = !!p.buyUrl;
+  const oos = p.stock === 0 && !external;
 
   /** Direct add (with a size when chosen on the card). */
   const doAdd = useCallback(
     (variant: WristSize | null) => {
-      if (oos || phRef.current !== "idle") return;
+      if (external || oos || phRef.current !== "idle") return;
       setPhase("loading");
       timers.current.push(
         setTimeout(() => {
@@ -56,7 +58,7 @@ export function useProductActions(p: Product, imgRef: RefObject<HTMLElement | nu
         }, 380),
       );
     },
-    [oos, p.id, imgRef, name, t, setPhase],
+    [external, oos, p.id, imgRef, name, t, setPhase],
   );
 
   /** Main button: sold out → WhatsApp notice; sized product → quick-add sheet; else add. */
@@ -92,6 +94,10 @@ export function useProductActions(p: Product, imgRef: RefObject<HTMLElement | nu
   );
 
   const moveToCart = useCallback(() => {
+    if (p.buyUrl) {
+      window.open(p.buyUrl, "_blank", "noopener,noreferrer");
+      return;
+    }
     if (p.sizes) {
       useUi.getState().openQuick(p.id, true);
       return;
@@ -100,7 +106,7 @@ export function useProductActions(p: Product, imgRef: RefObject<HTMLElement | nu
     flyToCart(imgRef.current);
     useWishlist.getState().toggle(p.id);
     useUi.getState().toast({ msg: t("moved", { name }), tone: "ok", action: { kind: "cart", label: t("viewCart") } });
-  }, [p.sizes, p.id, imgRef, name, t]);
+  }, [p.buyUrl, p.sizes, p.id, imgRef, name, t]);
 
   const removeWish = useCallback(() => {
     const wl = useWishlist.getState();
@@ -112,5 +118,5 @@ export function useProductActions(p: Product, imgRef: RefObject<HTMLElement | nu
     });
   }, [p.id, t]);
 
-  return { ph, oos, doAdd, add, addMobile, toggleWish, moveToCart, removeWish };
+  return { ph, oos, external, doAdd, add, addMobile, toggleWish, moveToCart, removeWish };
 }

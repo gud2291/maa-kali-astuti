@@ -6,6 +6,7 @@ import { POLICIES } from "../../src/lib/routes";
 import { productContentFor } from "./seed-content";
 import { AMULET_COPY } from "./amulet-content";
 import { ATTAR_COPY } from "./attar-content";
+import { BOOK_COPY } from "./book-content";
 import type { RudrakshaInfo } from "./seed-content";
 import { SEEDED_ARTICLES } from "./content/articles";
 import { SEEDED_POLICIES } from "./content/policies";
@@ -208,12 +209,15 @@ export async function main(): Promise<void> {
         ratingCount: p.reviews ?? 0,
         popularity: p.pop ?? 0,
         art: (p.art as ProductArt) ?? null,
-        seoTitleEn: (AMULET_COPY[p.id] ?? ATTAR_COPY[p.id])?.seoTitle ?? null,
-        seoDescEn: (AMULET_COPY[p.id] ?? ATTAR_COPY[p.id])?.seoDesc ?? null,
+        seoTitleEn: (AMULET_COPY[p.id] ?? ATTAR_COPY[p.id] ?? BOOK_COPY[p.id])?.seoTitle ?? null,
+        seoDescEn: (AMULET_COPY[p.id] ?? ATTAR_COPY[p.id] ?? BOOK_COPY[p.id])?.seoDesc ?? null,
+        seoTitleHi: BOOK_COPY[p.id]?.seoTitle ?? null,
+        seoDescHi: BOOK_COPY[p.id]?.seoDesc ?? null,
+        externalUrl: (p as { buyUrl?: string }).buyUrl ?? null,
         legacyPhoto: p.photo ?? null,
         legacyPhoto2: p.photo2 ?? null,
         content,
-        energizable: p.cat !== "havan" && p.cat !== "attar",
+        energizable: p.cat !== "havan" && p.cat !== "attar" && p.cat !== "books",
         status: "active",
         featured,
         sort: index,

@@ -77,6 +77,7 @@ export function MegaShop({ close, keep }: { close: () => void; keep: () => void 
   const nag = byId.get("nag12");
   const amulets = products.filter((p) => p.cat === "amulets");
   const attars = products.filter((p) => p.cat === "attar");
+  const books = products.filter((p) => p.cat === "books");
 
   return (
     <Panel onEnter={keep}>
@@ -164,6 +165,13 @@ export function MegaShop({ close, keep }: { close: () => void; keep: () => void 
           {attars.map((p) => (
             <Link key={p.id} href={productHref(p)} onClick={close} className={itemLink}>
               {p.name.replace(" (Fragrance Oil)", "")}
+            </Link>
+          ))}
+          <span className={`${num} mt-3.5`}>07</span>
+          <CatLink cat="books" name="Spiritual Books" hi="आध्यात्मिक पुस्तकें" close={close} />
+          {books.map((p) => (
+            <Link key={p.id} href={productHref(p)} onClick={close} className={itemLink}>
+              {p.name}
             </Link>
           ))}
         </div>

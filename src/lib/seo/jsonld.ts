@@ -353,3 +353,47 @@ export function course(c: CourseInput, url: string, feeInr?: number | null): Jso
         : undefined,
   };
 }
+
+export type BookInput = {
+  name: string;
+  description?: string | null;
+  image?: string[];
+  url: string;
+  author?: string;
+  publisher?: string;
+  isbn?: string;
+  /** "Hindi" → "hi" */
+  language?: string;
+  format?: string;
+  datePublished?: string;
+};
+
+/**
+ * Book structured data for a title sold on another site. Deliberately has no Offer / price: the only
+ * facts included are ones taken from the cover or the confirmed listing.
+ */
+export function book(b: BookInput): JsonLdObject {
+  const abs = (u: string) => (u.startsWith("http") ? u : `${SITE_URL}${u.startsWith("/") ? "" : "/"}${u}`);
+  const FORMATS: Record<string, string> = {
+    hardcover: "https://schema.org/Hardcover",
+    paperback: "https://schema.org/Paperback",
+  };
+  const LANGS: Record<string, string> = { hindi: "hi", english: "en" };
+  const obj: JsonLdObject = {
+    "@context": "https://schema.org",
+    "@type": "Book",
+    name: b.name,
+    url: abs(b.url),
+  };
+  if (b.description) obj.description = b.description;
+  if (b.image && b.image.length > 0) obj.image = b.image.map(abs);
+  if (b.author) obj.author = { "@type": "Person", name: b.author };
+  if (b.publisher) obj.publisher = { "@type": "Organization", name: b.publisher };
+  if (b.isbn) obj.isbn = b.isbn;
+  const lang = b.language ? LANGS[b.language.toLowerCase()] : undefined;
+  if (lang) obj.inLanguage = lang;
+  const fmt = b.format ? FORMATS[b.format.toLowerCase()] : undefined;
+  if (fmt) obj.bookFormat = fmt;
+  if (b.datePublished) obj.datePublished = b.datePublished;
+  return obj;
+}

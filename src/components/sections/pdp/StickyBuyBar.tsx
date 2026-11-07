@@ -17,7 +17,7 @@ type Props = {
   targetId?: string;
 };
 
-export function StickyBuyBar({ product, targetId = "pdp-main-add-button" }: Props) {
+export function StickyBuyBar({ product, targetId = product.buyUrl ? "pdp-flipkart-button" : "pdp-main-add-button" }: Props) {
   const t = useTranslations("pdp");
   const tt = useTranslations("toast");
   const locale = useLocale();
@@ -43,7 +43,8 @@ export function StickyBuyBar({ product, targetId = "pdp-main-add-button" }: Prop
     return () => observer.disconnect();
   }, [targetId]);
 
-  const oos = product.stock === 0;
+  const external = !!product.buyUrl;
+  const oos = product.stock === 0 && !external;
 
   const handleAdd = () => {
     if (oos || phase !== "idle") return;
@@ -92,27 +93,39 @@ export function StickyBuyBar({ product, targetId = "pdp-main-add-button" }: Prop
               <span className="font-title text-[15px] leading-tight text-em9 truncate">
                 {product.name}
               </span>
-              <Price price={product.price} mrp={product.mrp} hi={hi} size="card" />
+              {!external && <Price price={product.price} mrp={product.mrp} hi={hi} size="card" />}
             </div>
           </div>
 
-          <button
-            type="button"
-            disabled={oos || phase === "loading"}
-            onClick={handleAdd}
-            className={cn(
-              "flex h-10 px-5 cursor-pointer items-center justify-center gap-2 rounded-btn font-sans text-[14px] font-semibold transition-all select-none border-0",
-              phase === "added"
-                ? "bg-ok text-iv shadow-ring-gold"
-                : "bg-em7 text-iv shadow-ring-gold hover:bg-em5",
-              oos && "opacity-50 cursor-not-allowed",
-            )}
-          >
-            <Icon name={phase === "added" ? "check" : "bag"} className="size-4" />
-            <span>
-              {oos ? t("stockOut") : phase === "loading" ? t("adding") : phase === "added" ? t("added") : t("stickyAdd")}
-            </span>
-          </button>
+          {external ? (
+            <a
+              href={product.buyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-10 px-5 text-[14px] items-center justify-center gap-2 rounded-btn bg-em7 font-sans font-semibold text-iv no-underline shadow-ring-gold transition-colors hover:bg-em5 hover:text-iv"
+            >
+              <span>{t("buyFlipkart")}</span>
+              <Icon name="arrowR" className="size-4" />
+            </a>
+          ) : (
+            <button
+              type="button"
+              disabled={oos || phase === "loading"}
+              onClick={handleAdd}
+              className={cn(
+                "flex h-10 px-5 cursor-pointer items-center justify-center gap-2 rounded-btn font-sans text-[14px] font-semibold transition-all select-none border-0",
+                phase === "added"
+                  ? "bg-ok text-iv shadow-ring-gold"
+                  : "bg-em7 text-iv shadow-ring-gold hover:bg-em5",
+                oos && "opacity-50 cursor-not-allowed",
+              )}
+            >
+              <Icon name={phase === "added" ? "check" : "bag"} className="size-4" />
+              <span>
+                {oos ? t("stockOut") : phase === "loading" ? t("adding") : phase === "added" ? t("added") : t("stickyAdd")}
+              </span>
+            </button>
+          )}
         </div>
       </div>
 
@@ -136,27 +149,39 @@ export function StickyBuyBar({ product, targetId = "pdp-main-add-button" }: Prop
               <span className="font-title text-[14px] leading-tight text-em9 truncate">
                 {product.name}
               </span>
-              <Price price={product.price} mrp={product.mrp} hi={hi} size="card" />
+              {!external && <Price price={product.price} mrp={product.mrp} hi={hi} size="card" />}
             </div>
           </div>
 
-          <button
-            type="button"
-            disabled={oos || phase === "loading"}
-            onClick={handleAdd}
-            className={cn(
-              "flex h-10 px-4 cursor-pointer items-center justify-center gap-1.5 rounded-btn font-sans text-[13.5px] font-semibold transition-all select-none border-0 flex-none",
-              phase === "added"
-                ? "bg-ok text-iv shadow-ring-gold"
-                : "bg-em7 text-iv shadow-ring-gold hover:bg-em5",
-              oos && "opacity-50 cursor-not-allowed",
-            )}
-          >
-            <Icon name={phase === "added" ? "check" : "bag"} className="size-4" />
-            <span>
-              {oos ? t("stockOut") : phase === "loading" ? t("adding") : phase === "added" ? t("added") : t("stickyAdd")}
-            </span>
-          </button>
+          {external ? (
+            <a
+              href={product.buyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex h-10 px-4 text-[13.5px] flex-none items-center justify-center gap-2 rounded-btn bg-em7 font-sans font-semibold text-iv no-underline shadow-ring-gold transition-colors hover:bg-em5 hover:text-iv"
+            >
+              <span>{t("buyFlipkart")}</span>
+              <Icon name="arrowR" className="size-4" />
+            </a>
+          ) : (
+            <button
+              type="button"
+              disabled={oos || phase === "loading"}
+              onClick={handleAdd}
+              className={cn(
+                "flex h-10 px-4 cursor-pointer items-center justify-center gap-1.5 rounded-btn font-sans text-[13.5px] font-semibold transition-all select-none border-0 flex-none",
+                phase === "added"
+                  ? "bg-ok text-iv shadow-ring-gold"
+                  : "bg-em7 text-iv shadow-ring-gold hover:bg-em5",
+                oos && "opacity-50 cursor-not-allowed",
+              )}
+            >
+              <Icon name={phase === "added" ? "check" : "bag"} className="size-4" />
+              <span>
+                {oos ? t("stockOut") : phase === "loading" ? t("adding") : phase === "added" ? t("added") : t("stickyAdd")}
+              </span>
+            </button>
+          )}
         </div>
       </div>
     </>
